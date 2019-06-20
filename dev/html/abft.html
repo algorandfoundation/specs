@@ -323,14 +323,14 @@ V_{r, p} = \{\mathrm{Vote}(I, r, p, 0, v) | \mathrm{Vote}\in V\}
 <li><span class="math inline">\(r_k = r + 1\)</span> and either
 <ul>
 <li><span class="math inline">\(p_k &gt; 0\)</span> or</li>
-<li><span class="math inline">\(s_k \notin (\mathit{next}_0, \mathit{late})\)</span> or</li>
+<li><span class="math inline">\(s_k \in (\mathit{next}_0, \mathit{late})\)</span> or</li>
 </ul></li>
 <li><span class="math inline">\(r_k = r\)</span> and one of
 <ul>
 <li><span class="math inline">\(p_k \notin [p-1,p+1]\)</span> or</li>
-<li><span class="math inline">\(p_k = p + 1\)</span> and <span class="math inline">\(s_k \notin (\mathit{next}_0, \mathit{late})\)</span> or</li>
-<li><span class="math inline">\(p_k = p\)</span> and <span class="math inline">\(s_k \notin (\mathit{next}_0, \mathit{late})\)</span> and <span class="math inline">\(s_k \notin [s-1,s+1]\)</span> or</li>
-<li><span class="math inline">\(p_k = p - 1\)</span> and <span class="math inline">\(s_k \notin (\mathit{next}_0, \mathit{late})\)</span> and <span class="math inline">\(s_k \notin [\bar{s}-1,\bar{s}+1]\)</span>.</li>
+<li><span class="math inline">\(p_k = p + 1\)</span> and <span class="math inline">\(s_k \in (\mathit{next}_0, \mathit{late})\)</span> or</li>
+<li><span class="math inline">\(p_k = p\)</span> and <span class="math inline">\(s_k \in (\mathit{next}_0, \mathit{late})\)</span> and <span class="math inline">\(s_k \notin [s-1,s+1]\)</span> or</li>
+<li><span class="math inline">\(p_k = p - 1\)</span> and <span class="math inline">\(s_k \in (\mathit{next}_0, \mathit{late})\)</span> and <span class="math inline">\(s_k \notin [\bar{s}-1,\bar{s}+1]\)</span>.</li>
 </ul></li>
 </ul></li>
 <li>Otherwise, relays <span class="math inline">\(\mathrm{Vote}_k\)</span>, observes it, and then produces any consequent output.</li>
