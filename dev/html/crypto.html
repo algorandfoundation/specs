@@ -1,0 +1,86 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="Content-Style-Type" content="text/css" />
+  <meta name="generator" content="pandoc" />
+  <title>Algorand Cryptographic Primitive Specification</title>
+  <style type="text/css">code{white-space: pre;}</style>
+</head>
+<body>
+<div id="header">
+<h1 class="title">Algorand Cryptographic Primitive Specification</h1>
+</div>
+<div id="TOC">
+<ul>
+<li><a href="#representation">Representation</a><ul>
+<li><a href="#canonical-msgpack">Canonical Msgpack</a></li>
+<li><a href="#domain-separation">Domain Separation</a></li>
+</ul></li>
+<li><a href="#hash-function">Hash Function</a></li>
+<li><a href="#digital-signature">Digital Signature</a><ul>
+<li><a href="#ephemeral-key-signature">Ephemeral-key Signature</a></li>
+</ul></li>
+<li><a href="#verifiable-random-function">Verifiable Random Function</a><ul>
+<li><a href="#cryptographic-sortition">Cryptographic Sortition</a></li>
+</ul></li>
+</ul>
+</div>
+<h1 id="representation">Representation</h1>
+<p>As a preliminary for guaranteeing cryptographic data integrity, Algorand represents all inputs to cryptographic functions (i.e., a cryptographic hash, signature, or verifiable random function) via a canonical and domain-separated representation.</p>
+<h2 id="canonical-msgpack">Canonical Msgpack</h2>
+<p>Algorand uses a version of <a href="TODO-msgpack">msgpack</a> to produce canonical encodings of data. Algorand's msgpack encodings are valid msgpack encodings, but the encoding function is deterministic to ensure a canonical representation that can be reproduced to verify signatures. A canonical msgpack encoding in Algorand must follow these rules:</p>
+<ol style="list-style-type: decimal">
+<li>Maps must contain keys in lexicographic order;</li>
+<li>Maps must omit key-value pairs where the value is a zero-value, unless otherwise specified;</li>
+<li>Positive integer values must be encoded as &quot;unsigned&quot; in msgpack, regardless of whether the value space is semantically signed or unsigned;</li>
+<li>Integer values must be represented in the shortest possible encoding;</li>
+<li>Binary arrays must be represented using the &quot;bin&quot; format family (that is, use the most recent version of msgpack rather than the older msgpack version that had no &quot;bin&quot; family).</li>
+</ol>
+<h2 id="domain-separation">Domain Separation</h2>
+<p>Before an object is input to some cryptographic function, it is prepended with a multi-character domain-separating prefix. The list below specifies each prefix (in quotation marks):</p>
+<ul>
+<li>For cryptographic primitives:
+<ul>
+<li>&quot;OT1&quot; and &quot;OT2&quot;: The first and second layers of keys used for <a href="Ephemeral-key%20Signatures">ephemeral signatures</a>.</li>
+</ul></li>
+<li>In the <a href="https://github.com/algorand/spec/ledger.md">Algorand Ledger</a>:
+<ul>
+<li>&quot;BH&quot;: A <em>Block Header</em>.</li>
+<li>&quot;BR&quot;: A <em>Balance Record</em>.</li>
+<li>&quot;GE&quot;: A <em>Genesis</em> configuration.</li>
+<li>&quot;PF&quot;: A <em>Payset</em> encoded as a flat list.</li>
+<li>&quot;TX&quot;: A <em>Transaction</em>.</li>
+</ul></li>
+<li>In the <a href="https://github.com/algorand/spec/abft.md">Algorand Byzantine Fault Tolerance protocol</a>:
+<ul>
+<li>&quot;AS&quot;: An <em>Agreement Selector</em>, which is also a <a href="#verifiable-random-function">VRF</a> input.</li>
+<li>&quot;CR&quot;: A <em>Credential</em>.</li>
+<li>&quot;SD&quot;: A <em>Seed</em>.</li>
+<li>&quot;PL&quot;: A <em>Payload</em>.</li>
+<li>&quot;PS&quot;: A <em>Proposer Seed</em>.</li>
+<li>&quot;VO&quot;: A <em>Vote</em>.</li>
+</ul></li>
+<li>In other places:
+<ul>
+<li>&quot;MX&quot;: An arbitrary message used to prove ownership of a cryptographic secret.</li>
+<li>&quot;NPR&quot;: A message which proves a peer's stake in an Algorand networking implementation.</li>
+<li>&quot;TE&quot;: An arbitrary message reserved for testing purposes.</li>
+<li>In Algorand auctions:</li>
+<li>&quot;aB&quot;: A <em>Bid</em>.</li>
+<li>&quot;aD&quot;: A <em>Deposit</em>.</li>
+<li>&quot;aO&quot;: An <em>Outcome</em>.</li>
+<li>&quot;aP&quot;: Auction parameters.</li>
+<li>&quot;aS&quot;: A <em>Settlement</em>.</li>
+</ul></li>
+</ul>
+<h1 id="hash-function">Hash Function</h1>
+<p>Algorand uses the <a href="TODO-sha">SHA-512/256 algorithm</a> as its primary cryptographic hash function.</p>
+<p>Algorand uses this hash function to (1) commit to data for signing and for the Byzantine Fault Tolerance protocol, and (2) rerandomize its random seed.</p>
+<h1 id="digital-signature">Digital Signature</h1>
+<p>Algorand uses the <a href="TODO-ed25519">ed25519</a> digital signature scheme to sign data.</p>
+<h2 id="ephemeral-key-signature">Ephemeral-key Signature</h2>
+<h1 id="verifiable-random-function">Verifiable Random Function</h1>
+<h2 id="cryptographic-sortition">Cryptographic Sortition</h2>
+</body>
+</html>
