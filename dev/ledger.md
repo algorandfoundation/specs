@@ -230,10 +230,15 @@ The reward state depends on the $I_x$, the address of the _incentive pool_, and
 the functions $\Stake(r, I)$ and $\Units(r)$.  These are defined as part of the
 [Account State][Account State] below.
 
-Let $Z = \Units(r)$. Given a reward state $(T_r, R_r, B^*_r)$, the new reward
+Informally, every $\omega_r$ rounds, the rate $R_r$ is updated such that rewards given over the next
+$\omega_r$ rounds will drain the maximally drain the incentive pool, leaving it with the minimum balance $b_{min}$.
+The _rewards residue_ $B^*_r$ is the amount of leftover rewards that should have been given in the previous round but
+could not be evenly divided among all reward units. The residue carries over into the rewards to be given in the next round.
+
+More formally, let $Z = \Units(r)$. Given a reward state $(T_r, R_r, B^*_r)$, the new reward
 state is $(T_{r+1}, R_{r+1}, B^*_{r+1})$ where
 
- - $R_{r+1} = \floor{\frac{\Stake(r, X)}{\omega_r}}$ if
+ - $R_{r+1} = \floor{\frac{\Stake(r, X) - B^*_r - b_{min}}{\omega_r}}$ if
    $R_r \equiv 0 \bmod \omega_r$; $R_{r+1} = R_r$ otherwise,
  - $T_{r+1} = T_r + \floor{\frac{R_r}{Z}}$ if $Z \neq 0$; $T_{r+1} = T_r$
    otherwise, and
