@@ -180,9 +180,10 @@
 <li><p>The <em>receiver</em> <span class="math inline">\(I&#39;\)</span>, which is an optional address which specifies the receiver of the funds in the transaction.</p></li>
 <li><p>The <em>closing address</em> <span class="math inline">\(I_0\)</span>, which is an optional address that collects all remaining funds in the account after the transfer to the receiver.</p></li>
 </ul>
-<p>A key registration transaction additionally has the following field:</p>
+<p>A key registration transaction additionally has the following fields:</p>
 <ul>
-<li>The new participation keys <span class="math inline">\({\mathrm{pk}}\)</span>, which is an optional set of account participation keys to be registered to the account. If unset, the transaction deregisters the account's keys.</li>
+<li><p>The new participation keys <span class="math inline">\({\mathrm{pk}}\)</span>, which is an optional set of account participation keys to be registered to the account. If unset, the transaction deregisters the account's keys.</p></li>
+<li><p>An optional (boolean) flag <span class="math inline">\({\mathrm{nonpart}}\)</span> which, when deregistering keys, specifies whether to mark the account offline (if <span class="math inline">\({\mathrm{nonpart}}\)</span> is false) or nonparticipatory (if <span class="math inline">\({\mathrm{nonpart}}\)</span> is true). If absent, <span class="math inline">\({\mathrm{nonpart}}\)</span> is considered false.</p></li>
 </ul>
 <p>The cryptographic hash of the fields above is called the <em>transaction identifier</em>. This is written as <span class="math inline">\({\mathrm{Hash}}({\mathrm{Tx}})\)</span>.</p>
 <p>A valid transaction can either be a <em>signed</em> transaction or a <em>multi-signed</em> transaction. This is determined by the <em>signature</em> of a transaction:</p>
@@ -216,7 +217,7 @@
                   \{{\mathrm{Hash}}({\mathrm{Tx}}) | {\mathrm{Tx}}\in {\mathrm{TxSeq}}_r\}.\]</span> The transaction tail is part of the ledger state but is distinct from the account state and is not committed to in the block.</p>
 <h2 id="validity-and-state-changes">Validity and State Changes</h2>
 <p>The new account state which results from applying a block is the account state which results from applying each transaction in that block, in sequence. For a block to be valid, each transaction in its transaction sequence must be valid at the block's round <span class="math inline">\(r\)</span> and for the block's genesis identifier <span class="math inline">\({\mathrm{GenesisID}}_B\)</span>.</p>
-<p>For a transaction <span class="math display">\[{\mathrm{Tx}}= ({\mathrm{GenesisID}}, {\mathrm{TxType}}, r_1, r_2, I, I&#39;, I_0, f, a, N, {\mathrm{pk}})\]</span> to be valid at the intermediate state <span class="math inline">\(\rho\)</span> in round <span class="math inline">\(r\)</span> for the genesis identifier <span class="math inline">\({\mathrm{GenesisID}}_B\)</span>, the following conditions must all hold:</p>
+<p>For a transaction <span class="math display">\[{\mathrm{Tx}}= ({\mathrm{GenesisID}}, {\mathrm{TxType}}, r_1, r_2, I, I&#39;, I_0, f, a, N, {\mathrm{pk}}, {\mathrm{nonpart}})\]</span> to be valid at the intermediate state <span class="math inline">\(\rho\)</span> in round <span class="math inline">\(r\)</span> for the genesis identifier <span class="math inline">\({\mathrm{GenesisID}}_B\)</span>, the following conditions must all hold:</p>
 <ul>
 <li>It must represent a transition between two valid account states.</li>
 <li>Either <span class="math inline">\({\mathrm{GenesisID}}= {\mathrm{GenesisID}}_B\)</span> or <span class="math inline">\({\mathrm{GenesisID}}\)</span> is the empty string.</li>
@@ -235,6 +236,11 @@
 <li><span class="math inline">\({\mathrm{Stake}}(r+1, I) - f &gt; a\)</span> if <span class="math inline">\(I&#39; \neq I\)</span> and <span class="math inline">\(I&#39; \neq 0\)</span>.</li>
 <li>If <span class="math inline">\(I_0 \neq 0\)</span>, then <span class="math inline">\(I_0 \neq I\)</span>.</li>
 </ul></li>
+<li>If <span class="math inline">\({\mathrm{TxType}}\)</span> is &quot;keyreg&quot;,
+<ul>
+<li><span class="math inline">\(p_{\rho, I} \ne 2\)</span> (i.e., nonparticipatory accounts may not issue keyreg transactions)</li>
+<li>If <span class="math inline">\({\mathrm{nonpart}}\)</span> is true then <span class="math inline">\({\mathrm{pk}}= 0\)</span></li>
+</ul></li>
 </ul>
 <p>Given that a transaction is valid, it produces the following updated account state for intermediate state <span class="math inline">\(\rho+1\)</span>:</p>
 <ul>
@@ -246,7 +252,14 @@
 <li><span class="math inline">\(a_{\rho+1, I} = {\mathrm{Stake}}(\rho+1, I) - a - f\)</span> if <span class="math inline">\(I&#39; \neq I\)</span> and <span class="math inline">\(a_{\rho+1, I} = {\mathrm{Stake}}(\rho+1, I) - f\)</span> otherwise.</li>
 <li><span class="math inline">\(a&#39;_{\rho+1, I} = T_{r+1}\)</span>.</li>
 <li><span class="math inline">\(a^*_{\rho+1, I} = a^*_{\rho, I} +  (T_{r+1} - a&#39;_{\rho, I}) {\left \lfloor \frac{a_{\rho, I}}{A} \right \rfloor }\)</span>.</li>
-<li><span class="math inline">\({\mathrm{pk}}_{\rho+1, I} = {\mathrm{pk}}_{\rho, I}\)</span> and <span class="math inline">\(p_{\rho+1, I} = p_{\rho, I}\)</span> if <span class="math inline">\({\mathrm{TxType}}\)</span> is &quot;pay&quot;; otherwise, <span class="math inline">\({\mathrm{pk}}_{\rho+1, I} = {\mathrm{pk}}\)</span>, and <span class="math inline">\(p_{\rho, I} = 0\)</span> if <span class="math inline">\({\mathrm{pk}}= 0\)</span> and <span class="math inline">\(p_{\rho, I} = 1\)</span> otherwise.</li>
+<li>If <span class="math inline">\({\mathrm{TxType}}\)</span> is &quot;pay&quot;, then <span class="math inline">\({\mathrm{pk}}_{\rho+1, I} = {\mathrm{pk}}_{\rho, I}\)</span> and <span class="math inline">\(p_{\rho+1, I} = p_{\rho, I}\)</span></li>
+<li>Otherwise (i.e., if <span class="math inline">\({\mathrm{TxType}}\)</span> is &quot;keyreg&quot;),
+<ul>
+<li><span class="math inline">\({\mathrm{pk}}_{\rho+1, I} = {\mathrm{pk}}\)</span></li>
+<li><span class="math inline">\(p_{\rho+1, I} = 0\)</span> if <span class="math inline">\({\mathrm{pk}}= 0\)</span> and <span class="math inline">\({\mathrm{nonpart}}= \text{false}\)</span></li>
+<li><span class="math inline">\(p_{\rho+1, I} = 2\)</span> if <span class="math inline">\({\mathrm{pk}}= 0\)</span> and <span class="math inline">\({\mathrm{nonpart}}= \text{true}\)</span></li>
+<li><span class="math inline">\(p_{\rho+1, I} = 1\)</span> if <span class="math inline">\({\mathrm{pk}}\ne 0\)</span>.</li>
+</ul></li>
 </ul></li>
 </ul></li>
 <li>For <span class="math inline">\(I&#39;\)</span> if <span class="math inline">\(I \neq I&#39;\)</span> and either <span class="math inline">\(I&#39; \neq 0\)</span> or <span class="math inline">\(a \neq 0\)</span>:
