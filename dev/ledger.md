@@ -252,7 +252,7 @@ Account State
 The _balances_ are a set of mappings from _addresses_, 256-bit integers, to
 _balance records_.  A _balance record_ contains the following fields: the
 account _raw balance_, the account _status_, the account _rewards base_ and
-_total awarded amount_, and the account [_participation keys_][partkey-spec].
+_total awarded amount_, and the account [_participation key set_][partkey-spec].
 
 The account raw balance $a_I$ is a 64-bit unsigned integer which determines how
 much money the address has.
@@ -287,7 +287,7 @@ stake_ an account has, which is a 64-bit unsigned integer defined as follows:
  - The account balance, if the account is online.
  - 0 otherwise.
 
-The account's participation keys $\pk$ are defined in Algorand's [specification
+The account's participation key set $\pk$ are defined in Algorand's [specification
 of participation keys][partkey-spec].
 
 An account's participation keys and voting stake from a recent round is returned
@@ -305,7 +305,11 @@ Transactions
 \newcommand \TxSeq {\mathrm{TxSeq}}
 \newcommand \TxTail {\mathrm{TxTail}}
 \newcommand \TxType {\mathrm{TxType}}
-\newcommand \TxCommit {\mathrm{TxCommit}}
+\newcommand \vpk {\mathrm{vpk}}
+\newcommand \spk {\mathrm{spk}}
+\newcommand \vf {\mathrm{vf}}
+\newcommand \vl {\mathrm{vl}}
+\newcommand \vkd {\mathrm{vkd}}
 
 \newcommand \Hash {\mathrm{Hash}}
 
@@ -350,17 +354,21 @@ A payment transaction additionally has the following fields:
 
 A key registration transaction additionally has the following field:
 
- - The _vote public key_ $vpk$, (root) public authentication key 
-   of an account's participation key set.
- - The _selection public key_ $spk$, public authorization key of 
-   an account's participation key set. If either $vpk$ or $spk$ is unset, 
-   the transaction deregisters the account's participation key set, as 
-    the result, marks the account offline.
- - The _vote first_ $vf$, first valid round (inclusive) of 
+ - The _vote public key_ $\vpk$, (root) public authentication key 
+   of an account's participation key set ($\pk$).
+
+ - The _selection public key_ $\spk$, public authorization key of 
+   an account's participation key set ($\pk$). If either $\vpk$ or 
+   $\spk$ is unset, the transaction deregisters the account's participation 
+   key set, as the result, marks the account offline.
+
+ - The _vote first_ $\vf$, first valid round (inclusive) of 
    an account's participation key sets.
- - The _vote last_ $vl$, last valid round (inclusive) of an account's
+
+ - The _vote last_ $\vl$, last valid round (inclusive) of an account's
    participation key sets.
- - The _vote key dilution_ $vkd$, number of rounds that a single 
+
+ - The _vote key dilution_ $\vkd$, number of rounds that a single 
   leaf level authentication key can be used. The higher the number, the 
   more ``dilution'' added to the authentication key's security.  
 
