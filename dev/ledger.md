@@ -231,7 +231,7 @@ the functions $\Stake(r, I)$ and $\Units(r)$.  These are defined as part of the
 [Account State][Account State] below.
 
 Informally, every $\omega_r$ rounds, the rate $R_r$ is updated such that rewards given over the next
-$\omega_r$ rounds will drain the maximally drain the incentive pool, leaving it with the minimum balance $b_{min}$.
+$\omega_r$ rounds will drain the incentive pool, leaving it with the minimum balance $b_{min}$.
 The _rewards residue_ $B^*_r$ is the amount of leftover rewards that should have been given in the previous round but
 could not be evenly divided among all reward units. The residue carries over into the rewards to be given in the next round.
 
