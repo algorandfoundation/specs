@@ -305,6 +305,8 @@ Transactions
 \newcommand \TxSeq {\mathrm{TxSeq}}
 \newcommand \TxTail {\mathrm{TxTail}}
 \newcommand \TxType {\mathrm{TxType}}
+\newcommand \TxCommit {\mathrm{TxCommit}}
+
 \newcommand \vpk {\mathrm{vpk}}
 \newcommand \spk {\mathrm{spk}}
 \newcommand \vf {\mathrm{vf}}
