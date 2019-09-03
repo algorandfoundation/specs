@@ -183,7 +183,7 @@
 <p>A key registration transaction additionally has the following fields:</p>
 <ul>
 <li><p>The new participation keys <span class="math inline">\({\mathrm{pk}}\)</span>, which is an optional set of account participation keys to be registered to the account. If unset, the transaction deregisters the account's keys.</p></li>
-<li><p>An optional (boolean) flag <span class="math inline">\({\mathrm{nonpart}}\)</span> which, when deregistering keys, specifies whether to mark the account offline (if <span class="math inline">\({\mathrm{nonpart}}\)</span> is false) or nonparticipatory (if <span class="math inline">\({\mathrm{nonpart}}\)</span> is true). If absent, <span class="math inline">\({\mathrm{nonpart}}\)</span> is considered false.</p></li>
+<li><p>An optional (boolean) flag <span class="math inline">\({\mathrm{nonpart}}\)</span> which, when deregistering keys, specifies whether to mark the account offline (if <span class="math inline">\({\mathrm{nonpart}}\)</span> is false) or nonparticipatory (if <span class="math inline">\({\mathrm{nonpart}}\)</span> is true).</p></li>
 </ul>
 <p>The cryptographic hash of the fields above is called the <em>transaction identifier</em>. This is written as <span class="math inline">\({\mathrm{Hash}}({\mathrm{Tx}})\)</span>.</p>
 <p>A valid transaction can either be a <em>signed</em> transaction or a <em>multi-signed</em> transaction. This is determined by the <em>signature</em> of a transaction:</p>

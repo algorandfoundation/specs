@@ -362,7 +362,7 @@ A key registration transaction additionally has the following fields:
 
  - An optional (boolean) flag $\nonpart$ which, when deregistering keys,
    specifies whether to mark the account offline (if $\nonpart$ is false)
-   or nonparticipatory (if $\nonpart$ is true). If absent, $\nonpart$ is considered false.
+   or nonparticipatory (if $\nonpart$ is true).
 
 The cryptographic hash of the fields above is called the _transaction
 identifier_.  This is written as $\Hash(\Tx)$.
