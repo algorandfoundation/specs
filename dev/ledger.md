@@ -226,19 +226,20 @@ of money distributed to each earning unit since the genesis state $T_r$, the
 amount of money to be distributed to each earning unit at the next round $R_r$,
 and the amount of money left over after distribution $B^*_r$.
 
-The reward state depends on the $I_x$, the address of the _incentive pool_, and
-the functions $\Stake(r, I)$ and $\Units(r)$.  These are defined as part of the
+The reward state depends on the $I_{pool}$, the address of the _incentive pool_, and
+the functions $\Stake(r, I_{pool})$ and $\Units(r)$.  These are defined as part of the
 [Account State][Account State] below.
 
 Informally, every $\omega_r$ rounds, the rate $R_r$ is updated such that rewards given over the next
 $\omega_r$ rounds will drain the incentive pool, leaving it with the minimum balance $b_{min}$.
 The _rewards residue_ $B^*_r$ is the amount of leftover rewards that should have been given in the previous round but
 could not be evenly divided among all reward units. The residue carries over into the rewards to be given in the next round.
+The actual draining of the incentive pool account is described in the [Validity and State Changes][Validity and State Changes] section further below.
 
 More formally, let $Z = \Units(r)$. Given a reward state $(T_r, R_r, B^*_r)$, the new reward
 state is $(T_{r+1}, R_{r+1}, B^*_{r+1})$ where
 
- - $R_{r+1} = \floor{\frac{\Stake(r, X) - B^*_r - b_{min}}{\omega_r}}$ if
+ - $R_{r+1} = \floor{\frac{\Stake(r, I_{pool}) - B^*_r - b_{min}}{\omega_r}}$ if
    $R_r \equiv 0 \bmod \omega_r$; $R_{r+1} = R_r$ otherwise,
  - $T_{r+1} = T_r + \floor{\frac{R_r}{Z}}$ if $Z \neq 0$; $T_{r+1} = T_r$
    otherwise, and
@@ -298,7 +299,7 @@ of participation keys][partkey-spec].
 An account's participation keys and voting stake from a recent round is returned
 by the $\Record$ procedure in the [Byzantine Agreement Protocol][abft-spec].
 
-There exist two special addresses: $I_x$, the address of the _incentive pool_,
+There exist two special addresses: $I_{pool}$, the address of the _incentive pool_,
 and $I_f$, the address of the _fee sink_.  For both of these accounts,
 $p_I = 2$.
 
@@ -473,13 +474,13 @@ identifier $\GenesisID_B$, the following conditions must all hold:
  - $0 \leq r_2 - r_1 \leq T_{\max}$.
  - $r_1 \leq r \leq r_2$.
  - $|N| \leq N_{\max}$.
- - $I \neq I_x$ and $I \neq 0$.
+ - $I \neq I_{pool}$ and $I \neq 0$.
  - $\Stake(r+1, I) \geq f \geq f_{\min}$.
  - Exactly one of the signature or the multisignature is present and verifies
    for $\Hash(\Tx)$ under $I$.
  - $\Hash(\Tx) \notin \TxTail_r$.
  - If $\TxType$ is "pay",
-    - $I \neq I_k$ or both $I' \neq I_x$ and $I_0 \neq 0$.
+    - $I \neq I_k$ or both $I' \neq I_{pool}$ and $I_0 \neq 0$.
     - $\Stake(r+1, I) - f > a$ if $I' \neq I$ and $I' \neq 0$.
     - If $I_0 \neq 0$, then $I_0 \neq I$.
 
@@ -515,12 +516,12 @@ TODO define the sequence of intermediate states
 
 The final intermediate account $\rho_k$ state changes the balance of the
 incentive pool as follows:
-$$a_{\rho_k, I_x} = a_{\rho_{k-1}, I_x} - R_r(\Units(r))$$
+$$a_{\rho_k, I_{pool}} = a_{\rho_{k-1}, I_{pool}} - R_r(\Units(r))$$
 
 An account state in the intermediate state $\rho+1$ and at round $r$ is valid if
 all following conditions hold:
 
- - For all addresses $I \notin \{I_x, I_f\}$, either $\Stake(\rho+1, I) = 0$ or
+ - For all addresses $I \notin \{I_{pool}, I_f\}$, either $\Stake(\rho+1, I) = 0$ or
    $\Stake(\rho+1, I) \geq b_{\min}$.
    
  - $\sum_I \Stake(\rho+1, I) = \sum_I \Stake(\rho, I)$.
