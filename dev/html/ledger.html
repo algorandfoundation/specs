@@ -138,10 +138,11 @@
 <p>The seed is a 256-bit integer. Seeds are validated and updated according to the <a href="https://github.com/algorand/spec/abft.md">specification of the Algorand Byzantine Fault Tolerance protocol</a>. The <span class="math inline">\({\mathrm{Seed}}\)</span> procedure specified there returns the seed from the desired round.</p>
 <h1 id="reward-state">Reward State</h1>
 <p>The reward state consists of three 64-bit unsigned integers: the total amount of money distributed to each earning unit since the genesis state <span class="math inline">\(T_r\)</span>, the amount of money to be distributed to each earning unit at the next round <span class="math inline">\(R_r\)</span>, and the amount of money left over after distribution <span class="math inline">\(B^*_r\)</span>.</p>
-<p>The reward state depends on the <span class="math inline">\(I_x\)</span>, the address of the <em>incentive pool</em>, and the functions <span class="math inline">\({\mathrm{Stake}}(r, I)\)</span> and <span class="math inline">\({\mathrm{RewardUnits}}(r)\)</span>. These are defined as part of the <a href="#account-state">Account State</a> below.</p>
-<p>Let <span class="math inline">\(Z = {\mathrm{RewardUnits}}(r)\)</span>. Given a reward state <span class="math inline">\((T_r, R_r, B^*_r)\)</span>, the new reward state is <span class="math inline">\((T_{r+1}, R_{r+1}, B^*_{r+1})\)</span> where</p>
+<p>The reward state depends on the <span class="math inline">\(I_{pool}\)</span>, the address of the <em>incentive pool</em>, and the functions <span class="math inline">\({\mathrm{Stake}}(r, I_{pool})\)</span> and <span class="math inline">\({\mathrm{RewardUnits}}(r)\)</span>. These are defined as part of the <a href="#account-state">Account State</a> below.</p>
+<p>Informally, every <span class="math inline">\(\omega_r\)</span> rounds, the rate <span class="math inline">\(R_r\)</span> is updated such that rewards given over the next <span class="math inline">\(\omega_r\)</span> rounds will drain the incentive pool, leaving it with the minimum balance <span class="math inline">\(b_{min}\)</span>. The <em>rewards residue</em> <span class="math inline">\(B^*_r\)</span> is the amount of leftover rewards that should have been given in the previous round but could not be evenly divided among all reward units. The residue carries over into the rewards to be given in the next round. The actual draining of the incentive pool account is described in the <a href="#validity-and-state-changes">Validity and State Changes</a> section further below.</p>
+<p>More formally, let <span class="math inline">\(Z = {\mathrm{RewardUnits}}(r)\)</span>. Given a reward state <span class="math inline">\((T_r, R_r, B^*_r)\)</span>, the new reward state is <span class="math inline">\((T_{r+1}, R_{r+1}, B^*_{r+1})\)</span> where</p>
 <ul>
-<li><span class="math inline">\(R_{r+1} = {\left \lfloor \frac{{\mathrm{Stake}}(r, X)}{\omega_r} \right \rfloor }\)</span> if <span class="math inline">\(R_r \equiv 0 \bmod \omega_r\)</span>; <span class="math inline">\(R_{r+1} = R_r\)</span> otherwise,</li>
+<li><span class="math inline">\(R_{r+1} = {\left \lfloor \frac{{\mathrm{Stake}}(r, I_{pool}) - B^*_r - b_{min}}{\omega_r} \right \rfloor }\)</span> if <span class="math inline">\(R_r \equiv 0 \bmod \omega_r\)</span>; <span class="math inline">\(R_{r+1} = R_r\)</span> otherwise,</li>
 <li><span class="math inline">\(T_{r+1} = T_r + {\left \lfloor \frac{R_r}{Z} \right \rfloor }\)</span> if <span class="math inline">\(Z \neq 0\)</span>; <span class="math inline">\(T_{r+1} = T_r\)</span> otherwise, and</li>
 <li><span class="math inline">\(B^*_{r+1} = (B^*_r + R_r) \bmod Z\)</span> if <span class="math inline">\(Z \neq 0\)</span>; <span class="math inline">\(B^*_{r+1} = B^*_r\)</span> otherwise.</li>
 </ul>
@@ -161,7 +162,7 @@
 </ul>
 <p>The account's participation keys <span class="math inline">\({\mathrm{pk}}\)</span> are defined in Algorand's <a href="https://github.com/algorand/spec/partkey.md">specification of participation keys</a>.</p>
 <p>An account's participation keys and voting stake from a recent round is returned by the <span class="math inline">\({\mathrm{Record}}\)</span> procedure in the <a href="https://github.com/algorand/spec/abft.md">Byzantine Agreement Protocol</a>.</p>
-<p>There exist two special addresses: <span class="math inline">\(I_x\)</span>, the address of the <em>incentive pool</em>, and <span class="math inline">\(I_f\)</span>, the address of the <em>fee sink</em>. For both of these accounts, <span class="math inline">\(p_I = 2\)</span>.</p>
+<p>There exist two special addresses: <span class="math inline">\(I_{pool}\)</span>, the address of the <em>incentive pool</em>, and <span class="math inline">\(I_f\)</span>, the address of the <em>fee sink</em>. For both of these accounts, <span class="math inline">\(p_I = 2\)</span>.</p>
 <h2 id="transactions">Transactions</h2>
 <p>Just as a block represents a transition between two ledger states, a <em>transaction</em> <span class="math inline">\({\mathrm{Tx}}\)</span> represents a transition between two account states. A transaction contains the following fields:</p>
 <ul>
@@ -224,13 +225,13 @@
 <li><span class="math inline">\(0 \leq r_2 - r_1 \leq T_{\max}\)</span>.</li>
 <li><span class="math inline">\(r_1 \leq r \leq r_2\)</span>.</li>
 <li><span class="math inline">\(|N| \leq N_{\max}\)</span>.</li>
-<li><span class="math inline">\(I \neq I_x\)</span> and <span class="math inline">\(I \neq 0\)</span>.</li>
+<li><span class="math inline">\(I \neq I_{pool}\)</span> and <span class="math inline">\(I \neq 0\)</span>.</li>
 <li><span class="math inline">\({\mathrm{Stake}}(r+1, I) \geq f \geq f_{\min}\)</span>.</li>
 <li>Exactly one of the signature or the multisignature is present and verifies for <span class="math inline">\({\mathrm{Hash}}({\mathrm{Tx}})\)</span> under <span class="math inline">\(I\)</span>.</li>
 <li><span class="math inline">\({\mathrm{Hash}}({\mathrm{Tx}}) \notin {\mathrm{TxTail}}_r\)</span>.</li>
 <li>If <span class="math inline">\({\mathrm{TxType}}\)</span> is &quot;pay&quot;,
 <ul>
-<li><span class="math inline">\(I \neq I_k\)</span> or both <span class="math inline">\(I&#39; \neq I_x\)</span> and <span class="math inline">\(I_0 \neq 0\)</span>.</li>
+<li><span class="math inline">\(I \neq I_k\)</span> or both <span class="math inline">\(I&#39; \neq I_{pool}\)</span> and <span class="math inline">\(I_0 \neq 0\)</span>.</li>
 <li><span class="math inline">\({\mathrm{Stake}}(r+1, I) - f &gt; a\)</span> if <span class="math inline">\(I&#39; \neq I\)</span> and <span class="math inline">\(I&#39; \neq 0\)</span>.</li>
 <li>If <span class="math inline">\(I_0 \neq 0\)</span>, then <span class="math inline">\(I_0 \neq I\)</span>.</li>
 </ul></li>
@@ -263,10 +264,10 @@
 <li>For all other <span class="math inline">\(I^* \neq I\)</span>, the account state is identical to that in view <span class="math inline">\(\rho\)</span>.</li>
 </ul>
 <p>TODO define the sequence of intermediate states</p>
-<p>The final intermediate account <span class="math inline">\(\rho_k\)</span> state changes the balance of the incentive pool as follows: <span class="math display">\[a_{\rho_k, I_x} = a_{\rho_{k-1}, I_x} - R_r({\mathrm{RewardUnits}}(r))\]</span></p>
+<p>The final intermediate account <span class="math inline">\(\rho_k\)</span> state changes the balance of the incentive pool as follows: <span class="math display">\[a_{\rho_k, I_{pool}} = a_{\rho_{k-1}, I_{pool}} - R_r({\mathrm{RewardUnits}}(r))\]</span></p>
 <p>An account state in the intermediate state <span class="math inline">\(\rho+1\)</span> and at round <span class="math inline">\(r\)</span> is valid if all following conditions hold:</p>
 <ul>
-<li><p>For all addresses <span class="math inline">\(I \notin \{I_x, I_f\}\)</span>, either <span class="math inline">\({\mathrm{Stake}}(\rho+1, I) = 0\)</span> or <span class="math inline">\({\mathrm{Stake}}(\rho+1, I) \geq b_{\min}\)</span>.</p></li>
+<li><p>For all addresses <span class="math inline">\(I \notin \{I_{pool}, I_f\}\)</span>, either <span class="math inline">\({\mathrm{Stake}}(\rho+1, I) = 0\)</span> or <span class="math inline">\({\mathrm{Stake}}(\rho+1, I) \geq b_{\min}\)</span>.</p></li>
 <li><p><span class="math inline">\(\sum_I {\mathrm{Stake}}(\rho+1, I) = \sum_I {\mathrm{Stake}}(\rho, I)\)</span>.</p></li>
 </ul>
 <h1 id="previous-hash">Previous Hash</h1>
