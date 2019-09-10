@@ -314,6 +314,7 @@ Transactions
 \newcommand \TxCommit {\mathrm{TxCommit}}
 
 \newcommand \Hash {\mathrm{Hash}}
+\newcommand \nonpart {\mathrm{nonpart}}
 
 Just as a block represents a transition between two ledger states, a
 _transaction_ $\Tx$ represents a transition between two account states. A
@@ -354,11 +355,15 @@ A payment transaction additionally has the following fields:
  - The _closing address_ $I_0$, which is an optional address that collects all
    remaining funds in the account after the transfer to the receiver.
 
-A key registration transaction additionally has the following field:
+A key registration transaction additionally has the following fields:
 
  - The new participation keys $\pk$, which is an optional set of account
    participation keys to be registered to the account.  If unset, the
    transaction deregisters the account's keys.
+
+ - An optional (boolean) flag $\nonpart$ which, when deregistering keys,
+   specifies whether to mark the account offline (if $\nonpart$ is false)
+   or nonparticipatory (if $\nonpart$ is true).
 
 The cryptographic hash of the fields above is called the _transaction
 identifier_.  This is written as $\Hash(\Tx)$.
@@ -463,7 +468,7 @@ block to be valid, each transaction in its transaction sequence must be valid at
 the block's round $r$ and for the block's genesis identifier $\GenesisID_B$.
 
 For a transaction
-$$\Tx = (\GenesisID, \TxType, r_1, r_2, I, I', I_0, f, a, N, \pk)$$
+$$\Tx = (\GenesisID, \TxType, r_1, r_2, I, I', I_0, f, a, N, \pk, \nonpart)$$
 to be valid at the intermediate state $\rho$ in round $r$ for the genesis
 identifier $\GenesisID_B$, the following conditions must all hold:
 
@@ -483,6 +488,9 @@ identifier $\GenesisID_B$, the following conditions must all hold:
     - $I \neq I_k$ or both $I' \neq I_{pool}$ and $I_0 \neq 0$.
     - $\Stake(r+1, I) - f > a$ if $I' \neq I$ and $I' \neq 0$.
     - If $I_0 \neq 0$, then $I_0 \neq I$.
+ - If $\TxType$ is "keyreg",
+    - $p_{\rho, I} \ne 2$ (i.e., nonparticipatory accounts may not issue keyreg transactions)
+    - If $\nonpart$ is true then $\pk = 0$
 
 Given that a transaction is valid, it produces the following updated account
 state for intermediate state $\rho+1$:
@@ -496,9 +504,12 @@ state for intermediate state $\rho+1$:
         - $a'_{\rho+1, I} = T_{r+1}$.
         - $a^*_{\rho+1, I} = a^*_{\rho, I} +
                              (T_{r+1} - a'_{\rho, I}) \floor{\frac{a_{\rho, I}}{A}}$.
-        - $\pk_{\rho+1, I} = \pk_{\rho, I}$ and $p_{\rho+1, I} = p_{\rho, I}$ if $\TxType$ is
-          "pay"; otherwise, $\pk_{\rho+1, I} = \pk$, and $p_{\rho, I} = 0$ if $\pk = 0$
-          and $p_{\rho, I} = 1$ otherwise.
+        - If $\TxType$ is "pay", then $\pk_{\rho+1, I} = \pk_{\rho, I}$ and $p_{\rho+1, I} = p_{\rho, I}$
+        - Otherwise (i.e., if $\TxType$ is "keyreg"),
+            - $\pk_{\rho+1, I} = \pk$
+            - $p_{\rho+1, I} = 0$ if $\pk = 0$ and $\nonpart = \text{false}$
+            - $p_{\rho+1, I} = 2$ if $\pk = 0$ and $\nonpart = \text{true}$
+            - $p_{\rho+1, I} = 1$ if $\pk \ne 0$.
 
  - For $I'$ if $I \neq I'$ and either $I' \neq 0$ or $a \neq 0$:
     - $a_{\rho+1, I'} = \Stake(\rho+1, I') + a$.
