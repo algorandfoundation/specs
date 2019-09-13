@@ -12,7 +12,7 @@ Overview
 An algorand node uses two kind of cryptographic keys:
 
  - _participation keys_, a set of keys used for authentication, i.e. identify an 
-    account. Algorand uses a two\-level ephemeral signature scheme that 
+    account. Algorand uses a hierarchical (two\-level) identity encryption scheme that 
     ensures [forward security](https://en.wikipedia.org/wiki/Forward_secrecy), 
     which will be detailed in next section. 
 
