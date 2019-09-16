@@ -22,6 +22,7 @@ The Algorand Ledger is parameterized by the following values:
  - $f_{\min}$, the minimum processing fee for any transaction.
  - $V_{\max}$, the maximum length of protocol version strings.
  - $N_{\max}$, the maximum length of a transaction note string.
+ - $G_{\max}$, the maximum number of transactions allowed in a transaction group.
  - $\tau$, the number of votes needed to execute a protocol upgrade.
  - $\delta_d$, the number of rounds over with an upgrade proposal is open.
  - $\delta_x$, the number of rounds needed to prepare for an upgrade.
@@ -341,8 +342,12 @@ transaction contains the following fields:
  - The _genesis hash_ $\GenesisHash$ of the ledger for which this
    transaction is valid.  The $\GenesisHash$ is required.
 
+ - The _group_ $grp$, an optional 32-byte hash whose meaning is described in
+   the [Transaction Groups][Transaction Groups] section below.
+
  - The _note_ $N$, a sequence of bytes with length at most $N_{\max}$ which
    contains arbitrary data.
+
 
 A payment transaction additionally has the following fields:
 
@@ -458,6 +463,37 @@ $$\TxTail_{r+1} = \TxTail_r \setminus
 The transaction tail is part of the ledger state but is distinct from the
 account state and is not committed to in the block.
 
+
+Transaction Groups
+------------------
+
+A transaction may include a "Group" field (msgpack tag "grp"), a 32-byte hash
+that specifies what _transaction group_ the transaction belongs to.
+Informally, a transaction group is an ordered list of transactions that, in
+order to be confirmed at all, must all be confirmed together, in order, in the
+same block. The "Group" field in each transaction is set to what is essentially
+the hash of the list of transaction hashes in the group, except to avoid
+circularity, when hashing a transaction it is hashed with its "Group" field
+omitted. In this way a user wanting to require transaction A to confirm if and
+only if transactions B and C confirm can take the hashes of transactions A, B,
+and C (without the "Group" field set), hash them together, and set the "Group"
+field of all three transactions to that hash before signing them.
+A group may contain no more than $G_{max}$ transactions.
+
+More formally, when evaluating a block, consider the $i$th and $(i+1)$th
+transaction in the payset to belong to the same _transaction group_ if the
+"Group" fields of the two transactions are equal and nonzero.  The block may
+now be viewed as an ordered sequence of transaction groups, where each
+transaction group is a contiguous sublist of the payset consisting of one or
+more transactions with equal "Group" field.  For each transaction group where
+the transactions have nonzero "Group", compute the _TxGroup hash_ as follows:
+
+ - Take the hash of each transaction in the group but with its "Group" field omitted.
+ - Hash this ordered list of hashes -- more precisely, hash the canonical msgpack encoding of a struct with a field "txlist" containing the list of hashes, using "TG" as domain separation prefix.
+
+If the TxGroup hash of any transaction group in a block does not match the "Group" field of the transactions in that group (and that "Group" field is nonzero), then the block is invalid.
+
+Additionally, if a block contains a transaction group of more than $G_{max}$ transactions, the block is invalid.
 
 Validity and State Changes
 --------------------------
