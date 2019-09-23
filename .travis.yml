@@ -1,0 +1,20 @@
+language: minimal
+os: linux
+before_install:
+- sudo apt-get update -qq
+install:
+- sudo apt-get install -qq pandoc texlive-latex-base lmodern texlive-fonts-recommended
+before_script: cd dev
+script:
+- mkdir -p ./{pdf,html}
+- make
+- tar -czvf spec.tar.gz html pdf
+deploy:
+  provider: releases
+  skip_cleanup: true
+  file: spec.tar.gz
+  api_key:
+    secure: zagIN7eVcEAXFva1DjRKQ+8Y5bWrC+VMeimMdRvCmiCorTac/r6SNrY2vElH8AnWyhDdWgHlGprgADGYU3Gtu2X4HzJMmLAQ94VQgTl7AK2IOk9smFS5Modw1xiLBbDTO/t00sZJ8N5YRVlGDv0rNaEpLCw1zmMdgRYCULn9tjT2g5AFydy4KtbgZNrQQFEjAwqp6m9KJmfJpfEtdQxcKf4OPqMcTqAvpLXPNtkVIKE09DSck/HXaa6zYzbwR14Fwz2275/TtsNWmr1oe4OIhTPGGhwQIxjUOYP/YPPSapdNwWV4k6mcyAYniCSyAwuqlPreidU8fOvgilFMYZWPRsiocrLoDIuvAeJLxbzmnqri/qt+3xbLoN4c3GhmgbbHoaaJe9y3K1/ku4UWMCLTQG7hIxS/4ey2WLfuIxq2Rqmze/uIpd9Hn/X9Bu1faXOZLqB3qQT6KfMoe02cA6mkbiZ3EWV8X3G/+q6ClrcZDniAGAXlQX3z1vwYTXz0wwSEXkMAcWPzt2M/JFfTmts+xwaNPNJUcYDV01o1bVwaxp4zmKvcduO1akRDKnUdmL4FAoMhPwP+cogmmJIN1flANSAiwUY/XSTJThtBQbPTLogQbDmKUA3hKwOC84nRUrUBDQJj5exjkdKVndqQs6g7U7ok1+CvdChjflyIgwWmikU=
+  on:
+    repo: winder/specs
+    branch: master
