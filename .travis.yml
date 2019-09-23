@@ -11,6 +11,7 @@ script:
 - tar -czvf spec.tar.gz html pdf
 deploy:
   provider: releases
+  name: ${TRAVIS_COMMIT}
   skip_cleanup: true
   file: spec.tar.gz
   api_key:
