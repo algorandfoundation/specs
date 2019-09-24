@@ -368,8 +368,9 @@ A key registration transaction additionally has the following fields:
 The cryptographic hash of the fields above is called the _transaction
 identifier_.  This is written as $\Hash(\Tx)$.
 
-A valid transaction can either be a _signed_ transaction or a _multi-signed_
-transaction.  This is determined by the _signature_ of a transaction:
+A valid transaction can either be a _signed_ transaction, a _multi-signed_
+transaction, or a _logic-signed_ transaction.
+This is determined by the _signature_ of a transaction:
 
  - A valid signed transaction's signature is a 64-byte sequence which validates
    under the sender of the transaction.

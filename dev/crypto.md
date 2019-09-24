@@ -70,6 +70,7 @@ below specifies each prefix (in quotation marks):
     - "NPR": A message which proves a peer's stake in an Algorand
       networking implementation.
     - "TE": An arbitrary message reserved for testing purposes.
+    - "Program": A TEAL bytecode program.
     - In Algorand auctions:
        - "aB": A _Bid_.
        - "aD": A _Deposit_.
