@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Algorand Transaction Execution Approval Language, Opcodes</title>
+  <style>
+      code{white-space: pre-wrap;}
+      span.smallcaps{font-variant: small-caps;}
+      span.underline{text-decoration: underline;}
+      div.column{display: inline-block; vertical-align: top; width: 50%;}
+  </style>
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">Algorand Transaction Execution Approval Language, Opcodes</h1>
+</header>
+<nav id="TOC" role="doc-toc">
+<ul>
+<li><a href="#opcodes">Opcodes</a><ul>
+<li><a href="#err">err</a></li>
+<li><a href="#sha256">sha256</a></li>
+<li><a href="#keccak256">keccak256</a></li>
+<li><a href="#sha512_256">sha512_256</a></li>
+<li><a href="#ed25519verify">ed25519verify</a></li>
+<li><a href="#rand">rand</a></li>
+<li><a href="#section">+</a></li>
+<li><a href="#section-1">-</a></li>
+<li><a href="#section-2">/</a></li>
+<li><a href="#section-3">*</a></li>
+<li><a href="#section-4">&lt;</a></li>
+<li><a href="#section-5">&gt;</a></li>
+<li><a href="#section-6">&lt;=</a></li>
+<li><a href="#section-7">&gt;=</a></li>
+<li><a href="#section-8">&amp;&amp;</a></li>
+<li><a href="#section-9">||</a></li>
+<li><a href="#section-10">==</a></li>
+<li><a href="#section-11">!=</a></li>
+<li><a href="#section-12">!</a></li>
+<li><a href="#len">len</a></li>
+<li><a href="#btoi">btoi</a></li>
+<li><a href="#section-13">%</a></li>
+<li><a href="#section-14">|</a></li>
+<li><a href="#section-15">&amp;</a></li>
+<li><a href="#section-16">^</a></li>
+<li><a href="#section-17">~</a></li>
+<li><a href="#intcblock">intcblock</a></li>
+<li><a href="#intc">intc</a></li>
+<li><a href="#intc_0">intc_0</a></li>
+<li><a href="#intc_1">intc_1</a></li>
+<li><a href="#intc_2">intc_2</a></li>
+<li><a href="#intc_3">intc_3</a></li>
+<li><a href="#bytecblock">bytecblock</a></li>
+<li><a href="#bytec">bytec</a></li>
+<li><a href="#bytec_0">bytec_0</a></li>
+<li><a href="#bytec_1">bytec_1</a></li>
+<li><a href="#bytec_2">bytec_2</a></li>
+<li><a href="#bytec_3">bytec_3</a></li>
+<li><a href="#arg">arg</a></li>
+<li><a href="#arg_0">arg_0</a></li>
+<li><a href="#arg_1">arg_1</a></li>
+<li><a href="#arg_2">arg_2</a></li>
+<li><a href="#arg_3">arg_3</a></li>
+<li><a href="#txn">txn</a></li>
+<li><a href="#global">global</a></li>
+<li><a href="#gtxn">gtxn</a></li>
+<li><a href="#load">load</a></li>
+<li><a href="#store">store</a></li>
+<li><a href="#bnz">bnz</a></li>
+<li><a href="#pop">pop</a></li>
+<li><a href="#dup">dup</a></li>
+</ul></li>
+</ul>
+</nav>
+<h1 id="opcodes">Opcodes</h1>
+<p>Ops have a ‘cost’ of 1 unless otherwise specified.</p>
+<h2 id="err">err</h2>
+<ul>
+<li>Opcode: 0x00</li>
+<li>Pops: <em>None</em></li>
+<li>Pushes: <em>None</em></li>
+<li>Error. Panic immediately. This is primarily a fencepost against accidental zero bytes getting compiled into programs.</li>
+</ul>
+<h2 id="sha256">sha256</h2>
+<ul>
+<li>Opcode: 0x01</li>
+<li>Pops: <em>… stack</em>, []byte</li>
+<li>Pushes: []byte</li>
+<li>SHA256 hash of value, yields [32]byte</li>
+<li><strong>Cost</strong>: 7</li>
+</ul>
+<h2 id="keccak256">keccak256</h2>
+<ul>
+<li>Opcode: 0x02</li>
+<li>Pops: <em>… stack</em>, []byte</li>
+<li>Pushes: []byte</li>
+<li>Keccac256 hash of value, yields [32]byte</li>
+<li><strong>Cost</strong>: 26</li>
+</ul>
+<h2 id="sha512_256">sha512_256</h2>
+<ul>
+<li>Opcode: 0x03</li>
+<li>Pops: <em>… stack</em>, []byte</li>
+<li>Pushes: []byte</li>
+<li>SHA512_256 hash of value, yields [32]byte</li>
+<li><strong>Cost</strong>: 9</li>
+</ul>
+<h2 id="ed25519verify">ed25519verify</h2>
+<ul>
+<li>Opcode: 0x04</li>
+<li>Pops: <em>… stack</em>, {[]byte A}, {[]byte B}, {[]byte C}</li>
+<li>Pushes: uint64</li>
+<li>for (data, signature, pubkey) verify the signature of the data against the pubkey =&gt; {0 or 1}</li>
+<li><strong>Cost</strong>: 1900</li>
+</ul>
+<h2 id="rand">rand</h2>
+<ul>
+<li>Opcode: 0x05</li>
+<li>Pops: <em>None</em></li>
+<li>Pushes: uint64</li>
+<li>push random uint64 to stack</li>
+<li><strong>Cost</strong>: 3</li>
+</ul>
+<p>Random number generator based on the ChaCha20 algorithm. Seeded with the previous block’s <code>Seed</code> value and the current transaction ID.</p>
+<h2 id="section">+</h2>
+<ul>
+<li>Opcode: 0x08</li>
+<li>Pops: <em>… stack</em>, {uint64 A}, {uint64 B}</li>
+<li>Pushes: uint64</li>
+<li>A plus B. Panic on overflow.</li>
+</ul>
+<h2 id="section-1">-</h2>
+<ul>
+<li>Opcode: 0x09</li>
+<li>Pops: <em>… stack</em>, {uint64 A}, {uint64 B}</li>
+<li>Pushes: uint64</li>
+<li>A minus B. Panic if B &gt; A.</li>
+</ul>
+<h2 id="section-2">/</h2>
+<ul>
+<li>Opcode: 0x0a</li>
+<li>Pops: <em>… stack</em>, {uint64 A}, {uint64 B}</li>
+<li>Pushes: uint64</li>
+<li>A divided by B. Panic if B == 0.</li>
+</ul>
+<h2 id="section-3">*</h2>
+<ul>
+<li>Opcode: 0x0b</li>
+<li>Pops: <em>… stack</em>, {uint64 A}, {uint64 B}</li>
+<li>Pushes: uint64</li>
+<li>A times B. Panic on overflow.</li>
+</ul>
+<p>It is worth noting that there are 10,000,000,000,000,000 micro-Algos in the total supply, or a bit less than 2^54. When doing rational math, e.g. (A * (N/D)) as ((A * N) / D) one should limit the numerator to less than 2^10 to be completely sure there won’t be overflow.</p>
+<h2 id="section-4">&lt;</h2>
+<ul>
+<li>Opcode: 0x0c</li>
+<li>Pops: <em>… stack</em>, {uint64 A}, {uint64 B}</li>
+<li>Pushes: uint64</li>
+<li>A less than B =&gt; {0 or 1}</li>
+</ul>
+<h2 id="section-5">&gt;</h2>
+<ul>
+<li>Opcode: 0x0d</li>
+<li>Pops: <em>… stack</em>, {uint64 A}, {uint64 B}</li>
+<li>Pushes: uint64</li>
+<li>A greater than B =&gt; {0 or 1}</li>
+</ul>
+<h2 id="section-6">&lt;=</h2>
+<ul>
+<li>Opcode: 0x0e</li>
+<li>Pops: <em>… stack</em>, {uint64 A}, {uint64 B}</li>
+<li>Pushes: uint64</li>
+<li>A less than or equal to B =&gt; {0 or 1}</li>
+</ul>
+<h2 id="section-7">&gt;=</h2>
+<ul>
+<li>Opcode: 0x0f</li>
+<li>Pops: <em>… stack</em>, {uint64 A}, {uint64 B}</li>
+<li>Pushes: uint64</li>
+<li>A greater than or equal to B =&gt; {0 or 1}</li>
+</ul>
+<h2 id="section-8">&amp;&amp;</h2>
+<ul>
+<li>Opcode: 0x10</li>
+<li>Pops: <em>… stack</em>, {uint64 A}, {uint64 B}</li>
+<li>Pushes: uint64</li>
+<li>A is not zero and B is not zero =&gt; {0 or 1}</li>
+</ul>
+<h2 id="section-9">||</h2>
+<ul>
+<li>Opcode: 0x11</li>
+<li>Pops: <em>… stack</em>, {uint64 A}, {uint64 B}</li>
+<li>Pushes: uint64</li>
+<li>A is not zero or B is not zero =&gt; {0 or 1}</li>
+</ul>
+<h2 id="section-10">==</h2>
+<ul>
+<li>Opcode: 0x12</li>
+<li>Pops: <em>… stack</em>, {any A}, {any B}</li>
+<li>Pushes: uint64</li>
+<li>A is equal to B =&gt; {0 or 1}</li>
+</ul>
+<h2 id="section-11">!=</h2>
+<ul>
+<li>Opcode: 0x13</li>
+<li>Pops: <em>… stack</em>, {any A}, {any B}</li>
+<li>Pushes: uint64</li>
+<li>A is not equal to B =&gt; {0 or 1}</li>
+</ul>
+<h2 id="section-12">!</h2>
+<ul>
+<li>Opcode: 0x14</li>
+<li>Pops: <em>… stack</em>, uint64</li>
+<li>Pushes: uint64</li>
+<li>X == 0 yields 1; else 0</li>
+</ul>
+<h2 id="len">len</h2>
+<ul>
+<li>Opcode: 0x15</li>
+<li>Pops: <em>… stack</em>, []byte</li>
+<li>Pushes: uint64</li>
+<li>yields length of byte value</li>
+</ul>
+<h2 id="btoi">btoi</h2>
+<ul>
+<li>Opcode: 0x17</li>
+<li>Pops: <em>… stack</em>, []byte</li>
+<li>Pushes: uint64</li>
+<li>converts bytes as big endian to uint64</li>
+</ul>
+<h2 id="section-13">%</h2>
+<ul>
+<li>Opcode: 0x18</li>
+<li>Pops: <em>… stack</em>, {uint64 A}, {uint64 B}</li>
+<li>Pushes: uint64</li>
+<li>A modulo B. Panic if B == 0.</li>
+</ul>
+<h2 id="section-14">|</h2>
+<ul>
+<li>Opcode: 0x19</li>
+<li>Pops: <em>… stack</em>, {uint64 A}, {uint64 B}</li>
+<li>Pushes: uint64</li>
+<li>A bitwise-or B</li>
+</ul>
+<h2 id="section-15">&amp;</h2>
+<ul>
+<li>Opcode: 0x1a</li>
+<li>Pops: <em>… stack</em>, {uint64 A}, {uint64 B}</li>
+<li>Pushes: uint64</li>
+<li>A bitwise-and B</li>
+</ul>
+<h2 id="section-16">^</h2>
+<ul>
+<li>Opcode: 0x1b</li>
+<li>Pops: <em>… stack</em>, {uint64 A}, {uint64 B}</li>
+<li>Pushes: uint64</li>
+<li>A bitwise-xor B</li>
+</ul>
+<h2 id="section-17">~</h2>
+<ul>
+<li>Opcode: 0x1c</li>
+<li>Pops: <em>… stack</em>, uint64</li>
+<li>Pushes: uint64</li>
+<li>bitwise invert value</li>
+</ul>
+<h2 id="intcblock">intcblock</h2>
+<ul>
+<li>Opcode: 0x20 {varuint length} [{varuint value}, …]</li>
+<li>Pops: <em>None</em></li>
+<li>Pushes: <em>None</em></li>
+<li>load block of uint64 constants</li>
+</ul>
+<p><code>intcblock</code> loads following program bytes into an array of integer constants in the evaluator. These integer constants can be referred to by <code>intc</code> and <code>intc_*</code> which will push the value onto the stack.</p>
+<h2 id="intc">intc</h2>
+<ul>
+<li>Opcode: 0x21 {uint8 int constant index}</li>
+<li>Pops: <em>None</em></li>
+<li>Pushes: uint64</li>
+<li>push value from uint64 constants to stack by index into constants</li>
+</ul>
+<h2 id="intc_0">intc_0</h2>
+<ul>
+<li>Opcode: 0x22</li>
+<li>Pops: <em>None</em></li>
+<li>Pushes: uint64</li>
+<li>push uint64 constant 0 to stack</li>
+</ul>
+<h2 id="intc_1">intc_1</h2>
+<ul>
+<li>Opcode: 0x23</li>
+<li>Pops: <em>None</em></li>
+<li>Pushes: uint64</li>
+<li>push uint64 constant 1 to stack</li>
+</ul>
+<h2 id="intc_2">intc_2</h2>
+<ul>
+<li>Opcode: 0x24</li>
+<li>Pops: <em>None</em></li>
+<li>Pushes: uint64</li>
+<li>push uint64 constant 2 to stack</li>
+</ul>
+<h2 id="intc_3">intc_3</h2>
+<ul>
+<li>Opcode: 0x25</li>
+<li>Pops: <em>None</em></li>
+<li>Pushes: uint64</li>
+<li>push uint64 constant 3 to stack</li>
+</ul>
+<h2 id="bytecblock">bytecblock</h2>
+<ul>
+<li>Opcode: 0x26 {varuint length} [({varuint value length} bytes), …]</li>
+<li>Pops: <em>None</em></li>
+<li>Pushes: <em>None</em></li>
+<li>load block of byte-array constants</li>
+</ul>
+<p><code>bytecblock</code> loads the following program bytes into an array of byte string constants in the evaluator. These constants can be referred to by <code>bytec</code> and <code>bytec_*</code> which will push the value onto the stack.</p>
+<h2 id="bytec">bytec</h2>
+<ul>
+<li>Opcode: 0x27 {uint8 byte constant index}</li>
+<li>Pops: <em>None</em></li>
+<li>Pushes: []byte</li>
+<li>push bytes constant to stack by index into constants</li>
+</ul>
+<h2 id="bytec_0">bytec_0</h2>
+<ul>
+<li>Opcode: 0x28</li>
+<li>Pops: <em>None</em></li>
+<li>Pushes: []byte</li>
+<li>push bytes constant 0 to stack</li>
+</ul>
+<h2 id="bytec_1">bytec_1</h2>
+<ul>
+<li>Opcode: 0x29</li>
+<li>Pops: <em>None</em></li>
+<li>Pushes: []byte</li>
+<li>push bytes constant 1 to stack</li>
+</ul>
+<h2 id="bytec_2">bytec_2</h2>
+<ul>
+<li>Opcode: 0x2a</li>
+<li>Pops: <em>None</em></li>
+<li>Pushes: []byte</li>
+<li>push bytes constant 2 to stack</li>
+</ul>
+<h2 id="bytec_3">bytec_3</h2>
+<ul>
+<li>Opcode: 0x2b</li>
+<li>Pops: <em>None</em></li>
+<li>Pushes: []byte</li>
+<li>push bytes constant 3 to stack</li>
+</ul>
+<h2 id="arg">arg</h2>
+<ul>
+<li>Opcode: 0x2c {uint8 arg index N}</li>
+<li>Pops: <em>None</em></li>
+<li>Pushes: []byte</li>
+<li>push LogicSig.Args[N] value to stack by index</li>
+</ul>
+<h2 id="arg_0">arg_0</h2>
+<ul>
+<li>Opcode: 0x2d</li>
+<li>Pops: <em>None</em></li>
+<li>Pushes: []byte</li>
+<li>push LogicSig.Args[0] to stack</li>
+</ul>
+<h2 id="arg_1">arg_1</h2>
+<ul>
+<li>Opcode: 0x2e</li>
+<li>Pops: <em>None</em></li>
+<li>Pushes: []byte</li>
+<li>push LogicSig.Args[1] to stack</li>
+</ul>
+<h2 id="arg_2">arg_2</h2>
+<ul>
+<li>Opcode: 0x2f</li>
+<li>Pops: <em>None</em></li>
+<li>Pushes: []byte</li>
+<li>push LogicSig.Args[2] to stack</li>
+</ul>
+<h2 id="arg_3">arg_3</h2>
+<ul>
+<li>Opcode: 0x30</li>
+<li>Pops: <em>None</em></li>
+<li>Pushes: []byte</li>
+<li>push LogicSig.Args[3] to stack</li>
+</ul>
+<h2 id="txn">txn</h2>
+<ul>
+<li>Opcode: 0x31 {uint8 transaction field index}</li>
+<li>Pops: <em>None</em></li>
+<li>Pushes: any</li>
+<li>push field from current transaction to stack</li>
+</ul>
+<p>Most fields are a simple copy of a uint64 or byte string value. <code>XferAsset</code> is the concatenation of the AssetID Creator Address (32 bytes) and the big-endian bytes of the uint64 AssetID Index for a total of 40 bytes.</p>
+<p><code>txn</code> Fields:</p>
+<table>
+<thead>
+<tr class="header">
+<th>Index</th>
+<th>Name</th>
+<th>Type</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>0</td>
+<td>Sender</td>
+<td>[]byte</td>
+</tr>
+<tr class="even">
+<td>1</td>
+<td>Fee</td>
+<td>uint64</td>
+</tr>
+<tr class="odd">
+<td>2</td>
+<td>FirstValid</td>
+<td>uint64</td>
+</tr>
+<tr class="even">
+<td>3</td>
+<td>LastValid</td>
+<td>uint64</td>
+</tr>
+<tr class="odd">
+<td>4</td>
+<td>Note</td>
+<td>[]byte</td>
+</tr>
+<tr class="even">
+<td>5</td>
+<td>Receiver</td>
+<td>[]byte</td>
+</tr>
+<tr class="odd">
+<td>6</td>
+<td>Amount</td>
+<td>uint64</td>
+</tr>
+<tr class="even">
+<td>7</td>
+<td>CloseRemainderTo</td>
+<td>[]byte</td>
+</tr>
+<tr class="odd">
+<td>8</td>
+<td>VotePK</td>
+<td>[]byte</td>
+</tr>
+<tr class="even">
+<td>9</td>
+<td>SelectionPK</td>
+<td>[]byte</td>
+</tr>
+<tr class="odd">
+<td>10</td>
+<td>VoteFirst</td>
+<td>uint64</td>
+</tr>
+<tr class="even">
+<td>11</td>
+<td>VoteLast</td>
+<td>uint64</td>
+</tr>
+<tr class="odd">
+<td>12</td>
+<td>VoteKeyDilution</td>
+<td>uint64</td>
+</tr>
+<tr class="even">
+<td>13</td>
+<td>Type</td>
+<td>[]byte</td>
+</tr>
+<tr class="odd">
+<td>14</td>
+<td>TypeEnum</td>
+<td>uint64</td>
+</tr>
+<tr class="even">
+<td>15</td>
+<td>XferAsset</td>
+<td>[]byte</td>
+</tr>
+<tr class="odd">
+<td>16</td>
+<td>AssetAmount</td>
+<td>uint64</td>
+</tr>
+<tr class="even">
+<td>17</td>
+<td>AssetSender</td>
+<td>[]byte</td>
+</tr>
+<tr class="odd">
+<td>18</td>
+<td>AssetReceiver</td>
+<td>[]byte</td>
+</tr>
+<tr class="even">
+<td>19</td>
+<td>AssetCloseTo</td>
+<td>[]byte</td>
+</tr>
+<tr class="odd">
+<td>20</td>
+<td>GroupIndex</td>
+<td>uint64</td>
+</tr>
+</tbody>
+</table>
+<p>TypeEnum mapping:</p>
+<table>
+<thead>
+<tr class="header">
+<th>Index</th>
+<th>Name</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>0</td>
+<td>unknown</td>
+</tr>
+<tr class="even">
+<td>1</td>
+<td>pay</td>
+</tr>
+<tr class="odd">
+<td>2</td>
+<td>keyreg</td>
+</tr>
+<tr class="even">
+<td>3</td>
+<td>acfg</td>
+</tr>
+<tr class="odd">
+<td>4</td>
+<td>axfer</td>
+</tr>
+<tr class="even">
+<td>5</td>
+<td>afrz</td>
+</tr>
+</tbody>
+</table>
+<h2 id="global">global</h2>
+<ul>
+<li>Opcode: 0x32 {uint8 global field index}</li>
+<li>Pops: <em>None</em></li>
+<li>Pushes: any</li>
+<li>push value from globals to stack</li>
+</ul>
+<p><code>global</code> Fields:</p>
+<table>
+<thead>
+<tr class="header">
+<th>Index</th>
+<th>Name</th>
+<th>Type</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>0</td>
+<td>Round</td>
+<td>uint64</td>
+</tr>
+<tr class="even">
+<td>1</td>
+<td>MinTxnFee</td>
+<td>uint64</td>
+</tr>
+<tr class="odd">
+<td>2</td>
+<td>MinBalance</td>
+<td>uint64</td>
+</tr>
+<tr class="even">
+<td>3</td>
+<td>MaxTxnLife</td>
+<td>uint64</td>
+</tr>
+<tr class="odd">
+<td>4</td>
+<td>TimeStamp</td>
+<td>uint64</td>
+</tr>
+<tr class="even">
+<td>5</td>
+<td>ZeroAddress</td>
+<td>[]byte</td>
+</tr>
+<tr class="odd">
+<td>6</td>
+<td>GroupSize</td>
+<td>uint64</td>
+</tr>
+</tbody>
+</table>
+<h2 id="gtxn">gtxn</h2>
+<ul>
+<li>Opcode: 0x33 {uint8 transaction group index}{uint8 transaction field index}</li>
+<li>Pops: <em>None</em></li>
+<li>Pushes: any</li>
+<li>push field to the stack from a transaction in the current transaction group</li>
+</ul>
+<p>for notes on transaction fields available, see <code>txn</code></p>
+<h2 id="load">load</h2>
+<ul>
+<li>Opcode: 0x34 {uint8 position in scratch space to load from}</li>
+<li>Pops: <em>None</em></li>
+<li>Pushes: any</li>
+<li>copy a value from scratch space to the stack</li>
+</ul>
+<h2 id="store">store</h2>
+<ul>
+<li>Opcode: 0x35 {uint8 position in scratch space to store to}</li>
+<li>Pops: <em>… stack</em>, any</li>
+<li>Pushes: <em>None</em></li>
+<li>pop a value from the stack and store to scratch space</li>
+</ul>
+<h2 id="bnz">bnz</h2>
+<ul>
+<li>Opcode: 0x40 {0..0x7fff forward branch offset, big endian}</li>
+<li>Pops: <em>… stack</em>, uint64</li>
+<li>Pushes: <em>None</em></li>
+<li>branch if value is not zero</li>
+</ul>
+<p>for a bnz instruction at <code>pc</code>, if the last element of the stack is not zero then branch to instruction at <code>pc + 3 + N</code>, else proceed to next instruction at <code>pc + 3</code></p>
+<h2 id="pop">pop</h2>
+<ul>
+<li>Opcode: 0x48</li>
+<li>Pops: <em>… stack</em>, any</li>
+<li>Pushes: <em>None</em></li>
+<li>discard value from stack</li>
+</ul>
+<h2 id="dup">dup</h2>
+<ul>
+<li>Opcode: 0x49</li>
+<li>Pops: <em>… stack</em>, any</li>
+<li>Pushes: any, any</li>
+<li>duplicate last value on stack</li>
+</ul>
+</body>
+</html>

@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Algorand Transaction Execution Approval Language</title>
+  <style>
+      code{white-space: pre-wrap;}
+      span.smallcaps{font-variant: small-caps;}
+      span.underline{text-decoration: underline;}
+      div.column{display: inline-block; vertical-align: top; width: 50%;}
+  </style>
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">Algorand Transaction Execution Approval Language</h1>
+</header>
+<nav id="TOC" role="doc-toc">
+<ul>
+<li><a href="#transaction-execution-approval-language-teal">Transaction Execution Approval Language (TEAL)</a><ul>
+<li><a href="#the-stack">The Stack</a></li>
+<li><a href="#scratch-space">Scratch Space</a></li>
+<li><a href="#execution-environment">Execution Environment</a></li>
+<li><a href="#constants">Constants</a></li>
+<li><a href="#operations">Operations</a><ul>
+<li><a href="#arithmetic">Arithmetic</a></li>
+<li><a href="#loading-values">Loading Values</a></li>
+<li><a href="#flow-control">Flow Control</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#assembler-syntax">Assembler Syntax</a><ul>
+<li><a href="#constants-and-pseudo-ops">Constants and Pseudo-Ops</a></li>
+<li><a href="#labels-and-branches">Labels and Branches</a></li>
+</ul></li>
+<li><a href="#encoding-and-versioning">Encoding and Versioning</a><ul>
+<li><a href="#varuint">Varuint</a></li>
+</ul></li>
+</ul>
+</nav>
+<h1 id="transaction-execution-approval-language-teal">Transaction Execution Approval Language (TEAL)</h1>
+<p>TEAL is a bytecode based stack language that executes inside Algorand transactions to check the parameters of the transaction and approve the transaction as if by a signature.</p>
+<p>TEAL programs should be short, at most 1000 bytes including all constants and operations, and run fast as they are run in-line along with signature checking, transaction balance rule checking, and other checks during block assembly and validation.</p>
+<h2 id="the-stack">The Stack</h2>
+<p>The stack starts empty and contains values of either uint64 or bytes. (<code>bytes</code> implemented in Go as a []byte slice) Most operations act on the stack, popping arguments from it and pushing results to it.</p>
+<p>The maximum stack depth is currently 1000.</p>
+<h2 id="scratch-space">Scratch Space</h2>
+<p>In addition to the stack there are 256 positions of scratch space, also uint64-bytes union values, accessed by the <code>load</code> and <code>store</code> ops moving data from or to scratch space, respectively.</p>
+<h2 id="execution-environment">Execution Environment</h2>
+<p>TEAL runs in Algorand nodes as part of testing a proposed transaction to see if it is valid and authorized to be committed into a block. If an authorized program executes and finishes with a single non-zero uint64 value on the stack then that program has validated the transaction it is attached to.</p>
+<p>A program is an authorized program one of two ways: The SHA512_256 hash of the program (prefixed by “Program”) is equal to the transaction Sender address; OR the program (prefixed by “Program”) has a valid signature or multi-signature from the transaction Sender address.</p>
+<p>The TEAL bytecode plus the length of any Args must add up to less than 1000 bytes. Each TEAL op has an associated cost estimate and the program cost estimate must total less than 20000. Most ops have an estimated cost of 1, but a few slow crypto ops are much higher.</p>
+<p>The TEAL program has access to data from the transaction it is attached to, any transactions in a transaction group it is part of, and a few global values like the current Round number, block Timestamp, and some consensus paramaters.</p>
+<h2 id="constants">Constants</h2>
+<p>Constants are loaded into the environment into storage separate from the stack. They can then be pushed onto the stack by referring to the type and index. This makes for efficient re-use of byte constants used for account addresses, etc.</p>
+<p>The assembler will hide most of this, allowing simple use of <code>int 1234</code> and <code>byte 0xcafed00d</code>. These constants will automatically get assembled into int and byte pages of constants, de-duplicated, and operations to load them from constant storage space inserted.</p>
+<p>Constants are loaded into the environment by two opcodes, <code>intcblock</code> and <code>bytecblock</code>. Both of these use <a href="https://developers.google.com/protocol-buffers/docs/encoding#varint">proto-buf style variable length unsigned int</a>, reproduced <a href="#varuint">here</a>. The <code>intcblock</code> opcode is followed by a varuint specifying the length of the array and then that number of varuint. The <code>bytecblock</code> opcode is followed by a varuint array length then that number of pairs of (varuint, bytes) length prefixed byte strings. This should efficiently load 32 and 64 byte constants which will be common as addresses, hashes, and signatures.</p>
+<p>Constants are pushed onto the stack by <code>intc</code>, <code>intc_[0123]</code>, <code>bytec</code>, and <code>bytec_[0123]</code>. The assembler will typically handle converting <code>int N</code> or <code>byte N</code> into the appropriate constant-offset opcode or opcode followed by index byte.</p>
+<h2 id="operations">Operations</h2>
+<p>Most operations work with only one type of argument, uint64 or bytes, and panic if the wrong type value is on the stack.</p>
+<p>This summary is supplemented by more detail in the <a href="TEAL_opcodes.md">opcodes document</a>.</p>
+<p>Some operations ‘panic’ and immediately end execution of the program. A transaction checked a program that panics is not valid.</p>
+<h3 id="arithmetic">Arithmetic</h3>
+<p>For one-argument ops, <code>X</code> is the last element on the stack, which is typically replaced by a new value.</p>
+<p>For two-argument ops, <code>A</code> is the previous element on the stack and <code>B</code> is the last element on the stack. These typically result in popping A and B from the stack and pushing the result.</p>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Op</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>sha256</code></td>
+<td>SHA256 hash of value, yields [32]byte</td>
+</tr>
+<tr class="even">
+<td><code>keccak256</code></td>
+<td>Keccac256 hash of value, yields [32]byte</td>
+</tr>
+<tr class="odd">
+<td><code>sha512_256</code></td>
+<td>SHA512_256 hash of value, yields [32]byte</td>
+</tr>
+<tr class="even">
+<td><code>ed25519verify</code></td>
+<td>for (data, signature, pubkey) verify the signature of the data against the pubkey =&gt; {0 or 1}</td>
+</tr>
+<tr class="odd">
+<td><code>rand</code></td>
+<td>push random uint64 to stack</td>
+</tr>
+<tr class="even">
+<td><code>+</code></td>
+<td>A plus B. Panic on overflow.</td>
+</tr>
+<tr class="odd">
+<td><code>-</code></td>
+<td>A minus B. Panic if B &gt; A.</td>
+</tr>
+<tr class="even">
+<td><code>/</code></td>
+<td>A divided by B. Panic if B == 0.</td>
+</tr>
+<tr class="odd">
+<td><code>*</code></td>
+<td>A times B. Panic on overflow.</td>
+</tr>
+<tr class="even">
+<td><code>&lt;</code></td>
+<td>A less than B =&gt; {0 or 1}</td>
+</tr>
+<tr class="odd">
+<td><code>&gt;</code></td>
+<td>A greater than B =&gt; {0 or 1}</td>
+</tr>
+<tr class="even">
+<td><code>&lt;=</code></td>
+<td>A less than or equal to B =&gt; {0 or 1}</td>
+</tr>
+<tr class="odd">
+<td><code>&gt;=</code></td>
+<td>A greater than or equal to B =&gt; {0 or 1}</td>
+</tr>
+<tr class="even">
+<td><code>&amp;&amp;</code></td>
+<td>A is not zero and B is not zero =&gt; {0 or 1}</td>
+</tr>
+<tr class="odd">
+<td><code>\|\|</code></td>
+<td>A is not zero or B is not zero =&gt; {0 or 1}</td>
+</tr>
+<tr class="even">
+<td><code>==</code></td>
+<td>A is equal to B =&gt; {0 or 1}</td>
+</tr>
+<tr class="odd">
+<td><code>!=</code></td>
+<td>A is not equal to B =&gt; {0 or 1}</td>
+</tr>
+<tr class="even">
+<td><code>!</code></td>
+<td>X == 0 yields 1; else 0</td>
+</tr>
+<tr class="odd">
+<td><code>len</code></td>
+<td>yields length of byte value</td>
+</tr>
+<tr class="even">
+<td><code>btoi</code></td>
+<td>converts bytes as big endian to uint64</td>
+</tr>
+<tr class="odd">
+<td><code>%</code></td>
+<td>A modulo B. Panic if B == 0.</td>
+</tr>
+<tr class="even">
+<td><code>\|</code></td>
+<td>A bitwise-or B</td>
+</tr>
+<tr class="odd">
+<td><code>&amp;</code></td>
+<td>A bitwise-and B</td>
+</tr>
+<tr class="even">
+<td><code>^</code></td>
+<td>A bitwise-xor B</td>
+</tr>
+<tr class="odd">
+<td><code>~</code></td>
+<td>bitwise invert value</td>
+</tr>
+</tbody>
+</table>
+<h3 id="loading-values">Loading Values</h3>
+<p>Opcodes for getting data onto the stack.</p>
+<p>Some of these have immediate data in the byte or bytes after the opcode.</p>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Op</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>intcblock</code></td>
+<td>load block of uint64 constants</td>
+</tr>
+<tr class="even">
+<td><code>intc</code></td>
+<td>push value from uint64 constants to stack by index into constants</td>
+</tr>
+<tr class="odd">
+<td><code>intc_0</code></td>
+<td>push uint64 constant 0 to stack</td>
+</tr>
+<tr class="even">
+<td><code>intc_1</code></td>
+<td>push uint64 constant 1 to stack</td>
+</tr>
+<tr class="odd">
+<td><code>intc_2</code></td>
+<td>push uint64 constant 2 to stack</td>
+</tr>
+<tr class="even">
+<td><code>intc_3</code></td>
+<td>push uint64 constant 3 to stack</td>
+</tr>
+<tr class="odd">
+<td><code>bytecblock</code></td>
+<td>load block of byte-array constants</td>
+</tr>
+<tr class="even">
+<td><code>bytec</code></td>
+<td>push bytes constant to stack by index into constants</td>
+</tr>
+<tr class="odd">
+<td><code>bytec_0</code></td>
+<td>push bytes constant 0 to stack</td>
+</tr>
+<tr class="even">
+<td><code>bytec_1</code></td>
+<td>push bytes constant 1 to stack</td>
+</tr>
+<tr class="odd">
+<td><code>bytec_2</code></td>
+<td>push bytes constant 2 to stack</td>
+</tr>
+<tr class="even">
+<td><code>bytec_3</code></td>
+<td>push bytes constant 3 to stack</td>
+</tr>
+<tr class="odd">
+<td><code>arg</code></td>
+<td>push LogicSig.Args[N] value to stack by index</td>
+</tr>
+<tr class="even">
+<td><code>arg_0</code></td>
+<td>push LogicSig.Args[0] to stack</td>
+</tr>
+<tr class="odd">
+<td><code>arg_1</code></td>
+<td>push LogicSig.Args[1] to stack</td>
+</tr>
+<tr class="even">
+<td><code>arg_2</code></td>
+<td>push LogicSig.Args[2] to stack</td>
+</tr>
+<tr class="odd">
+<td><code>arg_3</code></td>
+<td>push LogicSig.Args[3] to stack</td>
+</tr>
+<tr class="even">
+<td><code>txn</code></td>
+<td>push field from current transaction to stack</td>
+</tr>
+<tr class="odd">
+<td><code>gtxn</code></td>
+<td>push field to the stack from a transaction in the current transaction group</td>
+</tr>
+<tr class="even">
+<td><code>global</code></td>
+<td>push value from globals to stack</td>
+</tr>
+<tr class="odd">
+<td><code>load</code></td>
+<td>copy a value from scratch space to the stack</td>
+</tr>
+<tr class="even">
+<td><code>store</code></td>
+<td>pop a value from the stack and store to scratch space</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Transaction Fields</strong></p>
+<table>
+<thead>
+<tr class="header">
+<th>Index</th>
+<th>Name</th>
+<th>Type</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>0</td>
+<td>Sender</td>
+<td>[]byte</td>
+</tr>
+<tr class="even">
+<td>1</td>
+<td>Fee</td>
+<td>uint64</td>
+</tr>
+<tr class="odd">
+<td>2</td>
+<td>FirstValid</td>
+<td>uint64</td>
+</tr>
+<tr class="even">
+<td>3</td>
+<td>LastValid</td>
+<td>uint64</td>
+</tr>
+<tr class="odd">
+<td>4</td>
+<td>Note</td>
+<td>[]byte</td>
+</tr>
+<tr class="even">
+<td>5</td>
+<td>Receiver</td>
+<td>[]byte</td>
+</tr>
+<tr class="odd">
+<td>6</td>
+<td>Amount</td>
+<td>uint64</td>
+</tr>
+<tr class="even">
+<td>7</td>
+<td>CloseRemainderTo</td>
+<td>[]byte</td>
+</tr>
+<tr class="odd">
+<td>8</td>
+<td>VotePK</td>
+<td>[]byte</td>
+</tr>
+<tr class="even">
+<td>9</td>
+<td>SelectionPK</td>
+<td>[]byte</td>
+</tr>
+<tr class="odd">
+<td>10</td>
+<td>VoteFirst</td>
+<td>uint64</td>
+</tr>
+<tr class="even">
+<td>11</td>
+<td>VoteLast</td>
+<td>uint64</td>
+</tr>
+<tr class="odd">
+<td>12</td>
+<td>VoteKeyDilution</td>
+<td>uint64</td>
+</tr>
+<tr class="even">
+<td>13</td>
+<td>Type</td>
+<td>[]byte</td>
+</tr>
+<tr class="odd">
+<td>14</td>
+<td>TypeEnum</td>
+<td>uint64</td>
+</tr>
+<tr class="even">
+<td>15</td>
+<td>XferAsset</td>
+<td>[]byte</td>
+</tr>
+<tr class="odd">
+<td>16</td>
+<td>AssetAmount</td>
+<td>uint64</td>
+</tr>
+<tr class="even">
+<td>17</td>
+<td>AssetSender</td>
+<td>[]byte</td>
+</tr>
+<tr class="odd">
+<td>18</td>
+<td>AssetReceiver</td>
+<td>[]byte</td>
+</tr>
+<tr class="even">
+<td>19</td>
+<td>AssetCloseTo</td>
+<td>[]byte</td>
+</tr>
+<tr class="odd">
+<td>20</td>
+<td>GroupIndex</td>
+<td>uint64</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Global Fields</strong></p>
+<table>
+<thead>
+<tr class="header">
+<th>Index</th>
+<th>Name</th>
+<th>Type</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>0</td>
+<td>Round</td>
+<td>uint64</td>
+</tr>
+<tr class="even">
+<td>1</td>
+<td>MinTxnFee</td>
+<td>uint64</td>
+</tr>
+<tr class="odd">
+<td>2</td>
+<td>MinBalance</td>
+<td>uint64</td>
+</tr>
+<tr class="even">
+<td>3</td>
+<td>MaxTxnLife</td>
+<td>uint64</td>
+</tr>
+<tr class="odd">
+<td>4</td>
+<td>TimeStamp</td>
+<td>uint64</td>
+</tr>
+<tr class="even">
+<td>5</td>
+<td>ZeroAddress</td>
+<td>[]byte</td>
+</tr>
+<tr class="odd">
+<td>6</td>
+<td>GroupSize</td>
+<td>uint64</td>
+</tr>
+</tbody>
+</table>
+<h3 id="flow-control">Flow Control</h3>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Op</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>err</code></td>
+<td>Error. Panic immediately. This is primarily a fencepost against accidental zero bytes getting compiled into programs.</td>
+</tr>
+<tr class="even">
+<td><code>bnz</code></td>
+<td>branch if value is not zero</td>
+</tr>
+<tr class="odd">
+<td><code>pop</code></td>
+<td>discard value from stack</td>
+</tr>
+<tr class="even">
+<td><code>dup</code></td>
+<td>duplicate last value on stack</td>
+</tr>
+</tbody>
+</table>
+<h1 id="assembler-syntax">Assembler Syntax</h1>
+<p>The assembler parses line by line. Ops that just use the stack appear on a line by themselves. Ops that take arguments are the op and then whitespace and then any argument or arguments.</p>
+<p>“<code>//</code>” prefixes a line comment.</p>
+<h2 id="constants-and-pseudo-ops">Constants and Pseudo-Ops</h2>
+<p>A few pseudo-ops simplify writing code. <code>int</code> and <code>byte</code> and <code>addr</code> followed by a constant record the constant to a <code>intcblock</code> or <code>bytecblock</code> at the beginning of code and insert an <code>intc</code> or <code>bytec</code> reference where the instruction appears to load that value. <code>addr</code> parses an Algorand account address base32 and converts it to a regular bytes constant.</p>
+<p><code>byte</code> constants are:</p>
+<pre><code>byte base64 AAAA...
+byte b64 AAAA...
+byte base64(AAAA...)
+byte b64(AAAA...)
+byte base32 AAAA...
+byte b32 AAAA...
+byte base32(AAAA...)
+byte b32(AAAA...)
+byte 0x0123456789abcdef...</code></pre>
+<p><code>int</code> constants may be <code>0x</code> prefixed for hex, <code>0</code> prefixed for octal, or decimal numbers.</p>
+<p><code>intcblock</code> may be explictily assembled. It will conflict with the assembler gathering <code>int</code> pseudo-ops into a <code>intcblock</code> program prefix, but may be used in code only has explicit <code>intc</code> references. <code>intcblock</code> should be followed by space separated int constants all on one line.</p>
+<p><code>bytecblock</code> may be explicitly assembled. It will conflict with the assembler if there are any <code>byte</code> pseudo-ops but may be used if only explicit <code>bytec</code> references are used. <code>bytecblock</code> should be followed with byte contants all on one line, either ‘encoding value’ pairs (<code>b64 AAA...</code>) or 0x prefix or function-style values (<code>base64(...)</code>).</p>
+<h2 id="labels-and-branches">Labels and Branches</h2>
+<p>A label is defined by any string not some other op or keyword and ending in ‘:’. A label can be an argument (without the trailing ‘:’) to a branch instruction.</p>
+<p>Example:</p>
+<pre><code>int 1
+bnz safe
+err
+safe:
+pop</code></pre>
+<h1 id="encoding-and-versioning">Encoding and Versioning</h1>
+<p>A program starts with a varuint declaring the version of the compiled code. Any addition, removal, or change of opcode behavior increments the version. For the most part opcode behavior should not change, addition will be infrequent (not likely more often than every three months and less often as the language matures), and removal should be very rare.</p>
+<p>For version 1, subsequent bytes after the varuint are program opcode bytes. Future versions could put other metadata following the version identifier.</p>
+<h2 id="varuint">Varuint</h2>
+<p>A ‘<a href="https://developers.google.com/protocol-buffers/docs/encoding#varint">proto-buf style variable length unsigned int</a>’ is encoded with 7 data bits per byte and the high bit is 1 if there is a following byte and 0 for the last byte. The lowest order 7 bits are in the first byte, followed by successively higher groups of 7 bits.</p>
+</body>
+</html>

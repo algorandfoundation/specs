@@ -1,18 +1,26 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-  <meta http-equiv="Content-Style-Type" content="text/css" />
+  <meta charset="utf-8" />
   <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <title>Algorand Ledger State Machine Specification</title>
-  <style type="text/css">code{white-space: pre;}</style>
-  <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_CHTML-full" type="text/javascript"></script>
+  <style>
+      code{white-space: pre-wrap;}
+      span.smallcaps{font-variant: small-caps;}
+      span.underline{text-decoration: underline;}
+      div.column{display: inline-block; vertical-align: top; width: 50%;}
+  </style>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-AMS_CHTML-full" type="text/javascript"></script>
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
 </head>
 <body>
-<div id="header">
+<header id="title-block-header">
 <h1 class="title">Algorand Ledger State Machine Specification</h1>
-</div>
-<div id="TOC">
+</header>
+<nav id="TOC" role="doc-toc">
 <ul>
 <li><a href="#overview">Overview</a><ul>
 <li><a href="#parameters">Parameters</a></li>
@@ -34,7 +42,7 @@
 </ul></li>
 <li><a href="#previous-hash">Previous Hash</a></li>
 </ul>
-</div>
+</nav>
 <h1 id="overview">Overview</h1>
 <h2 id="parameters">Parameters</h2>
 <p>The Algorand Ledger is parameterized by the following values:</p>
@@ -55,36 +63,40 @@
 <h2 id="states">States</h2>
 <p>A <em>ledger</em> is a sequence of states which comprise the common information established by some instantiation of the Algorand protocol. A ledger is identified by a string called the <em>genesis identifier</em>. Each state consists of the following components:</p>
 <ul>
-<li><p>The <em>round</em> of the state, which indexes into the ledger's sequence of states.</p></li>
+<li><p>The <em>round</em> of the state, which indexes into the ledger’s sequence of states.</p></li>
 <li><p>The <em>genesis identifier</em>, which identifies the ledger to which the state belongs.</p></li>
 <li><p>The current <em>protocol version</em> and the <em>upgrade state</em>.</p></li>
 <li><p>A <em>timestamp</em>, which is informational and identifies when the state was first proposed.</p></li>
 <li><p>A <em>seed</em>, which is a source of randomness used to <a href="https://github.com/algorand/spec/abft.md">establish consensus on the next state</a>.</p></li>
 <li><p>The current <em>reward state</em>, which describes the policy at which incentives are distributed to participants.</p></li>
-<li>The current <em>account state</em>, which holds account balances and keys for all stakeholding addresses.</li>
-<li><p>One component of this state is the <em>transaction tail</em>, which caches the <em>transaction sets</em> (see below) in the last <span class="math inline">\(T_{\max}\)</span> blocks.</p></li>
+<li><p>The current <em>account state</em>, which holds account balances and keys for all stakeholding addresses.</p>
+<ul>
+<li>One component of this state is the <em>transaction tail</em>, which caches the <em>transaction sets</em> (see below) in the last <span class="math inline">\(T_{\max}\)</span> blocks.</li>
+</ul></li>
 </ul>
 <h2 id="blocks">Blocks</h2>
 <p>A <em>block</em> is a data structure which specifies the transition between states. Each block consists of the following components, which correspond to components of the state:</p>
 <ul>
-<li><p>The block's <em>round</em>, which matches the round of the state it is transitioning into. (The block with round 0 is special in that this block specifies not a transition but rather the entire initial state, which is called the <em>genesis state</em>. This block is correspondingly called the <em>genesis block</em>.)</p></li>
-<li><p>The block's <em>genesis identifier</em>, which matches the genesis identifier of the states it transitions between.</p></li>
-<li><p>The block's <em>upgrade vote</em>, which results in the new upgrade state. The block also duplicates the upgrade state of the state it transitions into.</p></li>
-<li><p>The block's <em>timestamp</em>, which matches the timestamp of the state it transitions into.</p></li>
-<li><p>The block's <em>seed</em>, which matches the seed of the state it transitions into.</p></li>
-<li><p>The block's <em>reward updates</em>, which results in the new reward state. The block also duplicates the reward state of the state it transitions into.</p></li>
-<li><p>The block's <em>transaction set</em>, which represents a set of updates (i.e., <em>transactions</em>) to the account state. The block also duplicates a cryptographic commitment to its transaction set.</p></li>
-<li><p>The block's <em>previous hash</em>, which is the cryptographic hash of the previous block in the sequence. (The previous hash of the genesis block is 0.)</p></li>
+<li><p>The block’s <em>round</em>, which matches the round of the state it is transitioning into. (The block with round 0 is special in that this block specifies not a transition but rather the entire initial state, which is called the <em>genesis state</em>. This block is correspondingly called the <em>genesis block</em>.)</p></li>
+<li><p>The block’s <em>genesis identifier</em>, which matches the genesis identifier of the states it transitions between.</p></li>
+<li><p>The block’s <em>upgrade vote</em>, which results in the new upgrade state. The block also duplicates the upgrade state of the state it transitions into.</p></li>
+<li><p>The block’s <em>timestamp</em>, which matches the timestamp of the state it transitions into.</p></li>
+<li><p>The block’s <em>seed</em>, which matches the seed of the state it transitions into.</p></li>
+<li><p>The block’s <em>reward updates</em>, which results in the new reward state. The block also duplicates the reward state of the state it transitions into.</p></li>
+<li><p>The block’s <em>transaction set</em>, which represents a set of updates (i.e., <em>transactions</em>) to the account state. The block also duplicates a cryptographic commitment to its transaction set.</p></li>
+<li><p>The block’s <em>previous hash</em>, which is the cryptographic hash of the previous block in the sequence. (The previous hash of the genesis block is 0.)</p></li>
 </ul>
-<p>The data in a block is divided between the <em>block header</em> and its <em>block body</em>. The block body is the block's transaction set, while the block header contains all other data, including a cryptograhpic commitment to the transaction set.</p>
+<p>The data in a block is divided between the <em>block header</em> and its <em>block body</em>. The block body is the block’s transaction set, while the block header contains all other data, including a cryptograhpic commitment to the transaction set.</p>
 <p>A block is <em>valid</em> if each component is also <em>valid</em>. (The genesis block is always valid). <em>Applying</em> a valid block to a state produces a new state by updating each of its components. The rest of this document defines block validity and state transitions by describing them for each component.</p>
 <h1 id="round">Round</h1>
 <p>The round or <em>round number</em> is a 64-bit unsigned integer which indexes into the sequence of states and blocks. The round <span class="math inline">\(r\)</span> of each block is one greater than the round of the previous block. Given a ledger, the round of a block exclusively identifies it.</p>
 <p>The rest of this document describes components of states and blocks with respect to some implicit ledger. Thus, the round exclusively describes some component, and we denote the round of a component with a subscript. For instance, the timestamp of state/block <span class="math inline">\(r\)</span> is denoted <span class="math inline">\(t_r\)</span>.</p>
 <h1 id="genesis-identifier">Genesis Identifier</h1>
+
 <p>The genesis identifier is a short string that identifies an instance of a ledger.</p>
-<p>The genesis identifier of a valid block is the identifier of the block in the previous round. In other words, <span class="math inline">\({\mathrm{GenesisID}}_{r+1} = {\mathrm{GenesisID}}_{r}\)</span>.</p>
+<p>The genesis identifier of a valid block is the identifier of the block in the previous round. In other words, <span class="math inline">\(\mathrm{GenesisID}_{r+1} = \mathrm{GenesisID}_{r}\)</span>.</p>
 <h1 id="genesis-hash">Genesis Hash</h1>
+
 <p>The genesis hash is a cryptographic hash of the genesis configuration, used to unambiguously identify an instance of the ledger.</p>
 <p>The genesis hash is set in the genesis block (or the block at which an upgrade to a protocol supporting GenesisHash occurs), and must be preserved identically in all subsequent blocks.</p>
 <h1 id="protocol-upgrade-state">Protocol Upgrade State</h1>
@@ -135,43 +147,49 @@
 <li><span class="math inline">\(t_{r+1} &gt; t_{r}\)</span> and <span class="math inline">\(t_{r+1} &lt; t_{r} + t_{\delta}\)</span>.</li>
 </ul>
 <h1 id="cryptographic-seed">Cryptographic Seed</h1>
-<p>The seed is a 256-bit integer. Seeds are validated and updated according to the <a href="https://github.com/algorand/spec/abft.md">specification of the Algorand Byzantine Fault Tolerance protocol</a>. The <span class="math inline">\({\mathrm{Seed}}\)</span> procedure specified there returns the seed from the desired round.</p>
+
+<p>The seed is a 256-bit integer. Seeds are validated and updated according to the <a href="https://github.com/algorand/spec/abft.md">specification of the Algorand Byzantine Fault Tolerance protocol</a>. The <span class="math inline">\(\mathrm{Seed}\)</span> procedure specified there returns the seed from the desired round.</p>
 <h1 id="reward-state">Reward State</h1>
+
+
 <p>The reward state consists of three 64-bit unsigned integers: the total amount of money distributed to each earning unit since the genesis state <span class="math inline">\(T_r\)</span>, the amount of money to be distributed to each earning unit at the next round <span class="math inline">\(R_r\)</span>, and the amount of money left over after distribution <span class="math inline">\(B^*_r\)</span>.</p>
-<p>The reward state depends on the <span class="math inline">\(I_{pool}\)</span>, the address of the <em>incentive pool</em>, and the functions <span class="math inline">\({\mathrm{Stake}}(r, I_{pool})\)</span> and <span class="math inline">\({\mathrm{RewardUnits}}(r)\)</span>. These are defined as part of the <a href="#account-state">Account State</a> below.</p>
+<p>The reward state depends on the <span class="math inline">\(I_{pool}\)</span>, the address of the <em>incentive pool</em>, and the functions <span class="math inline">\(\mathrm{Stake}(r, I_{pool})\)</span> and <span class="math inline">\(\mathrm{RewardUnits}(r)\)</span>. These are defined as part of the <a href="#account-state">Account State</a> below.</p>
 <p>Informally, every <span class="math inline">\(\omega_r\)</span> rounds, the rate <span class="math inline">\(R_r\)</span> is updated such that rewards given over the next <span class="math inline">\(\omega_r\)</span> rounds will drain the incentive pool, leaving it with the minimum balance <span class="math inline">\(b_{min}\)</span>. The <em>rewards residue</em> <span class="math inline">\(B^*_r\)</span> is the amount of leftover rewards that should have been given in the previous round but could not be evenly divided among all reward units. The residue carries over into the rewards to be given in the next round. The actual draining of the incentive pool account is described in the <a href="#validity-and-state-changes">Validity and State Changes</a> section further below.</p>
-<p>More formally, let <span class="math inline">\(Z = {\mathrm{RewardUnits}}(r)\)</span>. Given a reward state <span class="math inline">\((T_r, R_r, B^*_r)\)</span>, the new reward state is <span class="math inline">\((T_{r+1}, R_{r+1}, B^*_{r+1})\)</span> where</p>
+<p>More formally, let <span class="math inline">\(Z = \mathrm{RewardUnits}(r)\)</span>. Given a reward state <span class="math inline">\((T_r, R_r, B^*_r)\)</span>, the new reward state is <span class="math inline">\((T_{r+1}, R_{r+1}, B^*_{r+1})\)</span> where</p>
 <ul>
-<li><span class="math inline">\(R_{r+1} = {\left \lfloor \frac{{\mathrm{Stake}}(r, I_{pool}) - B^*_r - b_{min}}{\omega_r} \right \rfloor }\)</span> if <span class="math inline">\(R_r \equiv 0 \bmod \omega_r\)</span>; <span class="math inline">\(R_{r+1} = R_r\)</span> otherwise,</li>
-<li><span class="math inline">\(T_{r+1} = T_r + {\left \lfloor \frac{R_r}{Z} \right \rfloor }\)</span> if <span class="math inline">\(Z \neq 0\)</span>; <span class="math inline">\(T_{r+1} = T_r\)</span> otherwise, and</li>
+<li><span class="math inline">\(R_{r+1} = \left \lfloor \frac{\mathrm{Stake}(r, I_{pool}) - B^*_r - b_{min}}{\omega_r} \right \rfloor \)</span> if <span class="math inline">\(R_r \equiv 0 \bmod \omega_r\)</span>; <span class="math inline">\(R_{r+1} = R_r\)</span> otherwise,</li>
+<li><span class="math inline">\(T_{r+1} = T_r + \left \lfloor \frac{R_r}{Z} \right \rfloor \)</span> if <span class="math inline">\(Z \neq 0\)</span>; <span class="math inline">\(T_{r+1} = T_r\)</span> otherwise, and</li>
 <li><span class="math inline">\(B^*_{r+1} = (B^*_r + R_r) \bmod Z\)</span> if <span class="math inline">\(Z \neq 0\)</span>; <span class="math inline">\(B^*_{r+1} = B^*_r\)</span> otherwise.</li>
 </ul>
-<p>A valid block's reward state matches the expected reward state.</p>
+<p>A valid block’s reward state matches the expected reward state.</p>
 <h1 id="account-state">Account State</h1>
+
 <p>The <em>balances</em> are a set of mappings from <em>addresses</em>, 256-bit integers, to <em>balance records</em>. A <em>balance record</em> contains the following fields: the account <em>raw balance</em>, the account <em>status</em>, the account <em>rewards base</em> and <em>total awarded amount</em>, and the account <a href="https://github.com/algorand/spec/partkey.md"><em>participation keys</em></a>.</p>
 <p>The account raw balance <span class="math inline">\(a_I\)</span> is a 64-bit unsigned integer which determines how much money the address has.</p>
 <p>The account rewards base <span class="math inline">\(a&#39;_I\)</span> and total awarded amount <span class="math inline">\(a^*_I\)</span> are 64-bit unsigned integers.</p>
-<p>Combined with the account balance, the reward base and total awarded amount are used to distribute rewards to accounts lazily. The <em>account stake</em> is a function which maps a given account and round to the account's balance in that round and is defined as follows: <span class="math display">\[{\mathrm{Stake}}(r, I) = a_I + (T_r - a&#39;_I) {\left \lfloor \frac{a_I}{A} \right \rfloor }\]</span> unless <span class="math inline">\(p_i = 2\)</span> (see below), in which case: <span class="math display">\[{\mathrm{Stake}}(r, I) = a_I.\]</span></p>
-<p><span class="math inline">\({\mathrm{RewardUnits}}(r)\)</span> is a function that computes the total number of whole <em>earning units</em> present in a system at round <span class="math inline">\(r\)</span>. A user owns <span class="math inline">\({\left \lfloor \frac{a_I}{A} \right \rfloor }\)</span> whole earning units, so the total number of earning units in the system is <span class="math inline">\({\mathrm{RewardUnits}}(r) = \sum_I {\left \lfloor \frac{a_I}{A} \right \rfloor }\)</span> for the <span class="math inline">\(a_I\)</span> corresponding to round <span class="math inline">\(r\)</span>.</p>
-<p>TODO define how <span class="math inline">\({\mathrm{RewardUnits}}\)</span> updates.</p>
+<p>Combined with the account balance, the reward base and total awarded amount are used to distribute rewards to accounts lazily. The <em>account stake</em> is a function which maps a given account and round to the account’s balance in that round and is defined as follows: <span class="math display">\[\mathrm{Stake}(r, I) = a_I + (T_r - a&#39;_I) \left \lfloor \frac{a_I}{A} \right \rfloor \]</span> unless <span class="math inline">\(p_i = 2\)</span> (see below), in which case: <span class="math display">\[\mathrm{Stake}(r, I) = a_I.\]</span></p>
+<p><span class="math inline">\(\mathrm{RewardUnits}(r)\)</span> is a function that computes the total number of whole <em>earning units</em> present in a system at round <span class="math inline">\(r\)</span>. A user owns <span class="math inline">\(\left \lfloor \frac{a_I}{A} \right \rfloor \)</span> whole earning units, so the total number of earning units in the system is <span class="math inline">\(\mathrm{RewardUnits}(r) = \sum_I \left \lfloor \frac{a_I}{A} \right \rfloor \)</span> for the <span class="math inline">\(a_I\)</span> corresponding to round <span class="math inline">\(r\)</span>.</p>
+<p>TODO define how <span class="math inline">\(\mathrm{RewardUnits}\)</span> updates.</p>
 <p>The account status <span class="math inline">\(p_I\)</span> is an 8-bit unsigned integer which is either 0, 1, or 2. An account status of 0 corresponds to an <em>offline</em> account, a status of 1 corresponds to an <em>online</em> account, and a status of 2 corresponds to a <em>non-participating</em> account.</p>
 <p>Combined with the account stake, the account status determines how much <em>voting stake</em> an account has, which is a 64-bit unsigned integer defined as follows:</p>
 <ul>
 <li>The account balance, if the account is online.</li>
 <li>0 otherwise.</li>
 </ul>
-<p>The account's participation keys <span class="math inline">\({\mathrm{pk}}\)</span> are defined in Algorand's <a href="https://github.com/algorand/spec/partkey.md">specification of participation keys</a>.</p>
-<p>An account's participation keys and voting stake from a recent round is returned by the <span class="math inline">\({\mathrm{Record}}\)</span> procedure in the <a href="https://github.com/algorand/spec/abft.md">Byzantine Agreement Protocol</a>.</p>
+<p>The account’s participation keys <span class="math inline">\(\mathrm{pk}\)</span> are defined in Algorand’s <a href="https://github.com/algorand/spec/partkey.md">specification of participation keys</a>.</p>
+<p>An account’s participation keys and voting stake from a recent round is returned by the <span class="math inline">\(\mathrm{Record}\)</span> procedure in the <a href="https://github.com/algorand/spec/abft.md">Byzantine Agreement Protocol</a>.</p>
 <p>There exist two special addresses: <span class="math inline">\(I_{pool}\)</span>, the address of the <em>incentive pool</em>, and <span class="math inline">\(I_f\)</span>, the address of the <em>fee sink</em>. For both of these accounts, <span class="math inline">\(p_I = 2\)</span>.</p>
 <h2 id="transactions">Transactions</h2>
-<p>Just as a block represents a transition between two ledger states, a <em>transaction</em> <span class="math inline">\({\mathrm{Tx}}\)</span> represents a transition between two account states. A transaction contains the following fields:</p>
+
+
+<p>Just as a block represents a transition between two ledger states, a <em>transaction</em> <span class="math inline">\(\mathrm{Tx}\)</span> represents a transition between two account states. A transaction contains the following fields:</p>
 <ul>
-<li><p>The <em>transaction type</em> <span class="math inline">\({\mathrm{TxType}}\)</span>, which is a short string that indicates the type of a transaction. The transaction type is either &quot;pay&quot; or &quot;keyreg&quot;. A transaction type of &quot;pay&quot; corresponds to a <em>payment</em> transaction, while a transaction type of &quot;keyreg&quot; corresponds to a <em>key registration</em> transaction.</p></li>
+<li><p>The <em>transaction type</em> <span class="math inline">\(\mathrm{TxType}\)</span>, which is a short string that indicates the type of a transaction. The transaction type is either “pay” or “keyreg”. A transaction type of “pay” corresponds to a <em>payment</em> transaction, while a transaction type of “keyreg” corresponds to a <em>key registration</em> transaction.</p></li>
 <li><p>The <em>sender</em> <span class="math inline">\(I\)</span>, which is an address which identifies the account that authorized the transaction.</p></li>
 <li><p>The <em>fee</em> <span class="math inline">\(f\)</span>, which is a 64-bit integer that specifies the processing fee the sender pays to execute the transaction.</p></li>
 <li><p>The first round <span class="math inline">\(r_1\)</span> and last round <span class="math inline">\(r_2\)</span> for which the transaction may be executed.</p></li>
-<li><p>The <em>genesis identifier</em> <span class="math inline">\({\mathrm{GenesisID}}\)</span> of the ledger for which this transaction is valid. The <span class="math inline">\({\mathrm{GenesisID}}\)</span> is optional.</p></li>
-<li><p>The <em>genesis hash</em> <span class="math inline">\({\mathrm{GenesisHash}}\)</span> of the ledger for which this transaction is valid. The <span class="math inline">\({\mathrm{GenesisHash}}\)</span> is required.</p></li>
+<li><p>The <em>genesis identifier</em> <span class="math inline">\(\mathrm{GenesisID}\)</span> of the ledger for which this transaction is valid. The <span class="math inline">\(\mathrm{GenesisID}\)</span> is optional.</p></li>
+<li><p>The <em>genesis hash</em> <span class="math inline">\(\mathrm{GenesisHash}\)</span> of the ledger for which this transaction is valid. The <span class="math inline">\(\mathrm{GenesisHash}\)</span> is required.</p></li>
 <li><p>The <em>note</em> <span class="math inline">\(N\)</span>, a sequence of bytes with length at most <span class="math inline">\(N_{\max}\)</span> which contains arbitrary data.</p></li>
 </ul>
 <p>A payment transaction additionally has the following fields:</p>
@@ -182,109 +200,109 @@
 </ul>
 <p>A key registration transaction additionally has the following fields:</p>
 <ul>
-<li><p>The new participation keys <span class="math inline">\({\mathrm{pk}}\)</span>, which is an optional set of account participation keys to be registered to the account. If unset, the transaction deregisters the account's keys.</p></li>
-<li><p>An optional (boolean) flag <span class="math inline">\({\mathrm{nonpart}}\)</span> which, when deregistering keys, specifies whether to mark the account offline (if <span class="math inline">\({\mathrm{nonpart}}\)</span> is false) or nonparticipatory (if <span class="math inline">\({\mathrm{nonpart}}\)</span> is true).</p></li>
+<li><p>The new participation keys <span class="math inline">\(\mathrm{pk}\)</span>, which is an optional set of account participation keys to be registered to the account. If unset, the transaction deregisters the account’s keys.</p></li>
+<li><p>An optional (boolean) flag <span class="math inline">\(\mathrm{nonpart}\)</span> which, when deregistering keys, specifies whether to mark the account offline (if <span class="math inline">\(\mathrm{nonpart}\)</span> is false) or nonparticipatory (if <span class="math inline">\(\mathrm{nonpart}\)</span> is true).</p></li>
 </ul>
-<p>The cryptographic hash of the fields above is called the <em>transaction identifier</em>. This is written as <span class="math inline">\({\mathrm{Hash}}({\mathrm{Tx}})\)</span>.</p>
-<p>A valid transaction can either be a <em>signed</em> transaction or a <em>multi-signed</em> transaction. This is determined by the <em>signature</em> of a transaction:</p>
+<p>The cryptographic hash of the fields above is called the <em>transaction identifier</em>. This is written as <span class="math inline">\(\mathrm{Hash}(\mathrm{Tx})\)</span>.</p>
+<p>A valid transaction can either be a <em>signed</em> transaction, a <em>multi-signed</em> transaction, or a <em>logic-signed</em> transaction. This is determined by the <em>signature</em> of a transaction:</p>
 <ul>
-<li><p>A valid signed transaction's signature is a 64-byte sequence which validates under the sender of the transaction.</p></li>
+<li><p>A valid signed transaction’s signature is a 64-byte sequence which validates under the sender of the transaction.</p></li>
 <li><p>(TODO specify multisignatures)</p></li>
 </ul>
 <h2 id="applydata">ApplyData</h2>
+
 <p>Each transaction is associated with some information about how it is applied to the account state. This information is called ApplyData, and contains the following fields:</p>
 <ul>
-<li><p>The closing amount, <span class="math inline">\({\mathrm{ClosingAmount}}\)</span>, which specifies how many microalgos were transferred to the closing address.</p></li>
-<li><p>The amount of rewards distributed to each of the accounts touched by this transaction. There are three fields (&quot;rs&quot;, &quot;rr&quot;, and &quot;rc&quot; keys in msgpack encoding), representing the amount of rewards distributed to the sender, receiver, and closing addresses respectively. The fields have integer values representing microalgos. If any of the accounts are the same (e.g., the sender and recipient are the same), then that account received the sum of the respective reward distributions (i.e., &quot;rs&quot; plus &quot;rr&quot;); in the reference implementation, one of these two fields will be zero in that case.</p></li>
+<li><p>The closing amount, <span class="math inline">\(\mathrm{ClosingAmount}\)</span>, which specifies how many microalgos were transferred to the closing address.</p></li>
+<li><p>The amount of rewards distributed to each of the accounts touched by this transaction. There are three fields (“rs”, “rr”, and “rc” keys in msgpack encoding), representing the amount of rewards distributed to the sender, receiver, and closing addresses respectively. The fields have integer values representing microalgos. If any of the accounts are the same (e.g., the sender and recipient are the same), then that account received the sum of the respective reward distributions (i.e., “rs” plus “rr”); in the reference implementation, one of these two fields will be zero in that case.</p></li>
 </ul>
 <h2 id="transaction-sequences-sets-and-tails">Transaction Sequences, Sets, and Tails</h2>
-<p>Each block contains a <em>transaction sequence</em>, an ordered sequence of transactions in that block. The transaction sequence of block <span class="math inline">\(r\)</span> is denoted <span class="math inline">\({\mathrm{TxSeq}}_r\)</span>. Each valid block contains a <em>transaction commitment</em> <span class="math inline">\({\mathrm{TxCommit}}_r\)</span> which is the commitment to this sequence (a hash of the msgpack encoding of the sequence).</p>
+<p>Each block contains a <em>transaction sequence</em>, an ordered sequence of transactions in that block. The transaction sequence of block <span class="math inline">\(r\)</span> is denoted <span class="math inline">\(\mathrm{TxSeq}_r\)</span>. Each valid block contains a <em>transaction commitment</em> <span class="math inline">\(\mathrm{TxCommit}_r\)</span> which is the commitment to this sequence (a hash of the msgpack encoding of the sequence).</p>
 <p>There are two differences between how a standalone transaction is encoded, and how it appears in the block:</p>
 <ul>
-<li>Transactions in a block are encoded in a slightly different way than standalone transactions, for efficiency:</li>
-</ul>
-<p>If a transaction contains a <span class="math inline">\({\mathrm{GenesisID}}\)</span> value, then (1) it must match the block's <span class="math inline">\({\mathrm{GenesisID}}\)</span>, (2) the transaction's <span class="math inline">\({\mathrm{GenesisID}}\)</span> value must be omitted from the transaction's msgpack encoding in the block, and (3) the transaction's msgpack encoding in the block must indicate the <span class="math inline">\({\mathrm{GenesisID}}\)</span> value was omitted by including a key &quot;hgi&quot; with the boolean value true.</p>
-<p>Since transactions must include a <span class="math inline">\({\mathrm{GenesisHash}}\)</span> value, the <span class="math inline">\({\mathrm{GenesisHash}}\)</span> value of each transaction in a block must match the block's <span class="math inline">\({\mathrm{GenesisHash}}\)</span>, and the <span class="math inline">\({\mathrm{GenesisHash}}\)</span> value is omitted from the transaction as encoded in a block.</p>
-<ul>
-<li>Transactions in a block are also augmented with the ApplyData that reflect how that transaction applied to the account state.</li>
+<li><p>Transactions in a block are encoded in a slightly different way than standalone transactions, for efficiency:</p>
+<p>If a transaction contains a <span class="math inline">\(\mathrm{GenesisID}\)</span> value, then (1) it must match the block’s <span class="math inline">\(\mathrm{GenesisID}\)</span>, (2) the transaction’s <span class="math inline">\(\mathrm{GenesisID}\)</span> value must be omitted from the transaction’s msgpack encoding in the block, and (3) the transaction’s msgpack encoding in the block must indicate the <span class="math inline">\(\mathrm{GenesisID}\)</span> value was omitted by including a key “hgi” with the boolean value true.</p>
+<p>Since transactions must include a <span class="math inline">\(\mathrm{GenesisHash}\)</span> value, the <span class="math inline">\(\mathrm{GenesisHash}\)</span> value of each transaction in a block must match the block’s <span class="math inline">\(\mathrm{GenesisHash}\)</span>, and the <span class="math inline">\(\mathrm{GenesisHash}\)</span> value is omitted from the transaction as encoded in a block.</p></li>
+<li><p>Transactions in a block are also augmented with the ApplyData that reflect how that transaction applied to the account state.</p></li>
 </ul>
 <p>The transaction commitment for a block covers the transaction encodings with the changes described above. Individual transaction signatures cover the original encoding of transactions as standalone.</p>
-<p>A valid transaction sequence contains no duplicates: each transaction in the transaction sequence appears exactly once. We can call the set of these transactions the <em>transaction set</em>. (For convenience, we may also write <span class="math inline">\({\mathrm{TxSeq}}_r\)</span> to refer unambiguously to this set.) For a block to be valid, its transaction sequence must be valid (i.e., no duplicate transactions may appear there).</p>
-<p>All transactions have a <em>size</em> in bytes. The size of the transaction <span class="math inline">\({\mathrm{Tx}}\)</span> is denoted <span class="math inline">\(|{\mathrm{Tx}}|\)</span>. For a block to be valid, the sum of the sizes of each transaction in a transaction sequence must be at most <span class="math inline">\(B_{\max}\)</span>; in other words, <span class="math display">\[\sum_{{\mathrm{Tx}}\in {\mathrm{TxSeq}}_r} |{\mathrm{Tx}}| \leq B_{\max}.\]</span></p>
-<p>The transaction tail for a given round <span class="math inline">\(r\)</span> is a set produced from the union of the transaction identifiers of each transaction in the last <span class="math inline">\(T_{\max}\)</span> transaction sets and is used to detect duplicate transactions. In other words, <span class="math display">\[{\mathrm{TxTail}}_r = \bigcup_{r-T_{\max} \leq s \leq r-1}
-              \{{\mathrm{Hash}}({\mathrm{Tx}}) | {\mathrm{Tx}}\in {\mathrm{TxSeq}}_s\}.\]</span> As a result, the transaction tail for round <span class="math inline">\(r+1\)</span> is computed as follows: <span class="math display">\[{\mathrm{TxTail}}_{r+1} = {\mathrm{TxTail}}_r \setminus
-                  \{{\mathrm{Hash}}({\mathrm{Tx}}) | {\mathrm{Tx}}\in {\mathrm{TxSeq}}_{r-T_{\max}}\} \cup
-                  \{{\mathrm{Hash}}({\mathrm{Tx}}) | {\mathrm{Tx}}\in {\mathrm{TxSeq}}_r\}.\]</span> The transaction tail is part of the ledger state but is distinct from the account state and is not committed to in the block.</p>
+<p>A valid transaction sequence contains no duplicates: each transaction in the transaction sequence appears exactly once. We can call the set of these transactions the <em>transaction set</em>. (For convenience, we may also write <span class="math inline">\(\mathrm{TxSeq}_r\)</span> to refer unambiguously to this set.) For a block to be valid, its transaction sequence must be valid (i.e., no duplicate transactions may appear there).</p>
+<p>All transactions have a <em>size</em> in bytes. The size of the transaction <span class="math inline">\(\mathrm{Tx}\)</span> is denoted <span class="math inline">\(|\mathrm{Tx}|\)</span>. For a block to be valid, the sum of the sizes of each transaction in a transaction sequence must be at most <span class="math inline">\(B_{\max}\)</span>; in other words, <span class="math display">\[\sum_{\mathrm{Tx}\in \mathrm{TxSeq}_r} |\mathrm{Tx}| \leq B_{\max}.\]</span></p>
+<p>The transaction tail for a given round <span class="math inline">\(r\)</span> is a set produced from the union of the transaction identifiers of each transaction in the last <span class="math inline">\(T_{\max}\)</span> transaction sets and is used to detect duplicate transactions. In other words, <span class="math display">\[\mathrm{TxTail}_r = \bigcup_{r-T_{\max} \leq s \leq r-1}
+              \{\mathrm{Hash}(\mathrm{Tx}) | \mathrm{Tx}\in \mathrm{TxSeq}_s\}.\]</span> As a result, the transaction tail for round <span class="math inline">\(r+1\)</span> is computed as follows: <span class="math display">\[\mathrm{TxTail}_{r+1} = \mathrm{TxTail}_r \setminus
+                  \{\mathrm{Hash}(\mathrm{Tx}) | \mathrm{Tx}\in \mathrm{TxSeq}_{r-T_{\max}}\} \cup
+                  \{\mathrm{Hash}(\mathrm{Tx}) | \mathrm{Tx}\in \mathrm{TxSeq}_r\}.\]</span> The transaction tail is part of the ledger state but is distinct from the account state and is not committed to in the block.</p>
 <h2 id="validity-and-state-changes">Validity and State Changes</h2>
-<p>The new account state which results from applying a block is the account state which results from applying each transaction in that block, in sequence. For a block to be valid, each transaction in its transaction sequence must be valid at the block's round <span class="math inline">\(r\)</span> and for the block's genesis identifier <span class="math inline">\({\mathrm{GenesisID}}_B\)</span>.</p>
-<p>For a transaction <span class="math display">\[{\mathrm{Tx}}= ({\mathrm{GenesisID}}, {\mathrm{TxType}}, r_1, r_2, I, I&#39;, I_0, f, a, N, {\mathrm{pk}}, {\mathrm{nonpart}})\]</span> to be valid at the intermediate state <span class="math inline">\(\rho\)</span> in round <span class="math inline">\(r\)</span> for the genesis identifier <span class="math inline">\({\mathrm{GenesisID}}_B\)</span>, the following conditions must all hold:</p>
+<p>The new account state which results from applying a block is the account state which results from applying each transaction in that block, in sequence. For a block to be valid, each transaction in its transaction sequence must be valid at the block’s round <span class="math inline">\(r\)</span> and for the block’s genesis identifier <span class="math inline">\(\mathrm{GenesisID}_B\)</span>.</p>
+<p>For a transaction <span class="math display">\[\mathrm{Tx}= (\mathrm{GenesisID}, \mathrm{TxType}, r_1, r_2, I, I&#39;, I_0, f, a, N, \mathrm{pk}, \mathrm{nonpart})\]</span> to be valid at the intermediate state <span class="math inline">\(\rho\)</span> in round <span class="math inline">\(r\)</span> for the genesis identifier <span class="math inline">\(\mathrm{GenesisID}_B\)</span>, the following conditions must all hold:</p>
 <ul>
 <li>It must represent a transition between two valid account states.</li>
-<li>Either <span class="math inline">\({\mathrm{GenesisID}}= {\mathrm{GenesisID}}_B\)</span> or <span class="math inline">\({\mathrm{GenesisID}}\)</span> is the empty string.</li>
-<li><span class="math inline">\({\mathrm{TxType}}\)</span> is either &quot;pay&quot; or &quot;keyreg&quot;.</li>
-<li>There are no extra fields that do not correspond to <span class="math inline">\({\mathrm{TxType}}\)</span>.</li>
+<li>Either <span class="math inline">\(\mathrm{GenesisID}= \mathrm{GenesisID}_B\)</span> or <span class="math inline">\(\mathrm{GenesisID}\)</span> is the empty string.</li>
+<li><span class="math inline">\(\mathrm{TxType}\)</span> is either “pay” or “keyreg”.</li>
+<li>There are no extra fields that do not correspond to <span class="math inline">\(\mathrm{TxType}\)</span>.</li>
 <li><span class="math inline">\(0 \leq r_2 - r_1 \leq T_{\max}\)</span>.</li>
 <li><span class="math inline">\(r_1 \leq r \leq r_2\)</span>.</li>
 <li><span class="math inline">\(|N| \leq N_{\max}\)</span>.</li>
 <li><span class="math inline">\(I \neq I_{pool}\)</span> and <span class="math inline">\(I \neq 0\)</span>.</li>
-<li><span class="math inline">\({\mathrm{Stake}}(r+1, I) \geq f \geq f_{\min}\)</span>.</li>
-<li>Exactly one of the signature or the multisignature is present and verifies for <span class="math inline">\({\mathrm{Hash}}({\mathrm{Tx}})\)</span> under <span class="math inline">\(I\)</span>.</li>
-<li><span class="math inline">\({\mathrm{Hash}}({\mathrm{Tx}}) \notin {\mathrm{TxTail}}_r\)</span>.</li>
-<li>If <span class="math inline">\({\mathrm{TxType}}\)</span> is &quot;pay&quot;,
+<li><span class="math inline">\(\mathrm{Stake}(r+1, I) \geq f \geq f_{\min}\)</span>.</li>
+<li>Exactly one of the signature or the multisignature is present and verifies for <span class="math inline">\(\mathrm{Hash}(\mathrm{Tx})\)</span> under <span class="math inline">\(I\)</span>.</li>
+<li><span class="math inline">\(\mathrm{Hash}(\mathrm{Tx}) \notin \mathrm{TxTail}_r\)</span>.</li>
+<li>If <span class="math inline">\(\mathrm{TxType}\)</span> is “pay”,
 <ul>
 <li><span class="math inline">\(I \neq I_k\)</span> or both <span class="math inline">\(I&#39; \neq I_{pool}\)</span> and <span class="math inline">\(I_0 \neq 0\)</span>.</li>
-<li><span class="math inline">\({\mathrm{Stake}}(r+1, I) - f &gt; a\)</span> if <span class="math inline">\(I&#39; \neq I\)</span> and <span class="math inline">\(I&#39; \neq 0\)</span>.</li>
+<li><span class="math inline">\(\mathrm{Stake}(r+1, I) - f &gt; a\)</span> if <span class="math inline">\(I&#39; \neq I\)</span> and <span class="math inline">\(I&#39; \neq 0\)</span>.</li>
 <li>If <span class="math inline">\(I_0 \neq 0\)</span>, then <span class="math inline">\(I_0 \neq I\)</span>.</li>
 </ul></li>
-<li>If <span class="math inline">\({\mathrm{TxType}}\)</span> is &quot;keyreg&quot;,
+<li>If <span class="math inline">\(\mathrm{TxType}\)</span> is “keyreg”,
 <ul>
 <li><span class="math inline">\(p_{\rho, I} \ne 2\)</span> (i.e., nonparticipatory accounts may not issue keyreg transactions)</li>
-<li>If <span class="math inline">\({\mathrm{nonpart}}\)</span> is true then <span class="math inline">\({\mathrm{pk}}= 0\)</span></li>
+<li>If <span class="math inline">\(\mathrm{nonpart}\)</span> is true then <span class="math inline">\(\mathrm{pk}= 0\)</span></li>
 </ul></li>
 </ul>
 <p>Given that a transaction is valid, it produces the following updated account state for intermediate state <span class="math inline">\(\rho+1\)</span>:</p>
 <ul>
 <li>For <span class="math inline">\(I\)</span>:
 <ul>
-<li>If <span class="math inline">\(I_0 \neq 0\)</span> then <span class="math inline">\(a_{\rho+1, I} = a&#39;_{\rho+1, I} = a^*_{\rho+1, I} = p_{\rho+1, I} = {\mathrm{pk}}_{\rho+1, I} = 0\)</span>;</li>
+<li>If <span class="math inline">\(I_0 \neq 0\)</span> then <span class="math inline">\(a_{\rho+1, I} = a&#39;_{\rho+1, I} = a^*_{\rho+1, I} = p_{\rho+1, I} = \mathrm{pk}_{\rho+1, I} = 0\)</span>;</li>
 <li>otherwise,
 <ul>
-<li><span class="math inline">\(a_{\rho+1, I} = {\mathrm{Stake}}(\rho+1, I) - a - f\)</span> if <span class="math inline">\(I&#39; \neq I\)</span> and <span class="math inline">\(a_{\rho+1, I} = {\mathrm{Stake}}(\rho+1, I) - f\)</span> otherwise.</li>
+<li><span class="math inline">\(a_{\rho+1, I} = \mathrm{Stake}(\rho+1, I) - a - f\)</span> if <span class="math inline">\(I&#39; \neq I\)</span> and <span class="math inline">\(a_{\rho+1, I} = \mathrm{Stake}(\rho+1, I) - f\)</span> otherwise.</li>
 <li><span class="math inline">\(a&#39;_{\rho+1, I} = T_{r+1}\)</span>.</li>
-<li><span class="math inline">\(a^*_{\rho+1, I} = a^*_{\rho, I} +  (T_{r+1} - a&#39;_{\rho, I}) {\left \lfloor \frac{a_{\rho, I}}{A} \right \rfloor }\)</span>.</li>
-<li>If <span class="math inline">\({\mathrm{TxType}}\)</span> is &quot;pay&quot;, then <span class="math inline">\({\mathrm{pk}}_{\rho+1, I} = {\mathrm{pk}}_{\rho, I}\)</span> and <span class="math inline">\(p_{\rho+1, I} = p_{\rho, I}\)</span></li>
-<li>Otherwise (i.e., if <span class="math inline">\({\mathrm{TxType}}\)</span> is &quot;keyreg&quot;),
+<li><span class="math inline">\(a^*_{\rho+1, I} = a^*_{\rho, I} +  (T_{r+1} - a&#39;_{\rho, I}) \left \lfloor \frac{a_{\rho, I}}{A} \right \rfloor \)</span>.</li>
+<li>If <span class="math inline">\(\mathrm{TxType}\)</span> is “pay”, then <span class="math inline">\(\mathrm{pk}_{\rho+1, I} = \mathrm{pk}_{\rho, I}\)</span> and <span class="math inline">\(p_{\rho+1, I} = p_{\rho, I}\)</span></li>
+<li>Otherwise (i.e., if <span class="math inline">\(\mathrm{TxType}\)</span> is “keyreg”),
 <ul>
-<li><span class="math inline">\({\mathrm{pk}}_{\rho+1, I} = {\mathrm{pk}}\)</span></li>
-<li><span class="math inline">\(p_{\rho+1, I} = 0\)</span> if <span class="math inline">\({\mathrm{pk}}= 0\)</span> and <span class="math inline">\({\mathrm{nonpart}}= \text{false}\)</span></li>
-<li><span class="math inline">\(p_{\rho+1, I} = 2\)</span> if <span class="math inline">\({\mathrm{pk}}= 0\)</span> and <span class="math inline">\({\mathrm{nonpart}}= \text{true}\)</span></li>
-<li><span class="math inline">\(p_{\rho+1, I} = 1\)</span> if <span class="math inline">\({\mathrm{pk}}\ne 0\)</span>.</li>
+<li><span class="math inline">\(\mathrm{pk}_{\rho+1, I} = \mathrm{pk}\)</span></li>
+<li><span class="math inline">\(p_{\rho+1, I} = 0\)</span> if <span class="math inline">\(\mathrm{pk}= 0\)</span> and <span class="math inline">\(\mathrm{nonpart}= \text{false}\)</span></li>
+<li><span class="math inline">\(p_{\rho+1, I} = 2\)</span> if <span class="math inline">\(\mathrm{pk}= 0\)</span> and <span class="math inline">\(\mathrm{nonpart}= \text{true}\)</span></li>
+<li><span class="math inline">\(p_{\rho+1, I} = 1\)</span> if <span class="math inline">\(\mathrm{pk}\ne 0\)</span>.</li>
 </ul></li>
 </ul></li>
 </ul></li>
 <li>For <span class="math inline">\(I&#39;\)</span> if <span class="math inline">\(I \neq I&#39;\)</span> and either <span class="math inline">\(I&#39; \neq 0\)</span> or <span class="math inline">\(a \neq 0\)</span>:
 <ul>
-<li><span class="math inline">\(a_{\rho+1, I&#39;} = {\mathrm{Stake}}(\rho+1, I&#39;) + a\)</span>.</li>
+<li><span class="math inline">\(a_{\rho+1, I&#39;} = \mathrm{Stake}(\rho+1, I&#39;) + a\)</span>.</li>
 <li><span class="math inline">\(a&#39;_{\rho+1, I&#39;} = T_{r+1}\)</span>.</li>
-<li><span class="math inline">\(a^*_{\rho+1, I&#39;} = a^*_{\rho, I&#39;} +  (T_{r+1} - a&#39;_{\rho, I&#39;}) {\left \lfloor \frac{a_{\rho, I&#39;}}{A} \right \rfloor }\)</span>.</li>
+<li><span class="math inline">\(a^*_{\rho+1, I&#39;} = a^*_{\rho, I&#39;} +  (T_{r+1} - a&#39;_{\rho, I&#39;}) \left \lfloor \frac{a_{\rho, I&#39;}}{A} \right \rfloor \)</span>.</li>
 </ul></li>
 <li>For <span class="math inline">\(I_0\)</span> if <span class="math inline">\(I_0 \neq 0\)</span>:
 <ul>
-<li><span class="math inline">\(a_{\rho+1, I_0} = {\mathrm{Stake}}(\rho+1, I_0) + {\mathrm{Stake}}(\rho+1, I) - a - f\)</span>.</li>
+<li><span class="math inline">\(a_{\rho+1, I_0} = \mathrm{Stake}(\rho+1, I_0) + \mathrm{Stake}(\rho+1, I) - a - f\)</span>.</li>
 <li><span class="math inline">\(a&#39;_{\rho+1, I_0} = T_{r+1}\)</span>.</li>
-<li><span class="math inline">\(a^*_{\rho+1, I_0} = a^*_{\rho, I_0} +  (T_{r+1} - a&#39;_{\rho, I_0}) {\left \lfloor \frac{a_{\rho, I_0}}{A} \right \rfloor }\)</span>.</li>
+<li><span class="math inline">\(a^*_{\rho+1, I_0} = a^*_{\rho, I_0} +  (T_{r+1} - a&#39;_{\rho, I_0}) \left \lfloor \frac{a_{\rho, I_0}}{A} \right \rfloor \)</span>.</li>
 </ul></li>
 <li>For all other <span class="math inline">\(I^* \neq I\)</span>, the account state is identical to that in view <span class="math inline">\(\rho\)</span>.</li>
 </ul>
 <p>TODO define the sequence of intermediate states</p>
-<p>The final intermediate account <span class="math inline">\(\rho_k\)</span> state changes the balance of the incentive pool as follows: <span class="math display">\[a_{\rho_k, I_{pool}} = a_{\rho_{k-1}, I_{pool}} - R_r({\mathrm{RewardUnits}}(r))\]</span></p>
+<p>The final intermediate account <span class="math inline">\(\rho_k\)</span> state changes the balance of the incentive pool as follows: <span class="math display">\[a_{\rho_k, I_{pool}} = a_{\rho_{k-1}, I_{pool}} - R_r(\mathrm{RewardUnits}(r))\]</span></p>
 <p>An account state in the intermediate state <span class="math inline">\(\rho+1\)</span> and at round <span class="math inline">\(r\)</span> is valid if all following conditions hold:</p>
 <ul>
-<li><p>For all addresses <span class="math inline">\(I \notin \{I_{pool}, I_f\}\)</span>, either <span class="math inline">\({\mathrm{Stake}}(\rho+1, I) = 0\)</span> or <span class="math inline">\({\mathrm{Stake}}(\rho+1, I) \geq b_{\min}\)</span>.</p></li>
-<li><p><span class="math inline">\(\sum_I {\mathrm{Stake}}(\rho+1, I) = \sum_I {\mathrm{Stake}}(\rho, I)\)</span>.</p></li>
+<li><p>For all addresses <span class="math inline">\(I \notin \{I_{pool}, I_f\}\)</span>, either <span class="math inline">\(\mathrm{Stake}(\rho+1, I) = 0\)</span> or <span class="math inline">\(\mathrm{Stake}(\rho+1, I) \geq b_{\min}\)</span>.</p></li>
+<li><p><span class="math inline">\(\sum_I \mathrm{Stake}(\rho+1, I) = \sum_I \mathrm{Stake}(\rho, I)\)</span>.</p></li>
 </ul>
 <h1 id="previous-hash">Previous Hash</h1>
+
 <p>The previous hash is a cryptographic hash of the previous block header in the sequence of blocks. The sequence of previous hashes in each block header forms an authenticated, linked-list of the reversed sequence.</p>
-<p>Let <span class="math inline">\(B_{r}\)</span> represent the block header in round <span class="math inline">\(r\)</span>, and let <span class="math inline">\(H\)</span> be some cryptographic function. Then the previous hash <span class="math inline">\({\mathrm{Prev}}_{r+1}\)</span> in the block for round <span class="math inline">\(r+1\)</span> is <span class="math inline">\({\mathrm{Prev}}_{r+1} = H(B_{r})\)</span>.</p>
+<p>Let <span class="math inline">\(B_{r}\)</span> represent the block header in round <span class="math inline">\(r\)</span>, and let <span class="math inline">\(H\)</span> be some cryptographic function. Then the previous hash <span class="math inline">\(\mathrm{Prev}_{r+1}\)</span> in the block for round <span class="math inline">\(r+1\)</span> is <span class="math inline">\(\mathrm{Prev}_{r+1} = H(B_{r})\)</span>.</p>
 </body>
 </html>
