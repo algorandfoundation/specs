@@ -631,7 +631,7 @@
 <li>Pushes: <em>None</em></li>
 <li>branch if value is not zero</li>
 </ul>
-<p>for a bnz instruction at <code>pc</code>, if the last element of the stack is not zero then branch to instruction at <code>pc + 3 + N</code>, else proceed to next instruction at <code>pc + 3</code></p>
+<p>For a bnz instruction at <code>pc</code>, if the last element of the stack is not zero then branch to instruction at <code>pc + 3 + N</code>, else proceed to next instruction at <code>pc + 3</code>. Branch targets must be well aligned instructions. (e.g. Branching to the second byte of a 2 byte op will be rejected.)</p>
 <h2 id="pop">pop</h2>
 <ul>
 <li>Opcode: 0x48</li>
