@@ -313,6 +313,12 @@ Transactions
 \newcommand \TxType {\mathrm{TxType}}
 \newcommand \TxCommit {\mathrm{TxCommit}}
 
+\newcommand \vpk {\mathrm{vpk}}
+\newcommand \spk {\mathrm{spk}}
+\newcommand \vf {\mathrm{vf}}
+\newcommand \vl {\mathrm{vl}}
+\newcommand \vkd {\mathrm{vkd}}
+
 \newcommand \Hash {\mathrm{Hash}}
 \newcommand \nonpart {\mathrm{nonpart}}
 
@@ -357,9 +363,23 @@ A payment transaction additionally has the following fields:
 
 A key registration transaction additionally has the following fields:
 
- - The new participation keys $\pk$, which is an optional set of account
-   participation keys to be registered to the account.  If unset, the
-   transaction deregisters the account's keys.
+ - The _vote public key_ $\vpk$, (root) public authentication key 
+   of an account's participation keys ($\pk$).
+
+ - The _selection public key_ $\spk$, public authorization key of 
+   an account's participation keys ($\pk$). If either $\vpk$ or 
+   $\spk$ is unset, the transaction deregisters the account's participation 
+   key set, as the result, marks the account offline.
+
+ - The _vote first_ $\vf$, first valid round (inclusive) of 
+   an account's participation key sets.
+
+ - The _vote last_ $\vl$, last valid round (inclusive) of an account's
+   participation key sets.
+
+ - The _vote key dilution_ $\vkd$, number of rounds that a single 
+  leaf level authentication key can be used. The higher the number, the 
+  more ``dilution'' added to the authentication key's security.  
 
  - An optional (boolean) flag $\nonpart$ which, when deregistering keys,
    specifies whether to mark the account offline (if $\nonpart$ is false)
