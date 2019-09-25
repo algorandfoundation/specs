@@ -94,7 +94,7 @@ of the state:
 
 The data in a block is divided between the _block header_ and its _block body_.
 The block body is the block's transaction set, while the block header contains
-all other data, including a cryptograhpic commitment to the transaction set.
+all other data, including a cryptographic commitment to the transaction set.
 
 A block is _valid_ if each component is also _valid_.  (The genesis block is
 always valid).  _Applying_ a valid block to a state produces a new state by
@@ -313,6 +313,12 @@ Transactions
 \newcommand \TxType {\mathrm{TxType}}
 \newcommand \TxCommit {\mathrm{TxCommit}}
 
+\newcommand \vpk {\mathrm{vpk}}
+\newcommand \spk {\mathrm{spk}}
+\newcommand \vf {\mathrm{vf}}
+\newcommand \vl {\mathrm{vl}}
+\newcommand \vkd {\mathrm{vkd}}
+
 \newcommand \Hash {\mathrm{Hash}}
 \newcommand \nonpart {\mathrm{nonpart}}
 
@@ -363,9 +369,23 @@ A payment transaction additionally has the following fields:
 
 A key registration transaction additionally has the following fields:
 
- - The new participation keys $\pk$, which is an optional set of account
-   participation keys to be registered to the account.  If unset, the
-   transaction deregisters the account's keys.
+ - The _vote public key_ $\vpk$, (root) public authentication key 
+   of an account's participation keys ($\pk$).
+
+ - The _selection public key_ $\spk$, public authorization key of 
+   an account's participation keys ($\pk$). If either $\vpk$ or 
+   $\spk$ is unset, the transaction deregisters the account's participation 
+   key set, as the result, marks the account offline.
+
+ - The _vote first_ $\vf$, first valid round (inclusive) of 
+   an account's participation key sets.
+
+ - The _vote last_ $\vl$, last valid round (inclusive) of an account's
+   participation key sets.
+
+ - The _vote key dilution_ $\vkd$, number of rounds that a single 
+  leaf level authentication key can be used. The higher the number, the 
+  more ``dilution'' added to the authentication key's security.  
 
  - An optional (boolean) flag $\nonpart$ which, when deregistering keys,
    specifies whether to mark the account offline (if $\nonpart$ is false)
@@ -380,7 +400,17 @@ transaction.  This is determined by the _signature_ of a transaction:
  - A valid signed transaction's signature is a 64-byte sequence which validates
    under the sender of the transaction.
 
- - (TODO specify multisignatures)
+ - A valid multisignature transaction's signature is the _msig_ object containing
+   the following fields (see [Multisignature][Multisignature] for details):
+
+   - The _subsig_ array of subsignatures each consisting of a signer address and a signature
+     as a 64-byte sequence. Note, multisignature transaction must contain
+     all signer's addresses in the _subsig_ array even if the transaction has not
+     been signed yet.
+
+   - The threshold _thr_ that is a minimum number of signatures required.
+
+   - The multisignature version _v_ (current value is 1).
 
 
 ApplyData
@@ -543,7 +573,7 @@ all following conditions hold:
 
  - For all addresses $I \notin \{I_{pool}, I_f\}$, either $\Stake(\rho+1, I) = 0$ or
    $\Stake(\rho+1, I) \geq b_{\min}$.
-   
+
  - $\sum_I \Stake(\rho+1, I) = \sum_I \Stake(\rho, I)$.
 
 
@@ -559,6 +589,23 @@ an authenticated, linked-list of the reversed sequence.
 Let $B_{r}$ represent the block header in round $r$, and let $H$ be some
 cryptographic function.  Then the previous hash $\Prev_{r+1}$ in the block for
 round $r+1$ is $\Prev_{r+1} = H(B_{r})$.
+
+
+Multisignature
+==============
+
+Multisignature term describes a special multisignature address, signing and
+validation procedures. In contrast with a regular account address
+that may be understood as a public key, multisignature address is a hash of
+a constant string identifier for multisignature, version, threshold, and
+all addresses used for multisignature address creation:
+$$MSig = \Hash("MultisigAddr", version, threshold, \pk_1, ..., \pk_s)$$
+One address might be specified multiple times in multisignature address creation.
+In this case every occurrence is counted independently in validation.
+
+Validation process checks all non-empty signatures are valid and their count
+not less than the threshold. Validation fails if any of signatures is invalid
+even if count of all remaining correct signatures is greater or equals than the threshold.
 
 
 [abft-spec]: https://github.com/algorand/spec/abft.md
