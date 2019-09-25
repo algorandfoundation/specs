@@ -341,7 +341,7 @@ transaction contains the following fields:
  - The first round $r_1$ and last round $r_2$ for which the transaction may be
    executed.
 
- - The _lock_ $x$, which is an optional 256-bit integer specifying mutual
+ - The _lease_ $x$, which is an optional 256-bit integer specifying mutual
    exclusion.  If $x \neq 0$ (i.e., $x$ is set) and this transaction is
    confirmed, then this transaction prevents another transaction from the same
    sender and with the lock set to the same value from being confirmed until
