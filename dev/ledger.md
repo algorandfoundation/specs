@@ -412,6 +412,17 @@ This is determined by the _signature_ of a transaction:
 
    - The multisignature version _v_ (current value is 1).
 
+- A valid logic-signed transaction's signature is the _lsig_ object containing
+  the following fields:
+
+  - The logic _l_ which is versioned bytecode. (See TEAL docs for details)
+
+  - An optional single signature _sig_ of 64 bytes valid for the sender of the transaction which has signed the bytes in _l_.
+
+  - An optional multisignature _msig_ from the transaction sender over the bytes in _l_.
+
+  - An optional array of byte strings _arg_ which are arguments supplied to the program in _l_.
+
 
 ApplyData
 ---------
