@@ -42,12 +42,14 @@
 <li><a href="#section-11">!=</a></li>
 <li><a href="#section-12">!</a></li>
 <li><a href="#len">len</a></li>
+<li><a href="#itob">itob</a></li>
 <li><a href="#btoi">btoi</a></li>
 <li><a href="#section-13">%</a></li>
 <li><a href="#section-14">|</a></li>
 <li><a href="#section-15">&amp;</a></li>
 <li><a href="#section-16">^</a></li>
 <li><a href="#section-17">~</a></li>
+<li><a href="#mulw">mulw</a></li>
 <li><a href="#intcblock">intcblock</a></li>
 <li><a href="#intc">intc</a></li>
 <li><a href="#intc_0">intc_0</a></li>
@@ -98,7 +100,7 @@
 <li>Opcode: 0x02</li>
 <li>Pops: <em>… stack</em>, []byte</li>
 <li>Pushes: []byte</li>
-<li>Keccac256 hash of value, yields [32]byte</li>
+<li>Keccak256 hash of value, yields [32]byte</li>
 <li><strong>Cost</strong>: 26</li>
 </ul>
 <h2 id="sha512_256">sha512_256</h2>
@@ -225,6 +227,13 @@
 <li>Pushes: uint64</li>
 <li>yields length of byte value</li>
 </ul>
+<h2 id="itob">itob</h2>
+<ul>
+<li>Opcode: 0x16</li>
+<li>Pops: <em>… stack</em>, uint64</li>
+<li>Pushes: []byte</li>
+<li>converts uint64 to big endian bytes</li>
+</ul>
 <h2 id="btoi">btoi</h2>
 <ul>
 <li>Opcode: 0x17</li>
@@ -232,6 +241,7 @@
 <li>Pushes: uint64</li>
 <li>converts bytes as big endian to uint64</li>
 </ul>
+<p><code>btoi</code> panics if the input is longer than 8 bytes</p>
 <h2 id="section-13">%</h2>
 <ul>
 <li>Opcode: 0x18</li>
@@ -266,6 +276,13 @@
 <li>Pops: <em>… stack</em>, uint64</li>
 <li>Pushes: uint64</li>
 <li>bitwise invert value</li>
+</ul>
+<h2 id="mulw">mulw</h2>
+<ul>
+<li>Opcode: 0x1d</li>
+<li>Pops: <em>… stack</em>, {uint64 A}, {uint64 B}</li>
+<li>Pushes: uint64, uint64</li>
+<li>A times B out to 128-bit long result as low (top) and high uint64 values on the stack</li>
 </ul>
 <h2 id="intcblock">intcblock</h2>
 <ul>
@@ -510,6 +527,11 @@
 <td>20</td>
 <td>GroupIndex</td>
 <td>uint64</td>
+</tr>
+<tr class="even">
+<td>21</td>
+<td>TxID</td>
+<td>[]byte</td>
 </tr>
 </tbody>
 </table>

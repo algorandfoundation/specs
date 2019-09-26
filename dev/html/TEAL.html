@@ -43,7 +43,7 @@
 </nav>
 <h1 id="transaction-execution-approval-language-teal">Transaction Execution Approval Language (TEAL)</h1>
 <p>TEAL is a bytecode based stack language that executes inside Algorand transactions to check the parameters of the transaction and approve the transaction as if by a signature.</p>
-<p>TEAL programs should be short, at most 1000 bytes including all constants and operations, and run fast as they are run in-line along with signature checking, transaction balance rule checking, and other checks during block assembly and validation.</p>
+<p>TEAL programs should be short and run fast as they are run in-line along with signature checking, transaction balance rule checking, and other checks during block assembly and validation. Many useful programs are less than 100 instructions.</p>
 <h2 id="the-stack">The Stack</h2>
 <p>The stack starts empty and contains values of either uint64 or bytes. (<code>bytes</code> implemented in Go as a []byte slice) Most operations act on the stack, popping arguments from it and pushing results to it.</p>
 <p>The maximum stack depth is currently 1000.</p>
@@ -62,7 +62,7 @@
 <h2 id="operations">Operations</h2>
 <p>Most operations work with only one type of argument, uint64 or bytes, and panic if the wrong type value is on the stack.</p>
 <p>This summary is supplemented by more detail in the <a href="TEAL_opcodes.md">opcodes document</a>.</p>
-<p>Some operations ‘panic’ and immediately end execution of the program. A transaction checked a program that panics is not valid.</p>
+<p>Some operations ‘panic’ and immediately end execution of the program. A transaction checked by a program that panics is not valid.</p>
 <h3 id="arithmetic">Arithmetic</h3>
 <p>For one-argument ops, <code>X</code> is the last element on the stack, which is typically replaced by a new value.</p>
 <p>For two-argument ops, <code>A</code> is the previous element on the stack and <code>B</code> is the last element on the stack. These typically result in popping A and B from the stack and pushing the result.</p>
@@ -84,7 +84,7 @@
 </tr>
 <tr class="even">
 <td><code>keccak256</code></td>
-<td>Keccac256 hash of value, yields [32]byte</td>
+<td>Keccak256 hash of value, yields [32]byte</td>
 </tr>
 <tr class="odd">
 <td><code>sha512_256</code></td>
@@ -155,28 +155,36 @@
 <td>yields length of byte value</td>
 </tr>
 <tr class="even">
+<td><code>itob</code></td>
+<td>converts uint64 to big endian bytes</td>
+</tr>
+<tr class="odd">
 <td><code>btoi</code></td>
 <td>converts bytes as big endian to uint64</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><code>%</code></td>
 <td>A modulo B. Panic if B == 0.</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><code>\|</code></td>
 <td>A bitwise-or B</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><code>&amp;</code></td>
 <td>A bitwise-and B</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><code>^</code></td>
 <td>A bitwise-xor B</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><code>~</code></td>
 <td>bitwise invert value</td>
+</tr>
+<tr class="odd">
+<td><code>mulw</code></td>
+<td>A times B out to 128-bit long result as low (top) and high uint64 values on the stack</td>
 </tr>
 </tbody>
 </table>
@@ -400,8 +408,14 @@
 <td>GroupIndex</td>
 <td>uint64</td>
 </tr>
+<tr class="even">
+<td>21</td>
+<td>TxID</td>
+<td>[]byte</td>
+</tr>
 </tbody>
 </table>
+<p>Additional details in the <a href="TEAL_opcodes.md#txn">opcodes document</a> on the <code>txn</code> op.</p>
 <p><strong>Global Fields</strong></p>
 <table>
 <thead>

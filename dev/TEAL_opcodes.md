@@ -31,7 +31,7 @@ Ops have a 'cost' of 1 unless otherwise specified.
 - Opcode: 0x02 
 - Pops: *... stack*, []byte
 - Pushes: []byte
-- Keccac256 hash of value, yields [32]byte
+- Keccak256 hash of value, yields [32]byte
 - **Cost**: 26
 
 ## sha512_256
@@ -160,12 +160,21 @@ It is worth noting that there are 10,000,000,000,000,000 micro-Algos in the tota
 - Pushes: uint64
 - yields length of byte value
 
+## itob
+
+- Opcode: 0x16 
+- Pops: *... stack*, uint64
+- Pushes: []byte
+- converts uint64 to big endian bytes
+
 ## btoi
 
 - Opcode: 0x17 
 - Pops: *... stack*, []byte
 - Pushes: uint64
 - converts bytes as big endian to uint64
+
+`btoi` panics if the input is longer than 8 bytes
 
 ## %
 
@@ -201,6 +210,13 @@ It is worth noting that there are 10,000,000,000,000,000 micro-Algos in the tota
 - Pops: *... stack*, uint64
 - Pushes: uint64
 - bitwise invert value
+
+## mulw
+
+- Opcode: 0x1d 
+- Pops: *... stack*, {uint64 A}, {uint64 B}
+- Pushes: uint64, uint64
+- A times B out to 128-bit long result as low (top) and high uint64 values on the stack
 
 ## intcblock
 
@@ -359,6 +375,7 @@ Most fields are a simple copy of a uint64 or byte string value. `XferAsset` is t
 | 18 | AssetReceiver | []byte |
 | 19 | AssetCloseTo | []byte |
 | 20 | GroupIndex | uint64 |
+| 21 | TxID | []byte |
 
 
 TypeEnum mapping:
