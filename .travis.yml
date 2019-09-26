@@ -13,7 +13,11 @@ deploy:
   provider: releases
   name: ${TRAVIS_COMMIT}
   skip_cleanup: true
-  file: specs.tar.gz
+  file_glob: true
+  file:
+    - html/*
+    - pdf/*
+    - specs.tar.gz
   api_key:
     secure: dfxB2paUlLJumwbeHsJBwvDPIZac5VkwVMxYNLqziHuqWtTqqEnWuDK/QYup9HGGFUh0ezuLlQ2H/tvuOr7Ppa0oxQnJ3k4vaxyb+QKG2Bz5eXnqttC8cXnDQVobl6fH2yFc7DCkEuRaKe7sNkKMwncCXIO1BJTFT2NDjojwEqaQph20C2zojFGgVQ93/iKLM1KHhM8vfvARcRL2ShiN++UrOhuFQq3IujVztxmmh0tF6YHdTkDR6HGJ3S1YPp7151zzSTy4C7XwuTJzxYPDL9DPxaBx3FbOZ5Z4IyleLTbsjeXNlNpTeA++hOeef5MolFdEN+g6F1x2FJt78rBpI2XQ7ZbQ6fqyu7cc/tXw5M8Rspe5uRwHZZaaSVTw8QMsikiW5MyHMS2YeKrnXauzjWjLIDa1qv62MEp0MGBhKnsyklCReiXar8r0ot1wwuXS0zuXpDmOfu+Y+MVI4C2j8/ahMTyeEmiSMYyJexqSLHj9DC0Xap2/QoVxM/O24aEpHJ2yvW8NEa8Qc29lK5o9/RugVJEA149/qva2LFs6ml7lG+oJ54IVjj3Yx8Tq72Dnu5wd0czN7BkAwFk9IYlyO6Vp58G0XJ353smjiJovwzsZWbew6Q+pxBvi1jwx9kL2LqL0aazfcWkEVw2oiTNbGwnTUojCbl5qE/wWbwg/XfY=
   on:
