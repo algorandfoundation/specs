@@ -323,14 +323,18 @@ Transactions
 \newcommand \Hash {\mathrm{Hash}}
 \newcommand \nonpart {\mathrm{nonpart}}
 
+\newcommand \aref {\hat{a}}
+\newcommand \aidref {\hat{\mathrm{AssetID}}}
+
 Just as a block represents a transition between two ledger states, a
 _transaction_ $\Tx$ represents a transition between two account states. A
 transaction contains the following fields:
 
  - The _transaction type_ $\TxType$, which is a short string that indicates the
-   type of a transaction.  The transaction type is either "pay" or "keyreg".  A
-   transaction type of "pay" corresponds to a _payment_ transaction, while a
-   transaction type of "keyreg" corresponds to a _key registration_
+   type of a transaction.  The transaction type is either "pay", "keyreg", or
+   "audit".  A transaction type of "pay" corresponds to a _payment_ transaction,
+   a transaction type of "keyreg" corresponds to a _key registration_
+   transaction, and a transaction type of "audit" corresponds to an _audit_
    transaction.
 
  - The _sender_ $I$, which is an address which identifies the account that
@@ -389,6 +393,18 @@ A key registration transaction additionally has the following fields:
  - An optional (boolean) flag $\nonpart$ which, when deregistering keys,
    specifies whether to mark the account offline (if $\nonpart$ is false)
    or nonparticipatory (if $\nonpart$ is true).
+
+An audit transaction additionally has the following fields:
+
+ - The _comparator_ $P$, which is a string that specifies the type of comparison
+   to be done.  It is one of the following values: "=", "<", or ">".
+
+ - The _reference value_ $\aref$ which is a 64-bit constant which the comparison
+   is done against.
+
+ - The _reference asset ID_ $\aidref$, which is an optional 40-bit value (TODO
+   wait for asset PR to specify data format).  If given, this value specifies
+   the ID of the asset to be used for comparison.
 
 The cryptographic hash of the fields above is called the _transaction
 identifier_.  This is written as $\Hash(\Tx)$.
@@ -534,13 +550,13 @@ block to be valid, each transaction in its transaction sequence must be valid at
 the block's round $r$ and for the block's genesis identifier $\GenesisID_B$.
 
 For a transaction
-$$\Tx = (\GenesisID, \TxType, r_1, r_2, I, I', I_0, f, a, N, \pk, \nonpart)$$
+$$\Tx = (\GenesisID, \TxType, r_1, r_2, I, I', I_0, f, a, N, \pk, \nonpart, P, \aref, \aidref)$$
 to be valid at the intermediate state $\rho$ in round $r$ for the genesis
 identifier $\GenesisID_B$, the following conditions must all hold:
 
  - It must represent a transition between two valid account states.
  - Either $\GenesisID = \GenesisID_B$ or $\GenesisID$ is the empty string.
- - $\TxType$ is either "pay" or "keyreg".
+ - $\TxType$ is either "pay", "keyreg", or "audit".
  - There are no extra fields that do not correspond to $\TxType$.
  - $0 \leq r_2 - r_1 \leq T_{\max}$.
  - $r_1 \leq r \leq r_2$.
@@ -556,7 +572,11 @@ identifier $\GenesisID_B$, the following conditions must all hold:
     - If $I_0 \neq 0$, then $I_0 \neq I$.
  - If $\TxType$ is "keyreg",
     - $p_{\rho, I} \ne 2$ (i.e., nonparticipatory accounts may not issue keyreg transactions)
-    - If $\nonpart$ is true then $\pk = 0$
+    - If $\nonpart$ is true then $\pk = 0$.
+ - If $\TxType$ is "audit", (TODO wait for asset PR to specify for $\aidref$)
+    - If $P$ is "<", $\Stake(\rho, I) - f < \aref$;
+	- if $P$ is ">", $\Stake(\rho, I) - f > \aref$; and
+	- otherwise (i.e., $P$ is "="), $\Stake(\rho, I) - f = \aref$.
 
 Given that a transaction is valid, it produces the following updated account
 state for intermediate state $\rho+1$:
@@ -570,8 +590,8 @@ state for intermediate state $\rho+1$:
         - $a'_{\rho+1, I} = T_{r+1}$.
         - $a^*_{\rho+1, I} = a^*_{\rho, I} +
                              (T_{r+1} - a'_{\rho, I}) \floor{\frac{a_{\rho, I}}{A}}$.
-        - If $\TxType$ is "pay", then $\pk_{\rho+1, I} = \pk_{\rho, I}$ and $p_{\rho+1, I} = p_{\rho, I}$
-        - Otherwise (i.e., if $\TxType$ is "keyreg"),
+        - If $\TxType$ is "pay", then $\pk_{\rho+1, I} = \pk_{\rho, I}$ and $p_{\rho+1, I} = p_{\rho, I}$;
+        - otherwise, if $\TxType$ is "keyreg",
             - $\pk_{\rho+1, I} = \pk$
             - $p_{\rho+1, I} = 0$ if $\pk = 0$ and $\nonpart = \text{false}$
             - $p_{\rho+1, I} = 2$ if $\pk = 0$ and $\nonpart = \text{true}$
