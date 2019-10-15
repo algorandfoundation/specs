@@ -48,13 +48,15 @@ the master key $\rightarrow$ batch sub\-key $\rightarrow$ leaf sub-key
 $\rightarrow$ voting message (more details in next sub-section: One\-time 
 Signature).
 
-After usage, an Algorand node deletes the outdated ephemeral subkeys. 
-Algorand allows users to set the number of rounds that a ephemeral sub-key
-can be used repeatedly, $\KeyDilution$. For example, the default $\KeyDilution$ 
+Each leaf level ephemeral sub-key is used only once, and will be deleted and 
+updated if current batch of leaf level ephemeral sub-keys run out.
+Algorand allows users to set the number of leaf leval ephemeral sub-key
+per batch, $\KeyDilution$. For example, the default $\KeyDilution$ 
 value of the current consensus protocol (V17) is $10,000$. 
 An algorand account can change her $\KeyDilution$ via 
 key registration transactions (see 
 [the ledger specification](https://github.com/algorandfoundation/specs/blob/master/dev/ledger.md)).
+
 
 One\-time Signature
 -------------------
