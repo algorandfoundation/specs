@@ -34,14 +34,15 @@ States
 
 A _ledger_ is a sequence of states which comprise the common information
 established by some instantiation of the Algorand protocol.  A ledger is
-identified by a string called the _genesis identifier_. Each state consists of
-the following components:
+identified by a string called the _genesis identifier_, as well as a
+_genesis hash_ that cryptographically commits to the starting state of
+the ledger. Each state consists of the following components:
 
  - The _round_ of the state, which indexes into the ledger's sequence of
    states.
 
- - The _genesis identifier_, which identifies the ledger to which the state
-   belongs.
+ - The _genesis identifier_ and _genesis hash_, which identify the ledger
+   to which the state belongs.
 
  - The current _protocol version_ and the _upgrade state_.
 
@@ -64,38 +65,45 @@ Blocks
 ------
 
 A _block_ is a data structure which specifies the transition between states.
-Each block consists of the following components, which correspond to components
-of the state:
+The data in a block is divided between the _block header_ and its _block body_.
+The block header contains the following components:
 
  - The block's _round_, which matches the round of the state it is transitioning
    into.  (The block with round 0 is special in that this block specifies not a
    transition but rather the entire initial state, which is called the _genesis
    state_.  This block is correspondingly called the _genesis block_.)
+   The round is stored under msgpack key `rnd`.
 
- - The block's _genesis identifier_, which matches the genesis identifier of the
-   states it transitions between.
+ - The block's _genesis identifier_ and _genesis hash_, which match the
+   genesis identifier and hash of the states it transitions between.
+   The genesis identifier is stored under msgpack key `gen`, and the genesis
+   hash is stored under msgpack key `gh`.
 
  - The block's _upgrade vote_, which results in the new upgrade state.  The
    block also duplicates the upgrade state of the state it transitions into.
+   The msgpack representation of the components of the upgrade vote are described
+   in detail below.
 
  - The block's _timestamp_, which matches the timestamp of the state it
-   transitions into.
+   transitions into.  The timestamp is stored under msgpack key `ts`.
 
  - The block's _seed_, which matches the seed of the state it transitions into.
+   The seed is stored under msgpack key `seed`.
 
  - The block's _reward updates_, which results in the new reward state.  The
    block also duplicates the reward state of the state it transitions into.
+   The msgpack representation of the components of the reward updates are described
+   in detail below.
 
- - The block's _transaction set_, which represents a set of updates (i.e.,
-   _transactions_) to the account state.  The block also duplicates a
-   cryptographic commitment to its transaction set.
+ - A cryptographic commitment to the block's _transaction sequence_, described
+   below, stored under msgpack key `txn`.
 
  - The block's _previous hash_, which is the cryptographic hash of the previous
-   block in the sequence.  (The previous hash of the genesis block is 0.)
+   block in the sequence.  (The previous hash of the genesis block is 0.)  The
+   previous hash is stored under msgpack key `prev`.
 
-The data in a block is divided between the _block header_ and its _block body_.
-The block body is the block's transaction set, while the block header contains
-all other data, including a cryptographic commitment to the transaction set.
+The block body is the block's transaction sequence, which describes the sequence
+of updates (transactions) to the account state.
 
 A block is _valid_ if each component is also _valid_.  (The genesis block is
 always valid).  _Applying_ a valid block to a state produces a new state by
