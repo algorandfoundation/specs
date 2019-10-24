@@ -1,7 +1,9 @@
 pdf/%.pdf: %.md
+	@mkdir -p $(@D)
 	pandoc --toc --template template/default.latex -o $@ $<
 
 html/%.html: %.md
+	@mkdir -p $(@D)
 	pandoc --toc -o $@ -s $< --mathjax
 
 all: pdf html
