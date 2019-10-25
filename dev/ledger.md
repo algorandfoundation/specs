@@ -28,6 +28,8 @@ The Algorand Ledger is parameterized by the following values:
  - $\delta_x$, the number of rounds needed to prepare for an upgrade.
  - $\omega_r$, the rate at which the reward rate is refreshed.
  - $A$, the size of an earning unit.
+ - $Assets_{\max}$, the maximum number of assets held by an account.
+
 
 States
 ------
@@ -92,6 +94,11 @@ of the state:
 
  - The block's _previous hash_, which is the cryptographic hash of the previous
    block in the sequence.  (The previous hash of the genesis block is 0.)
+
+ - The block's _transaction counter_, which is the total number of transactions
+   issued prior to this block.  This count starts from the first block with a
+   protocol version that supported the transaction counter.  The counter is
+   stored in msgpack field `tc`.
 
 The data in a block is divided between the _block header_ and its _block body_.
 The block body is the block's transaction set, while the block header contains
@@ -305,8 +312,61 @@ and $I_f$, the address of the _fee sink_.  For both of these accounts,
 $p_I = 2$.
 
 
+Assets
+------
+
+Each account can create assets, named by a unique integer.  Assets are
+associated with a set of _asset parameters_, which can be encoded as a
+msgpack struct:
+
+ - The total number of units of the asset that have been created, encoded with
+   msgpack field `t`.  This value must be between 0 and $2^{64}-1$.
+
+ - Whether holdings of that asset are frozen by default, a boolean flag encoded
+   with msgpack field `df`.
+
+ - An 8-byte string representing the unit name of the asset for display to the
+   user, encoded with msgpack field `un`.  This field does not uniquely identify
+   an asset; multiple assets can have the same unit name.
+
+ - A 32-byte string representing the name of the asset for display to the user,
+   encoded with msgpack field `an`.  As above, this does not uniquely identify
+   an asset.
+
+ - A 32-byte string representing A URL that provides further description of the
+   asset, encoded with msgpack field `au`.  As above, this does not uniquely
+   identify an asset.
+
+ - A 32-byte hash specifying a commitment to asset-specific metadata, encoded with
+   msgpack field `am`.  As above, this does not uniquely identify an asset.
+
+ - An address of a _manager_ account, encoded with msgpack field `m`.  The manager
+   address is used to update the addresses in the asset parameters using an asset
+   configuration transaction.
+
+ - An address of a _reserve_ account, encoded with msgpack field `r`.  The reserve
+   address is not used in the protocol, and is used purely by client software for
+   user display purposes.
+
+ - An address of a _freeze_ account, encoded with msgpack field `f`.  The freeze
+   address is used to issue asset freeze transactions.
+
+ - An address of a _clawback_ account, encoded with msgpack field `c`.
+   The clawback address is used to issue asset transfer transactions
+   from arbitrary source addresses.
+
+Parameters for assets created by an account are stored in a map in the
+account state, indexed by the asset ID.
+
+Accounts can hold up to $Assets_{\max}$ assets (1000 in this protocol).
+An account must hold every asset that it created (even if it holds 0
+units of that asset), until that asset is destroyed.  An account's asset
+holding is simply a map from asset IDs to an integer value indicating
+how many units of that asset is held by the account.
+
+
 Transactions
-------------
+============
 
 \newcommand \Tx {\mathrm{Tx}}
 \newcommand \TxSeq {\mathrm{TxSeq}}
@@ -328,10 +388,17 @@ _transaction_ $\Tx$ represents a transition between two account states. A
 transaction contains the following fields:
 
  - The _transaction type_ $\TxType$, which is a short string that indicates the
-   type of a transaction.  The transaction type is either "pay" or "keyreg".  A
-   transaction type of "pay" corresponds to a _payment_ transaction, while a
-   transaction type of "keyreg" corresponds to a _key registration_
-   transaction.
+   type of a transaction.  The following transaction types are supported:
+
+   - Transaction type `pay` corresponds to a _payment_ transaction.
+
+   - Transaction type `keyreg` corresponds to a _key registration_ transaction.
+
+   - Transaction type `acfg` corresponds to an _asset configuration_ transaction.
+
+   - Transaction type `axfer` corresponds to an _asset transfer_ transaction.
+
+   - Transaction type `afrz` corresponds to an _asset freeze_ transaction.
 
  - The _sender_ $I$, which is an address which identifies the account that
    authorized the transaction.
@@ -395,6 +462,44 @@ A key registration transaction additionally has the following fields:
  - An optional (boolean) flag $\nonpart$ which, when deregistering keys,
    specifies whether to mark the account offline (if $\nonpart$ is false)
    or nonparticipatory (if $\nonpart$ is true).
+
+An asset configuration transaction additionally has the following fields:
+
+ - The ID of the asset being configured, encoded as msgpack field `caid`.
+   If the ID is zero, this transaction is creating an asset.
+
+ - The parameters for the asset being configured, encoded as a struct under
+   msgpack field `apar`.  If this value is omitted (zero value), this
+   transaction is deleting the asset.
+
+An asset transfer transaction additionally has the following fields:
+
+ - The ID of the asset being transferred, encoded as msgpack field `xaid`.
+
+ - The number of units of the asset being transferred, encoded as msgpack
+   field `aamt`.
+
+ - The source address for the asset transfer (non-zero iff this is a
+   clawback), encoded as msgpack field `asnd`.
+
+ - The destination address for the asset transfer, encoded as msgpack field
+   `arcv`.
+
+ - The address to which all remaining asset units should be transferred
+   to close out this account's holdings of this asset, encoded as msgpack
+   field `aclose`.
+
+An asset freeze transaction additionally has the following fields:
+
+ - The address of the account whose holdings of an asset should be frozen
+   or unfrozen, encoded as msgpack field `fadd`.
+
+ - The ID of the asset the holdings of which should be frozen or unfrozen,
+   encoded as msgpack field `faid`.
+
+ - The new setting of whether the holdings should be frozen or unfrozen,
+   encoded as a boolean msgpack field `afrz` (true for frozen, false for
+   unfrozen).
 
 The cryptographic hash of the fields above is called the _transaction
 identifier_.  This is written as $\Hash(\Tx)$.
@@ -531,6 +636,89 @@ If the TxGroup hash of any transaction group in a block does not match the "Grou
 
 Beyond this check, each transaction in a group is evaluated separately and must be valid on its own, as described below in the [Validity and State Changes][Validity and State Changes] section. For example, a group containing a zero-fee transaction and a very-high-fee transaction would be rejected because the first transaction has fee less than $f_{\min}$, even if the average transaction fee of the group were above $f_{\min}$. As another example, an account with balance 50 could not spend 100 in transaction A and afterward receive 500 in transaction B, even if transactions A and B are in the same group, because transaction A would leave the account with a negative balance.
 
+Asset Transaction Semantics
+---------------------------
+
+An asset configuration transaction has the following semantics:
+
+ - If the asset ID is zero, create a new asset with an ID corresponding to
+   one plus this transaction's unique counter value.  The transaction's
+   counter value is the transaction counter field from the block header
+   plus the positional index of this transaction in the block (starting
+   from 0).
+
+   On asset creation, the asset parameters for the created asset are
+   stored in the creator's account under the newly allocated asset ID.
+   The creating account also allocates space to hold asset units of the
+   newly allocated asset.  All units of the newly created asset (i.e.,
+   the total specified in the parameters) are held by the creator.
+
+ - If the asset ID is non-zero, the transaction must be issued by the
+   manager of the asset (based on the asset's current parameters).  A
+   zero manager address means no such transaction can be issued.
+
+   If the parameters are omitted (the zero value), the asset is destroyed.
+   This is allowed only if the creator holds all of the units of that asset
+   (i.e., equal to the total in the parameters).
+
+   If the parameters are not omitted, any non-zero key in the asset's
+   current parameters (as stored in the asset creator's account) is
+   is updated to the key specified in the asset parameters.  This applies
+   to the manager, reserve, freeze, and clawback keys.  Once a key is set
+   to zero, it cannot be updated.  Other parameters are immutable.
+
+An asset transfer transaction has the following semantics:
+
+ - If the asset source field is non-zero, the transaction must be issued
+   by the asset's clawback account, and this transaction can neither
+   allocate nor close out holdings of an asset (i.e., the asset close-to
+   field must not be specified, and the source account must already have
+   allocated space to store holdings of the asset in question).  In this
+   clawback case, freezes are bypassed on both the source and destination
+   of this transfer.
+
+   If the asset source field is zero, the asset source is assumed to be the
+   transaction's sender, and freezes are not bypassed.
+
+ - If the transfer amount is 0, the transaction allocates space in the
+   sender's account to store the asset ID.  The holdings are initialized
+   with a zero number of units of that asset, and the default freeze flag
+   from the asset's parameters.  Space cannot be allocated for asset IDs
+   that have never been created, or that have been destroyed, at the time
+   of space allocation.  Space can remain allocated, however, after the
+   asset is destroyed.
+
+ - The transaction moves the specified number of units of the asset from
+   the source to the destination.  If either account is frozen, and
+   freezes are not bypassed, the transaction fails to execute.  If either
+   account does not have any space allocated to hold units of this asset,
+   the transaction fails to execute.  If the source account has fewer
+   than the specified number of units of that asset, the transaction
+   fails to execute.
+
+ - If the asset close-to field is specified, the transaction transfers
+   all remaining units of the asset to the close-to address.  If the
+   close-to address is not the creator address, then neither the sender
+   account's holdings of this asset not the close-to address's holdings
+   can be frozen; otherwise, the transaction fails to execute.  Closing to
+   the asset creator is always allowed, even if the source and/or creator
+   account's holdings are frozen.  If the sender or close-to address does
+   not have allocated space for the asset in question, the transaction
+   fails to execute.  After transferring all outstanding units of the
+   asset, space for the asset is deallocated from the sender account.
+
+An asset freeze transaction has the following semantics:
+
+ - If the transaction is not issued by the freeze address in the specified
+   asset's parameters, the transaction fails to execute.
+
+ - If the specified asset does not exist in the specified account, the
+   transaction fails to execute.
+
+ - The freeze flag of the specified asset in the specified account is updated
+   to the flag value from the freeze transaction.
+
+
 Validity and State Changes
 --------------------------
 
@@ -540,7 +728,9 @@ block to be valid, each transaction in its transaction sequence must be valid at
 the block's round $r$ and for the block's genesis identifier $\GenesisID_B$.
 
 For a transaction
-$$\Tx = (\GenesisID, \TxType, r_1, r_2, I, I', I_0, f, a, x, N, \pk, \nonpart)$$
+$$\Tx = (\GenesisID, \TxType, r_1, r_2, I, I', I_0, f, a, x, N, \pk, \nonpart,
+  \ldots)$$
+(where $\ldots$ represents fields specific to asset transaction types)
 to be valid at the intermediate state $\rho$ in round $r$ for the genesis
 identifier $\GenesisID_B$, the following conditions must all hold:
 
@@ -598,6 +788,9 @@ state for intermediate state $\rho+1$:
                          (T_{r+1} - a'_{\rho, I_0}) \floor{\frac{a_{\rho, I_0}}{A}}$.
  - For all other $I^* \neq I$, the account state is identical to that in view $\rho$.
 
+For asset transaction types (asset configuration, asset transfer, and asset freeze),
+account state is updated based on the reference logic described in [Asset Transaction Semantics].
+
 TODO define the sequence of intermediate states
 
 The final intermediate account $\rho_k$ state changes the balance of the
@@ -608,7 +801,11 @@ An account state in the intermediate state $\rho+1$ and at round $r$ is valid if
 all following conditions hold:
 
  - For all addresses $I \notin \{I_{pool}, I_f\}$, either $\Stake(\rho+1, I) = 0$ or
-   $\Stake(\rho+1, I) \geq b_{\min}$.
+   $\Stake(\rho+1, I) \geq b_{\min} \times (1 + NA)$, where $NA$ is the number of
+   assets held by that account.
+
+ - For all addresses, the number of assets held by that address must be less than
+   $Assets_{\max}$.
 
  - $\sum_I \Stake(\rho+1, I) = \sum_I \Stake(\rho, I)$.
 
