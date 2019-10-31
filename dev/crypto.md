@@ -71,6 +71,7 @@ below specifies each prefix (in quotation marks):
       networking implementation.
     - "TE": An arbitrary message reserved for testing purposes.
     - "Program": A TEAL bytecode program.
+	- "ProgData": Data which is signed within TEAL bytecode programs.
     - In Algorand auctions:
        - "aB": A _Bid_.
        - "aD": A _Deposit_.
