@@ -370,7 +370,8 @@ Accounts can hold up to $Assets_{\max}$ assets (1000 in this protocol).
 An account must hold every asset that it created (even if it holds 0
 units of that asset), until that asset is destroyed.  An account's asset
 holding is simply a map from asset IDs to an integer value indicating
-how many units of that asset is held by the account.
+how many units of that asset is held by the account.  An account that
+holds any asset cannot be closed.
 
 
 Transactions
@@ -761,6 +762,7 @@ identifier $\GenesisID_B$, the following conditions must all hold:
     - $I \neq I_k$ or both $I' \neq I_{pool}$ and $I_0 \neq 0$.
     - $\Stake(r+1, I) - f > a$ if $I' \neq I$ and $I' \neq 0$.
     - If $I_0 \neq 0$, then $I_0 \neq I$.
+    - If $I_0 \neq 0$, $I$ cannot hold any assets.
  - If $\TxType$ is "keyreg",
     - $p_{\rho, I} \ne 2$ (i.e., nonparticipatory accounts may not issue keyreg transactions)
     - If $\nonpart$ is true then $\pk = 0$
