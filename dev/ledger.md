@@ -323,9 +323,9 @@ $p_I = 2$.
 Assets
 ------
 
-Each account can create assets, named by a unique integer.  Assets are
-associated with a set of _asset parameters_, which can be encoded as a
-msgpack struct:
+Each account can create assets, named by a globally-unique integer (the
+_asset ID_).  Assets are associated with a set of _asset parameters_,
+which can be encoded as a msgpack struct:
 
  - The total number of units of the asset that have been created, encoded with
    msgpack field `t`.  This value must be between 0 and $2^{64}-1$.
@@ -370,7 +370,8 @@ Accounts can hold up to $Assets_{\max}$ assets (1000 in this protocol).
 An account must hold every asset that it created (even if it holds 0
 units of that asset), until that asset is destroyed.  An account's asset
 holding is simply a map from asset IDs to an integer value indicating
-how many units of that asset is held by the account.
+how many units of that asset is held by the account.  An account that
+holds any asset cannot be closed.
 
 
 Transactions
@@ -671,9 +672,9 @@ An asset configuration transaction has the following semantics:
 
    If the parameters are not omitted, any non-zero key in the asset's
    current parameters (as stored in the asset creator's account) is
-   is updated to the key specified in the asset parameters.  This applies
-   to the manager, reserve, freeze, and clawback keys.  Once a key is set
-   to zero, it cannot be updated.  Other parameters are immutable.
+   updated to the key specified in the asset parameters.  This applies to
+   the manager, reserve, freeze, and clawback keys.  Once a key is set to
+   zero, it cannot be updated.  Other parameters are immutable.
 
 An asset transfer transaction has the following semantics:
 
@@ -707,7 +708,7 @@ An asset transfer transaction has the following semantics:
  - If the asset close-to field is specified, the transaction transfers
    all remaining units of the asset to the close-to address.  If the
    close-to address is not the creator address, then neither the sender
-   account's holdings of this asset not the close-to address's holdings
+   account's holdings of this asset nor the close-to address's holdings
    can be frozen; otherwise, the transaction fails to execute.  Closing to
    the asset creator is always allowed, even if the source and/or creator
    account's holdings are frozen.  If the sender or close-to address does
@@ -761,6 +762,7 @@ identifier $\GenesisID_B$, the following conditions must all hold:
     - $I \neq I_k$ or both $I' \neq I_{pool}$ and $I_0 \neq 0$.
     - $\Stake(r+1, I) - f > a$ if $I' \neq I$ and $I' \neq 0$.
     - If $I_0 \neq 0$, then $I_0 \neq I$.
+    - If $I_0 \neq 0$, $I$ cannot hold any assets.
  - If $\TxType$ is "keyreg",
     - $p_{\rho, I} \ne 2$ (i.e., nonparticipatory accounts may not issue keyreg transactions)
     - If $\nonpart$ is true then $\pk = 0$
