@@ -323,9 +323,9 @@ $p_I = 2$.
 Assets
 ------
 
-Each account can create assets, named by a unique integer.  Assets are
-associated with a set of _asset parameters_, which can be encoded as a
-msgpack struct:
+Each account can create assets, named by a globally-unique integer (the
+_asset ID_).  Assets are associated with a set of _asset parameters_,
+which can be encoded as a msgpack struct:
 
  - The total number of units of the asset that have been created, encoded with
    msgpack field `t`.  This value must be between 0 and $2^{64}-1$.
@@ -671,9 +671,9 @@ An asset configuration transaction has the following semantics:
 
    If the parameters are not omitted, any non-zero key in the asset's
    current parameters (as stored in the asset creator's account) is
-   is updated to the key specified in the asset parameters.  This applies
-   to the manager, reserve, freeze, and clawback keys.  Once a key is set
-   to zero, it cannot be updated.  Other parameters are immutable.
+   updated to the key specified in the asset parameters.  This applies to
+   the manager, reserve, freeze, and clawback keys.  Once a key is set to
+   zero, it cannot be updated.  Other parameters are immutable.
 
 An asset transfer transaction has the following semantics:
 
@@ -707,7 +707,7 @@ An asset transfer transaction has the following semantics:
  - If the asset close-to field is specified, the transaction transfers
    all remaining units of the asset to the close-to address.  If the
    close-to address is not the creator address, then neither the sender
-   account's holdings of this asset not the close-to address's holdings
+   account's holdings of this asset nor the close-to address's holdings
    can be frozen; otherwise, the transaction fails to execute.  Closing to
    the asset creator is always allowed, even if the source and/or creator
    account's holdings are frozen.  If the sender or close-to address does
