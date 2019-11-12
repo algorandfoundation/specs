@@ -421,7 +421,7 @@ This is determined by the _signature_ of a transaction:
 
   - An optional multisignature _msig_ from the transaction sender over the bytes in _l_.
 
-  - An optional array of byte strings _arg_ which are arguments supplied to the program in _l_.
+  - An optional array of byte strings _arg_ which are arguments supplied to the program in _l_. (_arg_ bytes are not covered by _sig_ or _msig_)
 
 
 ApplyData
