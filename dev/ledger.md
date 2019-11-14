@@ -543,6 +543,8 @@ This is determined by the _signature_ of a transaction:
 
   - An optional array of byte strings _arg_ which are arguments supplied to the program in _l_. (_arg_ bytes are not covered by _sig_ or _msig_)
 
+  The logic signature is valid if exactly one of _sig_ or _msig_ is a valid signature of the program by the sender of the tranaction, or if neither _sig_ nor _msig_ is set and the hash of the program is equal to the sender address. Also the program must execute and finish with a single non-zero value on the stack. See [TEAL documentation](TEAL.md) for details on program execution.
+
 
 ApplyData
 ---------
