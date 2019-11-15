@@ -513,8 +513,9 @@ An asset freeze transaction additionally has the following fields:
 The cryptographic hash of the fields above is called the _transaction
 identifier_.  This is written as $\Hash(\Tx)$.
 
-A valid transaction can either be a _signed_ transaction or a _multi-signed_
-transaction.  This is determined by the _signature_ of a transaction:
+A valid transaction can either be a _signed_ transaction, a _multi-signed_
+transaction, or a _logic-signed_ transaction.
+This is determined by the _signature_ of a transaction:
 
  - A valid signed transaction's signature is a 64-byte sequence which validates
    under the sender of the transaction.
@@ -530,6 +531,19 @@ transaction.  This is determined by the _signature_ of a transaction:
    - The threshold _thr_ that is a minimum number of signatures required.
 
    - The multisignature version _v_ (current value is 1).
+
+- A valid logic-signed transaction's signature is the _lsig_ object containing
+  the following fields:
+
+  - The logic _l_ which is versioned bytecode. (See TEAL docs for details)
+
+  - An optional single signature _sig_ of 64 bytes valid for the sender of the transaction which has signed the bytes in _l_.
+
+  - An optional multisignature _msig_ from the transaction sender over the bytes in _l_.
+
+  - An optional array of byte strings _arg_ which are arguments supplied to the program in _l_. (_arg_ bytes are not covered by _sig_ or _msig_)
+
+  The logic signature is valid if exactly one of _sig_ or _msig_ is a valid signature of the program by the sender of the transaction, or if neither _sig_ nor _msig_ is set and the hash of the program is equal to the sender address. Also the program must execute and finish with a single non-zero value on the stack. See [TEAL documentation](TEAL.md) for details on program execution.
 
 
 ApplyData
