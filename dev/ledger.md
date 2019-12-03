@@ -330,20 +330,27 @@ which can be encoded as a msgpack struct:
  - The total number of units of the asset that have been created, encoded with
    msgpack field `t`.  This value must be between 0 and $2^{64}-1$.
 
+ - The number of digits after the decimal place to be used when displaying the
+   asset, encoded with msgpack field `dc`.  A value of 0 represents an asset
+   that is not divisible, while a value of 1 represents an asset divisible into
+   into tenths, 2 into hundredths, and so on.  This value must be between 0 and
+   and 19 (inclusive) ($2^{64}-1$ is 20 decimal digits).
+
  - Whether holdings of that asset are frozen by default, a boolean flag encoded
    with msgpack field `df`.
 
- - An 8-byte string representing the unit name of the asset for display to the
-   user, encoded with msgpack field `un`.  This field does not uniquely identify
-   an asset; multiple assets can have the same unit name.
+ - A string representing the unit name of the asset for display to the user,
+   encoded with msgpack field `un`.  This field does not uniquely identify an
+   asset; multiple assets can have the same unit name.  The maximum length of
+   this field is 8 bytes.
 
- - A 32-byte string representing the name of the asset for display to the user,
-   encoded with msgpack field `an`.  As above, this does not uniquely identify
-   an asset.
+ - A string representing the name of the asset for display to the user, encoded
+   with msgpack field `an`.  As above, this does not uniquely identify an asset.
+   The maximum length of this field is 32 bytes.
 
- - A 32-byte string representing A URL that provides further description of the
-   asset, encoded with msgpack field `au`.  As above, this does not uniquely
-   identify an asset.
+ - A string representing a URL that provides further description of the asset,
+   encoded with msgpack field `au`.  As above, this does not uniquely identify
+   an asset.  The maximum length of this field is 32 bytes.
 
  - A 32-byte hash specifying a commitment to asset-specific metadata, encoded with
    msgpack field `am`.  As above, this does not uniquely identify an asset.
