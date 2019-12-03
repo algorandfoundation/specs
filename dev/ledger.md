@@ -341,12 +341,12 @@ which can be encoded as a msgpack struct:
 
  - A string representing the unit name of the asset for display to the user,
    encoded with msgpack field `un`.  This field does not uniquely identify an
-   asset; multiple assets can have the same unit name.  This field may not be
-   be the empty string and its maximum length is 8 bytes.
+   asset; multiple assets can have the same unit name.  The maximum length of
+   this field is 8 bytes.
 
  - A string representing the name of the asset for display to the user, encoded
    with msgpack field `an`.  As above, this does not uniquely identify an asset.
-   This field may not be the empty string and its maximum length is 32 bytes.
+   The maximum length of this field is 32 bytes.
 
  - A string representing a URL that provides further description of the asset,
    encoded with msgpack field `au`.  As above, this does not uniquely identify
