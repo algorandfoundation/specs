@@ -24,8 +24,8 @@ The Algorand Ledger is parameterized by the following values:
  - $N_{\max}$, the maximum length of a transaction note string.
  - $G_{\max}$, the maximum number of transactions allowed in a transaction group.
  - $\tau$, the number of votes needed to execute a protocol upgrade.
- - $\delta_d$, the number of rounds over with an upgrade proposal is open.
- - $\delta_x$, the number of rounds needed to prepare for an upgrade.
+ - $\delta_d$, the number of rounds over with an upgrade proposal is open. Currently defined as 10,000.
+ - $\delta_x$, the number of rounds needed to prepare for an upgrade. Currently defined as 140,000.
  - $\omega_r$, the rate at which the reward rate is refreshed.
  - $A$, the size of an earning unit.
  - $Assets_{\max}$, the maximum number of assets held by an account.
