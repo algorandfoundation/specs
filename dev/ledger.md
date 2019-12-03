@@ -348,7 +348,7 @@ which can be encoded as a msgpack struct:
    with msgpack field `an`.  As above, this does not uniquely identify an asset.
    This field may not be the empty string and its maximum length is 32 bytes.
 
- - A string representing A URL that provides further description of the asset,
+ - A string representing a URL that provides further description of the asset,
    encoded with msgpack field `au`.  As above, this does not uniquely identify
    an asset.  The maximum length of this field is 32 bytes.
 
