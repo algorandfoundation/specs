@@ -408,7 +408,7 @@ $$
 
 The seed is valid if the following verification procedure succeeds:
 
-1. Let $(B, \pk) = \Record(L, r - \delta_b, I)$; let $q_0 = \Seed(L, r-1)$.
+1. Let $(B, \pk) = \Record(L, r - \delta_b, I)$; let $q_0 = \Seed(L, r-\delta_s)$.
 
 2. If $p = 0$, check $\mathrm{VRF.Verify}(y, q_0, \pk)$, immediately returning
    failure if verification fails. Let
