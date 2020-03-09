@@ -24,8 +24,13 @@ The Algorand Ledger is parameterized by the following values:
  - $N_{\max}$, the maximum length of a transaction note string.
  - $G_{\max}$, the maximum number of transactions allowed in a transaction group.
  - $\tau$, the number of votes needed to execute a protocol upgrade.
- - $\delta_d$, the number of rounds over with an upgrade proposal is open. Currently defined as 10,000.
- - $\delta_x$, the number of rounds needed to prepare for an upgrade. Currently defined as 140,000.
+ - $\delta_d$, the number of rounds over with an upgrade proposal is open.
+   Currently defined as 10,000.
+ - $\delta_{x_{\min}}$ and $\delta_{x_{\max}}$, the minimum and maximum number
+   of rounds needed to prepare for an upgrade.  Currently respectively defined
+   as 10,000 and 150,000.
+ - $\delta_x$, the default number of rounds needed to prepare for an upgrade.
+   Currently defined as 140,000.
  - $\omega_r$, the rate at which the reward rate is refreshed.
  - $A$, the size of an earning unit.
  - $Assets_{\max}$, the maximum number of assets held by an account.
@@ -164,19 +169,21 @@ A protocol version $v$ is a string no more than $V_{\max}$ bytes long. It
 corresponds to parameters used to execute some version of the Algorand
 protocol.
 
-The upgrade vote in each block consists of a protocol version $v_r$ and a
-single bit $b$ indicating whether the block proposer supports the given version.
+The upgrade vote in each block consists of a protocol version $v_r$, a 64-bit
+unsigned integer $x_r$ which indicates the delay between the acceptance of a
+protocol version and its execution, and a single bit $b$ indicating whether
+the block proposer supports the given version.
 
 The upgrade state in each block/state consists of the current protocol version
 $v^*_r$, the next proposed protocol version $v'_r$, a 64-bit round number
 $s_r$ counting the number of votes for the next protocol version, a 64-bit
 round number $d_r$ specifying the deadline for voting on the next protocol
-version, and a 64-bit round number $x_r$ specifying when the next proposed
+version, and a 64-bit round number $x_r'$ specifying when the next proposed
 protocol version would take effect, if passed.
 
-An upgrade vote $(v_r, b)$ is valid given the upgrade state
-$(v^*_r, v'_r, s_r, d_r, x_r)$ if $v_r$ is the empty string or $v'_r$ is the
-empty string, and either
+An upgrade vote $(v_r, x_r, b)$ is valid given the upgrade state
+$(v^*_r, v'_r, s_r, d_r, x_r')$ if $v_r$ is the empty string or $v'_r$ is the
+empty string, $\delta_{x_{\min}} \leq x_r \leq \delta_{x_{\max}}$, and either
 
  - $b = 0$ or
  - $b = 1$ with $r < d_r$ and either
@@ -186,24 +193,25 @@ empty string, and either
 If the vote is valid, then the new upgrade state is
 $(v^*_{r+1}, v'_{r+1}, s_{r+1}, d_{r+1}, x_{r+1})$ where
 
- - $v^*_{r+1}$ is $v'_r$ if $r = x_r$ and $v^*_r$ otherwise.
+ - $v^*_{r+1}$ is $v'_r$ if $r = x_r'$ and $v^*_r$ otherwise.
  - $v'_{r+1}$ is
-    - the empty string if $r = x_r$ or both $r = s_r$ and $s_r + b < \tau$,
+    - the empty string if $r = x_r'$ or both $r = s_r$ and $s_r + b < \tau$,
     - $v_r$ if $v'_r$ is the empty string, and
     - $v'_r$ otherwise.
  - $s_{r+1}$ is
-    - 0 if $r = x_r$ or both $r = s_r$ and $s_r + b < \tau$, and
+    - 0 if $r = x_r'$ or both $r = s_r$ and $s_r + b < \tau$, and
     - $s_r + b$ otherwise
  - $d_{r+1}$ is
-    - 0 if $r = x_r$ or both $r = s_r$ and $s_r + b < \tau$,
+    - 0 if $r = x_r'$ or both $r = s_r$ and $s_r + b < \tau$,
     - $r + \delta_d$ if $v'_r$ is the empty string and $v_r$ is not the empty
       string, and
     - $d_r$ otherwise.
  - $x_{r+1}$ is
-    - 0 if $r = x_r$ or both $r = s_r$ and $s_r + b < \tau$,
-    - $r + \delta_d + \delta_x$ if $v'_r$ is the empty string and $v_r$ is not
-      the empty string, and
-    - $x_r$ otherwise.
+    - 0 if $r = x_r'$ or both $r = s_r$ and $s_r + b < \tau$,
+    - $r + \delta_d + \delta$ if $v'_r$ is the empty string and $v_r$ is not
+      the empty string (where $\delta = \delta_x$ if $x_r = 0$ and
+      $\delta = x_r$ if $x_r \neq 0$), and
+    - $x_r'$ otherwise.
 
 
 Timestamp
