@@ -133,6 +133,8 @@ Some of these have immediate data in the byte or bytes after the opcode.
 | `arg_3` | push Args[3] to stack |
 | `txn` | push field from current transaction to stack |
 | `gtxn` | push field to the stack from a transaction in the current transaction group |
+| `txna` | push value of an array field from current transaction to stack |
+| `gtxna` | push value of a field to the stack from a transaction in the current transaction group |
 | `global` | push value from globals to stack |
 | `load` | copy a value from scratch space to the stack |
 | `store` | pop a value from the stack and store to scratch space |
@@ -165,6 +167,12 @@ Some of these have immediate data in the byte or bytes after the opcode.
 | 21 | AssetCloseTo | []byte | 32 byte address |
 | 22 | GroupIndex | uint64 | Position of this transaction within an atomic transaction group. A stand-alone transaction is implicitly element 0 in a group of 1. |
 | 23 | TxID | []byte | The computed ID for this transaction. 32 bytes. |
+| 24 | ApplicationID | uint64 | ApplicationID from ApplicationCall transaction |
+| 25 | OnCompletion | uint64 | ApplicationCall transaction on completion action |
+| 26 | ApplicationArgs | []byte | Arguments passed to the application in the ApplicationCall transaction |
+| 27 | NumAppArgs | uint64 | Number of ApplicationArgs |
+| 28 | Accounts | []byte | Accounts listed in the ApplicationCall transaction |
+| 29 | NumAccounts | uint64 | Number of Accounts |
 
 
 Additional details in the [opcodes document](TEAL_opcodes.md#txn) on the `txn` op.
@@ -183,6 +191,30 @@ Global fields are fields that are common to all the transactions in the group. I
 | 5 | LogicSigVersion | uint64 |  |
 
 
+**Asset Fields**
+
+Asset fields include `AssetHolding` and `AssetParam` fields that are used in `asset_read_*` opcodes
+
+| Index | Name | Type | Notes |
+| --- | --- | --- | --- |
+| 0 | AssetBalance | uint64 | Amount of the asset unit held by this account |
+| 1 | AssetFrozen | uint64 | Is the asset frozen or not |
+
+
+| Index | Name | Type | Notes |
+| --- | --- | --- | --- |
+| 0 | AssetTotal | uint64 | Total number of units of this asset |
+| 1 | AssetDecimals | uint64 | See AssetParams.Decimals |
+| 2 | AssetDefaultFrozen | uint64 | Frozen by default or not |
+| 3 | AssetUnitName | []byte | Asset unit name |
+| 4 | AssetAssetName | []byte | Asset name |
+| 5 | AssetURL | []byte | URL with additional info about the asset |
+| 6 | AssetMetadataHash | []byte | Arbitrary commitment |
+| 7 | AssetManager | []byte | Manager commitment |
+| 8 | AssetReserve | []byte | Reserve address |
+| 9 | AssetFreeze | []byte | Freeze address |
+| 10 | AssetClawback | []byte | Clawback address |
+
 
 ### Flow Control
 
@@ -192,6 +224,21 @@ Global fields are fields that are common to all the transactions in the group. I
 | `bnz` | branch if value X is not zero |
 | `pop` | discard value X from stack |
 | `dup` | duplicate last value on stack |
+
+### State Access
+
+| Op | Description |
+| --- | --- |
+| `balance` | get balance for the requested account A in microalgos. A is specified as an account index in the Accounts field of the ApplicationCall transaction |
+| `app_opted_in` | check if account A opted in for the application B => {0 or 1} |
+| `app_local_get` | read from account's A from local state of the application B key C  => {0 or 1 (top), value} |
+| `app_global_get` | read key A from global state of a current application => {0 or 1 (top), value} |
+| `app_local_put` | write to account's A to local state of a current application key B with value C |
+| `app_global_put` | write key A and value B to global state of the current application |
+| `app_local_del` | delete from account's A local state key B of the current application |
+| `app_global_del` | delete key A from a global state of the current application |
+| `asset_holding_get` | read from account's A and asset B holding field X (imm arg)  => {0 or 1 (top), value} |
+| `asset_params_get` | read from account's A and asset B params field X (imm arg)  => {0 or 1 (top), value} |
 
 # Assembler Syntax
 

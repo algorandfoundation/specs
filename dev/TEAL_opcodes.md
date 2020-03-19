@@ -13,14 +13,14 @@ Ops have a 'cost' of 1 unless otherwise specified.
 
 ## err
 
-- Opcode: 0x00 
+- Opcode: 0x00
 - Pops: _None_
 - Pushes: _None_
 - Error. Panic immediately. This is primarily a fencepost against accidental zero bytes getting compiled into programs.
 
 ## sha256
 
-- Opcode: 0x01 
+- Opcode: 0x01
 - Pops: *... stack*, []byte
 - Pushes: []byte
 - SHA256 hash of value X, yields [32]byte
@@ -28,7 +28,7 @@ Ops have a 'cost' of 1 unless otherwise specified.
 
 ## keccak256
 
-- Opcode: 0x02 
+- Opcode: 0x02
 - Pops: *... stack*, []byte
 - Pushes: []byte
 - Keccak256 hash of value X, yields [32]byte
@@ -36,7 +36,7 @@ Ops have a 'cost' of 1 unless otherwise specified.
 
 ## sha512_256
 
-- Opcode: 0x03 
+- Opcode: 0x03
 - Pops: *... stack*, []byte
 - Pushes: []byte
 - SHA512_256 hash of value X, yields [32]byte
@@ -44,38 +44,38 @@ Ops have a 'cost' of 1 unless otherwise specified.
 
 ## ed25519verify
 
-- Opcode: 0x04 
+- Opcode: 0x04
 - Pops: *... stack*, {[]byte A}, {[]byte B}, {[]byte C}
 - Pushes: uint64
 - for (data A, signature B, pubkey C) verify the signature of ("ProgData" || program_hash || data) against the pubkey => {0 or 1}
 - **Cost**: 1900
 
-The 32 byte public key is the last element on the stack, preceeded by the 64 byte signature at the second-to-last element on the stack, preceeded by the data which was signed at the third-to-last element on the stack.
+The 32 byte public key is the last element on the stack, preceded by the 64 byte signature at the second-to-last element on the stack, preceded by the data which was signed at the third-to-last element on the stack.
 
 ## +
 
-- Opcode: 0x08 
+- Opcode: 0x08
 - Pops: *... stack*, {uint64 A}, {uint64 B}
 - Pushes: uint64
 - A plus B. Panic on overflow.
 
 ## -
 
-- Opcode: 0x09 
+- Opcode: 0x09
 - Pops: *... stack*, {uint64 A}, {uint64 B}
 - Pushes: uint64
 - A minus B. Panic if B > A.
 
 ## /
 
-- Opcode: 0x0a 
+- Opcode: 0x0a
 - Pops: *... stack*, {uint64 A}, {uint64 B}
 - Pushes: uint64
 - A divided by B. Panic if B == 0.
 
 ## *
 
-- Opcode: 0x0b 
+- Opcode: 0x0b
 - Pops: *... stack*, {uint64 A}, {uint64 B}
 - Pushes: uint64
 - A times B. Panic on overflow.
@@ -84,84 +84,84 @@ Overflow is an error condition which halts execution and fails the transaction. 
 
 ## <
 
-- Opcode: 0x0c 
+- Opcode: 0x0c
 - Pops: *... stack*, {uint64 A}, {uint64 B}
 - Pushes: uint64
 - A less than B => {0 or 1}
 
 ## >
 
-- Opcode: 0x0d 
+- Opcode: 0x0d
 - Pops: *... stack*, {uint64 A}, {uint64 B}
 - Pushes: uint64
 - A greater than B => {0 or 1}
 
 ## <=
 
-- Opcode: 0x0e 
+- Opcode: 0x0e
 - Pops: *... stack*, {uint64 A}, {uint64 B}
 - Pushes: uint64
 - A less than or equal to B => {0 or 1}
 
 ## >=
 
-- Opcode: 0x0f 
+- Opcode: 0x0f
 - Pops: *... stack*, {uint64 A}, {uint64 B}
 - Pushes: uint64
 - A greater than or equal to B => {0 or 1}
 
 ## &&
 
-- Opcode: 0x10 
+- Opcode: 0x10
 - Pops: *... stack*, {uint64 A}, {uint64 B}
 - Pushes: uint64
 - A is not zero and B is not zero => {0 or 1}
 
 ## ||
 
-- Opcode: 0x11 
+- Opcode: 0x11
 - Pops: *... stack*, {uint64 A}, {uint64 B}
 - Pushes: uint64
 - A is not zero or B is not zero => {0 or 1}
 
 ## ==
 
-- Opcode: 0x12 
+- Opcode: 0x12
 - Pops: *... stack*, {any A}, {any B}
 - Pushes: uint64
 - A is equal to B => {0 or 1}
 
 ## !=
 
-- Opcode: 0x13 
+- Opcode: 0x13
 - Pops: *... stack*, {any A}, {any B}
 - Pushes: uint64
 - A is not equal to B => {0 or 1}
 
 ## !
 
-- Opcode: 0x14 
+- Opcode: 0x14
 - Pops: *... stack*, uint64
 - Pushes: uint64
 - X == 0 yields 1; else 0
 
 ## len
 
-- Opcode: 0x15 
+- Opcode: 0x15
 - Pops: *... stack*, []byte
 - Pushes: uint64
 - yields length of byte value X
 
 ## itob
 
-- Opcode: 0x16 
+- Opcode: 0x16
 - Pops: *... stack*, uint64
 - Pushes: []byte
 - converts uint64 X to big endian bytes
 
 ## btoi
 
-- Opcode: 0x17 
+- Opcode: 0x17
 - Pops: *... stack*, []byte
 - Pushes: uint64
 - converts bytes X as big endian to uint64
@@ -170,42 +170,42 @@ Overflow is an error condition which halts execution and fails the transaction. 
 
 ## %
 
-- Opcode: 0x18 
+- Opcode: 0x18
 - Pops: *... stack*, {uint64 A}, {uint64 B}
 - Pushes: uint64
 - A modulo B. Panic if B == 0.
 
 ## |
 
-- Opcode: 0x19 
+- Opcode: 0x19
 - Pops: *... stack*, {uint64 A}, {uint64 B}
 - Pushes: uint64
 - A bitwise-or B
 
 ## &
 
-- Opcode: 0x1a 
+- Opcode: 0x1a
 - Pops: *... stack*, {uint64 A}, {uint64 B}
 - Pushes: uint64
 - A bitwise-and B
 
 ## ^
 
-- Opcode: 0x1b 
+- Opcode: 0x1b
 - Pops: *... stack*, {uint64 A}, {uint64 B}
 - Pushes: uint64
 - A bitwise-xor B
 
 ## ~
 
-- Opcode: 0x1c 
+- Opcode: 0x1c
 - Pops: *... stack*, uint64
 - Pushes: uint64
 - bitwise invert value X
 
 ## mulw
 
-- Opcode: 0x1d 
+- Opcode: 0x1d
 - Pops: *... stack*, {uint64 A}, {uint64 B}
 - Pushes: uint64, uint64
 - A times B out to 128-bit long result as low (top) and high uint64 values on the stack
@@ -228,28 +228,28 @@ Overflow is an error condition which halts execution and fails the transaction. 
 
 ## intc_0
 
-- Opcode: 0x22 
+- Opcode: 0x22
 - Pops: _None_
 - Pushes: uint64
 - push constant 0 from intcblock to stack
 
 ## intc_1
 
-- Opcode: 0x23 
+- Opcode: 0x23
 - Pops: _None_
 - Pushes: uint64
 - push constant 1 from intcblock to stack
 
 ## intc_2
 
-- Opcode: 0x24 
+- Opcode: 0x24
 - Pops: _None_
 - Pushes: uint64
 - push constant 2 from intcblock to stack
 
 ## intc_3
 
-- Opcode: 0x25 
+- Opcode: 0x25
 - Pops: _None_
 - Pushes: uint64
 - push constant 3 from intcblock to stack
@@ -272,28 +272,28 @@ Overflow is an error condition which halts execution and fails the transaction. 
 
 ## bytec_0
 
-- Opcode: 0x28 
+- Opcode: 0x28
 - Pops: _None_
 - Pushes: []byte
 - push constant 0 from bytecblock to stack
 
 ## bytec_1
 
-- Opcode: 0x29 
+- Opcode: 0x29
 - Pops: _None_
 - Pushes: []byte
 - push constant 1 from bytecblock to stack
 
 ## bytec_2
 
-- Opcode: 0x2a 
+- Opcode: 0x2a
 - Pops: _None_
 - Pushes: []byte
 - push constant 2 from bytecblock to stack
 
 ## bytec_3
 
-- Opcode: 0x2b 
+- Opcode: 0x2b
 - Pops: _None_
 - Pushes: []byte
 - push constant 3 from bytecblock to stack
@@ -307,28 +307,28 @@ Overflow is an error condition which halts execution and fails the transaction. 
 
 ## arg_0
 
-- Opcode: 0x2d 
+- Opcode: 0x2d
 - Pops: _None_
 - Pushes: []byte
 - push Args[0] to stack
 
 ## arg_1
 
-- Opcode: 0x2e 
+- Opcode: 0x2e
 - Pops: _None_
 - Pushes: []byte
 - push Args[1] to stack
 
 ## arg_2
 
-- Opcode: 0x2f 
+- Opcode: 0x2f
 - Pops: _None_
 - Pushes: []byte
 - push Args[2] to stack
 
 ## arg_3
 
-- Opcode: 0x30 
+- Opcode: 0x30
 - Pops: _None_
 - Pushes: []byte
 - push Args[3] to stack
@@ -368,6 +368,12 @@ Overflow is an error condition which halts execution and fails the transaction. 
 | 21 | AssetCloseTo | []byte | 32 byte address |
 | 22 | GroupIndex | uint64 | Position of this transaction within an atomic transaction group. A stand-alone transaction is implicitly element 0 in a group of 1. |
 | 23 | TxID | []byte | The computed ID for this transaction. 32 bytes. |
+| 24 | ApplicationID | uint64 | ApplicationID from ApplicationCall transaction |
+| 25 | OnCompletion | uint64 | ApplicationCall transaction on completion action |
+| 26 | ApplicationArgs | []byte | Arguments passed to the application in the ApplicationCall transaction |
+| 27 | NumAppArgs | uint64 | Number of ApplicationArgs |
+| 28 | Accounts | []byte | Accounts listed in the ApplicationCall transaction |
+| 29 | NumAccounts | uint64 | Number of Accounts |
 
 
 TypeEnum mapping:
@@ -380,6 +386,7 @@ TypeEnum mapping:
 | 3 | acfg | AssetConfig |
 | 4 | axfer | AssetTransfer |
 | 5 | afrz | AssetFreeze |
+| 6 | appl | ApplicationCall |
 
 
 FirstValidTime causes the program to fail. The field is reserved for future use.
@@ -426,6 +433,22 @@ for notes on transaction fields available, see `txn`. If this transaction is _i_
 - Pushes: _None_
 - pop a value from the stack and store to scratch space
 
+## txna
+
+- Opcode: 0x36 {uint8 transaction field index}{uint8 transaction field array index}
+- Pops: _None_
+- Pushes: any
+- push value of an array field from current transaction to stack
+- LogicSigVersion >= 2
+
+## gtxna
+
+- Opcode: 0x37 {uint8 transaction group index}{uint8 transaction field index}{uint8 transaction field array index}
+- Pops: _None_
+- Pushes: any
+- push value of a field to the stack from a transaction in the current transaction group
+- LogicSigVersion >= 2
+
 ## bnz
 
 - Opcode: 0x40 {0..0x7fff forward branch offset, big endian}
@@ -439,27 +462,27 @@ At LogicSigVersion 2 it became allowed to branch to the end of the program exact
 
 ## pop
 
-- Opcode: 0x48 
+- Opcode: 0x48
 - Pops: *... stack*, any
 - Pushes: _None_
 - discard value X from stack
 
 ## dup
 
-- Opcode: 0x49 
+- Opcode: 0x49
 - Pops: *... stack*, any
 - Pushes: any, any
 - duplicate last value on stack
 
 ## concat
 
-- Opcode: 0x50 
+- Opcode: 0x50
 - Pops: *... stack*, {[]byte A}, {[]byte B}
 - Pushes: []byte
 - pop two byte strings A and B and join them, push the result
 - LogicSigVersion >= 2
 
-`cons` panics if the result would be greater than 4096 bytes
+`concat` panics if the result would be greater than 4096 bytes
 
 ## substring
 
@@ -471,8 +494,127 @@ At LogicSigVersion 2 it became allowed to branch to the end of the program exact
 
 ## substring3
 
-- Opcode: 0x52 
+- Opcode: 0x52
 - Pops: *... stack*, {[]byte A}, {uint64 B}, {uint64 C}
 - Pushes: []byte
 - pop a byte string A and two integers B and C. Extract a range of bytes from A starting at B up to but not including C, push the substring result
 - LogicSigVersion >= 2
+
+## balance
+
+- Opcode: 0x60
+- Pops: *... stack*, uint64
+- Pushes: uint64
+- get balance for the requested account A in microalgos. A is specified as an account index in the Accounts field of the ApplicationCall transaction
+- LogicSigVersion >= 2
+
+## app_opted_in
+
+- Opcode: 0x61
+- Pops: *... stack*, {uint64 A}, {uint64 B}
+- Pushes: uint64
+- check if account A opted in for the application B => {0 or 1}
+- LogicSigVersion >= 2
+
+params: account index, application id (top of the stack on opcode entry)
+
+## app_local_get
+
+- Opcode: 0x62
+- Pops: *... stack*, {uint64 A}, {uint64 B}, {[]byte C}
+- Pushes: uint64, any
+- read from account's A from local state of the application B key C  => {0 or 1 (top), value}
+- LogicSigVersion >= 2
+
+params: account index, application id, state key. Return: did_exist flag (top of the stack), value
+
+## app_global_get
+
+- Opcode: 0x63
+- Pops: *... stack*, []byte
+- Pushes: uint64, any
+- read key A from global state of a current application => {0 or 1 (top), value}
+- LogicSigVersion >= 2
+
+## app_local_put
+
+- Opcode: 0x64
+- Pops: *... stack*, {uint64 A}, {[]byte B}, {any C}
+- Pushes: _None_
+- write to account's A to local state of a current application key B with value C
+- LogicSigVersion >= 2
+
+params: account index, state key, value
+
+## app_global_put
+
+- Opcode: 0x65
+- Pops: *... stack*, {[]byte A}, {any B}
+- Pushes: _None_
+- write key A and value B to global state of the current application
+- LogicSigVersion >= 2
+
+## app_local_del
+
+- Opcode: 0x66
+- Pops: *... stack*, {uint64 A}, {[]byte B}
+- Pushes: _None_
+- delete from account's A local state key B of the current application
+- LogicSigVersion >= 2
+
+params: account index, state key
+
+## app_global_del
+
+- Opcode: 0x67
+- Pops: *... stack*, []byte
+- Pushes: _None_
+- delete key A from a global state of the current application
+- LogicSigVersion >= 2
+
+params: state key
+
+## asset_holding_get
+
+- Opcode: 0x70 {uint8 asset holding field index}
+- Pops: *... stack*, {uint64 A}, {uint64 B}
+- Pushes: uint64, any
+- read from account's A and asset B holding field X (imm arg)  => {0 or 1 (top), value}
+- LogicSigVersion >= 2
+
+`asset_holding_get` Fields:
+
+| Index | Name | Type | Notes |
+| --- | --- | --- | --- |
+| 0 | AssetBalance | uint64 | Amount of the asset unit held by this account |
+| 1 | AssetFrozen | uint64 | Is the asset frozen or not |
+
+
+params: account index, asset id. Return: did_exist flag, value
+
+## asset_params_get
+
+- Opcode: 0x71 {uint8 asset params field index}
+- Pops: *... stack*, {uint64 A}, {uint64 B}
+- Pushes: uint64, any
+- read from account's A and asset B params field X (imm arg)  => {0 or 1 (top), value}
+- LogicSigVersion >= 2
+
+`asset_params_get` Fields:
+
+| Index | Name | Type | Notes |
+| --- | --- | --- | --- |
+| 0 | AssetTotal | uint64 | Total number of units of this asset |
+| 1 | AssetDecimals | uint64 | See AssetParams.Decimals |
+| 2 | AssetDefaultFrozen | uint64 | Frozen by default or not |
+| 3 | AssetUnitName | []byte | Asset unit name |
+| 4 | AssetAssetName | []byte | Asset name |
+| 5 | AssetURL | []byte | URL with additional info about the asset |
+| 6 | AssetMetadataHash | []byte | Arbitrary commitment |
+| 7 | AssetManager | []byte | Manager commitment |
+| 8 | AssetReserve | []byte | Reserve address |
+| 9 | AssetFreeze | []byte | Freeze address |
+| 10 | AssetClawback | []byte | Clawback address |
+
+
+params: account index, asset id. Return: did_exist flag, value
