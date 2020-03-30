@@ -466,6 +466,34 @@ The `bnz` instruction opcode 0x40 is followed by two immediate data bytes which 
 
 At LogicSigVersion 2 it became allowed to branch to the end of the program exactly after the last instruction, removing the need for a last instruction or no-op as a branch target at the end. Branching beyond that may still fail the program.
 
+## bz
+
+- Opcode: 0x41 {0..0x7fff forward branch offset, big endian}
+- Pops: *... stack*, uint64
+- Pushes: _None_
+- branch if value X is zero
+- LogicSigVersion >= 2
+
+See `bnz` for details on how branches work
+
+## b
+
+- Opcode: 0x42 {0..0x7fff forward branch offset, big endian}
+- Pops: _None_
+- Pushes: _None_
+- branch unconditionally to offset
+- LogicSigVersion >= 2
+
+See `bnz` for details on how branches work. `b` always jumps to the offset.
+
+## return
+
+- Opcode: 0x43
+- Pops: *... stack*, uint64
+- Pushes: _None_
+- use last value on stack as success value; end
+- LogicSigVersion >= 2
+
 ## pop
 
 - Opcode: 0x48

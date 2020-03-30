@@ -231,6 +231,9 @@ Asset fields include `AssetHolding` and `AssetParam` fields that are used in `as
 | --- | --- |
 | `err` | Error. Panic immediately. This is primarily a fencepost against accidental zero bytes getting compiled into programs. |
 | `bnz` | branch if value X is not zero |
+| `bz` | branch if value X is zero |
+| `b` | branch unconditionally to offset |
+| `return` | use last value on stack as success value; end |
 | `pop` | discard value X from stack |
 | `dup` | duplicate last value on stack |
 
