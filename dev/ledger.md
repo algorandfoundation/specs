@@ -435,9 +435,9 @@ transaction contains the following fields:
 
  - The _lease_ $x$, which is an optional 256-bit integer specifying mutual
    exclusion.  If $x \neq 0$ (i.e., $x$ is set) and this transaction is
-   confirmed at round $r$, then any subsequent transaction with first valid
-   and last valid rounds $r_1' \leq r \leq r_2'$ and the same sender and lease
-   values may not be confirmed.
+   confirmed, then this transaction prevents another transaction from the same
+   sender and with the lease set to the same value from being confirmed until
+   $r_2$ is confirmed.
 
  - The _genesis identifier_ $\GenesisID$ of the ledger for which this
    transaction is valid.  The $\GenesisID$ is optional.
@@ -785,8 +785,8 @@ identifier $\GenesisID_B$, the following conditions must all hold:
    for $\Hash(\Tx)$ under $I$.
  - $\Hash(\Tx) \notin \TxTail_r$.
  - If $x \neq 0$, there exists no $\Tx' \in TxTail$ with sender $I'$, lease value
-   $x'$, and first and last valid rounds $r_1', r_2'$ such that $I' = I$, $x' = x$,
-   and $r_1' \leq r \leq r_2'$.
+   $x'$, and last valid round $r_2'$ such that $I' = I$, $x' = x$, and
+   $r_2' \geq r$.
  - If $\TxType$ is "pay",
     - $I \neq I_k$ or both $I' \neq I_{pool}$ and $I_0 \neq 0$.
     - $\Stake(r+1, I) - f > a$ if $I' \neq I$ and $I' \neq 0$.
