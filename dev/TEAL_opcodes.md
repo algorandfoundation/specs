@@ -24,7 +24,7 @@ Ops have a 'cost' of 1 unless otherwise specified.
 - Pops: *... stack*, []byte
 - Pushes: []byte
 - SHA256 hash of value X, yields [32]byte
-- **Cost**: 7
+- **Cost**: 35
 
 ## keccak256
 
@@ -32,7 +32,7 @@ Ops have a 'cost' of 1 unless otherwise specified.
 - Pops: *... stack*, []byte
 - Pushes: []byte
 - Keccak256 hash of value X, yields [32]byte
-- **Cost**: 26
+- **Cost**: 130
 
 ## sha512_256
 
@@ -40,7 +40,7 @@ Ops have a 'cost' of 1 unless otherwise specified.
 - Pops: *... stack*, []byte
 - Pushes: []byte
 - SHA512_256 hash of value X, yields [32]byte
-- **Cost**: 9
+- **Cost**: 45
 
 ## ed25519verify
 
@@ -380,6 +380,8 @@ Overflow is an error condition which halts execution and fails the transaction. 
 | 27 | NumAppArgs | uint64 | Number of ApplicationArgs |
 | 28 | Accounts | []byte | Accounts listed in the ApplicationCall transaction |
 | 29 | NumAccounts | uint64 | Number of Accounts |
+| 30 | ApprovalProgram | []byte | Approval program |
+| 31 | ClearStateProgram | []byte | Clear state program |
 
 
 TypeEnum mapping:
@@ -414,6 +416,7 @@ FirstValidTime causes the program to fail. The field is reserved for future use.
 | 3 | ZeroAddress | []byte | 32 byte address of all zero bytes |
 | 4 | GroupSize | uint64 | Number of transactions in this atomic transaction group. At least 1. |
 | 5 | LogicSigVersion | uint64 |  |
+| 6 | Round | uint64 | Current round number |
 
 
 ## gtxn
@@ -554,9 +557,20 @@ See `bnz` for details on how branches work. `b` always jumps to the offset.
 
 params: account index, application id (top of the stack on opcode entry)
 
-## app_local_get
+## app_local_gets
 
 - Opcode: 0x62
+- Pops: *... stack*, {uint64 A}, {[]byte B}
+- Pushes: any
+- read from account's A from local state of the current application key B  => value
+- LogicSigVersion >= 2
+- Mode: Application
+
+params: account index, state key. Return: value. The value is zero if the key does ont exist
+
+## app_local_get
+
+- Opcode: 0x63
 - Pops: *... stack*, {uint64 A}, {uint64 B}, {[]byte C}
 - Pushes: uint64, any
 - read from account's A from local state of the application B key C  => {0 or 1 (top), value}
@@ -565,18 +579,31 @@ params: account index, application id (top of the stack on opcode entry)
 
 params: account index, application id, state key. Return: did_exist flag (top of the stack), value
 
-## app_global_get
+## app_global_gets
 
-- Opcode: 0x63
+- Opcode: 0x64
 - Pops: *... stack*, []byte
-- Pushes: uint64, any
-- read key A from global state of a current application => {0 or 1 (top), value}
+- Pushes: any
+- read key A from global state of a current application => value
 - LogicSigVersion >= 2
 - Mode: Application
 
+params: state key. Return: value. The value is zero if the key does ont exist
+
+## app_global_get
+
+- Opcode: 0x65
+- Pops: *... stack*, {uint64 A}, {[]byte B}
+- Pushes: uint64, any
+- read from application A global state key B => {0 or 1 (top), value}
+- LogicSigVersion >= 2
+- Mode: Application
+
+params: application id, state key. Return: value
+
 ## app_local_put
 
-- Opcode: 0x64
+- Opcode: 0x66
 - Pops: *... stack*, {uint64 A}, {[]byte B}, {any C}
 - Pushes: _None_
 - write to account's A to local state of a current application key B with value C
@@ -587,7 +614,7 @@ params: account index, state key, value
 
 ## app_global_put
 
-- Opcode: 0x65
+- Opcode: 0x67
 - Pops: *... stack*, {[]byte A}, {any B}
 - Pushes: _None_
 - write key A and value B to global state of the current application
@@ -596,7 +623,7 @@ params: account index, state key, value
 
 ## app_local_del
 
-- Opcode: 0x66
+- Opcode: 0x68
 - Pops: *... stack*, {uint64 A}, {[]byte B}
 - Pushes: _None_
 - delete from account's A local state key B of the current application
@@ -607,7 +634,7 @@ params: account index, state key
 
 ## app_global_del
 
-- Opcode: 0x67
+- Opcode: 0x69
 - Pops: *... stack*, []byte
 - Pushes: _None_
 - delete key A from a global state of the current application
