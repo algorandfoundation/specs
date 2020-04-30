@@ -839,7 +839,7 @@ state for intermediate state $\rho+1$:
 For asset transaction types (asset configuration, asset transfer, and asset freeze),
 account state is updated based on the reference logic described in [Asset Transaction Semantics].
 
-Additionally, if the RekeyTo address of the transaction is nonzero and does not match the transaction sender address, then the transaction sender account's spending key is set to the RekeyTo address. If the RekeyTo address of the transaction does match the transaction sender address, then the transaction sender account's spending key is set to zero.
+Additionally, for all types of transactions, if the RekeyTo address of the transaction is nonzero and does not match the transaction sender address, then the transaction sender account's spending key is set to the RekeyTo address. If the RekeyTo address of the transaction does match the transaction sender address, then the transaction sender account's spending key is set to zero.
 
 TODO define the sequence of intermediate states
 
