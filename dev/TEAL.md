@@ -58,6 +58,30 @@ Constants are loaded into the environment by two opcodes, `intcblock` and `bytec
 
 Constants are pushed onto the stack by `intc`, `intc_[0123]`, `bytec`, and `bytec_[0123]`. The assembler will handle converting `int N` or `byte N` into the appropriate form of the instruction needed.
 
+### Named Integer Constants
+
+#### OnComplete
+| Value | Constant name | Description |
+| --- | --- | --- |
+| 0 | noop | Application transaction will simply call its ApprovalProgram. |
+| 1 | optin | Application transaction will allocate some LocalState for the application in the sender's account. |
+| 2 | closeout | Application transaction will deallocate some LocalState for the application from the user's account. |
+| 3 | clearstate | Similar to CloseOutOC, but may never fail. This allows users to reclaim their minimum balance from an application they no longer wish to opt in to. |
+| 4 | update | Application transaction will update the ApprovalProgram and ClearStateProgram for the application. |
+| 5 | delete | Application transaction will delete the AppParams for the application from the creator's balance. |
+
+#### TypeEnum constants
+| Value | Constant name | Description |
+| --- | --- | --- |
+| 0 | unknown | Unknown type. Invalid transaction. |
+| 1 | pay | Payment |
+| 2 | keyreg | KeyRegistration |
+| 3 | acfg | AssetConfig |
+| 4 | axfer | AssetTransfer |
+| 5 | afrz | AssetFreeze |
+| 6 | appl | ApplicationCall |
+
+
 ## Operations
 
 Most operations work with only one type of argument, uint64 or bytes, and panic if the wrong type value is on the stack.
@@ -244,18 +268,18 @@ Asset fields include `AssetHolding` and `AssetParam` fields that are used in `as
 
 | Op | Description |
 | --- | --- |
-| `balance` | get balance for the requested account A in microalgos. A is specified as an account index in the Accounts field of the ApplicationCall transaction |
-| `app_opted_in` | check if account A opted in for the application B => {0 or 1} |
-| `app_local_gets` | read from account's A from local state of the current application key B  => value |
-| `app_local_get` | read from account's A from local state of the application B key C  => {0 or 1 (top), value} |
+| `balance` | get balance for the requested account specified by Txn.Accounts[A] in microalgos. A is specified as an account index in the Accounts field of the ApplicationCall transaction |
+| `app_opted_in` | check if account specified by Txn.Accounts[A] opted in for the application B => {0 or 1} |
+| `app_local_gets` | read from account specified by Txn.Accounts[A] from local state of the current application key B  => value |
+| `app_local_get` | read from account specified by Txn.Accounts[A] from local state of the application B key C  => {0 or 1 (top), value} |
 | `app_global_gets` | read key A from global state of a current application => value |
 | `app_global_get` | read from application A global state key B => {0 or 1 (top), value} |
-| `app_local_put` | write to account's A to local state of a current application key B with value C |
+| `app_local_put` | write to account specified by Txn.Accounts[A] to local state of a current application key B with value C |
 | `app_global_put` | write key A and value B to global state of the current application |
-| `app_local_del` | delete from account's A local state key B of the current application |
+| `app_local_del` | delete from account specified by Txn.Accounts[A] local state key B of the current application |
 | `app_global_del` | delete key A from a global state of the current application |
-| `asset_holding_get` | read from account's A and asset B holding field X (imm arg)  => {0 or 1 (top), value} |
-| `asset_params_get` | read from account's A and asset B params field X (imm arg)  => {0 or 1 (top), value} |
+| `asset_holding_get` | read from account specified by Txn.Accounts[A] and asset B holding field X (imm arg)  => {0 or 1 (top), value} |
+| `asset_params_get` | read from account specified by Txn.Accounts[A] and asset B params field X (imm arg)  => {0 or 1 (top), value} |
 
 # Assembler Syntax
 
