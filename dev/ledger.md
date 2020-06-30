@@ -327,6 +327,24 @@ There exist two special addresses: $I_{pool}$, the address of the _incentive poo
 and $I_f$, the address of the _fee sink_.  For both of these accounts,
 $p_I = 2$.
 
+Applications
+------
+
+Each account can create applications, each named by a globally-unique integer (the _application ID_). Applications are associated with a set of _application parameters_, which can be encoded as a msgpack struct:
+
+- A mutable Stateful TEAL "Approval" program (`ApprovalProgram`), whose result determines whether or not an `ApplicationCall` transaction referring to this application ID is to be allowed. This program executes for all `ApplicationCall` transactions referring to this application ID except for those whose `OnCompletion == ClearState`, in which case the `ClearStateProgram` is executed instead. This field is encoded with msgpack field `approv`.
+
+- A mutable Stateful TEAL "Clear State" program (`ClearStateProgram`), executed when an opted-in user forcibly removes the local application state associated with this application from their balance record. This program, when executed, is not permitted to cause the transaction to fail. This field is encoded with msgpack field `clearp`.
+
+- An immutable "global state schema" (`GlobalStateSchema`), which sets a limit on the amount of global storage that may be associated with this application (see "State Schemas" below). This field is encoded with msgpack field `gsch`.
+
+- An immutable "local state schema" (`LocalStateSchema`), which sets a limit on the amount of storage that this application may allocate in the balance records of opted-in accounts (see "State Schemas" below). This field is encoded with msgpack field `lsch`.
+
+- The "global state" (`GlobalState`) associated with this application. This field is encoded with msgpack field `gs`.
+
+Parameters for applications created by an account are stored in a map in the account state, indexed by the application ID.
+
+`LocalState` for applications that an account has opted in to are also stored in a map in the account state, indexed by the application ID.
 
 Assets
 ------
@@ -487,6 +505,26 @@ A key registration transaction additionally has the following fields:
    specifies whether to mark the account offline (if $\nonpart$ is false)
    or nonparticipatory (if $\nonpart$ is true).
 
+An application call transaction additionally has the following fields:
+
+- The ID of the application being called, encoded as msgpack field `apid`. If the ID is zero, this transaction is creating an application.
+
+- An `OnCompletion` type, which may specify an additional effect of this transaction on the application's state in the sender or application creator's account data.  This field is encoded as msgpack field `apan`, and may take on one of the following values:
+
+  - `NoOpOC` (value `0`): Only execute the `ApprovalProgram` associated with this application ID, with no additional effects.
+  - `OptInOC` (value `1`): Before executing the `ApprovalProgram`, allocate local state for this application into the sender's account data.
+  - `CloseOutOC` (value `2`): After executing the `ApprovalProgram`, clear any local state for this application out of the sender's account data.
+  - `ClearStateOC` (value `3`): Don't execute the `ApprovalProgram`, and instead execute the `ClearStateProgram` (which may not reject this transaction). Additionally, clear any local state for this application out of the sender's account data as in `CloseOutOC`.
+  - `UpdateApplicationOC` (value `4`): After executing the `ApprovalProgram`, replace the `ApprovalProgram` and `ClearStateProgram` associated with this application ID with the programs specified in this transaction.
+  - `DeleteApplicationOC` (value `5`): After executing the `ApprovalProgram`, delete the application parameters from the account data of the application's creator.
+- Application arguments, encoded as msgpack field `apaa`. These arguments are a slice of byte slices.
+- Accounts besides the `Sender` whose local states may be referred to by the executing `ApprovalProgram` or `ClearStateProgram`. These accounts are referred to by their addresses, and this field is encoded as msgpack field `apat`.
+- Application IDs, besides the application whose `ApprovalProgram` or `ClearStateProgram` is executing, that the executing program may read global state from. This field is encoded as msgpack field `apfa`.
+- Local state schema, encoded as msgpack field `apls`. This field is only used during application creation, and sets bounds on the size of the local state for users who opt in to this application.
+- Global state schema, encoded as msgpack field `apgs`. This field is only used during application creation, and sets bounds on the size of the global state associated with this application.
+- Approval program, encoded as msgpack field `apap`. This field is used for both application creation and updates, and sets the corresponding application's `ApprovalProgram`.
+- Clear state program, encoded as msgpack field `apsu`. This field is used for both application creation and updates, and sets the corresponding application's `ClearStateProgram`.
+
 An asset configuration transaction additionally has the following fields:
 
  - The ID of the asset being configured, encoded as msgpack field `caid`.
@@ -583,6 +621,47 @@ and contains the following fields:
   in the reference implementation, one of these two fields will be zero
   in that case.
 
+- If this is an `ApplicationCall` transaction, the `EvalDelta` associated with the successful execution of the corresponding application's `ApprovalProgram` or `ClearStateProgram`. The `EvalDelta`, encoded as msgpack field `dt`, contains the following fields:
+  - A `GlobalDelta`, encoding changes to the global state of the called application, encoded as msgpack field `gd`.
+    - `gd` is a [`StateDelta`][State Deltas].
+  - Zero or more `LocalDeltas`, encoding changes to some local states associated with the called applicaiton, encoded as msgpack field `ld`.
+    - `ld` maps an "account offset" to a [`StateDelta`][State Deltas]. Account offset 0 is the transaction's sender. Account offsets 1 and greater refer to the account specified at that index minus one in the transaction's `Accounts` slice.
+
+TEAL Key/Value Stores
+---------------------
+A TEAL Key/Value Store, or TKV, is an associative array mapping keys of type byte-array to values of type byte-array or 64-bit unsigned integer.
+
+The values in a TKV are represented by the `TealValue` struct, which is composed of three fields:
+
+- `Type`, encoded as msgpack field `tt`. This field may take on one of two values:
+  - `TealBytesType` (value = `1`), indicating that the value can be found in the `Bytes` field of this struct.
+  - `TealUintType` (value = `2`), indicating that the value cna be found in the `Uint` field of this struct.
+- `Bytes`, encoded as msgpack field `tb`, representing a byte slice value.
+- `Uint`, encoded as msgpack field `ui`, representing an unsigned 64-bit integer value.
+
+The keys in a TKV are encoded directly as bytes.
+
+State Deltas
+------------
+
+A state delta represents an update to a [TEAL Key/Value Store (TKV)][TEAL Key/Value Stores]. It is represented as an associative array mapping a byte-array key to a single value delta.
+
+A value delta is composed of three fields:
+
+- Action, encoded as msgpack field `at`, which specifies how the value for this key has changed. It has three possible values:
+  - `SetUintAction` (value = `1`), indicating that the value for this key should be set to the value delta's `Uint` field.
+  - `SetBytesAction` (value = `2`), indicating that the value for this key should be set to the value delta's `Bytes` field.
+  - `DeleteAction` (value = `3`), indicating that the value for this key should be deleted.
+
+State Schemas
+-------------
+
+A state schema represents limits on the number of each value type that may appear in a [TEAL Key/Value Store (TKV)][TEAL Key/Value Stores].
+
+A state schema is composed of two fields:
+
+- `NumUint`, encoded as msgpack field `nui`. This field represents the maximum number of integer values that may appear in some TKV.
+- `NumByteSlice`, encoded as msgpack field `nbs`. This field represents the maximum number of byte slice values that may appear in some TKV.
 
 Transaction Sequences, Sets, and Tails
 --------------------------------------
@@ -756,6 +835,62 @@ An asset freeze transaction has the following semantics:
  - The freeze flag of the specified asset in the specified account is updated
    to the flag value from the freeze transaction.
 
+`ApplicationCall` Transaction Semantics
+---------------------------------------
+
+When an `ApplicationCall` transaction is evaluated by the network, it is processed according to the following procedure. None of the effects of the transaction are made visible to other transactions until the points marked **SUCCEED** below. **FAIL** indicates that any modifications to state up to that point must be discarded and the entire transaction rejected.
+
+1.
+    - If the Application ID specified by the transaction is zero, create a new application with ID equal to one plus the system transaction counter (this is the same ID selection algorithm as used by Assets).
+
+        When creating an application, the application parameters specified by the transaction (`ApprovalProgram`, `ClearStateProgram`, `GlobalStateSchema`, and `LocalStateSchema`) are allocated into the sender’s balance record, keyed by the new Application ID.
+
+        Continue to step 2.
+
+    - If the Application ID specified by the transaction is nonzero, continue to step 2.
+2.
+    - If `OnCompletion == ClearState`, then:
+        - Check if the transaction’s sender is opted in to this Application ID. If not, **FAIL.**
+        - Check if the application still exists by looking up the creator’s account by Application ID and checking if it contains the Application’s parameters.
+            - If the application does not exist, delete the sender’s local state for this application (marking them as no longer opted in), and **SUCCEED.**
+            - If the application does exist, continue to step 3.
+    - If the OnCompletion type of this transaction is not ClearState, continue to step 4.
+3.
+    - Execute the `ClearStateProgram`.
+        - If the program execution returns `PASS == true`, apply the local/global key/value store deltas generated by the program’s execution.
+        - If the program execution returns `PASS == false`, do not apply any local/global key/value store deltas generated by the program’s execution.
+    - Delete the sender’s local state for this application (marking them as no longer opted in). **SUCCEED.**
+4.
+    - If `OnCompletion == OptIn`, then at this point during execution we will allocate a local Key/Value store for the sender for this Application ID.
+
+        Once this state has been allocated, then from this point forward until an OptOut or ClearState `ApplicationCall` transaction is issued, the sender will be considered opted in to this Application ID.
+
+        Continue to step 5.
+5.
+    - Execute the `ApprovalProgram`.
+        - If the program execution returns `PASS == true`, apply any local/global key/value store deltas generated by the program’s execution. Continue to step 6.
+        - If the program execution returns `PASS == false`, **FAIL.**
+6.
+    - If `OnCompletion == NoOp`
+        - **SUCCEED.**
+    - If `OnCompletion == OptIn`
+        - This was handled above. **SUCCEED.**
+    - If `OnCompletion == CloseOut`
+        - Check if the transaction’s sender is opted in to this application ID. If not, **FAIL.**
+        - Delete the sender’s local state for this application (marking them as no longer opted in). **SUCCEED.**
+    - If `OnCompletion == ClearState`
+        - This was handled above (unreachable).
+    - If `OnCompletion == DeleteApplication`
+        - Delete the application’s parameters from the creator’s balance record. (Note: this does not affect any local state). **SUCCEED.**
+    - If `OnCompletion == UpdateApplication`
+        - Update the Approval and ClearState programs for this application according to the programs specified in this `ApplicationCall` transaction. The new programs are not executed in this transaction. **SUCCEED.**
+
+Application Stateful TEAL Execution Semantics
+---------------------------------------------
+
+- During the execution of an `ApprovalProgram` or `ClearStateProgram`, the application’s `LocalStateSchema` and `GlobalStateSchema` may never be violated. The program's execution will fail on the first instruction that would cause the relevant schema to be violated.
+- Global state may only be read for the application ID whose program is executing, or for any application ID mentioned in the `ForeignApps` transaction field. An attempts to read global state for other applications not listed in `ForeignApps` causes the program execution to fail.
+- Local state may be read for any application ID present in the sender’s balance record or the balance record of any account listed in the transaction’s `Accounts` field. An attempt to read state from any other balance record will cause program execution to fail.
 
 Validity and State Changes
 --------------------------
