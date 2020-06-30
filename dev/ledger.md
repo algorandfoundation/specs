@@ -889,7 +889,7 @@ Application Stateful TEAL Execution Semantics
 ---------------------------------------------
 
 - During the execution of an `ApprovalProgram` or `ClearStateProgram`, the application’s `LocalStateSchema` and `GlobalStateSchema` may never be violated. The program's execution will fail on the first instruction that would cause the relevant schema to be violated.
-- Global state may only be read for the application ID whose program is executing, or for any application ID mentioned in the `ForeignApps` transaction field. An attempts to read global state for other applications not listed in `ForeignApps` causes the program execution to fail.
+- Global state may only be read for the application ID whose program is executing, or for any application ID mentioned in the `ForeignApps` transaction field. An attempt to read global state for another application that is not listed in `ForeignApps` will cause the program execution to fail.
 - Local state may be read for any application ID present in the sender’s balance record or the balance record of any account listed in the transaction’s `Accounts` field. An attempt to read state from any other balance record will cause program execution to fail.
 
 Validity and State Changes
