@@ -334,11 +334,11 @@ Each account can create applications, each named by a globally-unique integer (t
 
 - A mutable Stateful TEAL "Approval" program (`ApprovalProgram`), whose result determines whether or not an `ApplicationCall` transaction referring to this application ID is to be allowed. This program executes for all `ApplicationCall` transactions referring to this application ID except for those whose `OnCompletion == ClearState`, in which case the `ClearStateProgram` is executed instead. This field is encoded with msgpack field `approv`.
 
-- A mutable Stateful TEAL "Clear State" program (`ClearStateProgram`), executed when an opted-in user forcibly removes the local application state associated with this application from their balance record. This program, when executed, is not permitted to cause the transaction to fail. This field is encoded with msgpack field `clearp`.
+- A mutable Stateful TEAL "Clear State" program (`ClearStateProgram`), executed when an opted-in user forcibly removes the local application state associated with this application from their account data. This program, when executed, is not permitted to cause the transaction to fail. This field is encoded with msgpack field `clearp`.
 
-- An immutable "global state schema" (`GlobalStateSchema`), which sets a limit on the amount of global storage that may be associated with this application (see "State Schemas" below). This field is encoded with msgpack field `gsch`.
+- An immutable "global state schema" (`GlobalStateSchema`), which sets a limit on the size of the global [TEAL Key/Value Store][TEAL Key/Value Stores] that may be associated with this application (see ["State Schemas"][State Schemas]). This field is encoded with msgpack field `gsch`.
 
-- An immutable "local state schema" (`LocalStateSchema`), which sets a limit on the amount of storage that this application may allocate in the balance records of opted-in accounts (see "State Schemas" below). This field is encoded with msgpack field `lsch`.
+- An immutable "local state schema" (`LocalStateSchema`), which sets a limit on the size of a [TEAL Key/Value Store][TEAL Key/Value Stores] that this application will allocate in the account data of an account that has opted in (see ["State Schemas"][State Schemas]). This field is encoded with msgpack field `lsch`.
 
 - The "global state" (`GlobalState`) associated with this application. This field is encoded with msgpack field `gs`.
 
@@ -843,7 +843,7 @@ When an `ApplicationCall` transaction is evaluated by the network, it is process
 1.
     - If the Application ID specified by the transaction is zero, create a new application with ID equal to one plus the system transaction counter (this is the same ID selection algorithm as used by Assets).
 
-        When creating an application, the application parameters specified by the transaction (`ApprovalProgram`, `ClearStateProgram`, `GlobalStateSchema`, and `LocalStateSchema`) are allocated into the sender’s balance record, keyed by the new Application ID.
+        When creating an application, the application parameters specified by the transaction (`ApprovalProgram`, `ClearStateProgram`, `GlobalStateSchema`, and `LocalStateSchema`) are allocated into the sender’s account data, keyed by the new Application ID.
 
         Continue to step 2.
 
@@ -881,7 +881,7 @@ When an `ApplicationCall` transaction is evaluated by the network, it is process
     - If `OnCompletion == ClearState`
         - This was handled above (unreachable).
     - If `OnCompletion == DeleteApplication`
-        - Delete the application’s parameters from the creator’s balance record. (Note: this does not affect any local state). **SUCCEED.**
+        - Delete the application’s parameters from the creator’s account data. (Note: this does not affect any local state). **SUCCEED.**
     - If `OnCompletion == UpdateApplication`
         - Update the Approval and ClearState programs for this application according to the programs specified in this `ApplicationCall` transaction. The new programs are not executed in this transaction. **SUCCEED.**
 
@@ -890,7 +890,7 @@ Application Stateful TEAL Execution Semantics
 
 - During the execution of an `ApprovalProgram` or `ClearStateProgram`, the application’s `LocalStateSchema` and `GlobalStateSchema` may never be violated. The program's execution will fail on the first instruction that would cause the relevant schema to be violated.
 - Global state may only be read for the application ID whose program is executing, or for any application ID mentioned in the `ForeignApps` transaction field. An attempt to read global state for another application that is not listed in `ForeignApps` will cause the program execution to fail.
-- Local state may be read for any application ID present in the sender’s balance record or the balance record of any account listed in the transaction’s `Accounts` field. An attempt to read state from any other balance record will cause program execution to fail.
+- Local state may be read for any opted-in application present in the sender’s account data, or in the account data for any address listed in the transaction’s `Accounts` field. An attempt to read local state from any other account will cause program execution to fail.
 
 Validity and State Changes
 --------------------------
