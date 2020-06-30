@@ -340,7 +340,7 @@ Each account can create applications, each named by a globally-unique integer (t
 
 - An immutable "local state schema" (`LocalStateSchema`), which sets a limit on the size of a [TEAL Key/Value Store][TEAL Key/Value Stores] that this application will allocate in the account data of an account that has opted in (see ["State Schemas"][State Schemas]). This field is encoded with msgpack field `lsch`.
 
-- The "global state" (`GlobalState`) associated with this application. This field is encoded with msgpack field `gs`.
+- The "global state" (`GlobalState`) associated with this application, stored as a [TEAL Key/Value Store][TEAL Key/Value Stores]. This field is encoded with msgpack field `gs`.
 
 Parameters for applications created by an account are stored in a map in the account state, indexed by the application ID. This map is encoded as msgpack field `appp`.
 
