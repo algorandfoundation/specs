@@ -648,10 +648,12 @@ A state delta represents an update to a [TEAL Key/Value Store (TKV)][TEAL Key/Va
 
 A value delta is composed of three fields:
 
-- Action, encoded as msgpack field `at`, which specifies how the value for this key has changed. It has three possible values:
+- `Action`, encoded as msgpack field `at`, which specifies how the value for this key has changed. It has three possible values:
   - `SetUintAction` (value = `1`), indicating that the value for this key should be set to the value delta's `Uint` field.
   - `SetBytesAction` (value = `2`), indicating that the value for this key should be set to the value delta's `Bytes` field.
   - `DeleteAction` (value = `3`), indicating that the value for this key should be deleted.
+- `Bytes`, encoded as msgpack field `bs`, which specifies a byte slice value to set.
+- `Uint`, encoded as msgpack field `ui`, which specifies a 64-bit unsigned integer value to set.
 
 State Schemas
 -------------
