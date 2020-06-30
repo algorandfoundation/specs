@@ -342,9 +342,9 @@ Each account can create applications, each named by a globally-unique integer (t
 
 - The "global state" (`GlobalState`) associated with this application. This field is encoded with msgpack field `gs`.
 
-Parameters for applications created by an account are stored in a map in the account state, indexed by the application ID.
+Parameters for applications created by an account are stored in a map in the account state, indexed by the application ID. This map is encoded as msgpack field `appp`.
 
-`LocalState` for applications that an account has opted in to are also stored in a map in the account state, indexed by the application ID.
+`LocalState` for applications that an account has opted in to are also stored in a map in the account state, indexed by the application ID. This map is encoded as msgpack field `appl`.
 
 Assets
 ------
