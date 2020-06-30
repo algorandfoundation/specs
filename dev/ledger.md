@@ -635,7 +635,7 @@ The values in a TKV are represented by the `TealValue` struct, which is composed
 
 - `Type`, encoded as msgpack field `tt`. This field may take on one of two values:
   - `TealBytesType` (value = `1`), indicating that the value can be found in the `Bytes` field of this struct.
-  - `TealUintType` (value = `2`), indicating that the value cna be found in the `Uint` field of this struct.
+  - `TealUintType` (value = `2`), indicating that the value can be found in the `Uint` field of this struct.
 - `Bytes`, encoded as msgpack field `tb`, representing a byte slice value.
 - `Uint`, encoded as msgpack field `ui`, representing an unsigned 64-bit integer value.
 
