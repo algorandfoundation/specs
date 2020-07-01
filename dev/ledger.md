@@ -7,11 +7,9 @@ abstract: >
   participants.  This state and its history is called the _Algorand Ledger_.
 ---
 
-Overview
-========
+# Overview
 
-Parameters
-----------
+## Parameters
 
 The Algorand Ledger is parameterized by the following values:
 
@@ -35,9 +33,7 @@ The Algorand Ledger is parameterized by the following values:
  - $A$, the size of an earning unit.
  - $Assets_{\max}$, the maximum number of assets held by an account.
 
-
-States
-------
+## States
 
 A _ledger_ is a sequence of states which comprise the common information
 established by some instantiation of the Algorand protocol.  A ledger is
@@ -67,9 +63,7 @@ the ledger. Each state consists of the following components:
    - One component of this state is the _transaction tail_, which caches the
 	 _transaction sets_ (see below) in the last $T_{\max}$ blocks.
 
-
-Blocks
-------
+## Blocks
 
 A _block_ is a data structure which specifies the transition between states.
 The data in a block is divided between the _block header_ and its _block body_.
@@ -122,9 +116,7 @@ always valid).  _Applying_ a valid block to a state produces a new state by
 updating each of its components.  The rest of this document defines block
 validity and state transitions by describing them for each component.
 
-
-Round
-=====
+# Round
 
 The round or _round number_ is a 64-bit unsigned integer which indexes into the
 sequence of states and blocks.  The round $r$ of each block is one greater than
@@ -137,8 +129,7 @@ and we denote the round of a component with a subscript.  For instance, the
 timestamp of state/block $r$ is denoted $t_r$.
 
 
-Genesis Identifier
-==================
+# Genesis Identifier
 
 \newcommand \GenesisID {\mathrm{GenesisID}}
 
@@ -149,8 +140,7 @@ The genesis identifier of a valid block is the identifier of the block in the
 previous round.  In other words, $\GenesisID_{r+1} = \GenesisID_{r}$.
 
 
-Genesis Hash
-============
+# Genesis Hash
 
 \newcommand \GenesisHash {\mathrm{GenesisHash}}
 
@@ -161,9 +151,7 @@ The genesis hash is set in the genesis block (or the block at which
 an upgrade to a protocol supporting GenesisHash occurs), and must be
 preserved identically in all subsequent blocks.
 
-
-Protocol Upgrade State
-======================
+# Protocol Upgrade State
 
 A protocol version $v$ is a string no more than $V_{\max}$ bytes long. It
 corresponds to parameters used to execute some version of the Algorand
@@ -213,9 +201,7 @@ $(v^*_{r+1}, v'_{r+1}, s_{r+1}, d_{r+1}, x_{r+1})$ where
       $\delta = x_r$ if $x_r \neq 0$), and
     - $x_r'$ otherwise.
 
-
-Timestamp
-=========
+# Timestamp
 
 The timestamp is a 64-bit signed integer.  The timestamp is purely informational
 and states when a block was first proposed, expressed in the number of seconds
@@ -226,9 +212,7 @@ The timestamp $t_{r+1}$ of a block in round $r$ is valid if:
  - $t_{r} = 0$ or
  - $t_{r+1} > t_{r}$ and $t_{r+1} < t_{r} + t_{\delta}$.
 
-
-Cryptographic Seed
-==================
+# Cryptographic Seed
 
 \newcommand \Seed {\mathrm{Seed}}
 
@@ -236,9 +220,7 @@ The seed is a 256-bit integer.  Seeds are validated and updated according to the
 [specification of the Algorand Byzantine Fault Tolerance protocol][abft-spec].
 The $\Seed$ procedure specified there returns the seed from the desired round.
 
-
-Reward State
-============
+# Reward State
 
 \newcommand \Stake {\mathrm{Stake}}
 \newcommand \Units {\mathrm{RewardUnits}}
@@ -272,9 +254,7 @@ state is $(T_{r+1}, R_{r+1}, B^*_{r+1})$ where
 
 A valid block's reward state matches the expected reward state.
 
-
-Account State
-=============
+# Account State
 
 \newcommand \Record {\mathrm{Record}}
 \newcommand \pk {\mathrm{pk}}
@@ -327,8 +307,7 @@ There exist two special addresses: $I_{pool}$, the address of the _incentive poo
 and $I_f$, the address of the _fee sink_.  For both of these accounts,
 $p_I = 2$.
 
-Applications
-------
+## Applications
 
 Each account can create applications, each named by a globally-unique integer
 (the _application ID_). Applications are associated with a set of _application
@@ -375,8 +354,39 @@ field `appp`.
 a map in the account state, indexed by the application ID. This map is encoded
 as msgpack field `appl`.
 
-Assets
-------
+### TEAL Key/Value Stores
+
+A TEAL Key/Value Store, or TKV, is an associative array mapping keys of type
+byte-array to values of type byte-array or 64-bit unsigned integer.
+
+The values in a TKV are represented by the `TealValue` struct, which is composed
+of three fields:
+
+- `Type`, encoded as msgpack field `tt`. This field may take on one of two
+  values:
+  - `TealBytesType` (value = `1`), indicating that the value can be found in the
+    `Bytes` field of this struct.
+  - `TealUintType` (value = `2`), indicating that the value can be found in the
+    `Uint` field of this struct.
+- `Bytes`, encoded as msgpack field `tb`, representing a byte slice value.
+- `Uint`, encoded as msgpack field `ui`, representing an unsigned 64-bit integer
+  value.
+
+The keys in a TKV are encoded directly as bytes.
+
+### State Schemas
+
+A state schema represents limits on the number of each value type that may
+appear in a [TEAL Key/Value Store (TKV)][TEAL Key/Value Stores].
+
+A state schema is composed of two fields:
+
+- `NumUint`, encoded as msgpack field `nui`. This field represents the maximum
+  number of integer values that may appear in some TKV.
+- `NumByteSlice`, encoded as msgpack field `nbs`. This field represents the
+  maximum number of byte slice values that may appear in some TKV.
+
+## Assets
 
 Each account can create assets, named by a globally-unique integer (the
 _asset ID_).  Assets are associated with a set of _asset parameters_,
@@ -435,9 +445,7 @@ holding is simply a map from asset IDs to an integer value indicating
 how many units of that asset is held by the account.  An account that
 holds any asset cannot be closed.
 
-
-Transactions
-============
+# Transactions
 
 \newcommand \Tx {\mathrm{Tx}}
 \newcommand \TxSeq {\mathrm{TxSeq}}
@@ -654,9 +662,7 @@ This is determined by the _signature_ of a transaction:
 
   The logic signature is valid if exactly one of _sig_ or _msig_ is a valid signature of the program by the sender of the transaction, or if neither _sig_ nor _msig_ is set and the hash of the program is equal to the sender address. Also the program must execute and finish with a single non-zero value on the stack. See [TEAL documentation](TEAL.md) for details on program execution.
 
-
-ApplyData
----------
+## ApplyData
 
 \newcommand \ClosingAmount {\mathrm{ClosingAmount}}
 
@@ -685,34 +691,13 @@ and contains the following fields:
     application, encoded as msgpack field `gd`.
     - `gd` is a [`StateDelta`][State Deltas].
   - Zero or more `LocalDeltas`, encoding changes to some local states associated
-    with the called applicaiton, encoded as msgpack field `ld`.
+    with the called application, encoded as msgpack field `ld`.
     - `ld` maps an "account offset" to a [`StateDelta`][State Deltas]. Account
       offset 0 is the transaction's sender. Account offsets 1 and greater refer
       to the account specified at that index minus one in the transaction's
       `Accounts` slice.
 
-TEAL Key/Value Stores
----------------------
-A TEAL Key/Value Store, or TKV, is an associative array mapping keys of type
-byte-array to values of type byte-array or 64-bit unsigned integer.
-
-The values in a TKV are represented by the `TealValue` struct, which is composed
-of three fields:
-
-- `Type`, encoded as msgpack field `tt`. This field may take on one of two
-  values:
-  - `TealBytesType` (value = `1`), indicating that the value can be found in the
-    `Bytes` field of this struct.
-  - `TealUintType` (value = `2`), indicating that the value can be found in the
-    `Uint` field of this struct.
-- `Bytes`, encoded as msgpack field `tb`, representing a byte slice value.
-- `Uint`, encoded as msgpack field `ui`, representing an unsigned 64-bit integer
-  value.
-
-The keys in a TKV are encoded directly as bytes.
-
-State Deltas
-------------
+### State Deltas
 
 A state delta represents an update to a [TEAL Key/Value Store (TKV)][TEAL
 Key/Value Stores]. It is represented as an associative array mapping a
@@ -733,21 +718,7 @@ A value delta is composed of three fields:
 - `Uint`, encoded as msgpack field `ui`, which specifies a 64-bit unsigned
   integer value to set.
 
-State Schemas
--------------
-
-A state schema represents limits on the number of each value type that may
-appear in a [TEAL Key/Value Store (TKV)][TEAL Key/Value Stores].
-
-A state schema is composed of two fields:
-
-- `NumUint`, encoded as msgpack field `nui`. This field represents the maximum
-  number of integer values that may appear in some TKV.
-- `NumByteSlice`, encoded as msgpack field `nbs`. This field represents the
-  maximum number of byte slice values that may appear in some TKV.
-
-Transaction Sequences, Sets, and Tails
---------------------------------------
+## Transaction Sequences, Sets, and Tails
 
 Each block contains a _transaction sequence_, an ordered sequence of
 transactions in that block.  The transaction sequence of block $r$ is denoted
@@ -804,9 +775,7 @@ $$\TxTail_{r+1} = \TxTail_r \setminus
 The transaction tail is part of the ledger state but is distinct from the
 account state and is not committed to in the block.
 
-
-Transaction Groups
-------------------
+## Transaction Groups
 
 A transaction may include a "Group" field (msgpack tag "grp"), a 32-byte hash
 that specifies what _transaction group_ the transaction belongs to.
@@ -836,8 +805,7 @@ If the TxGroup hash of any transaction group in a block does not match the "Grou
 
 Beyond this check, each transaction in a group is evaluated separately and must be valid on its own, as described below in the [Validity and State Changes][Validity and State Changes] section. For example, a group containing a zero-fee transaction and a very-high-fee transaction would be rejected because the first transaction has fee less than $f_{\min}$, even if the average transaction fee of the group were above $f_{\min}$. As another example, an account with balance 50 could not spend 100 in transaction A and afterward receive 500 in transaction B, even if transactions A and B are in the same group, because transaction A would leave the account with a negative balance.
 
-Asset Transaction Semantics
----------------------------
+## Asset Transaction Semantics
 
 An asset configuration transaction has the following semantics:
 
@@ -918,8 +886,7 @@ An asset freeze transaction has the following semantics:
  - The freeze flag of the specified asset in the specified account is updated
    to the flag value from the freeze transaction.
 
-`ApplicationCall` Transaction Semantics
----------------------------------------
+## `ApplicationCall` Transaction Semantics
 
 When an `ApplicationCall` transaction is evaluated by the network, it is
 processed according to the following procedure. None of the effects of the
@@ -995,8 +962,7 @@ point must be discarded and the entire transaction rejected.
           transaction. The new programs are not executed in this transaction.
           **SUCCEED.**
 
-Application Stateful TEAL Execution Semantics
----------------------------------------------
+### Application Stateful TEAL Execution Semantics
 
 - During the execution of an `ApprovalProgram` or `ClearStateProgram`, the
   application’s `LocalStateSchema` and `GlobalStateSchema` may never be
@@ -1011,8 +977,7 @@ Application Stateful TEAL Execution Semantics
   transaction’s `Accounts` field. An attempt to read local state from any other
   account will cause program execution to fail.
 
-Validity and State Changes
---------------------------
+## Validity and State Changes
 
 The new account state which results from applying a block is the account state
 which results from applying each transaction in that block, in sequence. For a
@@ -1102,9 +1067,7 @@ all following conditions hold:
 
  - $\sum_I \Stake(\rho+1, I) = \sum_I \Stake(\rho, I)$.
 
-
-Previous Hash
-=============
+# Previous Hash
 
 \newcommand \Prev {\mathrm{Prev}}
 
@@ -1116,9 +1079,7 @@ Let $B_{r}$ represent the block header in round $r$, and let $H$ be some
 cryptographic function.  Then the previous hash $\Prev_{r+1}$ in the block for
 round $r+1$ is $\Prev_{r+1} = H(B_{r})$.
 
-
-Multisignature
-==============
+# Multisignature
 
 Multisignature term describes a special multisignature address, signing and
 validation procedures. In contrast with a regular account address
