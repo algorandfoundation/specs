@@ -322,6 +322,9 @@ parameters_, which can be encoded as a msgpack struct:
   global state associated with this application. This field is encoded with
   msgpack field `approv`.
 
+  This field must not exceed 1024 bytes. The cost of the program as determined
+  by the Stateful TEAL `Check` function must not exceed 700.
+
 - A mutable Stateful TEAL "Clear State" program (`ClearStateProgram`), executed
   when an opted-in user forcibly removes the local application state associated
   with this application from their account data. This happens when an
@@ -331,10 +334,15 @@ parameters_, which can be encoded as a msgpack struct:
   global state associated with this application. This field is encoded with
   msgpack field `clearp`.
 
+  This field must not exceed 1024 bytes. The cost of the program as determined
+  by the Stateful TEAL `Check` function must not exceed 700.
+
 - An immutable "global state schema" (`GlobalStateSchema`), which sets a limit
   on the size of the global [TEAL Key/Value Store][TEAL Key/Value Stores] that
   may be associated with this application (see ["State Schemas"][State
   Schemas]). This field is encoded with msgpack field `gsch`.
+
+  The maximum number of values that this schema may permit is 64.
 
 - An immutable "local state schema" (`LocalStateSchema`), which sets a limit on
   the size of a [TEAL Key/Value Store][TEAL Key/Value Stores] that this
@@ -342,17 +350,26 @@ parameters_, which can be encoded as a msgpack struct:
   (see ["State Schemas"][State Schemas]). This field is encoded with msgpack
   field `lsch`.
 
+  The maximum number of values that this schema may permit is 16.
+
 - The "global state" (`GlobalState`) associated with this application, stored as
   a [TEAL Key/Value Store][TEAL Key/Value Stores]. This field is encoded with
   msgpack field `gs`.
 
 Parameters for applications created by an account are stored in a map in the
 account state, indexed by the application ID. This map is encoded as msgpack
-field `appp`.
+field `appp`. The maximum number of applications that a single account may
+create is 10. Creating one application increases the minimum balance
+requirements of the creator by 100000 microalgos, plus the [`GlobalStateSchema`
+Minimum Balance contribution][State Schema Minimum Balance Contribution].
 
 `LocalState` for applications that an account has opted in to are also stored in
 a map in the account state, indexed by the application ID. This map is encoded
-as msgpack field `appl`.
+as msgpack field `appl`. The maximum number of applications that a single
+account may opt in to is 10. Opting in to one application increases the minimum
+balance requirements of the opting-in account by 100000 microalgos plus the
+[`LocalStateSchema` Minimum Balance contribution][State Schema Minimum Balance
+Contribution].
 
 ### TEAL Key/Value Stores
 
@@ -372,7 +389,8 @@ of three fields:
 - `Uint`, encoded as msgpack field `ui`, representing an unsigned 64-bit integer
   value.
 
-The keys in a TKV are encoded directly as bytes.
+The keys in a TKV are encoded directly as bytes. The maximum length of a key in
+a TKV is 64 bytes. The maximimum length of a `Bytes` value in a TKV is 64 bytes.
 
 ### State Schemas
 
@@ -385,6 +403,15 @@ A state schema is composed of two fields:
   number of integer values that may appear in some TKV.
 - `NumByteSlice`, encoded as msgpack field `nbs`. This field represents the
   maximum number of byte slice values that may appear in some TKV.
+
+#### State Schema Minimum Balance Contribution
+
+When an account opts in to an application or creates an applicaiton, there is a
+minimum balance increase associated with the application's `LocalStateSchema` or
+`GlobalStateSchema`, respectively.
+
+The increase, in microalgos, is computed as `(25000 + 3500) * shema.NumUint +
+(25000 + 25000) * schema.NumByteSlice`.
 
 ## Assets
 
@@ -479,6 +506,8 @@ transaction contains the following fields:
 
    - Transaction type `afrz` corresponds to an _asset freeze_ transaction.
 
+   - Transaction type `appl` corresponds to an _application call_ transaction.
+
  - The _sender_ $I$, which is an address which identifies the account that
    authorized the transaction.
 
@@ -568,14 +597,16 @@ An application call transaction additionally has the following fields:
     delete the application parameters from the account data of the application's
     creator.
 - Application arguments, encoded as msgpack field `apaa`. These arguments are a
-  slice of byte slices.
+  slice of byte slices. There must be no more than 16 app arguments, and the sum
+  of their lengths in bytes must not exceed 2048.
 - Accounts besides the `Sender` whose local states may be referred to by the
   executing `ApprovalProgram` or `ClearStateProgram`. These accounts are
   referred to by their addresses, and this field is encoded as msgpack field
-  `apat`.
+  `apat`. The maximum number of addresses in this field is 4.
 - Application IDs, besides the application whose `ApprovalProgram` or
   `ClearStateProgram` is executing, that the executing program may read global
-  state from. This field is encoded as msgpack field `apfa`.
+  state from. This field is encoded as msgpack field `apfa`. The maximum number
+  of entries in this field is 2.
 - Local state schema, encoded as msgpack field `apls`. This field is only used
   during application creation, and sets bounds on the size of the local state
   for users who opt in to this application.
@@ -661,6 +692,10 @@ This is determined by the _signature_ of a transaction:
   - An optional array of byte strings _arg_ which are arguments supplied to the program in _l_. (_arg_ bytes are not covered by _sig_ or _msig_)
 
   The logic signature is valid if exactly one of _sig_ or _msig_ is a valid signature of the program by the sender of the transaction, or if neither _sig_ nor _msig_ is set and the hash of the program is equal to the sender address. Also the program must execute and finish with a single non-zero value on the stack. See [TEAL documentation](TEAL.md) for details on program execution.
+
+A transaction must be rejected if its inclusion in a block would cause an
+account's minimum balance to exceed the _maximum minimum balance_ of 100100000
+microalgos.
 
 ## ApplyData
 
@@ -894,6 +929,8 @@ transaction are made visible to other transactions until the points marked
 **SUCCEED** below. **FAIL** indicates that any modifications to state up to that
 point must be discarded and the entire transaction rejected.
 
+### Procedure
+
 1.
     - If the application ID specified by the transaction is zero, create a new
       application with ID equal to one plus the system transaction counter (this
@@ -967,7 +1004,10 @@ point must be discarded and the entire transaction rejected.
 - During the execution of an `ApprovalProgram` or `ClearStateProgram`, the
   application’s `LocalStateSchema` and `GlobalStateSchema` may never be
   violated. The program's execution will fail on the first instruction that
-  would cause the relevant schema to be violated.
+  would cause the relevant schema to be violated. Writing a `Bytes` value to a
+  local or global [TEAL Key/Value Store][TEAL Key/Value Stores] longer than 64
+  bytes, or writing any value to a key longer than 64 bytes, will likewise cause
+  the program to fail on the offending instruction.
 - Global state may only be read for the application ID whose program is
   executing, or for any application ID mentioned in the `ForeignApps`
   transaction field. An attempt to read global state for another application
