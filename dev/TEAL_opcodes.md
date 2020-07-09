@@ -66,7 +66,7 @@ The 32 byte public key is the last element on the stack, preceded by the 64 byte
 - Pushes: uint64
 - A plus B. Panic on overflow.
 
-Overflow is an error condition which halts execution and fails the transaction. Full precision is available from `plusw`.
+Overflow is an error condition which halts execution and fails the transaction. Full precision is available from `addw`.
 
 ## -
 
@@ -219,7 +219,7 @@ Overflow is an error condition which halts execution and fails the transaction. 
 - Pushes: uint64, uint64
 - A times B out to 128-bit long result as low (top) and high uint64 values on the stack
 
-## plusw
+## addw
 
 - Opcode: 0x1e
 - Pops: *... stack*, {uint64 A}, {uint64 B}
@@ -450,6 +450,7 @@ FirstValidTime causes the program to fail. The field is reserved for future use.
 | 5 | LogicSigVersion | uint64 | Maximum supported TEAL version. LogicSigVersion >= 2. |
 | 6 | Round | uint64 | Current round number. LogicSigVersion >= 2. |
 | 7 | LatestTimestamp | uint64 | Last confirmed block UNIX timestamp. Fails if negative. LogicSigVersion >= 2. |
+| 8 | CurrentApplicationID | uint64 | ID of current application executing. Fails if no such application is executing. LogicSigVersion >= 2. |
 
 
 ## gtxn
@@ -583,7 +584,7 @@ See `bnz` for details on how branches work. `b` always jumps to the offset.
 - Opcode: 0x60
 - Pops: *... stack*, uint64
 - Pushes: uint64
-- get balance for the requested account specified by Txn.Accounts[A] in microalgos. A is specified as an account index in the Accounts field of the ApplicationCall transaction
+- get balance for the requested account specified by Txn.Accounts[A] in microalgos. A is specified as an account index in the Accounts field of the ApplicationCall transaction, zero index means the sender
 - LogicSigVersion >= 2
 - Mode: Application
 
@@ -636,11 +637,11 @@ params: state key. Return: value. The value is zero if the key does not exist.
 - Opcode: 0x65
 - Pops: *... stack*, {uint64 A}, {[]byte B}
 - Pushes: uint64, any
-- read from application A global state key B => {0 or 1 (top), value}
+- read from application Txn.ForeignApps[A] global state key B => {0 or 1 (top), value}. A is specified as an account index in the ForeignApps field of the ApplicationCall transaction, zero index means this app
 - LogicSigVersion >= 2
 - Mode: Application
 
-params: application id, state key. Return: value.
+params: application index, state key. Return: value. Application index is
 
 ## app_local_put
 
