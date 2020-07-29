@@ -607,6 +607,9 @@ An application call transaction additionally has the following fields:
   `ClearStateProgram` is executing, that the executing program may read global
   state from. This field is encoded as msgpack field `apfa`. The maximum number
   of entries in this field is 2.
+- Asset IDs that the executing program may read asset parameters from. This
+  field is encoded as msgpack field `apas`. The maximum number of entries in
+  this field is 2.
 - Local state schema, encoded as msgpack field `apls`. This field is only used
   during application creation, and sets bounds on the size of the local state
   for users who opt in to this application.
@@ -1012,6 +1015,10 @@ point must be discarded and the entire transaction rejected.
   executing, or for any application ID mentioned in the `ForeignApps`
   transaction field. An attempt to read global state for another application
   that is not listed in `ForeignApps` will cause the program execution to fail.
+- Asset parameters may only be read for assets whose ID is specified in the
+  `ForeignAssets` transaction field. An attempt to read asset parameters for
+  an asset that is not listed in `ForeignAssets` will cause the program
+  execution to fail.
 - Local state may be read for any opted-in application present in the sender’s
   account data, or in the account data for any address listed in the
   transaction’s `Accounts` field. An attempt to read local state from any other
