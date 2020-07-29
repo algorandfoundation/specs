@@ -1096,8 +1096,6 @@ state for intermediate state $\rho+1$:
 For asset transaction types (asset configuration, asset transfer, and asset freeze),
 account state is updated based on the reference logic described in [Asset Transaction Semantics].
 
-TODO define the sequence of intermediate states
-
 The final intermediate account $\rho_k$ state changes the balance of the
 incentive pool as follows:
 $$a_{\rho_k, I_{pool}} = a_{\rho_{k-1}, I_{pool}} - R_r(\Units(r))$$
