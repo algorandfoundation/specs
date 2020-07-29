@@ -1023,6 +1023,10 @@ point must be discarded and the entire transaction rejected.
   account data, or in the account data for any address listed in the
   transaction’s `Accounts` field. An attempt to read local state from any other
   account will cause program execution to fail.
+- Algo balances and asset balances may be read for the sender's account or for
+  any account referenced by an address listed in the transaction's `Accounts`
+  field. An attempt to read an Algo balance or asset balance for any other
+  account will cause program execution to fail.
 
 ## Validity and State Changes
 
