@@ -406,12 +406,20 @@ A state schema is composed of two fields:
 
 #### State Schema Minimum Balance Contribution
 
-When an account opts in to an application or creates an applicaiton, there is a
-minimum balance increase associated with the application's `LocalStateSchema` or
-`GlobalStateSchema`, respectively.
+When an account opts in to an application or creates an application, the
+minimum balance requirements for that account increase.
 
-The increase, in microalgos, is computed as `(25000 + 3500) * shema.NumUint +
-(25000 + 25000) * schema.NumByteSlice`.
+When opting in to an application, there is a base minimum balance increase
+of 100000 microalgos. There is an additional minimum balance increase based on
+the `LocalStateSchema` for that application, described by following formula:
+
+`28500 * shema.NumUint + 50000 * schema.NumByteSlice` microalgos.
+
+When creating an application, there is a base minimum balance increase of
+100000 microalgos. There is an additional minimum balance increase based on the
+`GlobalStateSchema` for that application, described by the following formula:
+
+`28500 * shema.NumUint + 50000 * schema.NumByteSlice` microalgos.
 
 ## Assets
 
