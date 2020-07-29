@@ -732,7 +732,7 @@ and contains the following fields:
     with the called application, encoded as msgpack field `ld`.
     - `ld` maps an "account offset" to a [`StateDelta`][State Deltas]. Account
       offset 0 is the transaction's sender. Account offsets 1 and greater refer
-      to the account specified at that index minus one in the transaction's
+      to the account specified at that offset minus one in the transaction's
       `Accounts` slice.
 
 ### State Deltas
