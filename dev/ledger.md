@@ -747,7 +747,9 @@ and contains the following fields:
 
 A state delta represents an update to a [TEAL Key/Value Store (TKV)][TEAL
 Key/Value Stores]. It is represented as an associative array mapping a
-byte-array key to a single value delta.
+byte-array key to a single value delta. It represents a series of actions that
+when applied to the previous state of the key/value store will yield the new
+state.
 
 A value delta is composed of three fields:
 
