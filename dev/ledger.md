@@ -282,7 +282,7 @@ Account State
 The _balances_ are a set of mappings from _addresses_, 256-bit integers, to
 _balance records_.  A _balance record_ contains the following fields: the
 account _raw balance_, the account _status_, the account _rewards base_ and
-_total awarded amount_, and the account [_participation keys_][partkey-spec].
+_total awarded amount_, the account _spending key_, and the account [_participation keys_][partkey-spec].
 
 The account raw balance $a_I$ is a 64-bit unsigned integer which determines how
 much money the address has.
@@ -316,6 +316,9 @@ stake_ an account has, which is a 64-bit unsigned integer defined as follows:
 
  - The account balance, if the account is online.
  - 0 otherwise.
+
+The account's spending key determines how transactions from this account must be authorized (e.g., what public key to verify transaction signatures against).
+Transactions from this account must have this value (or, if this value zero, the account's address) as their authorization address. This is described in the [Authorization and Signatures][Authorization and Signatures] section below.
 
 The account's participation keys $\pk$ are defined in Algorand's [specification
 of participation keys][partkey-spec].
@@ -448,6 +451,8 @@ transaction contains the following fields:
  - The _group_ $grp$, an optional 32-byte hash whose meaning is described in
    the [Transaction Groups][Transaction Groups] section below.
 
+ - The _RekeyTo_ address, a 32-byte string. If nonzero, the transaction will set the sender account's spending key to this value. (If the _RekeyTo_ address matches the sender address, then the spending key is instead set to zero.)
+
  - The _note_ $N$, a sequence of bytes with length at most $N_{\max}$ which
    contains arbitrary data.
 
@@ -528,20 +533,25 @@ An asset freeze transaction additionally has the following fields:
 The cryptographic hash of the fields above is called the _transaction
 identifier_.  This is written as $\Hash(\Tx)$.
 
-A valid transaction can either be a _signed_ transaction, a _multi-signed_
-transaction, or a _logic-signed_ transaction.
-This is determined by the _signature_ of a transaction:
+Authorization and Signatures
+----------------------------
 
- - A valid signed transaction's signature is a 64-byte sequence which validates
-   under the sender of the transaction.
+Transactions are not valid unless they are somehow authorized by the sender account (for example, with a signature).
+The authorization information is not considered part of the transaction and does not affect the TXID.
+Rather, when serializing a transaction for submitting to a node or including in a block, the transaction and its authorization appear together in a struct called a SignedTxn.
+The SignedTxn struct contains the transaction (in msgpack field `txn`), optionally an _authorizer address_ (field `sgnr`), and exactly one of a _signature_ (field `sig`), _multisignature_ (field `msig`), or _logic signature_ (field `lsig`).
 
- - A valid multisignature transaction's signature is the _msig_ object containing
-   the following fields (see [Multisignature][Multisignature] for details):
+The _authorizer address_, a 32 byte string, determines against what to verify the sig / msig / lsig, as described below. If the `sgnr` field is omitted (or zero), then the authorizer address defaults to the transaction sender address. At the time the transaction is applied to the ledger, the authorizer address must match the transaction sender account's spending key (or the sender address, if the account's spending key is zero) -- if it does not match, then the transaction was improperly authorized and is invalid.
 
-   - The _subsig_ array of subsignatures each consisting of a signer address and a signature
-     as a 64-byte sequence. Note, multisignature transaction must contain
+ - A valid signature (`sig`) is a (64-byte) valid ed25519 signature of the transaction (encoded in canonical msgpack and with domain separation prefix "TX") where the public key is the authorizer address (interpreted as an ed25519 public key).
+
+ - A valid multisignature (`msig`) is an object containing
+   the following fields and which hashes to the authorizer address as described in the [Multisignature][Multisignature] section:
+
+   - The _subsig_ array of subsignatures each consisting of a signer address and a 64-byte signature
+     of the transaction. Note, multisignature transaction must contain
      all signer's addresses in the _subsig_ array even if the transaction has not
-     been signed yet.
+     been signed by that address.
 
    - The threshold _thr_ that is a minimum number of signatures required.
 
@@ -552,13 +562,13 @@ This is determined by the _signature_ of a transaction:
 
   - The logic _l_ which is versioned bytecode. (See TEAL docs for details)
 
-  - An optional single signature _sig_ of 64 bytes valid for the sender of the transaction which has signed the bytes in _l_.
+  - An optional single signature _sig_ of 64 bytes valid for the authorizer address of the transaction which has signed the bytes in _l_.
 
-  - An optional multisignature _msig_ from the transaction sender over the bytes in _l_.
+  - An optional multisignature _msig_ from the authorizer address over the bytes in _l_.
 
   - An optional array of byte strings _arg_ which are arguments supplied to the program in _l_. (_arg_ bytes are not covered by _sig_ or _msig_)
 
-  The logic signature is valid if exactly one of _sig_ or _msig_ is a valid signature of the program by the sender of the transaction, or if neither _sig_ nor _msig_ is set and the hash of the program is equal to the sender address. Also the program must execute and finish with a single non-zero value on the stack. See [TEAL documentation](TEAL.md) for details on program execution.
+  The logic signature is valid if exactly one of _sig_ or _msig_ is a valid signature of the program by the authorizer address of the transaction, or if neither _sig_ nor _msig_ is set and the hash of the program is equal to the authorizer address. Also the program must execute and finish with a single non-zero value on the stack. See [TEAL documentation](TEAL.md) for details on program execution.
 
 
 ApplyData
@@ -781,8 +791,7 @@ identifier $\GenesisID_B$, the following conditions must all hold:
  - $|N| \leq N_{\max}$.
  - $I \neq I_{pool}$ and $I \neq 0$.
  - $\Stake(r+1, I) \geq f \geq f_{\min}$.
- - Exactly one of the signature or the multisignature is present and verifies
-   for $\Hash(\Tx)$ under $I$.
+ - The transaction is properly authorized as described in the [Authorization and Signatures][Authorization and Signatures] section.
  - $\Hash(\Tx) \notin \TxTail_r$.
  - If $x \neq 0$, there exists no $\Tx' \in TxTail$ with sender $I'$, lease value
    $x'$, and last valid round $r_2'$ such that $I' = I$, $x' = x$, and
@@ -829,6 +838,8 @@ state for intermediate state $\rho+1$:
 
 For asset transaction types (asset configuration, asset transfer, and asset freeze),
 account state is updated based on the reference logic described in [Asset Transaction Semantics].
+
+Additionally, for all types of transactions, if the RekeyTo address of the transaction is nonzero and does not match the transaction sender address, then the transaction sender account's spending key is set to the RekeyTo address. If the RekeyTo address of the transaction does match the transaction sender address, then the transaction sender account's spending key is set to zero.
 
 TODO define the sequence of intermediate states
 
