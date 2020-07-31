@@ -500,6 +500,8 @@ holds any asset cannot be closed.
 \newcommand \Hash {\mathrm{Hash}}
 \newcommand \nonpart {\mathrm{nonpart}}
 
+\newcommand \RekeyTo {\mathrm{RekeyTo}}
+
 Just as a block represents a transition between two ledger states, a
 _transaction_ $\Tx$ represents a transition between two account states. A
 transaction contains the following fields:
