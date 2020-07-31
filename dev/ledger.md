@@ -7,11 +7,9 @@ abstract: >
   participants.  This state and its history is called the _Algorand Ledger_.
 ---
 
-Overview
-========
+# Overview
 
-Parameters
-----------
+## Parameters
 
 The Algorand Ledger is parameterized by the following values:
 
@@ -35,9 +33,7 @@ The Algorand Ledger is parameterized by the following values:
  - $A$, the size of an earning unit.
  - $Assets_{\max}$, the maximum number of assets held by an account.
 
-
-States
-------
+## States
 
 A _ledger_ is a sequence of states which comprise the common information
 established by some instantiation of the Algorand protocol.  A ledger is
@@ -67,9 +63,7 @@ the ledger. Each state consists of the following components:
    - One component of this state is the _transaction tail_, which caches the
 	 _transaction sets_ (see below) in the last $T_{\max}$ blocks.
 
-
-Blocks
-------
+## Blocks
 
 A _block_ is a data structure which specifies the transition between states.
 The data in a block is divided between the _block header_ and its _block body_.
@@ -122,9 +116,7 @@ always valid).  _Applying_ a valid block to a state produces a new state by
 updating each of its components.  The rest of this document defines block
 validity and state transitions by describing them for each component.
 
-
-Round
-=====
+# Round
 
 The round or _round number_ is a 64-bit unsigned integer which indexes into the
 sequence of states and blocks.  The round $r$ of each block is one greater than
@@ -137,8 +129,7 @@ and we denote the round of a component with a subscript.  For instance, the
 timestamp of state/block $r$ is denoted $t_r$.
 
 
-Genesis Identifier
-==================
+# Genesis Identifier
 
 \newcommand \GenesisID {\mathrm{GenesisID}}
 
@@ -149,8 +140,7 @@ The genesis identifier of a valid block is the identifier of the block in the
 previous round.  In other words, $\GenesisID_{r+1} = \GenesisID_{r}$.
 
 
-Genesis Hash
-============
+# Genesis Hash
 
 \newcommand \GenesisHash {\mathrm{GenesisHash}}
 
@@ -161,9 +151,7 @@ The genesis hash is set in the genesis block (or the block at which
 an upgrade to a protocol supporting GenesisHash occurs), and must be
 preserved identically in all subsequent blocks.
 
-
-Protocol Upgrade State
-======================
+# Protocol Upgrade State
 
 A protocol version $v$ is a string no more than $V_{\max}$ bytes long. It
 corresponds to parameters used to execute some version of the Algorand
@@ -213,9 +201,7 @@ $(v^*_{r+1}, v'_{r+1}, s_{r+1}, d_{r+1}, x_{r+1})$ where
       $\delta = x_r$ if $x_r \neq 0$), and
     - $x_r'$ otherwise.
 
-
-Timestamp
-=========
+# Timestamp
 
 The timestamp is a 64-bit signed integer.  The timestamp is purely informational
 and states when a block was first proposed, expressed in the number of seconds
@@ -226,9 +212,7 @@ The timestamp $t_{r+1}$ of a block in round $r$ is valid if:
  - $t_{r} = 0$ or
  - $t_{r+1} > t_{r}$ and $t_{r+1} < t_{r} + t_{\delta}$.
 
-
-Cryptographic Seed
-==================
+# Cryptographic Seed
 
 \newcommand \Seed {\mathrm{Seed}}
 
@@ -236,9 +220,7 @@ The seed is a 256-bit integer.  Seeds are validated and updated according to the
 [specification of the Algorand Byzantine Fault Tolerance protocol][abft-spec].
 The $\Seed$ procedure specified there returns the seed from the desired round.
 
-
-Reward State
-============
+# Reward State
 
 \newcommand \Stake {\mathrm{Stake}}
 \newcommand \Units {\mathrm{RewardUnits}}
@@ -272,9 +254,7 @@ state is $(T_{r+1}, R_{r+1}, B^*_{r+1})$ where
 
 A valid block's reward state matches the expected reward state.
 
-
-Account State
-=============
+# Account State
 
 \newcommand \Record {\mathrm{Record}}
 \newcommand \pk {\mathrm{pk}}
@@ -330,9 +310,121 @@ There exist two special addresses: $I_{pool}$, the address of the _incentive poo
 and $I_f$, the address of the _fee sink_.  For both of these accounts,
 $p_I = 2$.
 
+## Applications
 
-Assets
-------
+Each account can create applications, each named by a globally-unique integer
+(the _application ID_). Applications are associated with a set of _application
+parameters_, which can be encoded as a msgpack struct:
+
+- A mutable Stateful TEAL "Approval" program (`ApprovalProgram`), whose result
+  determines whether or not an `ApplicationCall` transaction referring to this
+  application ID is to be allowed. This program executes for all
+  `ApplicationCall` transactions referring to this application ID except for
+  those whose `OnCompletion == ClearState`, in which case the
+  `ClearStateProgram` is executed instead. This program may modify local or
+  global state associated with this application. This field is encoded with
+  msgpack field `approv`.
+
+  This field must not exceed 1024 bytes. The cost of the program as determined
+  by the Stateful TEAL `Check` function must not exceed 700.
+
+- A mutable Stateful TEAL "Clear State" program (`ClearStateProgram`), executed
+  when an opted-in user forcibly removes the local application state associated
+  with this application from their account data. This happens when an
+  `ApplicationCall` transaction referring to this application ID is executed
+  with `OnCompletion == ClearState`. This program, when executed, is not
+  permitted to cause the transaction to fail. This program may modify local or
+  global state associated with this application. This field is encoded with
+  msgpack field `clearp`.
+
+  This field must not exceed 1024 bytes. The cost of the program as determined
+  by the Stateful TEAL `Check` function must not exceed 700.
+
+- An immutable "global state schema" (`GlobalStateSchema`), which sets a limit
+  on the size of the global [TEAL Key/Value Store][TEAL Key/Value Stores] that
+  may be associated with this application (see ["State Schemas"][State
+  Schemas]). This field is encoded with msgpack field `gsch`.
+
+  The maximum number of values that this schema may permit is 64.
+
+- An immutable "local state schema" (`LocalStateSchema`), which sets a limit on
+  the size of a [TEAL Key/Value Store][TEAL Key/Value Stores] that this
+  application will allocate in the account data of an account that has opted in
+  (see ["State Schemas"][State Schemas]). This field is encoded with msgpack
+  field `lsch`.
+
+  The maximum number of values that this schema may permit is 16.
+
+- The "global state" (`GlobalState`) associated with this application, stored as
+  a [TEAL Key/Value Store][TEAL Key/Value Stores]. This field is encoded with
+  msgpack field `gs`.
+
+Parameters for applications created by an account are stored in a map in the
+account state, indexed by the application ID. This map is encoded as msgpack
+field `appp`. The maximum number of applications that a single account may
+create is 10. Creating one application increases the minimum balance
+requirements of the creator by 100000 microalgos, plus the [`GlobalStateSchema`
+Minimum Balance contribution][State Schema Minimum Balance Contribution].
+
+`LocalState` for applications that an account has opted in to are also stored in
+a map in the account state, indexed by the application ID. This map is encoded
+as msgpack field `appl`. The maximum number of applications that a single
+account may opt in to is 10. Opting in to one application increases the minimum
+balance requirements of the opting-in account by 100000 microalgos plus the
+[`LocalStateSchema` Minimum Balance contribution][State Schema Minimum Balance
+Contribution].
+
+### TEAL Key/Value Stores
+
+A TEAL Key/Value Store, or TKV, is an associative array mapping keys of type
+byte-array to values of type byte-array or 64-bit unsigned integer.
+
+The values in a TKV are represented by the `TealValue` struct, which is composed
+of three fields:
+
+- `Type`, encoded as msgpack field `tt`. This field may take on one of two
+  values:
+  - `TealBytesType` (value = `1`), indicating that the value can be found in the
+    `Bytes` field of this struct.
+  - `TealUintType` (value = `2`), indicating that the value can be found in the
+    `Uint` field of this struct.
+- `Bytes`, encoded as msgpack field `tb`, representing a byte slice value.
+- `Uint`, encoded as msgpack field `ui`, representing an unsigned 64-bit integer
+  value.
+
+The keys in a TKV are encoded directly as bytes. The maximum length of a key in
+a TKV is 64 bytes. The maximimum length of a `Bytes` value in a TKV is 64 bytes.
+
+### State Schemas
+
+A state schema represents limits on the number of each value type that may
+appear in a [TEAL Key/Value Store (TKV)][TEAL Key/Value Stores].
+
+A state schema is composed of two fields:
+
+- `NumUint`, encoded as msgpack field `nui`. This field represents the maximum
+  number of integer values that may appear in some TKV.
+- `NumByteSlice`, encoded as msgpack field `nbs`. This field represents the
+  maximum number of byte slice values that may appear in some TKV.
+
+#### State Schema Minimum Balance Contribution
+
+When an account opts in to an application or creates an application, the
+minimum balance requirements for that account increase.
+
+When opting in to an application, there is a base minimum balance increase
+of 100000 microalgos. There is an additional minimum balance increase based on
+the `LocalStateSchema` for that application, described by following formula:
+
+`28500 * shema.NumUint + 50000 * schema.NumByteSlice` microalgos.
+
+When creating an application, there is a base minimum balance increase of
+100000 microalgos. There is an additional minimum balance increase based on the
+`GlobalStateSchema` for that application, described by the following formula:
+
+`28500 * shema.NumUint + 50000 * schema.NumByteSlice` microalgos.
+
+## Assets
 
 Each account can create assets, named by a globally-unique integer (the
 _asset ID_).  Assets are associated with a set of _asset parameters_,
@@ -391,9 +483,7 @@ holding is simply a map from asset IDs to an integer value indicating
 how many units of that asset is held by the account.  An account that
 holds any asset cannot be closed.
 
-
-Transactions
-============
+# Transactions
 
 \newcommand \Tx {\mathrm{Tx}}
 \newcommand \TxSeq {\mathrm{TxSeq}}
@@ -427,6 +517,8 @@ transaction contains the following fields:
 
    - Transaction type `afrz` corresponds to an _asset freeze_ transaction.
 
+   - Transaction type `appl` corresponds to an _application call_ transaction.
+
  - The _sender_ $I$, which is an address which identifies the account that
    authorized the transaction.
 
@@ -451,7 +543,7 @@ transaction contains the following fields:
  - The _group_ $grp$, an optional 32-byte hash whose meaning is described in
    the [Transaction Groups][Transaction Groups] section below.
 
- - The _RekeyTo_ address, a 32-byte string. If nonzero, the transaction will set the sender account's spending key to this value. (If the _RekeyTo_ address matches the sender address, then the spending key is instead set to zero.)
+ - The _rekey to address_ $\RekeyTo$, a 32-byte string. If nonzero, the transaction will set the sender account's spending key to this value. (If the _RekeyTo_ address matches the sender address, then the spending key is instead set to zero.)
 
  - The _note_ $N$, a sequence of bytes with length at most $N_{\max}$ which
    contains arbitrary data.
@@ -491,6 +583,58 @@ A key registration transaction additionally has the following fields:
  - An optional (boolean) flag $\nonpart$ which, when deregistering keys,
    specifies whether to mark the account offline (if $\nonpart$ is false)
    or nonparticipatory (if $\nonpart$ is true).
+
+An application call transaction additionally has the following fields:
+
+- The ID of the application being called, encoded as msgpack field `apid`. If
+  the ID is zero, this transaction is creating an application.
+
+- An `OnCompletion` type, which may specify an additional effect of this
+  transaction on the application's state in the sender or application creator's
+  account data.  This field is encoded as msgpack field `apan`, and may take on
+  one of the following values:
+  - `NoOpOC` (value `0`): Only execute the `ApprovalProgram` associated with
+    this application ID, with no additional effects.
+  - `OptInOC` (value `1`): Before executing the `ApprovalProgram`, allocate
+    local state for this application into the sender's account data.
+  - `CloseOutOC` (value `2`): After executing the `ApprovalProgram`, clear any
+    local state for this application out of the sender's account data.
+  - `ClearStateOC` (value `3`): Don't execute the `ApprovalProgram`, and instead
+    execute the `ClearStateProgram` (which may not reject this transaction).
+    Additionally, clear any local state for this application out of the sender's
+    account data as in `CloseOutOC`.
+  - `UpdateApplicationOC` (value `4`): After executing the `ApprovalProgram`,
+    replace the `ApprovalProgram` and `ClearStateProgram` associated with this
+    application ID with the programs specified in this transaction.
+  - `DeleteApplicationOC` (value `5`): After executing the `ApprovalProgram`,
+    delete the application parameters from the account data of the application's
+    creator.
+- Application arguments, encoded as msgpack field `apaa`. These arguments are a
+  slice of byte slices. There must be no more than 16 app arguments, and the sum
+  of their lengths in bytes must not exceed 2048.
+- Accounts besides the `Sender` whose local states may be referred to by the
+  executing `ApprovalProgram` or `ClearStateProgram`. These accounts are
+  referred to by their addresses, and this field is encoded as msgpack field
+  `apat`. The maximum number of addresses in this field is 4.
+- Application IDs, besides the application whose `ApprovalProgram` or
+  `ClearStateProgram` is executing, that the executing program may read global
+  state from. This field is encoded as msgpack field `apfa`. The maximum number
+  of entries in this field is 2.
+- Asset IDs that the executing program may read asset parameters from. This
+  field is encoded as msgpack field `apas`. The maximum number of entries in
+  this field is 2.
+- Local state schema, encoded as msgpack field `apls`. This field is only used
+  during application creation, and sets bounds on the size of the local state
+  for users who opt in to this application.
+- Global state schema, encoded as msgpack field `apgs`. This field is only used
+  during application creation, and sets bounds on the size of the global state
+  associated with this application.
+- Approval program, encoded as msgpack field `apap`. This field is used for both
+  application creation and updates, and sets the corresponding application's
+  `ApprovalProgram`.
+- Clear state program, encoded as msgpack field `apsu`. This field is used for
+  both application creation and updates, and sets the corresponding
+  application's `ClearStateProgram`.
 
 An asset configuration transaction additionally has the following fields:
 
@@ -570,9 +714,11 @@ The _authorizer address_, a 32 byte string, determines against what to verify th
 
   The logic signature is valid if exactly one of _sig_ or _msig_ is a valid signature of the program by the authorizer address of the transaction, or if neither _sig_ nor _msig_ is set and the hash of the program is equal to the authorizer address. Also the program must execute and finish with a single non-zero value on the stack. See [TEAL documentation](TEAL.md) for details on program execution.
 
+A transaction must be rejected if its inclusion in a block would cause an
+account's minimum balance to exceed the _maximum minimum balance_ of 100100000
+microalgos.
 
-ApplyData
----------
+## ApplyData
 
 \newcommand \ClosingAmount {\mathrm{ClosingAmount}}
 
@@ -593,9 +739,44 @@ and contains the following fields:
   in the reference implementation, one of these two fields will be zero
   in that case.
 
+- If this is an `ApplicationCall` transaction, the `EvalDelta` associated with
+  the successful execution of the corresponding application's `ApprovalProgram`
+  or `ClearStateProgram`. The `EvalDelta`, encoded as msgpack field `dt`,
+  contains the following fields:
+  - A `GlobalDelta`, encoding changes to the global state of the called
+    application, encoded as msgpack field `gd`.
+    - `gd` is a [`StateDelta`][State Deltas].
+  - Zero or more `LocalDeltas`, encoding changes to some local states associated
+    with the called application, encoded as msgpack field `ld`.
+    - `ld` maps an "account offset" to a [`StateDelta`][State Deltas]. Account
+      offset 0 is the transaction's sender. Account offsets 1 and greater refer
+      to the account specified at that offset minus one in the transaction's
+      `Accounts` slice.
 
-Transaction Sequences, Sets, and Tails
---------------------------------------
+### State Deltas
+
+A state delta represents an update to a [TEAL Key/Value Store (TKV)][TEAL
+Key/Value Stores]. It is represented as an associative array mapping a
+byte-array key to a single value delta. It represents a series of actions that
+when applied to the previous state of the key/value store will yield the new
+state.
+
+A value delta is composed of three fields:
+
+- `Action`, encoded as msgpack field `at`, which specifies how the value for
+  this key has changed. It has three possible values:
+  - `SetUintAction` (value = `1`), indicating that the value for this key should
+    be set to the value delta's `Uint` field.
+  - `SetBytesAction` (value = `2`), indicating that the value for this key
+    should be set to the value delta's `Bytes` field.
+  - `DeleteAction` (value = `3`), indicating that the value for this key should
+    be deleted.
+- `Bytes`, encoded as msgpack field `bs`, which specifies a byte slice value to
+  set.
+- `Uint`, encoded as msgpack field `ui`, which specifies a 64-bit unsigned
+  integer value to set.
+
+## Transaction Sequences, Sets, and Tails
 
 Each block contains a _transaction sequence_, an ordered sequence of
 transactions in that block.  The transaction sequence of block $r$ is denoted
@@ -652,9 +833,7 @@ $$\TxTail_{r+1} = \TxTail_r \setminus
 The transaction tail is part of the ledger state but is distinct from the
 account state and is not committed to in the block.
 
-
-Transaction Groups
-------------------
+## Transaction Groups
 
 A transaction may include a "Group" field (msgpack tag "grp"), a 32-byte hash
 that specifies what _transaction group_ the transaction belongs to.
@@ -684,8 +863,7 @@ If the TxGroup hash of any transaction group in a block does not match the "Grou
 
 Beyond this check, each transaction in a group is evaluated separately and must be valid on its own, as described below in the [Validity and State Changes][Validity and State Changes] section. For example, a group containing a zero-fee transaction and a very-high-fee transaction would be rejected because the first transaction has fee less than $f_{\min}$, even if the average transaction fee of the group were above $f_{\min}$. As another example, an account with balance 50 could not spend 100 in transaction A and afterward receive 500 in transaction B, even if transactions A and B are in the same group, because transaction A would leave the account with a negative balance.
 
-Asset Transaction Semantics
----------------------------
+## Asset Transaction Semantics
 
 An asset configuration transaction has the following semantics:
 
@@ -766,9 +944,111 @@ An asset freeze transaction has the following semantics:
  - The freeze flag of the specified asset in the specified account is updated
    to the flag value from the freeze transaction.
 
+## `ApplicationCall` Transaction Semantics
 
-Validity and State Changes
---------------------------
+When an `ApplicationCall` transaction is evaluated by the network, it is
+processed according to the following procedure. None of the effects of the
+transaction are made visible to other transactions until the points marked
+**SUCCEED** below. **FAIL** indicates that any modifications to state up to that
+point must be discarded and the entire transaction rejected.
+
+### Procedure
+
+1.
+    - If the application ID specified by the transaction is zero, create a new
+      application with ID equal to one plus the system transaction counter (this
+      is the same ID selection algorithm as used by Assets).
+
+        When creating an application, the application parameters specified by
+        the transaction (`ApprovalProgram`, `ClearStateProgram`,
+        `GlobalStateSchema`, and `LocalStateSchema`) are allocated into the
+        sender’s account data, keyed by the new application ID.
+
+        Continue to step 2.
+
+    - If the application ID specified by the transaction is nonzero, continue to
+      step 2.
+2.
+    - If `OnCompletion == ClearState`, then:
+        - Check if the transaction’s sender is opted in to this application ID.
+          If not, **FAIL.**
+        - Check if the application parameters still exist in the creator's
+          account data.
+            - If the application does not exist, delete the sender’s local state
+              for this application (marking them as no longer opted in), and
+              **SUCCEED.**
+            - If the application does exist, continue to step 3.
+    - If the `OnCompletion != ClearState`, continue to step 4.
+3.
+    - Execute the `ClearStateProgram`.
+        - If the program execution returns `PASS == true`, apply the
+          local/global TEAL key/value store deltas generated by the program’s
+          execution.
+        - If the program execution returns `PASS == false`, do not apply any
+          local/global TEAL key/value store deltas generated by the program’s
+          execution.
+    - Delete the sender’s local state for this application (marking them as no
+      longer opted in). **SUCCEED.**
+4.
+    - If `OnCompletion == OptIn`, then at this point during execution we will
+      allocate a local TEAL key/value store for the sender for this application
+      ID, marking the sender as opted in.
+
+        Continue to step 5.
+5.
+    - Execute the `ApprovalProgram`.
+        - If the program execution returns `PASS == true`, apply any
+          local/global TEAL key/value store deltas generated by the program’s
+          execution. Continue to step 6.
+        - If the program execution returns `PASS == false`, **FAIL.**
+6.
+    - If `OnCompletion == NoOp`
+        - **SUCCEED.**
+    - If `OnCompletion == OptIn`
+        - This was handled above. **SUCCEED.**
+    - If `OnCompletion == CloseOut`
+        - Check if the transaction’s sender is opted in to this application ID.
+          If not, **FAIL.**
+        - Delete the sender’s local state for this application (marking them as
+          no longer opted in). **SUCCEED.**
+    - If `OnCompletion == ClearState`
+        - This was handled above (unreachable).
+    - If `OnCompletion == DeleteApplication`
+        - Delete the application’s parameters from the creator’s account data.
+          (Note: this does not affect any local state). **SUCCEED.**
+    - If `OnCompletion == UpdateApplication`
+        - Update the Approval and ClearState programs for this application
+          according to the programs specified in this `ApplicationCall`
+          transaction. The new programs are not executed in this transaction.
+          **SUCCEED.**
+
+### Application Stateful TEAL Execution Semantics
+
+- During the execution of an `ApprovalProgram` or `ClearStateProgram`, the
+  application’s `LocalStateSchema` and `GlobalStateSchema` may never be
+  violated. The program's execution will fail on the first instruction that
+  would cause the relevant schema to be violated. Writing a `Bytes` value to a
+  local or global [TEAL Key/Value Store][TEAL Key/Value Stores] longer than 64
+  bytes, or writing any value to a key longer than 64 bytes, will likewise cause
+  the program to fail on the offending instruction.
+- Global state may only be read for the application ID whose program is
+  executing, or for any application ID mentioned in the `ForeignApps`
+  transaction field. An attempt to read global state for another application
+  that is not listed in `ForeignApps` will cause the program execution to fail.
+- Asset parameters may only be read for assets whose ID is specified in the
+  `ForeignAssets` transaction field. An attempt to read asset parameters for
+  an asset that is not listed in `ForeignAssets` will cause the program
+  execution to fail.
+- Local state may be read for any opted-in application present in the sender’s
+  account data, or in the account data for any address listed in the
+  transaction’s `Accounts` field. An attempt to read local state from any other
+  account will cause program execution to fail.
+- Algo balances and asset balances may be read for the sender's account or for
+  any account referenced by an address listed in the transaction's `Accounts`
+  field. An attempt to read an Algo balance or asset balance for any other
+  account will cause program execution to fail.
+
+## Validity and State Changes
 
 The new account state which results from applying a block is the account state
 which results from applying each transaction in that block, in sequence. For a
@@ -841,8 +1121,6 @@ account state is updated based on the reference logic described in [Asset Transa
 
 Additionally, for all types of transactions, if the RekeyTo address of the transaction is nonzero and does not match the transaction sender address, then the transaction sender account's spending key is set to the RekeyTo address. If the RekeyTo address of the transaction does match the transaction sender address, then the transaction sender account's spending key is set to zero.
 
-TODO define the sequence of intermediate states
-
 The final intermediate account $\rho_k$ state changes the balance of the
 incentive pool as follows:
 $$a_{\rho_k, I_{pool}} = a_{\rho_{k-1}, I_{pool}} - R_r(\Units(r))$$
@@ -859,9 +1137,7 @@ all following conditions hold:
 
  - $\sum_I \Stake(\rho+1, I) = \sum_I \Stake(\rho, I)$.
 
-
-Previous Hash
-=============
+# Previous Hash
 
 \newcommand \Prev {\mathrm{Prev}}
 
@@ -873,9 +1149,7 @@ Let $B_{r}$ represent the block header in round $r$, and let $H$ be some
 cryptographic function.  Then the previous hash $\Prev_{r+1}$ in the block for
 round $r+1$ is $\Prev_{r+1} = H(B_{r})$.
 
-
-Multisignature
-==============
+# Multisignature
 
 Multisignature term describes a special multisignature address, signing and
 validation procedures. In contrast with a regular account address
