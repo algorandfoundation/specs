@@ -732,7 +732,7 @@ and contains the following fields:
   were transferred to the closing address.
  
 - The asset closing amount, $\AssetClosingAmount$, which specifies how many
-   asset's unit were transsfered to the closing address.
+   of the asset units were transsfered to the closing address.
 
 - The amount of rewards distributed to each of the accounts touched by this
   transaction.  There are three fields ("rs", "rr", and "rc" keys in msgpack
