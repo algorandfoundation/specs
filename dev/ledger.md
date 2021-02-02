@@ -663,6 +663,10 @@ An asset transfer transaction additionally has the following fields:
  - The address to which all remaining asset units should be transferred
    to close out this account's holdings of this asset, encoded as msgpack
    field `aclose`.
+ 
+ - The amount of all the remaining asset's units transferred
+   to `aclose` account, encoded as msgpack
+   field `aca`.
 
 An asset freeze transaction additionally has the following fields:
 
