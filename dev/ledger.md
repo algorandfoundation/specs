@@ -663,10 +663,6 @@ An asset transfer transaction additionally has the following fields:
  - The address to which all remaining asset units should be transferred
    to close out this account's holdings of this asset, encoded as msgpack
    field `aclose`.
- 
- - The amount of all the remaining asset's units transferred
-   to `aclose` account, encoded as msgpack
-   field `aca`.
 
 An asset freeze transaction additionally has the following fields:
 
@@ -734,6 +730,9 @@ and contains the following fields:
 
 - The closing amount, $\ClosingAmount$, which specifies how many microalgos
   were transferred to the closing address.
+ 
+- The asset closing amount, $\AssetClosingAmount$, which specifies how many
+   asset's unit were transsfered to the closing address.
 
 - The amount of rewards distributed to each of the accounts touched by this
   transaction.  There are three fields ("rs", "rr", and "rc" keys in msgpack
