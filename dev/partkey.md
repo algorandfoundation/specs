@@ -9,19 +9,29 @@ abstract: >
 Overview
 ========
 
-An algorand node uses two kind of cryptographic keys:
+An algorand node interacts with three types of cryptographic keys:
 
- - _participation keys_, a set of keys used for authentication, i.e. identify an 
+ - _root keys_, a set of keys used to control the access to a particular account.
+
+ - _voting keys_, a set of keys used for authentication, i.e. identify an 
     account. Algorand uses a hierarchical (two\-level) identity encryption scheme that 
     ensures [forward security](https://en.wikipedia.org/wiki/Forward_secrecy), 
     which will be detailed in next section. 
 
- - _selection credential_, key used for proving membership of selection. 
+ - _VRF selection keys_, keys used for proving membership of selection. 
 
-A vote is valid only if both the participation keys and the selection
-credential are valid.
+An agreement vote message is valid only when both the votings keys and the VRF selection
+keys are valid.
 
-Participation Keys 
+Root Keys
+=========
+
+Root keys are used to identify ownership of an account. An algorand node only interacts with
+the public key of a root key. Root keys are used to sign transaction messages as well as
+delegating the voting authentication using _voting keys_. The public key of a root key is also
+used as the account address.
+
+Voting Keys 
 ==================
 
 \newcommand \KeyDilution {\mathrm{KeyDilution}}
@@ -37,23 +47,23 @@ Algorand's ephemeral subkeys
 uses [Ed25519 public\-key signature system](https://ed25519.cr.yp.to/).
 
 Algorand uses a two\-level ephemeral signature scheme.
-Instead of signing voting messages directly, an algorand account uses her
-master key to sign an intermediate ephemeral sub-key. 
-This intemediate ephemeral sub-key signs a batch of leaf level ephemeral 
+Instead of signing voting messages directly, a algorand accounts use their
+_root keys_ to sign an intermediate ephemeral sub-key. 
+This intermediate ephemeral sub-key signs a batch of leaf level ephemeral 
 sub-keys. Hence, each intermediate ephemeral sub-key is associate with a
 batch number ($\Batch$), and each leaf ephemeral sub-key is associate with a
 batch number (of its parent key) and an offset ($\Offset$, denotes its offset
-in current batch). A voting message is signed hierarchically: 
-the master key $\rightarrow$ batch sub\-key $\rightarrow$ leaf sub-key
-$\rightarrow$ voting message (more details in next sub-section: One\-time 
+within a batch). A voting message is signed hierarchically: 
+the root key $\rightarrow$ batch sub\-key $\rightarrow$ leaf sub-key
+$\rightarrow$ agreement voting message (more details in next sub-section: One\-time 
 Signature).
 
-Each leaf level ephemeral sub-key is used only once, and will be deleted and 
-updated if current batch of leaf level ephemeral sub-keys run out.
-Algorand allows users to set the number of leaf leval ephemeral sub-key
-per batch, $\KeyDilution$. For example, the default $\KeyDilution$ 
-value of the current consensus protocol (V17) is $10,000$. 
-An algorand account can change her $\KeyDilution$ via 
+Each leaf level ephemeral sub-key is used for voting on a single agreement round,
+and will be deleted afterward. Once a batch of leaf level ephemeral sub-keys run out,
+new batch would be generated. Algorand allows users to set the number of leaf level ephemeral
+sub-key per batch, $\KeyDilution$. For example, the default $\KeyDilution$ 
+value of of the genesis consensus protocol (V17) was $10,000$. 
+An algorand account can change its $\KeyDilution$ via 
 key registration transactions (see 
 [the ledger specification](https://github.com/algorandfoundation/specs/blob/master/dev/ledger.md)).
 
@@ -109,7 +119,7 @@ messages between algorand users. It contains the following fields:
  - _Public Key 2 Signature_ $\PKTwoSig$, a signature of $\OTSSBatchID$ under
    the master key.
 
-Selection Credential
+VRF Selection Key
 ====================
 \newcommand \unauthenticatedVote {\mathrm{unauthenticatedVote}}
 \newcommand \UnauthenticatedCredential {\mathrm{UnauthenticatedCredential}}
@@ -126,9 +136,9 @@ Selection Credential
 \newcommand \Hashable {\mathrm{Hashable}}
 \newcommand \Vote {\mathrm{Vote}}
 
-To check the validity of a voting message, its selection credential
-needs to be verfied. Algorand uses Verifiable Random Function (VRF) to 
-generate selection credentials (more details in 
+To check the validity of a voting message, its VRF selection key
+needs to be verified. Algorand uses Verifiable Random Function (VRF) to 
+generate selection keys (more details in 
 [crypto specification](https://github.com/algorandfoundation/specs/blob/master/dev/crypto.md)).
 
 More specifically, an unverified vote ($\unauthenticatedVote$) has the
@@ -137,20 +147,20 @@ following fields:
  - _Row Vote_ $\mathrm{R}$, an inner struct contains $\Sender$, $\Round$, $\Period$, 
    $\Step$, and $\Proposal$.
 
- - _Unverified Credential_ $\Cred$, unverified selection credential. $\Cred$ contains 
+ - _Unverified Credential_ $\Cred$, unverified VRF selection key. $\Cred$ contains 
    a single field $\mathrm{Proof}$, which is a VRF proof.
 
  - _Signature_ $\Sig$, one-time signature of the vote.
 
 Once receiving an unverified vote ($\unauthenticatedVote$) from the network, 
-an Algorand node verifies its selection credential by checking the validity
+an Algorand node verifies its VRF selection key by checking the validity
 of the VRF Proof (in $\Cred$), the committee membership parameters that
 it is conditioned on, and the voter's voting stake. 
 If verified, the result of this verification is 
 wrapped in a $\Credential$ struct, containing the following fields:
 
  - _Unverifed Credential_ $\UnauthenticatedCredential$, the unverified 
-  credential from input.
+  selection key from input.
 
  - _Weight_ $\Weight$, the weight of the vote.
 
@@ -162,4 +172,4 @@ wrapped in a $\Credential$ struct, containing the following fields:
  - _Hashable_ $\Hashable$, the original credential
 
 And this verified credential is wrapped in a $\Vote$ struct with _Row Vote_ 
-($\mathrm{R}$), _Verifid Credential_ ($\Credential$), and _Signature_ ($\Sig$).
+($\mathrm{R}$), _Verified Credential_ ($\Credential$), and _Signature_ ($\Sig$).
