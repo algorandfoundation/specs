@@ -723,6 +723,7 @@ microalgos.
 ## ApplyData
 
 \newcommand \ClosingAmount {\mathrm{ClosingAmount}}
+\newcommand \AssetClosingAmount {\mathrm{AssetClosingAmount}}
 
 Each transaction is associated with some information about how it is
 applied to the account state.  This information is called ApplyData,
@@ -730,6 +731,9 @@ and contains the following fields:
 
 - The closing amount, $\ClosingAmount$, which specifies how many microalgos
   were transferred to the closing address.
+ 
+- The asset closing amount, $\AssetClosingAmount$, which specifies how many
+   of the asset units were transsfered to the closing address.
 
 - The amount of rewards distributed to each of the accounts touched by this
   transaction.  There are three fields ("rs", "rr", and "rc" keys in msgpack
