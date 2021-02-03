@@ -723,6 +723,7 @@ microalgos.
 ## ApplyData
 
 \newcommand \ClosingAmount {\mathrm{ClosingAmount}}
+\newcommand \AssetClosingAmount {\mathrm{AssetClosingAmount}}
 
 Each transaction is associated with some information about how it is
 applied to the account state.  This information is called ApplyData,
