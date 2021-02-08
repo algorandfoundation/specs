@@ -210,7 +210,7 @@ The following functions are defined on $s$:
 $$
 \CommitteeSize(s) = \left\{
 \begin{array}{rl}
-      9 & : s = \Propose \\
+     20 & : s = \Propose \\
    2990 & : s = \Soft \\
    1500 & : s = \Cert \\
     500 & : s = \Late \\
