@@ -27,6 +27,7 @@ Ops have a 'cost' of 1 unless otherwise specified.
 - **Cost**:
    - 7 (LogicSigVersion = 1)
    - 35 (LogicSigVersion = 2)
+   - 35 (LogicSigVersion = 3)
 
 ## keccak256
 
@@ -37,6 +38,7 @@ Ops have a 'cost' of 1 unless otherwise specified.
 - **Cost**:
    - 26 (LogicSigVersion = 1)
    - 130 (LogicSigVersion = 2)
+   - 130 (LogicSigVersion = 3)
 
 ## sha512_256
 
@@ -47,6 +49,7 @@ Ops have a 'cost' of 1 unless otherwise specified.
 - **Cost**:
    - 9 (LogicSigVersion = 1)
    - 45 (LogicSigVersion = 2)
+   - 45 (LogicSigVersion = 3)
 
 ## ed25519verify
 
@@ -414,6 +417,16 @@ Overflow is an error condition which halts execution and fails the transaction. 
 | 45 | FreezeAsset | uint64 | Asset ID being frozen or un-frozen. LogicSigVersion >= 2. |
 | 46 | FreezeAssetAccount | []byte | 32 byte address of the account whose asset slot is being frozen or un-frozen. LogicSigVersion >= 2. |
 | 47 | FreezeAssetFrozen | uint64 | The new frozen value, 0 or 1. LogicSigVersion >= 2. |
+| 48 | ForeignAssets | uint64 | Foreign Assets listed in the ApplicationCall transaction. LogicSigVersion >= 3. |
+| 49 | NumForeignAssets | uint64 | Number of Assets. LogicSigVersion >= 3. |
+| 50 | ForeignApps | uint64 | Foreign Apps listed in the ApplicationCall transaction. LogicSigVersion >= 3. |
+| 51 | NumForeignApps | uint64 | Number of Applications. LogicSigVersion >= 3. |
+| 52 | GlobalStateInts | uint64 | Number of global state integers in ApplicationCall. LogicSigVersion >= 3. |
+| 53 | GlobalStateByteslices | uint64 | Number of global state byteslices in ApplicationCall. LogicSigVersion >= 3. |
+| 54 | LocalStateInts | uint64 | Number of local state integers in ApplicationCall. LogicSigVersion >= 3. |
+| 55 | LocalStateByteslices | uint64 | Number of local state byteslices in ApplicationCall. LogicSigVersion >= 3. |
+| 56 | LogicArgs | []byte | Arguments to the LogicSig of the transaction. LogicSigVersion >= 3. |
+| 57 | NumLogicArgs | uint64 | Number of arguments to the LogicSig of the transaction. LogicSigVersion >= 3. |
 
 
 TypeEnum mapping:
@@ -451,6 +464,7 @@ FirstValidTime causes the program to fail. The field is reserved for future use.
 | 6 | Round | uint64 | Current round number. LogicSigVersion >= 2. |
 | 7 | LatestTimestamp | uint64 | Last confirmed block UNIX timestamp. Fails if negative. LogicSigVersion >= 2. |
 | 8 | CurrentApplicationID | uint64 | ID of current application executing. Fails if no such application is executing. LogicSigVersion >= 2. |
+| 9 | CreatorAddress | []byte | Address of the creator of the current application. Fails if no such application is executing. LogicSigVersion >= 3. |
 
 
 ## gtxn
@@ -481,7 +495,7 @@ for notes on transaction fields available, see `txn`. If this transaction is _i_
 - Opcode: 0x36 {uint8 transaction field index}{uint8 transaction field array index}
 - Pops: _None_
 - Pushes: any
-- push value of an array field from current transaction to stack
+- push value from an array field from current transaction to stack
 - LogicSigVersion >= 2
 
 ## gtxna
@@ -489,7 +503,7 @@ for notes on transaction fields available, see `txn`. If this transaction is _i_
 - Opcode: 0x37 {uint8 transaction group index}{uint8 transaction field index}{uint8 transaction field array index}
 - Pops: _None_
 - Pushes: any
-- push value of a field to the stack from a transaction in the current transaction group
+- push value from an array field from a transaction in the current transaction group
 - LogicSigVersion >= 2
 
 ## bnz
@@ -735,3 +749,110 @@ params: account index, asset id. Return: did_exist flag (1 if exist and 0 otherw
 
 
 params: txn.ForeignAssets offset. Return: did_exist flag (1 if exist and 0 otherwise), value.
+
+## assert
+
+- Opcode: 0x72
+- Pops: *... stack*, uint64
+- Pushes: _None_
+- immediately fail unless value X is a non-zero number
+- LogicSigVersion >= 3
+
+## min_balance
+
+- Opcode: 0x73
+- Pops: *... stack*, uint64
+- Pushes: uint64
+- get minimum balance for the requested account specified by Txn.Accounts[A] in microalgos. A is specified as an account index in the Accounts field of the ApplicationCall transaction, zero index means the sender
+- LogicSigVersion >= 3
+- Mode: Application
+
+## getbit
+
+- Opcode: 0x74
+- Pops: *... stack*, {uint64 A}, {uint64 B}
+- Pushes: uint64
+- pop an integer A (between 0..63) and integer B. Extract the Ath bit of B and push it. A==0 is lowest order bit.
+- LogicSigVersion >= 3
+
+## setbit
+
+- Opcode: 0x75
+- Pops: *... stack*, {uint64 A}, {uint64 B}, {uint64 C}
+- Pushes: uint64
+- pop a bit A, integer B (between 0..63), and integer C. Set the Bth bit of C to A, and push the result
+- LogicSigVersion >= 3
+
+## getbyte
+
+- Opcode: 0x76
+- Pops: *... stack*, {[]byte A}, {uint64 B}
+- Pushes: uint64
+- pop an integer A and string B. Extract the Ath byte of B and push it as an integer
+- LogicSigVersion >= 3
+
+## setbyte
+
+- Opcode: 0x77
+- Pops: *... stack*, {[]byte A}, {uint64 B}, {uint64 C}
+- Pushes: []byte
+- pop a small integer A (between (0..255), and integer B, and string C. Set the Bth byte of C to A, and push the result
+- LogicSigVersion >= 3
+
+## swap
+
+- Opcode: 0x78
+- Pops: *... stack*, {any A}, {any B}
+- Pushes: *... stack*, any, any
+- swaps two last values on stack: A, B -> B, A
+- LogicSigVersion >= 3
+
+## select
+
+- Opcode: 0x79
+- Pops: *... stack*, {any A}, {any B}, {uint64 C}
+- Pushes: any
+- selects one of two values to retain: A, B, C -> A ? B : C
+- LogicSigVersion >= 3
+
+## dig
+
+- Opcode: 0x80 {uint8 depth}
+- Pops: *... stack*, any
+- Pushes: *... stack*, any, any
+- duplicate value N from the top of stack
+- LogicSigVersion >= 3
+
+## stxn
+
+- Opcode: 0x81 {uint8 transaction field index}
+- Pops: *... stack*, uint64
+- Pushes: any
+- push field to the stack from transaction A in the current group
+- LogicSigVersion >= 3
+
+for notes on transaction fields available, see `txn`. If top of stack is _i_, `stxn field` is equivalent to `gtxn _i_ field`.
+
+## stxna
+
+- Opcode: 0x82 {uint8 transaction field index}{uint8 transaction field array index}
+- Pops: *... stack*, uint64
+- Pushes: any
+- pusha value from an array field from transaction A in the current group
+- LogicSigVersion >= 3
+
+## pushbytes
+
+- Opcode: 0x83
+- Pops: _None_
+- Pushes: []byte
+- push the following program bytes to the stack
+- LogicSigVersion >= 3
+
+## pushint
+
+- Opcode: 0x84
+- Pops: _None_
+- Pushes: uint64
+- push the following varuint encoded bytes to the stack as an integer
+- LogicSigVersion >= 3
