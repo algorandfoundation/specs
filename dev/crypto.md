@@ -52,7 +52,8 @@ below specifies each prefix (in quotation marks):
     - "BH": A _Block Header_.
     - "BR": A _Balance Record_.
     - "GE": A _Genesis_ configuration.
-    - "PF": A _Payset_ encoded as a flat list.
+    - "STIB": A _SignedTxnInBlock_ that appears as part of the leaf in the Merkle tree of transactions.
+    - "TL": A leaf in the Merkle tree of transactions.
     - "TX": A _Transaction_.
  - In the [Algorand Byzantine Fault Tolerance protocol][abft-spec]:
     - "AS": An _Agreement Selector_, which is also a [VRF][Verifiable
