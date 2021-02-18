@@ -281,7 +281,7 @@ Overflow is an error condition which halts execution and fails the transaction. 
 - Pushes: _None_
 - load block of byte-array constants
 
-`bytecblock` loads the following program bytes into an array of byte string constants in the evaluator. These constants can be referred to by `bytec` and `bytec_*` which will push the value onto the stack. Subsequent calls to `bytecblock` reset and replace the bytes constants available to the script.
+`bytecblock` loads the following program bytes into an array of byte-array constants in the evaluator. These constants can be referred to by `bytec` and `bytec_*` which will push the value onto the stack. Subsequent calls to `bytecblock` reset and replace the bytes constants available to the script.
 
 ## bytec
 
@@ -469,7 +469,7 @@ FirstValidTime causes the program to fail. The field is reserved for future use.
 
 ## gtxn
 
-- Opcode: 0x33 {uint8 transaction group index}{uint8 transaction field index}
+- Opcode: 0x33 {uint8 transaction group index} {uint8 transaction field index}
 - Pops: _None_
 - Pushes: any
 - push field to the stack from a transaction in the current transaction group
@@ -492,7 +492,7 @@ for notes on transaction fields available, see `txn`. If this transaction is _i_
 
 ## txna
 
-- Opcode: 0x36 {uint8 transaction field index}{uint8 transaction field array index}
+- Opcode: 0x36 {uint8 transaction field index} {uint8 transaction field array index}
 - Pops: _None_
 - Pushes: any
 - push value from an array field from current transaction to stack
@@ -500,7 +500,7 @@ for notes on transaction fields available, see `txn`. If this transaction is _i_
 
 ## gtxna
 
-- Opcode: 0x37 {uint8 transaction group index}{uint8 transaction field index}{uint8 transaction field array index}
+- Opcode: 0x37 {uint8 transaction group index} {uint8 transaction field index} {uint8 transaction field array index}
 - Pops: _None_
 - Pushes: any
 - push value from an array field from a transaction in the current transaction group
@@ -572,17 +572,17 @@ See `bnz` for details on how branches work. `b` always jumps to the offset.
 - Opcode: 0x50
 - Pops: *... stack*, {[]byte A}, {[]byte B}
 - Pushes: []byte
-- pop two byte strings A and B and join them, push the result
+- pop two byte-arrays A and B and join them, push the result
 - LogicSigVersion >= 2
 
 `concat` panics if the result would be greater than 4096 bytes.
 
 ## substring
 
-- Opcode: 0x51 {uint8 start position}{uint8 end position}
+- Opcode: 0x51 {uint8 start position} {uint8 end position}
 - Pops: *... stack*, []byte
 - Pushes: []byte
-- pop a byte string X. For immediate values in 0..255 M and N: extract a range of bytes from it starting at M up to but not including N, push the substring result. If N < M, or either is larger than the string length, the program fails
+- pop a byte-array X. For immediate values in 0..255 M and N: extract a range of bytes from it starting at M up to but not including N, push the substring result. If N < M, or either is larger than the array length, the program fails
 - LogicSigVersion >= 2
 
 ## substring3
@@ -590,7 +590,7 @@ See `bnz` for details on how branches work. `b` always jumps to the offset.
 - Opcode: 0x52
 - Pops: *... stack*, {[]byte A}, {uint64 B}, {uint64 C}
 - Pushes: []byte
-- pop a byte string A and two integers B and C. Extract a range of bytes from A starting at B up to but not including C, push the substring result. If C < B, or either is larger than the string length, the program fails
+- pop a byte-array A and two integers B and C. Extract a range of bytes from A starting at B up to but not including C, push the substring result. If C < B, or either is larger than the array length, the program fails
 - LogicSigVersion >= 2
 
 ## balance
@@ -770,17 +770,17 @@ params: txn.ForeignAssets offset. Return: did_exist flag (1 if exist and 0 other
 ## getbit
 
 - Opcode: 0x74
-- Pops: *... stack*, {uint64 A}, {uint64 B}
+- Pops: *... stack*, {any A}, {uint64 B}
 - Pushes: uint64
-- pop an integer A (between 0..63) and integer B. Extract the Ath bit of B and push it. A==0 is lowest order bit.
+- pop a target A (integer or byte-array), and index B. Pushes the Bth bit of A.
 - LogicSigVersion >= 3
 
 ## setbit
 
 - Opcode: 0x75
-- Pops: *... stack*, {uint64 A}, {uint64 B}, {uint64 C}
+- Pops: *... stack*, {any A}, {uint64 B}, {uint64 C}
 - Pushes: uint64
-- pop a bit A, integer B (between 0..63), and integer C. Set the Bth bit of C to A, and push the result
+- pop a target A, index B, and bit C. Sets the Bth bit of A to C, and push the result
 - LogicSigVersion >= 3
 
 ## getbyte
@@ -788,7 +788,7 @@ params: txn.ForeignAssets offset. Return: did_exist flag (1 if exist and 0 other
 - Opcode: 0x76
 - Pops: *... stack*, {[]byte A}, {uint64 B}
 - Pushes: uint64
-- pop an integer A and string B. Extract the Ath byte of B and push it as an integer
+- pop a byte-array A and integer B. Extract the Bth byte of A and push it as an integer
 - LogicSigVersion >= 3
 
 ## setbyte
@@ -796,7 +796,7 @@ params: txn.ForeignAssets offset. Return: did_exist flag (1 if exist and 0 other
 - Opcode: 0x77
 - Pops: *... stack*, {[]byte A}, {uint64 B}, {uint64 C}
 - Pushes: []byte
-- pop a small integer A (between 0..255), and integer B, and string C. Set the Bth byte of C to A, and push the result
+- pop a byte-array A, integer B, and small integer C (between 0..255). Set the Bth byte of A to C, and push the result
 - LogicSigVersion >= 3
 
 ## swap
@@ -835,15 +835,15 @@ for notes on transaction fields available, see `txn`. If top of stack is _i_, `s
 
 ## stxna
 
-- Opcode: 0x82 {uint8 transaction field index}{uint8 transaction field array index}
+- Opcode: 0x82 {uint8 transaction field index} {uint8 transaction field array index}
 - Pops: *... stack*, uint64
 - Pushes: any
-- pusha value from an array field from transaction A in the current group
+- push value from an array field from transaction A in the current group
 - LogicSigVersion >= 3
 
 ## pushbytes
 
-- Opcode: 0x83
+- Opcode: 0x83 {varuint length} {bytes}
 - Pops: _None_
 - Pushes: []byte
 - push the following program bytes to the stack
@@ -851,7 +851,7 @@ for notes on transaction fields available, see `txn`. If top of stack is _i_, `s
 
 ## pushint
 
-- Opcode: 0x84
+- Opcode: 0x84 {varuint int}
 - Pops: _None_
 - Pushes: uint64
 - push the following varuint encoded bytes to the stack as an integer
