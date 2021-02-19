@@ -48,6 +48,9 @@ below specifies each prefix (in quotation marks):
     - "OT1" and "OT2": The first and second layers of keys used for
       [ephemeral signatures](#ephemeral-key-signature).
     - "MA": An internal node in a [Merkle tree](#merkle-tree).
+    - "ccc": A coin used as part of the compact certificate construction.
+    - "ccs": A signature from a specific participant that is used to form a compact certificate.
+    - "ccp": A voting participant's information used for compact certificates.
  - In the [Algorand Ledger][ledger-spec]:
     - "BH": A _Block Header_.
     - "BR": A _Balance Record_.
@@ -223,6 +226,121 @@ def verify(elems, proof, root):
 ```
 
 
+# Compact certificates
+
+Compact certificates allow external parties to efficiently validate
+Algorand blocks.  The [technical report][compactcert] provides the
+overall approach of compact certificates; this section describes the
+specific details of how compact certificates are realized in Algorand.
+
+As a brief summary of the technical report, compact certificates operate
+in three steps:
+
+- The first step is to commit to a set of participants that are eligible
+  to produce signatures, along with a weight for each participant.
+  In Algorand's case, these end up being the online accounts, and the
+  weights are the account balances.
+
+- The second step is for each participant to sign the same message, and
+  broadcast this signature to others.  In Algorand's case, this ends up
+  being a signature on the block header.
+
+- The third step is for participants to collect these signatures from a
+  large fraction of participants (by weight) and generate a compact
+  certificate.  Given a sufficient number of signatures, a participant
+  can form a compact certificate, which effectively consists of a
+  small number of signatures, pseudo-randomly chosen out of all of
+  the signatures.
+
+The resulting compact certificate proves that at least some `provenWeight`
+of participants have signed the message.  The actual weight of
+all participants that have signed the message must be greater than
+`provenWeight`.
+
+## Participant commitment
+
+The participants are represented using a `msgpack` encoding with three
+fields: the participant's [voting key](#ephemeral-key-signature) (under
+msgpack key `p`), the participant's weight (under msgpack key `w`),
+and the participant's key dilution for their ephemeral voting key (under
+msgpack key `d`).  The compact certificate scheme requires a Merkle tree
+commitment to a dense array of participants, in some well-defined order.
+To commit to participants, the three fields are encoded using canonical
+msgpack with domain-separation prefix `ccp`.
+
+## Signature format
+
+The signature from each participant is represented using a `msgpack`
+encoding with two fields: the one-time signature of the message (in
+Algorand's case, the block header), under the msgpack key `s`, and the
+`L` value as described in the technical report, under the msgpack key
+`l`.  The compact certificate requires committing to a dense array of
+signatures using a Merkle tree; for this purpose, these signatures are
+encoded using canonical msgpack with domain-separation prefix `ccs`.
+
+## Choice of revealed signatures
+
+As described in the [technical report][compactcert] section IV.A, a
+compact certificate contains a pseudorandomly chosen set of signatures.
+The choice is made using a coin.  In Algorand's implementation, the
+coin is chosen using a hash of the following canonical msgpack encoding,
+with domain-separation prefix `ccc`:
+
+- The J index of the coin, from the technical report, under msgpack
+  key `j`.
+
+- The total weight of all signers whose signatures are being used to
+  construct the compact certificate, under msgpack key `sigweight`.
+
+- The `provenWeight` being proven with the compact certificate, under
+  msgpack key `provenweight`.
+
+- The root of the Merkle tree commitment to the array of participants,
+  under msgpack key `partcom`.
+
+- The root of the Merkle tree commitment to the array of signatures,
+  under msgpack key `sigcom`.
+
+- The hash of the message being signed, under msgpack key `msghash`.
+
+The hash of the above message is then interpreted as a big-endian integer,
+and the coin is computed as that integer modulo the total weight of
+all signatures.
+
+## Compact certificate format
+
+A compact certificate consists of five fields:
+
+- The Merkle root commitment to the array of signatures, under msgpack
+  key `c`.
+
+- The total weight of all signers whose signatures appear in the array
+  of signatures, under msgpack key `w`.
+
+- The set of revealed signatures, chosen as described in section IV.A
+  of the [technical report][compactcert], under msgpack key `r`.  This set is stored as a
+  msgpack map.  The key of the map is the position in the array of the
+  participant whose signature is being revealed.  The value in the map
+  is a msgpack struct with the following fields:
+
+  -- The participant information, encoded as described [above](#participant-commitment),
+    under msgpack key `p`.
+
+  -- The signature information, encoded as described [above](#signature-format),
+    under msgpack key `s`.
+
+- The Merkle proof for the signatures revealed above, under msgpack
+  key `S`.  The Merkle proof is an array of 32-byte hash digests.
+
+- The Merkle proof for the participants revealed above, under msgpack
+  key `P`.
+
+Note that, although the compact certificate contains a commitment to
+the signatures, it does not contain a commitment to the participants.
+The set of participants must already be known in order to verify a
+compact certificate.  In practice, a commitment to the participants is
+stored in the block header of an earlier block.
+
 
 [ledger-spec]: https://github.com/algorand/spec/ledger.md
 [abft-spec]: https://github.com/algorand/spec/abft.md
@@ -230,3 +348,4 @@ def verify(elems, proof, root):
 [sha]: TODO-sha
 [ed25519]: TODO-ed25519
 [msgpack]: https://github.com/msgpack/msgpack/blob/master/spec.md
+[compactcert]: https://eprint.iacr.org/2020/1568
