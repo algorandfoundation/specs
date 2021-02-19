@@ -32,6 +32,15 @@ The Algorand Ledger is parameterized by the following values:
  - $\omega_r$, the rate at which the reward rate is refreshed.
  - $A$, the size of an earning unit.
  - $Assets_{\max}$, the maximum number of assets held by an account.
+ - Several parameters for compact certificates; namely:
+   - $\delta_{CC}$, the number of rounds between compact certificates.
+   - $\delta_{CCB}$, the delay (lookback) in rounds for online participant
+     information committed to in the block header for compact certificates.
+   - $N_{CC}$, the maximum number of online accounts that are included
+     in the Merkle tree commitment of compact certificate participants.
+   - $KQ_{CC}$, the security parameter for compact certificates.
+   - $f_{CC}$, the fraction of participants that are proven to have
+     signed by a compact certificate.
 
 ## States
 
@@ -482,6 +491,65 @@ units of that asset), until that asset is destroyed.  An account's asset
 holding is simply a map from asset IDs to an integer value indicating
 how many units of that asset is held by the account.  An account that
 holds any asset cannot be closed.
+
+# Compact Certificate State
+
+Each block header keeps track of the state needed to construct, validate,
+and record compact certificates.  The state for compact certificates is
+stored in a map under the msgpack key `cc` in the block header.  The map
+is indexed by the type of the compact certificate; at the moment, only
+type 0 is supported.  In the future, other types of compact certificates
+might be added, with different parameters or choices of hash function
+or signature scheme.
+
+For type 0 certificates, $KQ_{CC}=128$, $f_{CC}$ is $2^{32}*30/100$
+(as the numerator of a fraction out of $2^{32}$), $N_{CC}=1048576$,
+$\delta_{CC}=128$ and $\delta_{CCB}=16$.
+
+The value of this compact cert state map is a msgpack map with three
+elements:
+
+- Under key `n`, the next expected round of a compact certificate that
+  should be formed.  When upgrading from an earlier consensus protocol
+  to a protocol that supports compact certificates, the `n` field is
+  set to the lowest value such that `n` is a multiple of $\delta_{CC}$
+  and so that the `n` is at least the first round of the new protocol
+  (supporting compact certificates) plus $\delta_{CCB}+\delta{CC}$.
+  This field is set in every block.
+
+- Under key `v`, the root of the Merkle tree commitment to an array of
+  participants that are eligible to vote in the compact certificate for
+  block $\delta_{CC}$ from the current block.  Only blocks whose round
+  number is a multiple of $\delta_{CC}$ have a non-zero `v` field.
+
+- Under key `t`, the total weight of participants in the Merkle tree.
+
+The participants committed to by the Merkle tree are chosen in a
+specific fashion:
+
+- First off, because it takes some time to collect all of the online
+  participants (more than the target assembly time for a block), the
+  set of participants appearing in a commitment in block at round $r$
+  are actually based on the account state from round $r-\delta_{CCB}$.
+
+- The participants are sorted by the number of microAlgos they currently
+  hold (including any pending rewards).  This enables more compact
+  proofs of pseudorandomly-chosen participants weighted by their
+  microAlgo holdings.  Only accounts in the online state are included
+  in this list of participants.
+
+- To limit the worst-case size of this Merkle tree, the array of
+  participants contains just the top $N_{CC}$ participants.  Efficiently
+  computing the top $N_{CC}$ accounts by their algo balance is difficult
+  in the presence of pending rewards.  Thus, to make this top-$N_{CC}$
+  calculation more efficient, we choose the top accounts based on a
+  normalized balance.  The normalized balance is a hypothetical balance
+  that a given account would need to have at round 0 to achieve its
+  current balance (without pending rewards) as of the last round at
+  which the account was touched (i.e., its pending rewards were added
+  to the account's balance).  Specifically, for an account $a$ with raw
+  balance $a_I$ and rewards base $a'_I$, the normalized balance is $a_I *
+  RewardUnit / (a'_I + RewardUnit)$.
 
 # Transactions
 
@@ -1053,6 +1121,54 @@ point must be discarded and the entire transaction rejected.
   any account referenced by an address listed in the transaction's `Accounts`
   field. An attempt to read an Algo balance or asset balance for any other
   account will cause program execution to fail.
+
+## Compact certificate transaction
+
+A special transaction is used to disseminate and store compact
+certificates.  The type of a compact certificate transaction is `cert`.
+This type of transaction must always be issued from a special sender
+address, which is the hash of the domain-separation prefix `SpecialAddr`
+with the string `CompactCertSender`.  The transaction must not have any
+signature, must not have any fee, must have an empty note, must not have
+the rekeying field set, must not have any lease, and must not be part
+of a transaction group.
+
+The compact certificate transaction includes three additional fields:
+
+- Under msgpack key `certtype`, the type of the compact certificate;
+  currently always zero.
+
+- Under msgpack key `certrnd`, the round number whose block header is
+  signed by this compact certificate.
+
+- Under msgpack key `cert`, the compact certificate fields as defined
+  in the compact certificate format subsection of the cryptographic
+  primitive specification document.
+
+In order for a compact certificate transaction to be valid, the round of
+the compact certificate (`certrnd`) must be exactly equal to the next
+expected compact certificate round in the block header, as described
+[above](#compact-certificate-state).  When a compact certificate
+transaction is applied to the state, the next expected compact
+certificate round for that type of compact certificate is incremented
+by $\delta_{CC}$.
+
+To encourage the formation of shorter compact certificates, the rule for
+validity of compact certificate transactions is dependent on the round
+number of the block in which a compact certificate transaction appears.
+In particular, the signed weight of a compact certificate must be:
+
+- Equal to the full weight of all participants, `TotalWeight`, if the
+  containing block's round number is no greater than the certificate's
+  `certrnd` plus $\delta_{CC}/2+2$.
+
+- At least the minimum weight being proven by the certificate,
+  `ProvenWeight, if the containing block's round number is no less than
+  the certificate's `certrnd` plus $\delta_{CC}+2`.
+
+- At least $ProvenWeight + (TotalWeight - ProvenWeight) * Offset / (\delta_{CC} / 2)$,
+  if the containing block's round number is the certificate's `certrnd` plus
+  $\delta_{CC}/2+2+Offset$.
 
 ## Validity and State Changes
 

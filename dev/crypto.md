@@ -58,6 +58,7 @@ below specifies each prefix (in quotation marks):
     - "STIB": A _SignedTxnInBlock_ that appears as part of the leaf in the Merkle tree of transactions.
     - "TL": A leaf in the Merkle tree of transactions.
     - "TX": A _Transaction_.
+    - "SpecialAddr": A prefix used to generate designated addresses for specific functions, such as sending compact certificate transactions.
  - In the [Algorand Byzantine Fault Tolerance protocol][abft-spec]:
     - "AS": An _Agreement Selector_, which is also a [VRF][Verifiable
       Random Function] input.
@@ -340,6 +341,27 @@ the signatures, it does not contain a commitment to the participants.
 The set of participants must already be known in order to verify a
 compact certificate.  In practice, a commitment to the participants is
 stored in the block header of an earlier block.
+
+## Compact certificate validity
+
+A compact certificate is valid for the message hash specified in the
+certificate, with respect to a commitment to the array of participants,
+if:
+
+- All of the participant and signature information that appears in
+  the reveals is validated by the Merkle proofs for the participants
+  (against the commitment to participants, supplied outside of the
+  certificate) and signatures (against the commitment in the compact
+  certificate itself), respectively.
+
+- All of the signatures are valid signatures for the message hash
+  specified in the compact certificate.
+
+- The signed weight claimed by the compact certificate is at least
+  the proven weight that the certificate is trying to establish.
+
+- The reveals included as part of the compact certificate include
+  all of the coins generated based on the certificate parameters.
 
 
 [ledger-spec]: https://github.com/algorand/spec/ledger.md
