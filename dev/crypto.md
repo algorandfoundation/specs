@@ -209,10 +209,11 @@ def verify(elems, proof, root):
     sibling = pos ^ 1
     if i+1 < len(elems) and elems[i+1].pos == sibling:
       sibhash = elems[i+1].hash
-      i++
+      i += 2
     else:
       sibhash = proof[0]
       proof = proof[1:]
+      i += 1
     if pos&1 == 0:
       h = H("MA" + poshash + sibhash)
     else:
