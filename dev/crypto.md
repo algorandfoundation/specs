@@ -228,6 +228,6 @@ def verify(elems, proof, root):
 [ledger-spec]: https://github.com/algorand/spec/ledger.md
 [abft-spec]: https://github.com/algorand/spec/abft.md
 
-[sha]: TODO-sha
-[ed25519]: TODO-ed25519
+[sha]: https://doi.org/10.6028/NIST.FIPS.180-4
+[ed25519]: https://tools.ietf.org/html/rfc8032
 [msgpack]: https://github.com/msgpack/msgpack/blob/master/spec.md
