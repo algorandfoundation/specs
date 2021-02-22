@@ -230,21 +230,21 @@ Overflow is an error condition which halts execution and fails the transaction. 
 - A plus B out to 128-bit long result as sum (top) and carry-bit uint64 values on the stack
 - LogicSigVersion >= 2
 
-## intcblock
+## intcblock uint ...
 
 - Opcode: 0x20 {varuint length} [{varuint value}, ...]
 - Pops: _None_
 - Pushes: _None_
-- load block of uint64 constants
+- prepare block of uint64 constants for use by intc
 
 `intcblock` loads following program bytes into an array of integer constants in the evaluator. These integer constants can be referred to by `intc` and `intc_*` which will push the value onto the stack. Subsequent calls to `intcblock` reset and replace the integer constants available to the script.
 
-## intc
+## intc i
 
 - Opcode: 0x21 {uint8 int constant index}
 - Pops: _None_
 - Pushes: uint64
-- push value from uint64 constants to stack by index into constants
+- push Ith constant from intcblock to stack
 
 ## intc_0
 
@@ -274,21 +274,21 @@ Overflow is an error condition which halts execution and fails the transaction. 
 - Pushes: uint64
 - push constant 3 from intcblock to stack
 
-## bytecblock
+## bytecblock bytes ...
 
 - Opcode: 0x26 {varuint length} [({varuint value length} bytes), ...]
 - Pops: _None_
 - Pushes: _None_
-- load block of byte-array constants
+- prepare block of byte-array constants for use by bytec
 
 `bytecblock` loads the following program bytes into an array of byte-array constants in the evaluator. These constants can be referred to by `bytec` and `bytec_*` which will push the value onto the stack. Subsequent calls to `bytecblock` reset and replace the bytes constants available to the script.
 
-## bytec
+## bytec i
 
 - Opcode: 0x27 {uint8 byte constant index}
 - Pops: _None_
 - Pushes: []byte
-- push bytes constant to stack by index into constants
+- push Ith constant from bytecblock to stack
 
 ## bytec_0
 
@@ -318,12 +318,12 @@ Overflow is an error condition which halts execution and fails the transaction. 
 - Pushes: []byte
 - push constant 3 from bytecblock to stack
 
-## arg
+## arg n
 
 - Opcode: 0x2c {uint8 arg index N}
 - Pops: _None_
 - Pushes: []byte
-- push Args[N] value to stack by index
+- push Nth LogicSig argument to stack
 - Mode: Signature
 
 ## arg_0
@@ -331,7 +331,7 @@ Overflow is an error condition which halts execution and fails the transaction. 
 - Opcode: 0x2d
 - Pops: _None_
 - Pushes: []byte
-- push Args[0] to stack
+- push LogicSig argument 0 to stack
 - Mode: Signature
 
 ## arg_1
@@ -339,7 +339,7 @@ Overflow is an error condition which halts execution and fails the transaction. 
 - Opcode: 0x2e
 - Pops: _None_
 - Pushes: []byte
-- push Args[1] to stack
+- push LogicSig argument 1 to stack
 - Mode: Signature
 
 ## arg_2
@@ -347,7 +347,7 @@ Overflow is an error condition which halts execution and fails the transaction. 
 - Opcode: 0x2f
 - Pops: _None_
 - Pushes: []byte
-- push Args[2] to stack
+- push LogicSig argument 2 to stack
 - Mode: Signature
 
 ## arg_3
@@ -355,17 +355,17 @@ Overflow is an error condition which halts execution and fails the transaction. 
 - Opcode: 0x30
 - Pops: _None_
 - Pushes: []byte
-- push Args[3] to stack
+- push LogicSig argument 3 to stack
 - Mode: Signature
 
-## txn
+## txn f
 
 - Opcode: 0x31 {uint8 transaction field index}
 - Pops: _None_
 - Pushes: any
-- push field from current transaction to stack
+- push field F of current transaction to stack
 
-`txn` Fields:
+`txn` Fields (see [transaction reference](https://developer.algorand.org/docs/reference/transactions/)):
 
 | Index | Name | Type | Notes |
 | --- | --- | --- | --- |
@@ -444,7 +444,7 @@ TypeEnum mapping:
 
 FirstValidTime causes the program to fail. The field is reserved for future use.
 
-## global
+## global f
 
 - Opcode: 0x32 {uint8 global field index}
 - Pops: _None_
@@ -467,72 +467,90 @@ FirstValidTime causes the program to fail. The field is reserved for future use.
 | 9 | CreatorAddress | []byte | Address of the creator of the current application. Fails if no such application is executing. LogicSigVersion >= 3. |
 
 
-## gtxn
+## gtxn t f
 
 - Opcode: 0x33 {uint8 transaction group index} {uint8 transaction field index}
 - Pops: _None_
 - Pushes: any
-- push field to the stack from a transaction in the current transaction group
+- push field F of the Tth transaction in the current group
 
 for notes on transaction fields available, see `txn`. If this transaction is _i_ in the group, `gtxn i field` is equivalent to `txn field`.
 
-## load
+## load i
 
 - Opcode: 0x34 {uint8 position in scratch space to load from}
 - Pops: _None_
 - Pushes: any
 - copy a value from scratch space to the stack
 
-## store
+## store i
 
 - Opcode: 0x35 {uint8 position in scratch space to store to}
 - Pops: *... stack*, any
 - Pushes: _None_
 - pop a value from the stack and store to scratch space
 
-## txna
+## txna f i
 
 - Opcode: 0x36 {uint8 transaction field index} {uint8 transaction field array index}
 - Pops: _None_
 - Pushes: any
-- push value from an array field from current transaction to stack
+- push Ith value of the array field F of the current transaction
 - LogicSigVersion >= 2
 
-## gtxna
+## gtxna t f i
 
 - Opcode: 0x37 {uint8 transaction group index} {uint8 transaction field index} {uint8 transaction field array index}
 - Pops: _None_
 - Pushes: any
-- push value from an array field from a transaction in the current transaction group
+- push Ith value of the array field F from the Tth transaction in the current group
 - LogicSigVersion >= 2
 
-## bnz
+## stxn f
+
+- Opcode: 0x38 {uint8 transaction field index}
+- Pops: *... stack*, uint64
+- Pushes: any
+- push field F of the Ath transaction in the current group
+- LogicSigVersion >= 3
+
+for notes on transaction fields available, see `txn`. If top of stack is _i_, `stxn field` is equivalent to `gtxn _i_ field`. stxn exists so that _i_ can be calculated, often based on the index of the current transaction.
+
+## stxna f i
+
+- Opcode: 0x39 {uint8 transaction field index} {uint8 transaction field array index}
+- Pops: *... stack*, uint64
+- Pushes: any
+- push Ith value of the array field F from the Ath transaction in the current group
+- LogicSigVersion >= 3
+
+## bnz target
 
 - Opcode: 0x40 {0..0x7fff forward branch offset, big endian}
 - Pops: *... stack*, uint64
 - Pushes: _None_
-- branch if value X is not zero
+- branch to TARGET if value X is not zero
 
 The `bnz` instruction opcode 0x40 is followed by two immediate data bytes which are a high byte first and low byte second which together form a 16 bit offset which the instruction may branch to. For a bnz instruction at `pc`, if the last element of the stack is not zero then branch to instruction at `pc + 3 + N`, else proceed to next instruction at `pc + 3`. Branch targets must be well aligned instructions. (e.g. Branching to the second byte of a 2 byte op will be rejected.) Branch offsets are currently limited to forward branches only, 0-0x7fff. A future expansion might make this a signed 16 bit integer allowing for backward branches and looping.
 
 At LogicSigVersion 2 it became allowed to branch to the end of the program exactly after the last instruction: bnz to byte N (with 0-indexing) was illegal for a TEAL program with N bytes before LogicSigVersion 2, and is legal after it. This change eliminates the need for a last instruction of no-op as a branch target at the end. (Branching beyond the end--in other words, to a byte larger than N--is still illegal and will cause the program to fail.)
 
-## bz
+## bz target
 
 - Opcode: 0x41 {0..0x7fff forward branch offset, big endian}
 - Pops: *... stack*, uint64
 - Pushes: _None_
-- branch if value X is zero
+- branch to TARGET if value X is zero
 - LogicSigVersion >= 2
 
 See `bnz` for details on how branches work. `bz` inverts the behavior of `bnz`.
 
-## b
+## b target
 
 - Opcode: 0x42 {0..0x7fff forward branch offset, big endian}
 - Pops: _None_
 - Pushes: _None_
-- branch unconditionally to offset
+- branch unconditionally to TARGET
 - LogicSigVersion >= 2
 
 See `bnz` for details on how branches work. `b` always jumps to the offset.
@@ -544,6 +562,14 @@ See `bnz` for details on how branches work. `b` always jumps to the offset.
 - Pushes: _None_
 - use last value on stack as success value; end
 - LogicSigVersion >= 2
+
+## assert
+
+- Opcode: 0x44
+- Pops: *... stack*, uint64
+- Pushes: _None_
+- immediately fail unless value X is a non-zero number
+- LogicSigVersion >= 3
 
 ## pop
 
@@ -567,6 +593,30 @@ See `bnz` for details on how branches work. `b` always jumps to the offset.
 - duplicate two last values on stack: A, B -> A, B, A, B
 - LogicSigVersion >= 2
 
+## dig n
+
+- Opcode: 0x4b {uint8 depth}
+- Pops: *... stack*, any
+- Pushes: *... stack*, any, any
+- push the Nth value from the top of the stack. dig 0 is equivalent to dup
+- LogicSigVersion >= 3
+
+## swap
+
+- Opcode: 0x4c
+- Pops: *... stack*, {any A}, {any B}
+- Pushes: *... stack*, any, any
+- swaps two last values on stack: A, B -> B, A
+- LogicSigVersion >= 3
+
+## select
+
+- Opcode: 0x4d
+- Pops: *... stack*, {any A}, {any B}, {uint64 C}
+- Pushes: any
+- selects one of two values based on top-of-stack: A, B, C -> (if C != 0 then B else A)
+- LogicSigVersion >= 3
+
 ## concat
 
 - Opcode: 0x50
@@ -577,12 +627,12 @@ See `bnz` for details on how branches work. `b` always jumps to the offset.
 
 `concat` panics if the result would be greater than 4096 bytes.
 
-## substring
+## substring s e
 
 - Opcode: 0x51 {uint8 start position} {uint8 end position}
 - Pops: *... stack*, []byte
 - Pushes: []byte
-- pop a byte-array X. For immediate values in 0..255 M and N: extract a range of bytes from it starting at M up to but not including N, push the substring result. If N < M, or either is larger than the array length, the program fails
+- pop a byte-array X. For immediate values in 0..255 S and E: extract a range of bytes from it starting at S up to but not including E, push the substring result. If E < S, or either is larger than the array length, the program fails
 - LogicSigVersion >= 2
 
 ## substring3
@@ -592,6 +642,42 @@ See `bnz` for details on how branches work. `b` always jumps to the offset.
 - Pushes: []byte
 - pop a byte-array A and two integers B and C. Extract a range of bytes from A starting at B up to but not including C, push the substring result. If C < B, or either is larger than the array length, the program fails
 - LogicSigVersion >= 2
+
+## getbit
+
+- Opcode: 0x53
+- Pops: *... stack*, {any A}, {uint64 B}
+- Pushes: uint64
+- pop a target A (integer or byte-array), and index B. Push the Bth bit of A.
+- LogicSigVersion >= 3
+
+see explanation of bit ordering in setbit
+
+## setbit
+
+- Opcode: 0x54
+- Pops: *... stack*, {any A}, {uint64 B}, {uint64 C}
+- Pushes: uint64
+- pop a target A, index B, and bit C. Set the Bth bit of A to C, and push the result
+- LogicSigVersion >= 3
+
+bit indexing begins with low-order bits in integers. Setting bit 4 to 1 on the integer 0 yields 16 (`int 0x0010`, or 2^4). Indexing begins in the first bytes of a byte-string (as seen in getbyte and substring). Setting bits 0 through 11 to 1 in a 4 byte-array of 0s yields `byte 0xfff00000`
+
+## getbyte
+
+- Opcode: 0x55
+- Pops: *... stack*, {[]byte A}, {uint64 B}
+- Pushes: uint64
+- pop a byte-array A and integer B. Extract the Bth byte of A and push it as an integer
+- LogicSigVersion >= 3
+
+## setbyte
+
+- Opcode: 0x56
+- Pops: *... stack*, {[]byte A}, {uint64 B}, {uint64 C}
+- Pushes: []byte
+- pop a byte-array A, integer B, and small integer C (between 0..255). Set the Bth byte of A to C, and push the result
+- LogicSigVersion >= 3
 
 ## balance
 
@@ -622,18 +708,18 @@ params: account index, application id (top of the stack on opcode entry). Return
 - LogicSigVersion >= 2
 - Mode: Application
 
-params: account index, state key. Return: value. The value is zero if the key does not exist.
+params: account index, state key. Return: value. The value is zero (of type uint64) if the key does not exist.
 
 ## app_local_get_ex
 
 - Opcode: 0x63
 - Pops: *... stack*, {uint64 A}, {uint64 B}, {[]byte C}
 - Pushes: *... stack*, any, uint64
-- read from account specified by Txn.Accounts[A] from local state of the application B key C => {0 or 1 (top), value}
+- read from account specified by Txn.Accounts[A] from local state of the application B key C => [*... stack*, value, 0 or 1]
 - LogicSigVersion >= 2
 - Mode: Application
 
-params: account index, application id, state key. Return: did_exist flag (top of the stack, 1 if exist and 0 otherwise), value.
+params: account index, application id, state key. Return: did_exist flag (top of the stack, 1 if exist and 0 otherwise), value. The value is zero (of type uint64) if the key does not exist.
 
 ## app_global_get
 
@@ -644,18 +730,18 @@ params: account index, application id, state key. Return: did_exist flag (top of
 - LogicSigVersion >= 2
 - Mode: Application
 
-params: state key. Return: value. The value is zero if the key does not exist.
+params: state key. Return: value. The value is zero (of type uint64) if the key does not exist.
 
 ## app_global_get_ex
 
 - Opcode: 0x65
 - Pops: *... stack*, {uint64 A}, {[]byte B}
 - Pushes: *... stack*, any, uint64
-- read from application Txn.ForeignApps[A] global state key B => {0 or 1 (top), value}. A is specified as an account index in the ForeignApps field of the ApplicationCall transaction, zero index means this app
+- read from application Txn.ForeignApps[A] global state key B => [*... stack*, value, 0 or 1]. A is specified as an account index in the ForeignApps field of the ApplicationCall transaction, zero index means this app
 - LogicSigVersion >= 2
 - Mode: Application
 
-params: application index, state key. Return: value. Application index is
+params: application index, state key. Return: did_exist flag (top of the stack, 1 if exist and 0 otherwise), value. The value is zero (of type uint64) if the key does not exist.
 
 ## app_local_put
 
@@ -703,7 +789,7 @@ params: state key.
 
 Deleting a key which is already absent has no effect on the application global state. (In particular, it does _not_ cause the program to fail.)
 
-## asset_holding_get
+## asset_holding_get i
 
 - Opcode: 0x70 {uint8 asset holding field index}
 - Pops: *... stack*, {uint64 A}, {uint64 B}
@@ -722,7 +808,7 @@ Deleting a key which is already absent has no effect on the application global s
 
 params: account index, asset id. Return: did_exist flag (1 if exist and 0 otherwise), value.
 
-## asset_params_get
+## asset_params_get i
 
 - Opcode: 0x71 {uint8 asset params field index}
 - Pops: *... stack*, uint64
@@ -750,109 +836,27 @@ params: account index, asset id. Return: did_exist flag (1 if exist and 0 otherw
 
 params: txn.ForeignAssets offset. Return: did_exist flag (1 if exist and 0 otherwise), value.
 
-## assert
-
-- Opcode: 0x72
-- Pops: *... stack*, uint64
-- Pushes: _None_
-- immediately fail unless value X is a non-zero number
-- LogicSigVersion >= 3
-
 ## min_balance
 
-- Opcode: 0x73
+- Opcode: 0x78
 - Pops: *... stack*, uint64
 - Pushes: uint64
-- get minimum balance for the requested account specified by Txn.Accounts[A] in microalgos. A is specified as an account index in the Accounts field of the ApplicationCall transaction, zero index means the sender
+- get minimum required balance for the requested account specified by Txn.Accounts[A] in microalgos. A is specified as an account index in the Accounts field of the ApplicationCall transaction, zero index means the sender. Required balance is affected by [ASA](https://developer.algorand.org/docs/features/asa/#assets-overview) and [App](https://developer.algorand.org/docs/features/asc1/stateful/#minimum-balance-requirement-for-a-smart-contract) usage
 - LogicSigVersion >= 3
 - Mode: Application
 
-## getbit
+## pushbytes bytes
 
-- Opcode: 0x74
-- Pops: *... stack*, {any A}, {uint64 B}
-- Pushes: uint64
-- pop a target A (integer or byte-array), and index B. Pushes the Bth bit of A.
-- LogicSigVersion >= 3
-
-## setbit
-
-- Opcode: 0x75
-- Pops: *... stack*, {any A}, {uint64 B}, {uint64 C}
-- Pushes: uint64
-- pop a target A, index B, and bit C. Sets the Bth bit of A to C, and push the result
-- LogicSigVersion >= 3
-
-## getbyte
-
-- Opcode: 0x76
-- Pops: *... stack*, {[]byte A}, {uint64 B}
-- Pushes: uint64
-- pop a byte-array A and integer B. Extract the Bth byte of A and push it as an integer
-- LogicSigVersion >= 3
-
-## setbyte
-
-- Opcode: 0x77
-- Pops: *... stack*, {[]byte A}, {uint64 B}, {uint64 C}
-- Pushes: []byte
-- pop a byte-array A, integer B, and small integer C (between 0..255). Set the Bth byte of A to C, and push the result
-- LogicSigVersion >= 3
-
-## swap
-
-- Opcode: 0x78
-- Pops: *... stack*, {any A}, {any B}
-- Pushes: *... stack*, any, any
-- swaps two last values on stack: A, B -> B, A
-- LogicSigVersion >= 3
-
-## select
-
-- Opcode: 0x79
-- Pops: *... stack*, {any A}, {any B}, {uint64 C}
-- Pushes: any
-- selects one of two values to retain: A, B, C -> A ? B : C
-- LogicSigVersion >= 3
-
-## dig
-
-- Opcode: 0x80 {uint8 depth}
-- Pops: *... stack*, any
-- Pushes: *... stack*, any, any
-- duplicate value N from the top of stack
-- LogicSigVersion >= 3
-
-## stxn
-
-- Opcode: 0x81 {uint8 transaction field index}
-- Pops: *... stack*, uint64
-- Pushes: any
-- push field to the stack from transaction A in the current group
-- LogicSigVersion >= 3
-
-for notes on transaction fields available, see `txn`. If top of stack is _i_, `stxn field` is equivalent to `gtxn _i_ field`.
-
-## stxna
-
-- Opcode: 0x82 {uint8 transaction field index} {uint8 transaction field array index}
-- Pops: *... stack*, uint64
-- Pushes: any
-- push value from an array field from transaction A in the current group
-- LogicSigVersion >= 3
-
-## pushbytes
-
-- Opcode: 0x83 {varuint length} {bytes}
+- Opcode: 0x80 {varuint length} {bytes}
 - Pops: _None_
 - Pushes: []byte
 - push the following program bytes to the stack
 - LogicSigVersion >= 3
 
-## pushint
+## pushint uint
 
-- Opcode: 0x84 {varuint int}
+- Opcode: 0x81 {varuint int}
 - Pops: _None_
 - Pushes: uint64
-- push the following varuint encoded bytes to the stack as an integer
+- push immediate UINT to the stack as an integer
 - LogicSigVersion >= 3
