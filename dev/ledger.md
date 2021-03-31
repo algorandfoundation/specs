@@ -480,8 +480,9 @@ Accounts can hold up to $Assets_{\max}$ assets (1000 in this protocol).
 An account must hold every asset that it created (even if it holds 0
 units of that asset), until that asset is destroyed.  An account's asset
 holding is simply a map from asset IDs to an integer value indicating
-how many units of that asset is held by the account.  An account that
-holds any asset cannot be closed.
+how many units of that asset is held by the account and a boolean flag
+indicating if the holding is frozen or unfrozen.  An account that holds
+any asset cannot be closed.
 
 # Transactions
 
@@ -883,7 +884,9 @@ An asset configuration transaction has the following semantics:
    stored in the creator's account under the newly allocated asset ID.
    The creating account also allocates space to hold asset units of the
    newly allocated asset.  All units of the newly created asset (i.e.,
-   the total specified in the parameters) are held by the creator.
+   the total specified in the parameters) are held by the creator. When
+   the creator holding is initialized it ignores the default freeze flag
+   and is always initialized to unfrozen.
 
  - If the asset ID is non-zero, the transaction must be issued by the
    manager of the asset (based on the asset's current parameters).  A
