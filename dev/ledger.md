@@ -757,7 +757,7 @@ and contains the following fields:
     - `ld` maps an "account offset" to a [`StateDelta`][State Deltas]. Account
       offset 0 is the transaction's sender. Account offsets 1 and greater refer
       to the account specified at that offset minus one in the transaction's
-      `Accounts` slice. An account would have it’s `LocalDeltas` changes as long
+      `Accounts` slice. An account would have its `LocalDeltas` changes as long
       as there is at least a single change in that set.
 
 
