@@ -453,7 +453,7 @@ which can be encoded as a msgpack struct:
 
  - A string representing a URL that provides further description of the asset,
    encoded with msgpack field `au`.  As above, this does not uniquely identify
-   an asset.  The maximum length of this field is 32 bytes.
+   an asset.  The maximum length of this field is 96 bytes.
 
  - A 32-byte hash specifying a commitment to asset-specific metadata, encoded with
    msgpack field `am`.  As above, this does not uniquely identify an asset.
