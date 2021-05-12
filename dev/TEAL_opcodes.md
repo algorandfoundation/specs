@@ -878,6 +878,8 @@ pushint args are not added to the intcblock during assembly processes
 - branch unconditionally to TARGET, saving the next instruction on the call stack
 - LogicSigVersion >= 4
 
+The call stack is separate from the data stack. Only `callsub` and `retsub` manipulate it.`
+
 ## retsub
 
 - Opcode: 0x89
@@ -885,6 +887,8 @@ pushint args are not added to the intcblock during assembly processes
 - Pushes: _None_
 - pop the top instruction from the call stack and branch to it
 - LogicSigVersion >= 4
+
+The call stack is separate from the data stack. Only `callsub` and `retsub` manipulate it.`
 
 ## shl
 
