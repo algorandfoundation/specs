@@ -325,8 +325,8 @@ parameters_, which can be encoded as a msgpack struct:
   global state associated with this application. This field is encoded with
   msgpack field `approv`.
 
-  This field must not exceed 1024 bytes. The cost of the program as determined
-  by the Stateful TEAL `Check` function must not exceed 700.
+  This field must not exceed 1024*(1+`ExtraProgramPages`) bytes. The
+  cost of the program during execution must not exceed 700.
 
 - A mutable Stateful TEAL "Clear State" program (`ClearStateProgram`), executed
   when an opted-in user forcibly removes the local application state associated
@@ -337,8 +337,8 @@ parameters_, which can be encoded as a msgpack struct:
   global state associated with this application. This field is encoded with
   msgpack field `clearp`.
 
-  This field must not exceed 1024 bytes. The cost of the program as determined
-  by the Stateful TEAL `Check` function must not exceed 700.
+  This field must not exceed 1024*(1+`ExtraProgramPages`) bytes. The
+  cost of the program as during execution must not exceed 700.
 
 - An immutable "global state schema" (`GlobalStateSchema`), which sets a limit
   on the size of the global [TEAL Key/Value Store][TEAL Key/Value Stores] that
@@ -564,23 +564,23 @@ A payment transaction additionally has the following fields:
 
 A key registration transaction additionally has the following fields:
 
- - The _vote public key_ $\vpk$, (root) public authentication key 
+ - The _vote public key_ $\vpk$, (root) public authentication key
    of an account's participation keys ($\pk$).
 
- - The _selection public key_ $\spk$, public authorization key of 
-   an account's participation keys ($\pk$). If either $\vpk$ or 
-   $\spk$ is unset, the transaction deregisters the account's participation 
+ - The _selection public key_ $\spk$, public authorization key of
+   an account's participation keys ($\pk$). If either $\vpk$ or
+   $\spk$ is unset, the transaction deregisters the account's participation
    key set, as the result, marks the account offline.
 
- - The _vote first_ $\vf$, first valid round (inclusive) of 
+ - The _vote first_ $\vf$, first valid round (inclusive) of
    an account's participation key sets.
 
  - The _vote last_ $\vl$, last valid round (inclusive) of an account's
    participation key sets.
 
- - The _vote key dilution_ $\vkd$, number of rounds that a single 
-  leaf level authentication key can be used. The higher the number, the 
-  more ``dilution'' added to the authentication key's security.  
+ - The _vote key dilution_ $\vkd$, number of rounds that a single
+  leaf level authentication key can be used. The higher the number, the
+  more ``dilution'' added to the authentication key's security.
 
  - An optional (boolean) flag $\nonpart$ which, when deregistering keys,
    specifies whether to mark the account offline (if $\nonpart$ is false)
@@ -631,6 +631,9 @@ An application call transaction additionally has the following fields:
 - Global state schema, encoded as msgpack field `apgs`. This field is only used
   during application creation, and sets bounds on the size of the global state
   associated with this application.
+- Extra program pages, encoded as msgpack field `apep`. This field is only used
+  during application creation, and requests an increased maximum size for the
+  approval and clear state programs.
 - Approval program, encoded as msgpack field `apap`. This field is used for both
   application creation and updates, and sets the corresponding application's
   `ApprovalProgram`.
@@ -731,7 +734,7 @@ and contains the following fields:
 
 - The closing amount, $\ClosingAmount$, which specifies how many microalgos
   were transferred to the closing address.
- 
+
 - The asset closing amount, $\AssetClosingAmount$, which specifies how many
    of the asset units were transsfered to the closing address.
 
@@ -967,7 +970,7 @@ point must be discarded and the entire transaction rejected.
 
         When creating an application, the application parameters specified by
         the transaction (`ApprovalProgram`, `ClearStateProgram`,
-        `GlobalStateSchema`, and `LocalStateSchema`) are allocated into the
+        `GlobalStateSchema`, `LocalStateSchema`, and `ExtraProgramPages`) are allocated into the
         sender’s account data, keyed by the new application ID.
 
         Continue to step 2.
