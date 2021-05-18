@@ -364,15 +364,14 @@ account state, indexed by the application ID. This map is encoded as msgpack
 field `appp`. The maximum number of applications that a single account may
 create is 10. Creating one application increases the minimum balance
 requirements of the creator by 100000 microalgos, plus the [`GlobalStateSchema`
-Minimum Balance contribution][State Schema Minimum Balance Contribution].
+Minimum Balance contribution][App Minimum Balance Increases].
 
 `LocalState` for applications that an account has opted in to are also stored in
 a map in the account state, indexed by the application ID. This map is encoded
 as msgpack field `appl`. The maximum number of applications that a single
 account may opt in to is 10. Opting in to one application increases the minimum
 balance requirements of the opting-in account by 100000 microalgos plus the
-[`LocalStateSchema` Minimum Balance contribution][State Schema Minimum Balance
-Contribution].
+[`LocalStateSchema` Minimum Balance contribution][App Minimum Balance Increases].
 
 ### TEAL Key/Value Stores
 
@@ -407,7 +406,7 @@ A state schema is composed of two fields:
 - `NumByteSlice`, encoded as msgpack field `nbs`. This field represents the
   maximum number of byte slice values that may appear in some TKV.
 
-#### State Schema Minimum Balance Contribution
+#### App Minimum Balance Increases
 
 When an account opts in to an application or creates an application, the
 minimum balance requirements for that account increase.
@@ -416,13 +415,15 @@ When opting in to an application, there is a base minimum balance increase
 of 100000 microalgos. There is an additional minimum balance increase based on
 the `LocalStateSchema` for that application, described by following formula:
 
-`28500 * shema.NumUint + 50000 * schema.NumByteSlice` microalgos.
+`28500 * schema.NumUint + 50000 * schema.NumByteSlice` microalgos.
 
-When creating an application, there is a base minimum balance increase of
-100000 microalgos. There is an additional minimum balance increase based on the
-`GlobalStateSchema` for that application, described by the following formula:
+When creating an application, there is a base minimum balance increase
+of 100000 microalgos. There is an additional minimum blance increase
+of `100000 * ExtraProgramPages` microalgos.  Finally, there is an
+additional minimum balance increase based on the `GlobalStateSchema`
+for that application, described by the following formula:
 
-`28500 * shema.NumUint + 50000 * schema.NumByteSlice` microalgos.
+`28500 * schema.NumUint + 50000 * schema.NumByteSlice` microalgos.
 
 ## Assets
 
