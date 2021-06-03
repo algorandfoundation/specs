@@ -1036,13 +1036,15 @@ point must be discarded and the entire transaction rejected.
 
 ### Application Stateful TEAL Execution Semantics
 
-- During the execution of an `ApprovalProgram` or `ClearStateProgram`, the
-  application’s `LocalStateSchema` and `GlobalStateSchema` may never be
-  violated. The program's execution will fail on the first instruction that
-  would cause the relevant schema to be violated. Writing a `Bytes` value to a
-  local or global [TEAL Key/Value Store][TEAL Key/Value Stores] longer than 64
-  bytes, or writing any value to a key longer than 64 bytes, will likewise cause
-  the program to fail on the offending instruction.
+- During the execution of an `ApprovalProgram` or `ClearStateProgram`,
+  the application’s `LocalStateSchema` and `GlobalStateSchema` may
+  never be violated. The program's execution will fail on the first
+  instruction that would cause the relevant schema to be
+  violated. Writing a `Bytes` value to a local or global [TEAL
+  Key/Value Store][TEAL Key/Value Stores] such that the sum of the
+  lengths of the key and value in bytes exceeds 128, or writing any
+  value to a key longer than 64 bytes, will likewise cause the program
+  to fail on the offending instruction.
 - Global state may only be read for the application ID whose program is
   executing, or for any application ID mentioned in the `ForeignApps`
   transaction field. An attempt to read global state for another application
