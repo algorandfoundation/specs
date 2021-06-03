@@ -220,6 +220,8 @@ Some of these have immediate data in the byte or bytes after the opcode.
 | `global f` | push value from globals to stack |
 | `load i` | copy a value from scratch space to the stack |
 | `store i` | pop a value from the stack and store to scratch space |
+| `gload t i` | push Ith scratch space index of the Tth transaction in the current group |
+| `gloads i` | push Ith scratch space index of the Ath transaction in the current group |
 
 **Transaction Fields**
 
@@ -281,6 +283,7 @@ Some of these have immediate data in the byte or bytes after the opcode.
 | 53 | GlobalNumByteSlice | uint64 | Number of global state byteslices in ApplicationCall. LogicSigVersion >= 3. |
 | 54 | LocalNumUint | uint64 | Number of local state integers in ApplicationCall. LogicSigVersion >= 3. |
 | 55 | LocalNumByteSlice | uint64 | Number of local state byteslices in ApplicationCall. LogicSigVersion >= 3. |
+| 56 | AppProgramExtraPages | uint64 |  |
 
 
 Additional details in the [opcodes document](TEAL_opcodes.md#txn) on the `txn` op.

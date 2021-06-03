@@ -433,6 +433,7 @@ Overflow is an error condition which halts execution and fails the transaction. 
 | 53 | GlobalNumByteSlice | uint64 | Number of global state byteslices in ApplicationCall. LogicSigVersion >= 3. |
 | 54 | LocalNumUint | uint64 | Number of local state integers in ApplicationCall. LogicSigVersion >= 3. |
 | 55 | LocalNumByteSlice | uint64 | Number of local state byteslices in ApplicationCall. LogicSigVersion >= 3. |
+| 56 | AppProgramExtraPages | uint64 |  |
 
 
 TypeEnum mapping:
@@ -529,6 +530,28 @@ for notes on transaction fields available, see `txn`. If top of stack is _i_, `g
 - Pushes: any
 - push Ith value of the array field F from the Ath transaction in the current group
 - LogicSigVersion >= 3
+
+## gload t i
+
+- Opcode: 0x3a {uint8 transaction group index} {uint8 position in scratch space to load from}
+- Pops: _None_
+- Pushes: any
+- push Ith scratch space index of the Tth transaction in the current group
+- LogicSigVersion >= 4
+- Mode: Application
+
+The `gload` opcode can only access scratch spaces of previous app calls contained in the current group.
+
+## gloads i
+
+- Opcode: 0x3b {uint8 position in scratch space to load from}
+- Pops: *... stack*, uint64
+- Pushes: any
+- push Ith scratch space index of the Ath transaction in the current group
+- LogicSigVersion >= 4
+- Mode: Application
+
+The `gloads` opcode can only access scratch spaces of previous app calls contained in the current group.
 
 ## bnz target
 
