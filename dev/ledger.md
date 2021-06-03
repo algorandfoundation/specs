@@ -325,8 +325,7 @@ parameters_, which can be encoded as a msgpack struct:
   global state associated with this application. This field is encoded with
   msgpack field `approv`.
 
-  This field must not exceed 1024*(1+`ExtraProgramPages`) bytes. The
-  cost of the program during execution must not exceed 700.
+  The cost of the program during execution must not exceed 700.
 
 - A mutable Stateful TEAL "Clear State" program (`ClearStateProgram`), executed
   when an opted-in user forcibly removes the local application state associated
@@ -337,8 +336,7 @@ parameters_, which can be encoded as a msgpack struct:
   global state associated with this application. This field is encoded with
   msgpack field `clearp`.
 
-  This field must not exceed 1024*(1+`ExtraProgramPages`) bytes. The
-  cost of the program as during execution must not exceed 700.
+  The cost of the program during execution must not exceed 700.
 
 - An immutable "global state schema" (`GlobalStateSchema`), which sets a limit
   on the size of the global [TEAL Key/Value Store][TEAL Key/Value Stores] that
@@ -354,6 +352,12 @@ parameters_, which can be encoded as a msgpack struct:
   field `lsch`.
 
   The maximum number of values that this schema may permit is 16.
+
+- An immutable "extra pages" value (`ExtraProgramPages`), which limits
+  the total size of the programs of the application. The sum of the
+  lengths of `ApprovalProgram` and `ClearStateProgram` may not exceed
+  2048*(1+`ExtraProgramPages`) bytes. This field is encoded with
+  msgpack field `epp` and may not exceed 3.
 
 - The "global state" (`GlobalState`) associated with this application, stored as
   a [TEAL Key/Value Store][TEAL Key/Value Stores]. This field is encoded with
