@@ -871,7 +871,9 @@ the transactions have nonzero "Group", compute the _TxGroup hash_ as follows:
 
 If the TxGroup hash of any transaction group in a block does not match the "Group" field of the transactions in that group (and that "Group" field is nonzero), then the block is invalid. Additionally, if a block contains a transaction group of more than $G_{max}$ transactions, the block is invalid.
 
-Beyond this check, each transaction in a group is evaluated separately and must be valid on its own, as described below in the [Validity and State Changes][Validity and State Changes] section. For example, a group containing a zero-fee transaction and a very-high-fee transaction would be rejected because the first transaction has fee less than $f_{\min}$, even if the average transaction fee of the group were above $f_{\min}$. As another example, an account with balance 50 could not spend 100 in transaction A and afterward receive 500 in transaction B, even if transactions A and B are in the same group, because transaction A would leave the account with a negative balance.
+If the sum of the fees paid by the transactions in a transaction group is less than $f_{\min}$ times the number of transactions in the group, then the block is invalid.
+
+Beyond the TxGroup and MinFee checks, each transaction in a group is evaluated separately and must be valid on its own, as described below in the [Validity and State Changes][Validity and State Changes] section. For example, an account with balance 50 could not spend 100 in transaction A and afterward receive 500 in transaction B, even if transactions A and B are in the same group, because transaction A would leave the account with a negative balance.
 
 ## Asset Transaction Semantics
 
