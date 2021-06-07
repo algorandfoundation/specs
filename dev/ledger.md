@@ -527,7 +527,7 @@ transaction contains the following fields:
  - The _fee_ $f$, which is a 64-bit integer that specifies the processing fee
    the sender pays to execute the transaction.
 
- - The first round $r_1$ and last round $r_2$ for which the transaction may be
+ - The _first valid_ $r_1$ and _last valid_ $r_2$ for which the transaction may be
    executed.
 
  - The _lease_ $x$, which is an optional 256-bit integer specifying mutual
@@ -550,7 +550,7 @@ transaction contains the following fields:
  - The _note_ $N$, a sequence of bytes with length at most $N_{\max}$ which
    contains arbitrary data.
 
-
+### Payment Transaction
 A payment transaction additionally has the following fields:
 
  - The _amount_ $a$, which is a 64-bit number that indicates the amount of money
@@ -561,6 +561,8 @@ A payment transaction additionally has the following fields:
 
  - The _closing address_ $I_0$, which is an optional address that collects all
    remaining funds in the account after the transfer to the receiver.
+
+### Key Registration Transaction
 
 A key registration transaction additionally has the following fields:
 
@@ -586,6 +588,19 @@ A key registration transaction additionally has the following fields:
    specifies whether to mark the account offline (if $\nonpart$ is false)
    or nonparticipatory (if $\nonpart$ is true).
 
+For a key registration transaction to be valid, the following needs to apply:
+
+ - The set of [_vote public key_, _selection public key_, _vote key dilution_] are required to all be present, or all ommitted (clear).
+   Providing the default value or the empty value for any of the members of the set
+   would be interpted as if these values were omitted.
+ - _vote first_ less or equal _vote last_.
+ - If the set of [_vote public key_, _selection public key_, _vote key dilution_] is clear, then _vote last_ need to be clear as well.
+ - If the set of [_vote public key_, _selection public key_, _vote key dilution_] is not clear, the following applies:
+   - _vote last_ greater than the current network round _r_.
+   - _vote first_ is less or equal to (_first valid_+1)
+   - _vote first_ is less or equal to (_r_+1)
+
+### Application Call Transaction
 An application call transaction additionally has the following fields:
 
 - The ID of the application being called, encoded as msgpack field `apid`. If
