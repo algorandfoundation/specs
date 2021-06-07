@@ -8,8 +8,9 @@ abstract: >
   primitives.
 ---
 
+# Algorand Cryptographic Primitive Specification
 
-# Representation
+## Representation
 
 As a preliminary for guaranteeing cryptographic data integrity,
 Algorand represents all inputs to cryptographic functions (i.e., a
@@ -17,7 +18,7 @@ cryptographic hash, signature, or verifiable random function) via a
 canonical and domain-separated representation.
 
 
-## Canonical Msgpack
+### Canonical Msgpack
 
 Algorand uses a version of [msgpack][msgpack] to produce canonical
 encodings of data.  Algorand's msgpack encodings are valid msgpack
@@ -38,7 +39,7 @@ A canonical msgpack encoding in Algorand must follow these rules:
     older msgpack version that had no "bin" family).
 
 
-## Domain Separation
+### Domain Separation
 
 Before an object is input to some cryptographic function, it is
 prepended with a multi-character domain-separating prefix.  The list
@@ -79,7 +80,7 @@ below specifies each prefix (in quotation marks):
        - "aS": A _Settlement_.
 
 
-# Hash Function
+## Hash Function
 
 Algorand uses the [SHA-512/256 algorithm][sha] as its primary
 cryptographic hash function.
@@ -89,23 +90,23 @@ for the Byzantine Fault Tolerance protocol, and (2) rerandomize its
 random seed.
 
 
-# Digital Signature
+## Digital Signature
 
 Algorand uses the [ed25519][ed25519] digital signature scheme to sign
 data.
 
 
-## Ephemeral-key Signature
+### Ephemeral-key Signature
 
 
 
-# Verifiable Random Function
+## Verifiable Random Function
 
 
-## Cryptographic Sortition
+### Cryptographic Sortition
 
 
-# Merkle tree
+## Merkle tree
 
 Algorand uses a Merkle tree to commit to an array of elements and
 to generate and verify proofs of elements against such a commitment.
@@ -123,7 +124,7 @@ of the proof verifier and fill in the expected left- and right-sibling
 values in the proof based on the internal nodes of the Merkle tree built
 up during commitment.
 
-## Commitment
+### Commitment
 
 To commit to an array of N elements, each element is first hashed
 to produce a 32-byte hash value, together with the appropriate
@@ -145,7 +146,7 @@ value is paired together with an all-zero value (i.e., 32 zero bytes).
 
 The pseudocode for the commitment algorithm is as follows:
 
-```
+```python
 def commit(elems):
   hashes = [H(elem) for elem in elems]
   return reduce(hashes)
@@ -164,7 +165,7 @@ def reduce(hashes):
   return reduce(nexthashes)
 ```
 
-## Proofs
+### Proofs
 
 Logically, to verify that an element appears at some position P in the
 array, the verifier runs a variant of the commit procedure to compute
@@ -182,7 +183,7 @@ additional information is required as part of the proof (in particular,
 no information about which part of the Merkle tree each proof element
 corresponds to).
 
-## Verifying a proof
+### Verifying a proof
 
 The following pseudocode defines the logic for verifying a proof (a
 list of 32-byte hashes) for one or more elements, specified as a list
@@ -194,7 +195,7 @@ exception due to accessing the proof past the end; this is equivalent
 to returning `False`.)  The function implements a variant of `reduce()`
 for a sparse array, rather than a fully-populated one.
 
-```
+```python
 def verify(elems, proof, root):
   if len(elems) == 0:
     return len(proof) == 0
