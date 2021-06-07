@@ -597,8 +597,8 @@ For a key registration transaction to be valid, the following needs to apply:
  - If the set of [_vote public key_, _selection public key_, _vote key dilution_] is clear, then _vote last_ need to be clear as well.
  - If the set of [_vote public key_, _selection public key_, _vote key dilution_] is not clear, the following applies:
    - _vote last_ greater than the current network round _r_.
-   - _vote first_ is less or equal to (_first valid_+1)
-   - _vote first_ is less or equal to (_r_+1)
+   - _vote first_ is less or equal to (_first valid_+1).
+   - _vote first_ is less or equal to (_r_+1).
 
 ### Application Call Transaction
 An application call transaction additionally has the following fields:
