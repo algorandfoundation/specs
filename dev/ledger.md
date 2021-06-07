@@ -594,7 +594,7 @@ For a key registration transaction to be valid, the following needs to apply:
    Providing the default value or the empty value for any of the members of the set
    would be interpreted as if these values were omitted.
  - _vote first_ less or equal _vote last_.
- - If the set of [_vote public key_, _selection public key_, _vote key dilution_] is clear, then _vote last_ need to be clear as well.
+ - If the set of [_vote public key_, _selection public key_, _vote key dilution_] is clear, then _vote first_ and _vote last_ need to be clear as well.
  - If the set of [_vote public key_, _selection public key_, _vote key dilution_] is not clear, the following applies:
    - _vote last_ greater than the current network round _r_.
    - _vote first_ is less or equal to (_first valid_+1).
