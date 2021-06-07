@@ -590,9 +590,9 @@ A key registration transaction additionally has the following fields:
 
 For a key registration transaction to be valid, the following needs to apply:
 
- - The set of [_vote public key_, _selection public key_, _vote key dilution_] are required to all be present, or all ommitted (clear).
+ - The set of [_vote public key_, _selection public key_, _vote key dilution_] are required to all be present, or all omitted (clear).
    Providing the default value or the empty value for any of the members of the set
-   would be interpted as if these values were omitted.
+   would be interpreted as if these values were omitted.
  - _vote first_ less or equal _vote last_.
  - If the set of [_vote public key_, _selection public key_, _vote key dilution_] is clear, then _vote last_ need to be clear as well.
  - If the set of [_vote public key_, _selection public key_, _vote key dilution_] is not clear, the following applies:
