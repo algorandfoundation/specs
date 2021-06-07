@@ -590,15 +590,15 @@ A key registration transaction additionally has the following fields:
 
 For a key registration transaction to be valid, the following needs to apply:
 
- - The set of [_vote public key_, _selection public key_, _vote key dilution_] are required to all be present, or all omitted (clear).
+ - The set of \[_vote public key_, _selection public key_, _vote key dilution_\] are required to all be present, or all omitted (clear).
    Providing the default value or the empty value for any of the members of the set
    would be interpreted as if these values were omitted.
- - _vote first_ less or equal _vote last_.
- - If the set of [_vote public key_, _selection public key_, _vote key dilution_] is clear, then _vote first_ and _vote last_ need to be clear as well.
- - If the set of [_vote public key_, _selection public key_, _vote key dilution_] is not clear, the following applies:
-   - _vote last_ greater than the current network round _r_.
-   - _vote first_ is less or equal to (_first valid_+1).
-   - _vote first_ is less or equal to (_r_+1).
+ - _vote first_ needs to be less than or equal to _vote last_.
+ - If the set of \[_vote public key_, _selection public key_, _vote key dilution_\] is clear, then _vote first_ and _vote last_ need to be clear as well.
+ - If the set of \[_vote public key_, _selection public key_, _vote key dilution_\] is not clear, the following applies:
+   - _vote last_ needs to be greater than or equal to the current network round _r_.
+   - _vote first_ needs to be less than or equal to (_first valid_+1).
+   - _vote first_ needs to be less than or equal to (_r_+1).
 
 ### Application Call Transaction
 An application call transaction additionally has the following fields:
