@@ -790,11 +790,11 @@ A value delta is composed of three fields:
 Each block contains a _transaction sequence_, an ordered sequence of
 transactions in that block.  The transaction sequence of block $r$ is denoted
 $\TxSeq_r$.  Each valid block contains a _transaction commitment_ $\TxCommit_r$
-which is the commitment to this sequence (a hash of the msgpack encoding of the
-sequence).
-
-There are two differences between how a standalone transaction is encoded,
-and how it appears in the block:
+which is a Merkle tree commitment to this sequence.  The leaves in the Merkle
+tree are hashed as $$\Hash("TL", txid, stibhash)$$.  The txid value is the
+32-byte transaction identifier.  The stibhash value is a 32-byte hash of the
+signed transaction and ApplyData for the transaction, hashed with the
+domain-separation prefix `STIB`, and encoded as follows:
 
 - Transactions in a block are encoded in a slightly different way than
   standalone transactions, for efficiency:
