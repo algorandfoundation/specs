@@ -433,7 +433,7 @@ Overflow is an error condition which halts execution and fails the transaction. 
 | 53 | GlobalNumByteSlice | uint64 | Number of global state byteslices in ApplicationCall. LogicSigVersion >= 3. |
 | 54 | LocalNumUint | uint64 | Number of local state integers in ApplicationCall. LogicSigVersion >= 3. |
 | 55 | LocalNumByteSlice | uint64 | Number of local state byteslices in ApplicationCall. LogicSigVersion >= 3. |
-| 56 | AppProgramExtraPages | uint64 |  |
+| 56 | ExtraProgramPages | uint64 | Number of additional pages for each of the application's approval and clear state programs. An ExtraProgramPages of 1 means 2048 more total bytes, or 1024 for each program. LogicSigVersion >= 4. |
 
 
 TypeEnum mapping:
@@ -552,6 +552,28 @@ The `gload` opcode can only access scratch spaces of previous app calls containe
 - Mode: Application
 
 The `gloads` opcode can only access scratch spaces of previous app calls contained in the current group.
+
+## gaid t
+
+- Opcode: 0x3c
+- Pops: _None_
+- Pushes: uint64
+- push the ID of the asset or application created in the Tth transaction of the current group
+- LogicSigVersion >= 4
+- Mode: Application
+
+The `gaid` opcode can only access the ID of assets or applications created by previous txns in the current group.
+
+## gaids
+
+- Opcode: 0x3d
+- Pops: *... stack*, uint64
+- Pushes: uint64
+- push the ID of the asset or application created in the Ath transaction of the current group
+- LogicSigVersion >= 4
+- Mode: Application
+
+The `gaids` opcode can only access the ID of assets or applications created by previous txns in the current group.
 
 ## bnz target
 
