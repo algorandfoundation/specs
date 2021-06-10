@@ -1057,14 +1057,20 @@ point must be discarded and the entire transaction rejected.
   `ForeignAssets` transaction field. An attempt to read asset parameters for
   an asset that is not listed in `ForeignAssets` will cause the program
   execution to fail.
-- Local state may be read for any opted-in application present in the sender’s
-  account data, or in the account data for any address listed in the
-  transaction’s `Accounts` field. An attempt to read local state from any other
-  account will cause program execution to fail.
-- Algo balances and asset balances may be read for the sender's account or for
-  any account referenced by an address listed in the transaction's `Accounts`
-  field. An attempt to read an Algo balance or asset balance for any other
-  account will cause program execution to fail.
+- Local state may be read for any opted-in application present in the
+  sender’s account data, or in the account data for any address listed
+  in the transaction’s `Accounts` field. An attempt to read local
+  state from any other tea account will cause program execution to
+  fail. Further, in TEAL programs version 4 or later, Local state
+  reads are restricted by application ID in the same way as Global
+  state reads.
+- Algo balances and asset balances may be read for the sender's
+  account or for any account referenced by an address listed in the
+  transaction's `Accounts` field. An attempt to read an Algo balance
+  or asset balance for any other account will cause program execution
+  to fail.  Further, in TEAL programs version 4 or later, asset
+  balances may only be read for assets whose parameters are also
+  readable.
 
 ## Validity and State Changes
 
