@@ -35,7 +35,7 @@ A program can either authorize some delegated action on a normal private key sig
 * If the account has signed the program (an ed25519 signature on "Program" concatenated with the program bytes) then if the program returns true the transaction is authorized as if the account had signed it. This allows an account to hand out a signed program so that other users can carry out delegated actions which are approved by the program.
 * If the SHA512_256 hash of the program (prefixed by "Program") is equal to the transaction Sender address then this is a contract account wholly controlled by the program. No other signature is necessary or possible. The only way to execute a transaction against the contract account is for the program to approve it.
 
-The TEAL bytecode plus the length of any Args must add up to less than 1000 bytes (consensus parameter LogicSigMaxSize). Each TEAL op has an associated cost and the program cost must total less than 20000 (consensus parameter LogicSigMaxCost). Most ops have a cost of 1, but a few slow crypto ops are much higher. Prior to v4, program costs was estimated as the static sum of all opcode costs in a program (ignoring conditionals that might skip some code). Beginning with v4, a program's cost is tracked dynamically, while being evaluated. If the program exceeds its budget, it fails.
+The TEAL bytecode plus the length of any Args must add up to less than 1000 bytes (consensus parameter LogicSigMaxSize). Each TEAL op has an associated cost and the program cost must total less than 20000 (consensus parameter LogicSigMaxCost). Most ops have a cost of 1, but a few slow crypto ops are much higher. Prior to v4, the program's cost was estimated as the static sum of all the opcode costs in the program (whether they were actually executed or not). Beginning with v4, the program's cost is tracked dynamically, while being evaluated. If the program exceeds its budget, it fails.
 
 ## Execution modes
 
@@ -44,7 +44,7 @@ Starting from version 2 TEAL evaluator can run programs in two modes:
 2. Application run (stateful)
 
 Differences between modes include:
-1. Max program length (consensus parameters LogicSigMaxSize, MaxAppProgramLen & MaxExtraAppProgramPages)
+1. Max program length (consensus parameters LogicSigMaxSize, MaxAppTotalProgramLen & MaxExtraAppProgramPages)
 2. Max program cost (consensus parameters LogicSigMaxCost, MaxAppProgramCost)
 3. Opcode availability. For example, all stateful operations are only available in stateful mode. Refer to [opcodes document](TEAL_opcodes.md) for details.
 
@@ -89,7 +89,7 @@ An application transaction must indicate the action to be taken following the ex
 
 Most operations work with only one type of argument, uint64 or bytes, and panic if the wrong type value is on the stack.
 
-Many instructions accept values to designate Accounts, Assets, or Applications. Beginning with TEAL v4, these values may always be given as an _offset_ in the corresponding Txn fields (Txn.Accounts, Txn.ForeignAssets, Txn.ForeignApps) _or_ as the value itself (a bytes address for Accounts, or a uint64 id). The values, however, must still be present in the Txn fields. Before TEAL v4, most opcodes required the use of an offset, except for reading account local values of assets or applications, which accepted the IDs directly and did not require the ID to be present in they corresponding _Foreign_ array.  See individual opcodes for details. In the case of account offsets or application offsets, 0 is specially defined to Txn.Sender or the ID of the current application, respectively.
+Many instructions accept values to designate Accounts, Assets, or Applications. Beginning with TEAL v4, these values may always be given as an _offset_ in the corresponding Txn fields (Txn.Accounts, Txn.ForeignAssets, Txn.ForeignApps) _or_ as the value itself (a bytes address for Accounts, or a uint64 ID). The values, however, must still be present in the Txn fields. Before TEAL v4, most opcodes required the use of an offset, except for reading account local values of assets or applications, which accepted the IDs directly and did not require the ID to be present in they corresponding _Foreign_ array. (Note that beginning with TEAL v4, those ID are required to be present in their corresponding _Foreign_ array.) See individual opcodes for details. In the case of account offsets or application offsets, 0 is specially defined to Txn.Sender or the ID of the current application, respectively.
 
 Many programs need only a few dozen instructions. The instruction set has some optimization built in. `intc`, `bytec`, and `arg` take an immediate value byte, making a 2-byte op to load a value onto the stack, but they also have single byte versions for loading the most common constant values. Any program will benefit from having a few common values loaded with a smaller one byte opcode. Cryptographic hashes and `ed25519verify` are single byte opcodes with powerful libraries behind them. These operations still take more time than other ops (and this is reflected in the cost of each op and the cost limit of a program) but are efficient in compiled code space.
 
@@ -103,7 +103,9 @@ A contract account governed by a buggy program might not have a way to get asset
 
 For one-argument ops, `X` is the last element on the stack, which is typically replaced by a new value.
 
-For two-argument ops, `A` is the previous element on the stack and `B` is the last element on the stack. These typically result in popping A and B from the stack and pushing the result.
+For two-argument ops, `A` is the penultimate element on the stack and `B` is the top of the stack. These typically result in popping A and B from the stack and pushing the result.
+
+For three-argument ops, `A` is the element two below the top, `B` is the penultimate stack element and `C` is the top of the stack. These operatiosn typically pop A, B, and C from the stack and push the result.
 
 | Op | Description |
 | --- | --- |
@@ -123,8 +125,8 @@ For two-argument ops, `A` is the previous element on the stack and `B` is the la
 | `\|\|` | A is not zero or B is not zero => {0 or 1} |
 | `shl` | A times 2^B, modulo 2^64 |
 | `shr` | A divided by 2^B |
-| `sqrt` | The largest integer X such that X^2 <= A |
-| `bitlen` | The index of the highest bit in A. If A is a byte-array, it is interpreted as a big-endian unsigned integer |
+| `sqrt` | The largest integer B such that B^2 <= X |
+| `bitlen` | The highest set bit in X. If X is a byte-array, it is interpreted as a big-endian unsigned integer. bitlen of 0 is 0, bitlen of 8 is 4 |
 | `exp` | A raised to the Bth power. Panic if A == B == 0 and on overflow |
 | `==` | A is equal to B => {0 or 1} |
 | `!=` | A is not equal to B => {0 or 1} |
@@ -182,7 +184,7 @@ these results may contain leading zero bytes.
 | `b\|` | A bitwise-or B, where A and B are byte-arrays, zero-left extended to the greater of their lengths |
 | `b&` | A bitwise-and B, where A and B are byte-arrays, zero-left extended to the greater of their lengths |
 | `b^` | A bitwise-xor B, where A and B are byte-arrays, zero-left extended to the greater of their lengths |
-| `b~` | A with all bits inverted |
+| `b~` | X with all bits inverted |
 
 
 ### Loading Values
@@ -207,7 +209,7 @@ Some of these have immediate data in the byte or bytes after the opcode.
 | `bytec_2` | push constant 2 from bytecblock to stack |
 | `bytec_3` | push constant 3 from bytecblock to stack |
 | `pushbytes bytes` | push the following program bytes to the stack |
-| `bzero` | push a byte-array of length A, containing all zero bytes |
+| `bzero` | push a byte-array of length X, containing all zero bytes |
 | `arg n` | push Nth LogicSig argument to stack |
 | `arg_0` | push LogicSig argument 0 to stack |
 | `arg_1` | push LogicSig argument 1 to stack |

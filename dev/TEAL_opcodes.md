@@ -712,7 +712,7 @@ see explanation of bit ordering in setbit
 - pop a target A, index B, and bit C. Set the Bth bit of A to C, and push the result
 - LogicSigVersion >= 3
 
-bit indexing begins with low-order bits in integers. Setting bit 4 to 1 on the integer 0 yields 16 (`int 0x0010`, or 2^4). Indexing begins in the first bytes of a byte-string (as seen in getbyte and substring). Setting bits 0 through 11 to 1 in a 4 byte-array of 0s yields `byte 0xfff00000`
+When A is a uint64, index 0 is the least significant bit. Setting bit 3 to 1 on the integer 0 yields 8, or 2^3. When A is a byte array, index 0 is the leftmost bit of the leftmost byte. Setting bits 0 through 11 to 1 in a 4-byte-array of 0s yields the byte array 0xfff00000. Setting bit 3 to 1 on the 1-byte-array 0x00 yields the byte array 0x10.
 
 ## getbyte
 
@@ -928,7 +928,7 @@ pushint args are not added to the intcblock during assembly processes
 - branch unconditionally to TARGET, saving the next instruction on the call stack
 - LogicSigVersion >= 4
 
-The call stack is separate from the data stack. Only `callsub` and `retsub` manipulate it.
+The call stack is separate from the data stack. Only `callsub` and `retsub` manipulate it.`
 
 ## retsub
 
@@ -938,7 +938,7 @@ The call stack is separate from the data stack. Only `callsub` and `retsub` mani
 - pop the top instruction from the call stack and branch to it
 - LogicSigVersion >= 4
 
-The call stack is separate from the data stack. Only `callsub` and `retsub` manipulate it.
+The call stack is separate from the data stack. Only `callsub` and `retsub` manipulate it.`
 
 ## shl
 
@@ -961,7 +961,7 @@ The call stack is separate from the data stack. Only `callsub` and `retsub` mani
 - Opcode: 0x92
 - Pops: *... stack*, uint64
 - Pushes: uint64
-- The largest integer X such that X^2 <= A
+- The largest integer B such that B^2 <= X
 - **Cost**: 4
 - LogicSigVersion >= 4
 
@@ -970,7 +970,7 @@ The call stack is separate from the data stack. Only `callsub` and `retsub` mani
 - Opcode: 0x93
 - Pops: *... stack*, any
 - Pushes: uint64
-- The index of the highest bit in A. If A is a byte-array, it is interpreted as a big-endian unsigned integer
+- The highest set bit in X. If X is a byte-array, it is interpreted as a big-endian unsigned integer. bitlen of 0 is 0, bitlen of 8 is 4
 - LogicSigVersion >= 4
 
 bitlen interprets arrays as big-endian integers, unlike setbit/getbit
@@ -1117,7 +1117,7 @@ bitlen interprets arrays as big-endian integers, unlike setbit/getbit
 - Opcode: 0xae
 - Pops: *... stack*, []byte
 - Pushes: []byte
-- A with all bits inverted
+- X with all bits inverted
 - **Cost**: 4
 - LogicSigVersion >= 4
 
@@ -1126,5 +1126,5 @@ bitlen interprets arrays as big-endian integers, unlike setbit/getbit
 - Opcode: 0xaf
 - Pops: *... stack*, uint64
 - Pushes: []byte
-- push a byte-array of length A, containing all zero bytes
+- push a byte-array of length X, containing all zero bytes
 - LogicSigVersion >= 4

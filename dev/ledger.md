@@ -325,7 +325,9 @@ parameters_, which can be encoded as a msgpack struct:
   global state associated with this application. This field is encoded with
   msgpack field `approv`.
 
-  The cost of the program during execution must not exceed 700.
+  For Version 3 or lower TEAL programs, the cost of the program as determined by the Stateful TEAL `Check` function must not exceed 700.
+
+  For Version 4 or higher TEAL programs, the cost of the program during execution must not exceed 700.
 
 - A mutable Stateful TEAL "Clear State" program (`ClearStateProgram`), executed
   when an opted-in user forcibly removes the local application state associated
@@ -336,7 +338,9 @@ parameters_, which can be encoded as a msgpack struct:
   global state associated with this application. This field is encoded with
   msgpack field `clearp`.
 
-  The cost of the program during execution must not exceed 700.
+  For Version 3 or lower TEAL programs, the cost of the program as determined by the Stateful TEAL `Check` function must not exceed 700.
+
+  For Version 4 or higher TEAL programs, the cost of the program during execution must not exceed 700.
 
 - An immutable "global state schema" (`GlobalStateSchema`), which sets a limit
   on the size of the global [TEAL Key/Value Store][TEAL Key/Value Stores] that
