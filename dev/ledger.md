@@ -1064,7 +1064,7 @@ point must be discarded and the entire transaction rejected.
 - Local state may be read for any opted-in application present in the
   sender’s account data, or in the account data for any address listed
   in the transaction’s `Accounts` field. An attempt to read local
-  state from any other tea account will cause program execution to
+  state from any other account will cause program execution to
   fail. Further, in TEAL programs version 4 or later, Local state
   reads are restricted by application ID in the same way as Global
   state reads.

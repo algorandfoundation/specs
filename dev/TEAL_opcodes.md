@@ -558,7 +558,7 @@ The `gloads` opcode can only access scratch spaces of previous app calls contain
 - Opcode: 0x3c
 - Pops: _None_
 - Pushes: uint64
-- push the ID of the asset or application created in the Tth transaction of the current group
+- push the ID of the asset or application created in the Tth transaction of the current group, or fail if nothing was created in that transaction
 - LogicSigVersion >= 4
 - Mode: Application
 
@@ -569,7 +569,7 @@ The `gaid` opcode can only access the ID of assets or applications created by pr
 - Opcode: 0x3d
 - Pops: *... stack*, uint64
 - Pushes: uint64
-- push the ID of the asset or application created in the Ath transaction of the current group
+- push the ID of the asset or application created in the Ath transaction of the current group, or fail if nothing was created in that transaction
 - LogicSigVersion >= 4
 - Mode: Application
 
@@ -577,18 +577,18 @@ The `gaids` opcode can only access the ID of assets or applications created by p
 
 ## bnz target
 
-- Opcode: 0x40 {int16 branch offset, big endian. (negative offsets are illegal before v4)}
+- Opcode: 0x40 {int16 branch offset, big endian}
 - Pops: *... stack*, uint64
 - Pushes: _None_
 - branch to TARGET if value X is not zero
 
-The `bnz` instruction opcode 0x40 is followed by two immediate data bytes which are a high byte first and low byte second which together form a 16 bit offset which the instruction may branch to. For a bnz instruction at `pc`, if the last element of the stack is not zero then branch to instruction at `pc + 3 + N`, else proceed to next instruction at `pc + 3`. Branch targets must be well aligned instructions. (e.g. Branching to the second byte of a 2 byte op will be rejected.) Branch offsets are limited to forward branches only, 0-0x7fff until v4. v4 treats offset as a signed 16 bit integer allowing for backward branches and looping.
+The `bnz` instruction opcode 0x40 is followed by two immediate data bytes which are a high byte first and low byte second which together form a 16 bit offset which the instruction may branch to. For a bnz instruction at `pc`, if the last element of the stack is not zero then branch to instruction at `pc + 3 + N`, else proceed to next instruction at `pc + 3`. Branch targets must be aligned instructions. (e.g. Branching to the second byte of a 2 byte op will be rejected.) Starting at v4, the offset is treated as a signed 16 bit integer allowing for backward branches and looping. In prior version (v1 to v3), branch offsets are limited to forward branches only, 0-0x7fff.
 
-At LogicSigVersion 2 it became allowed to branch to the end of the program exactly after the last instruction: bnz to byte N (with 0-indexing) was illegal for a TEAL program with N bytes before LogicSigVersion 2, and is legal after it. This change eliminates the need for a last instruction of no-op as a branch target at the end. (Branching beyond the end--in other words, to a byte larger than N--is still illegal and will cause the program to fail.)
+At v2 it became allowed to branch to the end of the program exactly after the last instruction: bnz to byte N (with 0-indexing) was illegal for a TEAL program with N bytes before v2, and is legal after it. This change eliminates the need for a last instruction of no-op as a branch target at the end. (Branching beyond the end--in other words, to a byte larger than N--is still illegal and will cause the program to fail.)
 
 ## bz target
 
-- Opcode: 0x41 {int16 branch offset, big endian. (negative offsets are illegal before v4)}
+- Opcode: 0x41 {int16 branch offset, big endian}
 - Pops: *... stack*, uint64
 - Pushes: _None_
 - branch to TARGET if value X is zero
@@ -598,7 +598,7 @@ See `bnz` for details on how branches work. `bz` inverts the behavior of `bnz`.
 
 ## b target
 
-- Opcode: 0x42 {int16 branch offset, big endian. (negative offsets are illegal before v4)}
+- Opcode: 0x42 {int16 branch offset, big endian}
 - Pops: _None_
 - Pushes: _None_
 - branch unconditionally to TARGET

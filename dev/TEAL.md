@@ -8,9 +8,8 @@ abstract: >
 
 # Transaction Execution Approval Language (TEAL)
 
-TEAL is a bytecode based stack language that executes inside Algorand transactions to check the parameters of the transaction and approve the transaction as if by a signature. Programs have read-only access to the transaction they are attached to, transactions in their atomic transaction group, and a few global values. Programs cannot modify or create transactions, only reject or approve them. Approval is signaled by finishing with the stack containing a single non-zero uint64 value.
-
-TEAL programs should be short and run fast as they are run in-line along with signature checking, transaction balance rule checking, and other checks during block assembly and validation. Many useful programs are less than 100 instructions.
+TEAL is a bytecode based stack language that executes inside Algorand transactions. TEAL programs can be used to check the parameters of the transaction and approve the transaction as if by a signature. This use of TEAL is called a _LogicSig_. Starting with v2, TEAL programs may
+also execute as _Applications_ which are invoked with explicit application call transactions. Programs have read-only access to the transaction they are attached to, transactions in their atomic transaction group, and a few global values. In addition, _Application_ programs have access to limited state that is global to the application and per-account local state for each account that has opted-in to the application. Programs cannot modify or create transactions, only reject or approve them. For both types of program, approval is signaled by finishing with the stack containing a single non-zero uint64 value.
 
 ## The Stack
 
@@ -22,9 +21,20 @@ The maximum stack depth is currently 1000.
 
 In addition to the stack there are 256 positions of scratch space, also uint64-bytes union values, accessed by the `load` and `store` ops moving data from or to scratch space, respectively.
 
-## Execution Environment
+## Execution modes
 
-TEAL runs in Algorand nodes as part of testing a proposed transaction to see if it is valid and authorized to be committed into a block.
+Starting from version 2 TEAL evaluator can run programs in two modes:
+1. LogigSig (stateless)
+2. Application run (stateful)
+
+Differences between modes include:
+1. Max program length (consensus parameters LogicSigMaxSize, MaxAppTotalProgramLen & MaxExtraAppProgramPages)
+2. Max program cost (consensus parameters LogicSigMaxCost, MaxAppProgramCost)
+3. Opcode availability. For example, all stateful operations are only available in stateful mode. Refer to [opcodes document](TEAL_opcodes.md) for details.
+
+## Execution Environment for LogicSigs
+
+TEAL LogicSigs run in Algorand nodes as part of testing a proposed transaction to see if it is valid and authorized to be committed into a block.
 
 If an authorized program executes and finishes with a single non-zero uint64 value on the stack then that program has validated the transaction it is attached to.
 
@@ -36,17 +46,6 @@ A program can either authorize some delegated action on a normal private key sig
 * If the SHA512_256 hash of the program (prefixed by "Program") is equal to the transaction Sender address then this is a contract account wholly controlled by the program. No other signature is necessary or possible. The only way to execute a transaction against the contract account is for the program to approve it.
 
 The TEAL bytecode plus the length of any Args must add up to less than 1000 bytes (consensus parameter LogicSigMaxSize). Each TEAL op has an associated cost and the program cost must total less than 20000 (consensus parameter LogicSigMaxCost). Most ops have a cost of 1, but a few slow crypto ops are much higher. Prior to v4, the program's cost was estimated as the static sum of all the opcode costs in the program (whether they were actually executed or not). Beginning with v4, the program's cost is tracked dynamically, while being evaluated. If the program exceeds its budget, it fails.
-
-## Execution modes
-
-Starting from version 2 TEAL evaluator can run programs in two modes:
-1. Signature verification (stateless)
-2. Application run (stateful)
-
-Differences between modes include:
-1. Max program length (consensus parameters LogicSigMaxSize, MaxAppTotalProgramLen & MaxExtraAppProgramPages)
-2. Max program cost (consensus parameters LogicSigMaxCost, MaxAppProgramCost)
-3. Opcode availability. For example, all stateful operations are only available in stateful mode. Refer to [opcodes document](TEAL_opcodes.md) for details.
 
 ## Constants
 
@@ -151,13 +150,17 @@ For three-argument ops, `A` is the element two below the top, `B` is the penulti
 | `substring s e` | pop a byte-array A. For immediate values in 0..255 S and E: extract a range of bytes from A starting at S up to but not including E, push the substring result. If E < S, or either is larger than the array length, the program fails |
 | `substring3` | pop a byte-array A and two integers B and C. Extract a range of bytes from A starting at B up to but not including C, push the substring result. If C < B, or either is larger than the array length, the program fails |
 
-These opcodes take and return byte-array values that are interpreted
-as big-endian unsigned integers.  Returned values are the shortest
-byte-array that can represent the returned value.  For example, the
-zero value is the empty byte-array.
+These opcodes take byte-array values that are interpreted as
+big-endian unsigned integers.  For mathematical opeartors, the
+returned values are the shortest byte-array that can represent the
+returned value.  For example, the zero value is the empty
+byte-array. For comparison operators, the returned value is a uint64
 
-Input lengths are limited to maximum length 64, which represents a 512
-bit unsigned integer.
+Input lengths are limited to a maximum length 64 bytes, which
+represents a 512 bit unsigned integer. Output lengths are not
+explicitly restricted, though only `b*` and `b+` can produce a larger
+output than their inputs, so there is an implicit length limit of 128
+bytes on outputs.
 
 | Op | Description |
 | --- | --- |
@@ -226,8 +229,8 @@ Some of these have immediate data in the byte or bytes after the opcode.
 | `store i` | pop a value from the stack and store to scratch space |
 | `gload t i` | push Ith scratch space index of the Tth transaction in the current group |
 | `gloads i` | push Ith scratch space index of the Ath transaction in the current group |
-| `gaid t` | push the ID of the asset or application created in the Tth transaction of the current group |
-| `gaids` | push the ID of the asset or application created in the Ath transaction of the current group |
+| `gaid t` | push the ID of the asset or application created in the Tth transaction of the current group, or fail if nothing was created in that transaction |
+| `gaids` | push the ID of the asset or application created in the Ath transaction of the current group, or fail if nothing was created in that transaction |
 
 **Transaction Fields**
 
