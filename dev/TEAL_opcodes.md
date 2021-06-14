@@ -739,7 +739,7 @@ When A is a uint64, index 0 is the least significant bit. Setting bit 3 to 1 on 
 - LogicSigVersion >= 2
 - Mode: Application
 
-params: Txn.Accounts offset (or, since v4, an account address that appears in Txn.Accounts or is Txn.Sender). Return: value.
+params: Before v4, Txn.Accounts offset. Since v4, Txn.Accounts offset or an account address that appears in Txn.Accounts or is Txn.Sender). Return: value.
 
 ## app_opted_in
 
@@ -887,7 +887,7 @@ params: Txn.Accounts offset (or, since v4, an account address that appears in Tx
 | 10 | AssetClawback | []byte | Clawback address |
 
 
-params: Txn.ForeignAssets offset (or, since v4, an asset id that appears in Txn.ForeignAssets). Return: did_exist flag (1 if exist and 0 otherwise), value.
+params: Before v4, Txn.ForeignAssets offset. Since v4, Txn.ForeignAssets offset or an asset id that appears in Txn.ForeignAssets. Return: did_exist flag (1 if exist and 0 otherwise), value.
 
 ## min_balance
 
@@ -898,7 +898,7 @@ params: Txn.ForeignAssets offset (or, since v4, an asset id that appears in Txn.
 - LogicSigVersion >= 3
 - Mode: Application
 
-params: Txn.Accounts offset (or, since v4, an account address that appears in Txn.Accounts or is Txn.Sender). Return: value.
+params: Before v4, Txn.Accounts offset. Since v4, Txn.Accounts offset or an account address that appears in Txn.Accounts or is Txn.Sender). Return: value.
 
 ## pushbytes bytes
 
