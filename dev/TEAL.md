@@ -21,7 +21,7 @@ The maximum stack depth is currently 1000.
 
 In addition to the stack there are 256 positions of scratch space, also uint64-bytes union values, accessed by the `load` and `store` ops moving data from or to scratch space, respectively.
 
-## Execution modes
+## Execution Modes
 
 Starting from version 2 TEAL evaluator can run programs in two modes:
 1. LogigSig (stateless)
@@ -222,15 +222,15 @@ Some of these have immediate data in the byte or bytes after the opcode.
 | `gtxn t f` | push field F of the Tth transaction in the current group |
 | `txna f i` | push Ith value of the array field F of the current transaction |
 | `gtxna t f i` | push Ith value of the array field F from the Tth transaction in the current group |
-| `gtxns f` | push field F of the Ath transaction in the current group |
-| `gtxnsa f i` | push Ith value of the array field F from the Ath transaction in the current group |
+| `gtxns f` | push field F of the Xth transaction in the current group |
+| `gtxnsa f i` | push Ith value of the array field F from the Xth transaction in the current group |
 | `global f` | push value from globals to stack |
 | `load i` | copy a value from scratch space to the stack |
 | `store i` | pop a value from the stack and store to scratch space |
 | `gload t i` | push Ith scratch space index of the Tth transaction in the current group |
-| `gloads i` | push Ith scratch space index of the Ath transaction in the current group |
-| `gaid t` | push the ID of the asset or application created in the Tth transaction of the current group, or fail if nothing was created in that transaction |
-| `gaids` | push the ID of the asset or application created in the Ath transaction of the current group, or fail if nothing was created in that transaction |
+| `gloads i` | push Ith scratch space index of the Xth transaction in the current group |
+| `gaid t` | push the ID of the asset or application created in the Tth transaction of the current group |
+| `gaids` | push the ID of the asset or application created in the Xth transaction of the current group |
 
 **Transaction Fields**
 

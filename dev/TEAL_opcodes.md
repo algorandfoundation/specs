@@ -518,7 +518,7 @@ for notes on transaction fields available, see `txn`. If this transaction is _i_
 - Opcode: 0x38 {uint8 transaction field index}
 - Pops: *... stack*, uint64
 - Pushes: any
-- push field F of the Ath transaction in the current group
+- push field F of the Xth transaction in the current group
 - LogicSigVersion >= 3
 
 for notes on transaction fields available, see `txn`. If top of stack is _i_, `gtxns field` is equivalent to `gtxn _i_ field`. gtxns exists so that _i_ can be calculated, often based on the index of the current transaction.
@@ -528,7 +528,7 @@ for notes on transaction fields available, see `txn`. If top of stack is _i_, `g
 - Opcode: 0x39 {uint8 transaction field index} {uint8 transaction field array index}
 - Pops: *... stack*, uint64
 - Pushes: any
-- push Ith value of the array field F from the Ath transaction in the current group
+- push Ith value of the array field F from the Xth transaction in the current group
 - LogicSigVersion >= 3
 
 ## gload t i
@@ -540,40 +540,40 @@ for notes on transaction fields available, see `txn`. If top of stack is _i_, `g
 - LogicSigVersion >= 4
 - Mode: Application
 
-The `gload` opcode can only access scratch spaces of previous app calls contained in the current group.
+`gload` fails unless the requested transaction is an ApplicationCall and T < GroupIndex.
 
 ## gloads i
 
 - Opcode: 0x3b {uint8 position in scratch space to load from}
 - Pops: *... stack*, uint64
 - Pushes: any
-- push Ith scratch space index of the Ath transaction in the current group
+- push Ith scratch space index of the Xth transaction in the current group
 - LogicSigVersion >= 4
 - Mode: Application
 
-The `gloads` opcode can only access scratch spaces of previous app calls contained in the current group.
+`gloads` fails unless the requested transaction is an ApplicationCall and X < GroupIndex.
 
 ## gaid t
 
 - Opcode: 0x3c
 - Pops: _None_
 - Pushes: uint64
-- push the ID of the asset or application created in the Tth transaction of the current group, or fail if nothing was created in that transaction
+- push the ID of the asset or application created in the Tth transaction of the current group
 - LogicSigVersion >= 4
 - Mode: Application
 
-The `gaid` opcode can only access the ID of assets or applications created by previous txns in the current group.
+`gaid` fails unless the requested transaction created an asset or application and T < GroupIndex.
 
 ## gaids
 
 - Opcode: 0x3d
 - Pops: *... stack*, uint64
 - Pushes: uint64
-- push the ID of the asset or application created in the Ath transaction of the current group, or fail if nothing was created in that transaction
+- push the ID of the asset or application created in the Xth transaction of the current group
 - LogicSigVersion >= 4
 - Mode: Application
 
-The `gaids` opcode can only access the ID of assets or applications created by previous txns in the current group.
+`gaidx` fails unless the requested transaction created an asset or application and X < GroupIndex.
 
 ## bnz target
 
