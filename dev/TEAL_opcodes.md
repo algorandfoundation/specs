@@ -735,7 +735,7 @@ When A is a uint64, index 0 is the least significant bit. Setting bit 3 to 1 on 
 - Opcode: 0x60
 - Pops: *... stack*, any
 - Pushes: uint64
-- get balance account A, in microalgos. The balance is observed after the effects of previous transactions in the group, and after the fee for the current transaction is deducted.
+- get balance for account A, in microalgos. The balance is observed after the effects of previous transactions in the group, and after the fee for the current transaction is deducted.
 - LogicSigVersion >= 2
 - Mode: Application
 
@@ -894,7 +894,7 @@ params: Txn.ForeignAssets offset (or, since v4, an asset id that appears in Txn.
 - Opcode: 0x78
 - Pops: *... stack*, any
 - Pushes: uint64
-- get minimum required balance account A, in microalgos. Required balance is affected by [ASA](https://developer.algorand.org/docs/features/asa/#assets-overview) and [App](https://developer.algorand.org/docs/features/asc1/stateful/#minimum-balance-requirement-for-a-smart-contract) usage. When creating or opting into an app, the minimum balance grows before the app code runs, therefore the increase is visible there. When deleting or closing out, the minimum balance decreases after the app executes.
+- get minimum required balance for account A, in microalgos. Required balance is affected by [ASA](https://developer.algorand.org/docs/features/asa/#assets-overview) and [App](https://developer.algorand.org/docs/features/asc1/stateful/#minimum-balance-requirement-for-a-smart-contract) usage. When creating or opting into an app, the minimum balance grows before the app code runs, therefore the increase is visible there. When deleting or closing out, the minimum balance decreases after the app executes.
 - LogicSigVersion >= 3
 - Mode: Application
 
