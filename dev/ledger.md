@@ -634,8 +634,6 @@ An application call transaction additionally has the following fields:
 - Asset IDs that the executing program may read asset parameters from. This
   field is encoded as msgpack field `apas`. The maximum number of entries in
   this field is 8.
-- The sum of the number of Accounts in `apat`, Application IDs in
-  `apfa`, and Asset IDs in `apas` is limited to 8.
 - Local state schema, encoded as msgpack field `apls`. This field is only used
   during application creation, and sets bounds on the size of the local state
   for users who opt in to this application.
@@ -651,6 +649,10 @@ An application call transaction additionally has the following fields:
 - Clear state program, encoded as msgpack field `apsu`. This field is used for
   both application creation and updates, and sets the corresponding
   application's `ClearStateProgram`.
+
+Furthermore, the sum of the number of Accounts in `apat`, Application IDs in
+`apfa`, and Asset IDs in `apas` is limited to 8.
+
 
 An asset configuration transaction additionally has the following fields:
 
