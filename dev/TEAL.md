@@ -151,7 +151,7 @@ For three-argument ops, `A` is the element two below the top, `B` is the penulti
 | `substring3` | pop a byte-array A and two integers B and C. Extract a range of bytes from A starting at B up to but not including C, push the substring result. If C < B, or either is larger than the array length, the program fails |
 
 These opcodes take byte-array values that are interpreted as
-big-endian unsigned integers.  For mathematical opeartors, the
+big-endian unsigned integers.  For mathematical operators, the
 returned values are the shortest byte-array that can represent the
 returned value.  For example, the zero value is the empty
 byte-array. For comparison operators, the returned value is a uint64
