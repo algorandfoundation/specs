@@ -325,8 +325,9 @@ parameters_, which can be encoded as a msgpack struct:
   global state associated with this application. This field is encoded with
   msgpack field `approv`.
 
-  This field must not exceed 1024 bytes. The cost of the program as determined
-  by the Stateful TEAL `Check` function must not exceed 700.
+  For Version 3 or lower TEAL programs, the cost of the program as determined by the Stateful TEAL `Check` function must not exceed 700.
+
+  For Version 4 or higher TEAL programs, the cost of the program during execution must not exceed 700.
 
 - A mutable Stateful TEAL "Clear State" program (`ClearStateProgram`), executed
   when an opted-in user forcibly removes the local application state associated
@@ -337,8 +338,9 @@ parameters_, which can be encoded as a msgpack struct:
   global state associated with this application. This field is encoded with
   msgpack field `clearp`.
 
-  This field must not exceed 1024 bytes. The cost of the program as determined
-  by the Stateful TEAL `Check` function must not exceed 700.
+  For Version 3 or lower TEAL programs, the cost of the program as determined by the Stateful TEAL `Check` function must not exceed 700.
+
+  For Version 4 or higher TEAL programs, the cost of the program during execution must not exceed 700.
 
 - An immutable "global state schema" (`GlobalStateSchema`), which sets a limit
   on the size of the global [TEAL Key/Value Store][TEAL Key/Value Stores] that
@@ -355,6 +357,12 @@ parameters_, which can be encoded as a msgpack struct:
 
   The maximum number of values that this schema may permit is 16.
 
+- An immutable "extra pages" value (`ExtraProgramPages`), which limits
+  the total size of the programs of the application. The sum of the
+  lengths of `ApprovalProgram` and `ClearStateProgram` may not exceed
+  2048*(1+`ExtraProgramPages`) bytes. This field is encoded with
+  msgpack field `epp` and may not exceed 3.
+
 - The "global state" (`GlobalState`) associated with this application, stored as
   a [TEAL Key/Value Store][TEAL Key/Value Stores]. This field is encoded with
   msgpack field `gs`.
@@ -364,15 +372,14 @@ account state, indexed by the application ID. This map is encoded as msgpack
 field `appp`. The maximum number of applications that a single account may
 create is 10. Creating one application increases the minimum balance
 requirements of the creator by 100000 microalgos, plus the [`GlobalStateSchema`
-Minimum Balance contribution][State Schema Minimum Balance Contribution].
+Minimum Balance contribution][App Minimum Balance Increases].
 
 `LocalState` for applications that an account has opted in to are also stored in
 a map in the account state, indexed by the application ID. This map is encoded
 as msgpack field `appl`. The maximum number of applications that a single
 account may opt in to is 10. Opting in to one application increases the minimum
 balance requirements of the opting-in account by 100000 microalgos plus the
-[`LocalStateSchema` Minimum Balance contribution][State Schema Minimum Balance
-Contribution].
+[`LocalStateSchema` Minimum Balance contribution][App Minimum Balance Increases].
 
 ### TEAL Key/Value Stores
 
@@ -407,7 +414,7 @@ A state schema is composed of two fields:
 - `NumByteSlice`, encoded as msgpack field `nbs`. This field represents the
   maximum number of byte slice values that may appear in some TKV.
 
-#### State Schema Minimum Balance Contribution
+#### App Minimum Balance Increases
 
 When an account opts in to an application or creates an application, the
 minimum balance requirements for that account increase.
@@ -416,13 +423,15 @@ When opting in to an application, there is a base minimum balance increase
 of 100000 microalgos. There is an additional minimum balance increase based on
 the `LocalStateSchema` for that application, described by following formula:
 
-`28500 * shema.NumUint + 50000 * schema.NumByteSlice` microalgos.
+`28500 * schema.NumUint + 50000 * schema.NumByteSlice` microalgos.
 
-When creating an application, there is a base minimum balance increase of
-100000 microalgos. There is an additional minimum balance increase based on the
-`GlobalStateSchema` for that application, described by the following formula:
+When creating an application, there is a base minimum balance increase
+of 100000 microalgos. There is an additional minimum blance increase
+of `100000 * ExtraProgramPages` microalgos.  Finally, there is an
+additional minimum balance increase based on the `GlobalStateSchema`
+for that application, described by the following formula:
 
-`28500 * shema.NumUint + 50000 * schema.NumByteSlice` microalgos.
+`28500 * schema.NumUint + 50000 * schema.NumByteSlice` microalgos.
 
 ## Assets
 
@@ -453,7 +462,7 @@ which can be encoded as a msgpack struct:
 
  - A string representing a URL that provides further description of the asset,
    encoded with msgpack field `au`.  As above, this does not uniquely identify
-   an asset.  The maximum length of this field is 32 bytes.
+   an asset.  The maximum length of this field is 96 bytes.
 
  - A 32-byte hash specifying a commitment to asset-specific metadata, encoded with
    msgpack field `am`.  As above, this does not uniquely identify an asset.
@@ -567,23 +576,23 @@ A payment transaction additionally has the following fields:
 
 A key registration transaction additionally has the following fields:
 
- - The _vote public key_ $\vpk$, (root) public authentication key 
+ - The _vote public key_ $\vpk$, (root) public authentication key
    of an account's participation keys ($\pk$).
 
- - The _selection public key_ $\spk$, public authorization key of 
-   an account's participation keys ($\pk$). If either $\vpk$ or 
-   $\spk$ is unset, the transaction deregisters the account's participation 
+ - The _selection public key_ $\spk$, public authorization key of
+   an account's participation keys ($\pk$). If either $\vpk$ or
+   $\spk$ is unset, the transaction deregisters the account's participation
    key set, as the result, marks the account offline.
 
- - The _vote first_ $\vf$, first valid round (inclusive) of 
+ - The _vote first_ $\vf$, first valid round (inclusive) of
    an account's participation key sets.
 
  - The _vote last_ $\vl$, last valid round (inclusive) of an account's
    participation key sets.
 
- - The _vote key dilution_ $\vkd$, number of rounds that a single 
-  leaf level authentication key can be used. The higher the number, the 
-  more ``dilution'' added to the authentication key's security.  
+ - The _vote key dilution_ $\vkd$, number of rounds that a single
+  leaf level authentication key can be used. The higher the number, the
+  more ``dilution'' added to the authentication key's security.
 
  - An optional (boolean) flag $\nonpart$ which, when deregistering keys,
    specifies whether to mark the account offline (if $\nonpart$ is false)
@@ -647,6 +656,9 @@ An application call transaction additionally has the following fields:
 - Global state schema, encoded as msgpack field `apgs`. This field is only used
   during application creation, and sets bounds on the size of the global state
   associated with this application.
+- Extra program pages, encoded as msgpack field `apep`. This field is only used
+  during application creation, and requests an increased maximum size for the
+  approval and clear state programs.
 - Approval program, encoded as msgpack field `apap`. This field is used for both
   application creation and updates, and sets the corresponding application's
   `ApprovalProgram`.
@@ -747,7 +759,7 @@ and contains the following fields:
 
 - The closing amount, $\ClosingAmount$, which specifies how many microalgos
   were transferred to the closing address.
- 
+
 - The asset closing amount, $\AssetClosingAmount$, which specifies how many
    of the asset units were transsfered to the closing address.
 
@@ -885,7 +897,9 @@ the transactions have nonzero "Group", compute the _TxGroup hash_ as follows:
 
 If the TxGroup hash of any transaction group in a block does not match the "Group" field of the transactions in that group (and that "Group" field is nonzero), then the block is invalid. Additionally, if a block contains a transaction group of more than $G_{max}$ transactions, the block is invalid.
 
-Beyond this check, each transaction in a group is evaluated separately and must be valid on its own, as described below in the [Validity and State Changes][Validity and State Changes] section. For example, a group containing a zero-fee transaction and a very-high-fee transaction would be rejected because the first transaction has fee less than $f_{\min}$, even if the average transaction fee of the group were above $f_{\min}$. As another example, an account with balance 50 could not spend 100 in transaction A and afterward receive 500 in transaction B, even if transactions A and B are in the same group, because transaction A would leave the account with a negative balance.
+If the sum of the fees paid by the transactions in a transaction group is less than $f_{\min}$ times the number of transactions in the group, then the block is invalid.
+
+Beyond the TxGroup and MinFee checks, each transaction in a group is evaluated separately and must be valid on its own, as described below in the [Validity and State Changes][Validity and State Changes] section. For example, an account with balance 50 could not spend 100 in transaction A and afterward receive 500 in transaction B, even if transactions A and B are in the same group, because transaction A would leave the account with a negative balance.
 
 ## Asset Transaction Semantics
 
@@ -987,7 +1001,7 @@ point must be discarded and the entire transaction rejected.
 
         When creating an application, the application parameters specified by
         the transaction (`ApprovalProgram`, `ClearStateProgram`,
-        `GlobalStateSchema`, and `LocalStateSchema`) are allocated into the
+        `GlobalStateSchema`, `LocalStateSchema`, and `ExtraProgramPages`) are allocated into the
         sender’s account data, keyed by the new application ID.
 
         Continue to step 2.
@@ -1050,13 +1064,15 @@ point must be discarded and the entire transaction rejected.
 
 ### Application Stateful TEAL Execution Semantics
 
-- During the execution of an `ApprovalProgram` or `ClearStateProgram`, the
-  application’s `LocalStateSchema` and `GlobalStateSchema` may never be
-  violated. The program's execution will fail on the first instruction that
-  would cause the relevant schema to be violated. Writing a `Bytes` value to a
-  local or global [TEAL Key/Value Store][TEAL Key/Value Stores] longer than 64
-  bytes, or writing any value to a key longer than 64 bytes, will likewise cause
-  the program to fail on the offending instruction.
+- During the execution of an `ApprovalProgram` or `ClearStateProgram`,
+  the application’s `LocalStateSchema` and `GlobalStateSchema` may
+  never be violated. The program's execution will fail on the first
+  instruction that would cause the relevant schema to be
+  violated. Writing a `Bytes` value to a local or global [TEAL
+  Key/Value Store][TEAL Key/Value Stores] such that the sum of the
+  lengths of the key and value in bytes exceeds 128, or writing any
+  value to a key longer than 64 bytes, will likewise cause the program
+  to fail on the offending instruction.
 - Global state may only be read for the application ID whose program is
   executing, or for any application ID mentioned in the `ForeignApps`
   transaction field. An attempt to read global state for another application
@@ -1065,14 +1081,20 @@ point must be discarded and the entire transaction rejected.
   `ForeignAssets` transaction field. An attempt to read asset parameters for
   an asset that is not listed in `ForeignAssets` will cause the program
   execution to fail.
-- Local state may be read for any opted-in application present in the sender’s
-  account data, or in the account data for any address listed in the
-  transaction’s `Accounts` field. An attempt to read local state from any other
-  account will cause program execution to fail.
-- Algo balances and asset balances may be read for the sender's account or for
-  any account referenced by an address listed in the transaction's `Accounts`
-  field. An attempt to read an Algo balance or asset balance for any other
-  account will cause program execution to fail.
+- Local state may be read for any opted-in application present in the
+  sender’s account data, or in the account data for any address listed
+  in the transaction’s `Accounts` field. An attempt to read local
+  state from any other account will cause program execution to
+  fail. Further, in TEAL programs version 4 or later, Local state
+  reads are restricted by application ID in the same way as Global
+  state reads.
+- Algo balances and asset balances may be read for the sender's
+  account or for any account referenced by an address listed in the
+  transaction's `Accounts` field. An attempt to read an Algo balance
+  or asset balance for any other account will cause program execution
+  to fail.  Further, in TEAL programs version 4 or later, asset
+  balances may only be read for assets whose parameters are also
+  readable.
 
 ## Validity and State Changes
 
