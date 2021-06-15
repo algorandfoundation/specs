@@ -24,7 +24,7 @@ In addition to the stack there are 256 positions of scratch space, also uint64-b
 ## Execution Modes
 
 Starting from version 2 TEAL evaluator can run programs in two modes:
-1. LogigSig (stateless)
+1. LogicSig (stateless)
 2. Application run (stateful)
 
 Differences between modes include:
