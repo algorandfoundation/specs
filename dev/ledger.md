@@ -362,6 +362,7 @@ parameters_, which can be encoded as a msgpack struct:
   lengths of `ApprovalProgram` and `ClearStateProgram` may not exceed
   2048*(1+`ExtraProgramPages`) bytes. This field is encoded with
   msgpack field `epp` and may not exceed 3.
+  This `ExtraProgramPages` field is taken into account on application update as well.
 
 - The "global state" (`GlobalState`) associated with this application, stored as
   a [TEAL Key/Value Store][TEAL Key/Value Stores]. This field is encoded with
@@ -426,7 +427,7 @@ the `LocalStateSchema` for that application, described by following formula:
 `28500 * schema.NumUint + 50000 * schema.NumByteSlice` microalgos.
 
 When creating an application, there is a base minimum balance increase
-of 100000 microalgos. There is an additional minimum blance increase
+of 100000 microalgos. There is an additional minimum balance increase
 of `100000 * ExtraProgramPages` microalgos.  Finally, there is an
 additional minimum balance increase based on the `GlobalStateSchema`
 for that application, described by the following formula:
