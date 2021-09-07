@@ -746,10 +746,12 @@ applied to the account state.  This information is called ApplyData,
 and contains the following fields:
 
 - The closing amount, $\ClosingAmount$, which specifies how many microalgos
-  were transferred to the closing address.
+  were transferred to the closing address, and is encoded as "ca" in
+  msgpack.
 
 - The asset closing amount, $\AssetClosingAmount$, which specifies how many
-   of the asset units were transsfered to the closing address.
+  of the asset units were transferred to the closing address.  It is
+  encoded as "aca" in msgpack.
 
 - The amount of rewards distributed to each of the accounts touched by this
   transaction.  There are three fields ("rs", "rr", and "rc" keys in msgpack
@@ -774,6 +776,18 @@ and contains the following fields:
       offset 0 is the transaction's sender. Account offsets 1 and greater refer
       to the account specified at that offset minus one in the transaction's
       `Accounts` slice.
+  - Zero or more `Logs` encoded in an array `lg`, recording the arguments
+    to each call of the `log` opcode in the called application. The order
+    of the entries follows the execution order of the `log`
+    invocations. The maximum total number of `log` calls is 32, and the
+    total size of all logged bytes is limited to 1024.
+  - Zero or more `InnerTxns`, encoded in an array `itx`. Each element of
+    `itx` records a succesful invocation of the `tx_submit` opcode. Each
+    element will contain the transaction fields, encoded under `txn`, in
+    the same way that the top-level transaction is encoded, recursively,
+    including `ApplyData` that applies to the inner transaction.  Up to 16
+    `InnerTxns` may be present.
+    - InnerTxns are limited to `pay` and `axfer` transactions.
 
 ### State Deltas
 
