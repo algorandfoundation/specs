@@ -473,6 +473,7 @@ FirstValidTime causes the program to fail. The field is reserved for future use.
 | 8 | CurrentApplicationID | uint64 | ID of current application executing. Fails if no such application is executing. LogicSigVersion >= 2. |
 | 9 | CreatorAddress | []byte | Address of the creator of the current application. Fails if no such application is executing. LogicSigVersion >= 3. |
 | 10 | CurrentApplicationAddress | []byte | Address that the current application controls. Fails if no such application is executing. LogicSigVersion >= 5. |
+| 11 | GroupID | []byte | ID of the transaction group. 32 zero bytes if the transaction is not part of a group. LogicSigVersion >= 5. |
 
 
 ## gtxn t f
@@ -496,7 +497,7 @@ for notes on transaction fields available, see `txn`. If this transaction is _i_
 - Opcode: 0x35 {uint8 position in scratch space to store to}
 - Pops: *... stack*, any
 - Pushes: _None_
-- pop a value from the stack and store to scratch space
+- pop value X. store X to the Ith scratch space
 
 ## txna f i
 
@@ -575,6 +576,22 @@ for notes on transaction fields available, see `txn`. If top of stack is _i_, `g
 - Mode: Application
 
 `gaids` fails unless the requested transaction created an asset or application and X < GroupIndex.
+
+## loads
+
+- Opcode: 0x3e
+- Pops: *... stack*, uint64
+- Pushes: any
+- copy a value from the Xth scratch space to the stack
+- LogicSigVersion >= 5
+
+## stores
+
+- Opcode: 0x3f
+- Pops: *... stack*, {any A}, {uint64 B}
+- Pushes: _None_
+- pop indexes A and B. store A to the Bth scratch space
+- LogicSigVersion >= 5
 
 ## bnz target
 
@@ -1250,3 +1267,36 @@ bitlen interprets arrays as big-endian integers, unlike setbit/getbit
 - Execute the current inner transaction. Panic on any failure.
 - LogicSigVersion >= 5
 - Mode: Application
+
+## txnas f
+
+- Opcode: 0xc0 {uint8 transaction field index}
+- Pops: *... stack*, uint64
+- Pushes: any
+- push Xth value of the array field F of the current transaction
+- LogicSigVersion >= 5
+
+## gtxnas t f
+
+- Opcode: 0xc1 {uint8 transaction group index} {uint8 transaction field index}
+- Pops: *... stack*, uint64
+- Pushes: any
+- push Xth value of the array field F from the Tth transaction in the current group
+- LogicSigVersion >= 5
+
+## gtxnsas f
+
+- Opcode: 0xc2 {uint8 transaction field index}
+- Pops: *... stack*, {uint64 A}, {uint64 B}
+- Pushes: any
+- pop an index A and an index B. push Bth value of the array field F from the Ath transaction in the current group
+- LogicSigVersion >= 5
+
+## args
+
+- Opcode: 0xc3
+- Pops: *... stack*, uint64
+- Pushes: []byte
+- push Xth LogicSig argument to stack
+- LogicSigVersion >= 5
+- Mode: Signature
