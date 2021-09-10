@@ -782,7 +782,7 @@ and contains the following fields:
     invocations. The maximum total number of `log` calls is 32, and the
     total size of all logged bytes is limited to 1024.
   - Zero or more `InnerTxns`, encoded in an array `itx`. Each element of
-    `itx` records a succesful invocation of the `tx_submit` opcode. Each
+    `itx` records a successful invocation of the `tx_submit` opcode. Each
     element will contain the transaction fields, encoded under `txn`, in
     the same way that the top-level transaction is encoded, recursively,
     including `ApplyData` that applies to the inner transaction.  Up to 16
