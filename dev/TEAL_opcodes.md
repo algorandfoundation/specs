@@ -1250,6 +1250,8 @@ bitlen interprets arrays as big-endian integers, unlike setbit/getbit
 - LogicSigVersion >= 5
 - Mode: Application
 
+`tx_begin` sets Sender to the application address; Fee to the minimum allowable, taking into account MinTxnFee and credit from overpaying in earlier transactions; and FirstValid/LastValid to the values in the top-level transaction.
+
 ## tx_field f
 
 - Opcode: 0xb2 {uint8 transaction field index}
