@@ -1261,6 +1261,8 @@ bitlen interprets arrays as big-endian integers, unlike setbit/getbit
 - LogicSigVersion >= 5
 - Mode: Application
 
+The following fields may be set by `tx_field` - Sender, Fee, Receiver, Amount, CloseRemainderTo, Type, TypeEnum, XferAsset, AssetAmount, AssetSender, AssetReceiver, AssetCloseTo
+
 ## tx_submit
 
 - Opcode: 0xb3
