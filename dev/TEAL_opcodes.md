@@ -745,7 +745,7 @@ See `bnz` for details on how branches work. `b` always jumps to the offset.
 - Opcode: 0x4e {uint8 depth}
 - Pops: *... stack*, any
 - Pushes: any
-- remove top of stack, and place it deeper in the stack such that N elements are above it
+- remove top of stack, and place it deeper in the stack such that N elements are above it. Fails if stack depth <= N.
 - LogicSigVersion >= 5
 
 ## uncover n
@@ -753,7 +753,7 @@ See `bnz` for details on how branches work. `b` always jumps to the offset.
 - Opcode: 0x4f {uint8 depth}
 - Pops: *... stack*, any
 - Pushes: any
-- remove the value at depth N in the stack and shift above items down so the Nth deep value is on top of the stack
+- remove the value at depth N in the stack and shift above items down so the Nth deep value is on top of the stack. Fails if stack depth <= N.
 - LogicSigVersion >= 5
 
 ## concat
