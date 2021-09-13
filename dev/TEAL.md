@@ -365,7 +365,7 @@ Asset fields include `AssetHolding` and `AssetParam` fields that are used in the
 | 8 | AssetReserve | []byte | Reserve address |
 | 9 | AssetFreeze | []byte | Freeze address |
 | 10 | AssetClawback | []byte | Clawback address |
-| 11 | AssetCreator | []byte | Creator address |
+| 11 | AssetCreator | []byte | Creator address. LogicSigVersion >= 5. |
 
 
 **App Fields**
@@ -381,8 +381,8 @@ App fields used in the `app_params_get` opcode.
 | 4 | AppLocalNumUint | uint64 | Number of uint64 values allowed in Local State |
 | 5 | AppLocalNumByteSlice | uint64 | Number of byte array values allowed in Local State |
 | 6 | AppExtraProgramPages | uint64 | Number of Extra Program Pages of code space |
-| 7 | AppCreator | []byte | Creator address |
-| 8 | AppAddress | []byte | Address for which this application has authority |
+| 7 | AppCreator | []byte | Creator address. LogicSigVersion >= 5. |
+| 8 | AppAddress | []byte | Address for which this application has authority. LogicSigVersion >= 5. |
 
 
 ### Flow Control
