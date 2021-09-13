@@ -381,8 +381,8 @@ App fields used in the `app_params_get` opcode.
 | 4 | AppLocalNumUint | uint64 | Number of uint64 values allowed in Local State |
 | 5 | AppLocalNumByteSlice | uint64 | Number of byte array values allowed in Local State |
 | 6 | AppExtraProgramPages | uint64 | Number of Extra Program Pages of code space |
-| 7 | AppCreator | []byte | Creator address. LogicSigVersion >= 5. |
-| 8 | AppAddress | []byte | Address for which this application has authority. LogicSigVersion >= 5. |
+| 7 | AppCreator | []byte | Creator address |
+| 8 | AppAddress | []byte | Address for which this application has authority |
 
 
 ### Flow Control
