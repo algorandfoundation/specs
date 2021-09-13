@@ -1315,6 +1315,8 @@ bitlen interprets arrays as big-endian integers, unlike setbit/getbit
 - LogicSigVersion >= 5
 - Mode: Application
 
+`tx_field` fails if X is of the wrong type for F, including a byte array of the wrong size for use as an address when F is an address field. `tx_field` also fails if X is an account or asset that does not appear in `txn.Accounts` or `txn.ForeignAssets` of the top-level transaction. (Setting addresses in asset creation are exempted from this requirement.)
+
 ## tx_submit
 
 - Opcode: 0xb3
