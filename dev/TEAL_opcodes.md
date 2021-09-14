@@ -488,6 +488,10 @@ Overflow is an error condition which halts execution and fails the transaction. 
 | 55 | LocalNumByteSlice | uint64 | Number of local state byteslices in ApplicationCall. LogicSigVersion >= 3. |
 | 56 | ExtraProgramPages | uint64 | Number of additional pages for each of the application's approval and clear state programs. An ExtraProgramPages of 1 means 2048 more total bytes, or 1024 for each program. LogicSigVersion >= 4. |
 | 57 | Nonparticipation | uint64 | Marks an account nonparticipating for rewards. LogicSigVersion >= 5. |
+| 58 | Logs | []byte | Log messages emitted by an application call. LogicSigVersion >= 5. |
+| 59 | NumLogs | uint64 | Number of Logs. LogicSigVersion >= 5. |
+| 60 | EvalConfigAsset | uint64 | Asset ID allocated by the creation of an ASA. LogicSigVersion >= 5. |
+| 61 | EvalApplicationID | uint64 | ApplicationID allocated by the creation of an application. LogicSigVersion >= 5. |
 
 
 TypeEnum mapping:
@@ -900,7 +904,7 @@ params: Txn.Accounts offset (or, since v4, an account address that appears in Tx
 - LogicSigVersion >= 2
 - Mode: Application
 
-params: Txn.Accounts offset (or, since v4, an account address that appears in Txn.Accounts or is Txn.Sender), application id (or, since v4, a Txn.ForeignApps offset), state key. Return: did_exist flag (top of the stack, 1 if exist and 0 otherwise), value. The value is zero (of type uint64) if the key does not exist.
+params: Txn.Accounts offset (or, since v4, an account address that appears in Txn.Accounts or is Txn.Sender), application id (or, since v4, a Txn.ForeignApps offset), state key. Return: did_exist flag (top of the stack, 1 if the application existed and 0 otherwise), value. The value is zero (of type uint64) if the key does not exist.
 
 ## app_global_get
 
@@ -922,7 +926,7 @@ params: state key. Return: value. The value is zero (of type uint64) if the key 
 - LogicSigVersion >= 2
 - Mode: Application
 
-params: Txn.ForeignApps offset (or, since v4, an application id that appears in Txn.ForeignApps or is the CurrentApplicationID), state key. Return: did_exist flag (top of the stack, 1 if exist and 0 otherwise), value. The value is zero (of type uint64) if the key does not exist.
+params: Txn.ForeignApps offset (or, since v4, an application id that appears in Txn.ForeignApps or is the CurrentApplicationID), state key. Return: did_exist flag (top of the stack, 1 if the application existed and 0 otherwise), value. The value is zero (of type uint64) if the key does not exist.
 
 ## app_local_put
 
@@ -987,7 +991,7 @@ Deleting a key which is already absent has no effect on the application global s
 | 1 | AssetFrozen | uint64 | Is the asset frozen or not |
 
 
-params: Txn.Accounts offset (or, since v4, an account address that appears in Txn.Accounts or is Txn.Sender), asset id (or, since v4, a Txn.ForeignAssets offset). Return: did_exist flag (1 if exist and 0 otherwise), value.
+params: Txn.Accounts offset (or, since v4, an account address that appears in Txn.Accounts or is Txn.Sender), asset id (or, since v4, a Txn.ForeignAssets offset). Return: did_exist flag (1 if the asset existed and 0 otherwise), value.
 
 ## asset_params_get i
 
@@ -1016,7 +1020,7 @@ params: Txn.Accounts offset (or, since v4, an account address that appears in Tx
 | 11 | AssetCreator | []byte | Creator address. LogicSigVersion >= 5. |
 
 
-params: Before v4, Txn.ForeignAssets offset. Since v4, Txn.ForeignAssets offset or an asset id that appears in Txn.ForeignAssets. Return: did_exist flag (1 if exist and 0 otherwise), value.
+params: Before v4, Txn.ForeignAssets offset. Since v4, Txn.ForeignAssets offset or an asset id that appears in Txn.ForeignAssets. Return: did_exist flag (1 if the asset existed and 0 otherwise), value.
 
 ## app_params_get i
 
@@ -1042,7 +1046,7 @@ params: Before v4, Txn.ForeignAssets offset. Since v4, Txn.ForeignAssets offset 
 | 8 | AppAddress | []byte | Address for which this application has authority |
 
 
-params: Txn.ForeignApps offset or an app id that appears in Txn.ForeignApps. Return: did_exist flag (1 if exist and 0 otherwise), value.
+params: Txn.ForeignApps offset or an app id that appears in Txn.ForeignApps. Return: did_exist flag (1 if the application existed and 0 otherwise), value.
 
 ## min_balance
 
@@ -1295,7 +1299,7 @@ bitlen interprets arrays as big-endian integers, unlike setbit/getbit
 
 `log` fails if called more than MaxLogCalls times in a program, or if the sum of logged bytes exceeds 1024 bytes.
 
-## tx_begin
+## itxn_begin
 
 - Opcode: 0xb1
 - Pops: _None_
@@ -1304,25 +1308,43 @@ bitlen interprets arrays as big-endian integers, unlike setbit/getbit
 - LogicSigVersion >= 5
 - Mode: Application
 
-`tx_begin` initializes Sender to the application address; Fee to the minimum allowable, taking into account MinTxnFee and credit from overpaying in earlier transactions; FirstValid/LastValid to the values in the top-level transaction, and all other fields to zero values.
+`itxn_begin` initializes Sender to the application address; Fee to the minimum allowable, taking into account MinTxnFee and credit from overpaying in earlier transactions; FirstValid/LastValid to the values in the top-level transaction, and all other fields to zero values.
 
-## tx_field f
+## itxn_field f
 
 - Opcode: 0xb2 {uint8 transaction field index}
 - Pops: *... stack*, any
 - Pushes: _None_
-- Set field F of the current inner transaction to X. Fail if X is the wrong type for F.
+- Set field F of the current inner transaction to X
 - LogicSigVersion >= 5
 - Mode: Application
 
-`tx_field` fails if X is of the wrong type for F, including a byte array of the wrong size for use as an address when F is an address field. `tx_field` also fails if X is an account or asset that does not appear in `txn.Accounts` or `txn.ForeignAssets` of the top-level transaction. (Setting addresses in asset creation are exempted from this requirement.)
+`itxn_field` fails if X is of the wrong type for F, including a byte array of the wrong size for use as an address when F is an address field. `itxn_field` also fails if X is an account or asset that does not appear in `txn.Accounts` or `txn.ForeignAssets` of the top-level transaction. (Setting addresses in asset creation are exempted from this requirement.)
 
-## tx_submit
+## itxn_submit
 
 - Opcode: 0xb3
 - Pops: _None_
 - Pushes: _None_
-- Execute the current inner transaction. Fail if 16 inner transactions have already been executed, or if the transaction fails
+- Execute the current inner transaction. Fail if 16 inner transactions have already been executed, or if the transaction itself fails.
+- LogicSigVersion >= 5
+- Mode: Application
+
+## itxn f
+
+- Opcode: 0xb4 {uint8 transaction field index}
+- Pops: _None_
+- Pushes: any
+- push field F of the last inner transaction to stack
+- LogicSigVersion >= 5
+- Mode: Application
+
+## itxna f i
+
+- Opcode: 0xb5 {uint8 transaction field index} {uint8 transaction field array index}
+- Pops: _None_
+- Pushes: any
+- push Ith valoue of the array field F of the last inner transaction to stack
 - LogicSigVersion >= 5
 - Mode: Application
 

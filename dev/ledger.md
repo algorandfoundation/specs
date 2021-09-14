@@ -787,7 +787,7 @@ and contains the following fields:
     the same way that the top-level transaction is encoded, recursively,
     including `ApplyData` that applies to the inner transaction.  Up to 16
     `InnerTxns` may be present.
-    - InnerTxns are limited to `pay` and `axfer` transactions.
+    - InnerTxns are limited to `pay`, `axfer`, `acfg`, and `afrz` transactions.
 
 ### State Deltas
 

@@ -13,7 +13,10 @@ also execute as _Applications_ which are invoked with explicit application call 
 
 ## The Stack
 
-The stack starts empty and contains values of either uint64 or bytes (`bytes` are implemented in Go as a []byte slice). Most operations act on the stack, popping arguments from it and pushing results to it.
+The stack starts empty and contains values of either uint64 or bytes
+(`bytes` are implemented in Go as a []byte slice and may not exceed
+4096 bytes in length). Most operations act on the stack, popping
+arguments from it and pushing results to it.
 
 The maximum stack depth is currently 1000.
 
@@ -318,6 +321,10 @@ Some of these have immediate data in the byte or bytes after the opcode.
 | 55 | LocalNumByteSlice | uint64 | Number of local state byteslices in ApplicationCall. LogicSigVersion >= 3. |
 | 56 | ExtraProgramPages | uint64 | Number of additional pages for each of the application's approval and clear state programs. An ExtraProgramPages of 1 means 2048 more total bytes, or 1024 for each program. LogicSigVersion >= 4. |
 | 57 | Nonparticipation | uint64 | Marks an account nonparticipating for rewards. LogicSigVersion >= 5. |
+| 58 | Logs | []byte | Log messages emitted by an application call. LogicSigVersion >= 5. |
+| 59 | NumLogs | uint64 | Number of Logs. LogicSigVersion >= 5. |
+| 60 | EvalConfigAsset | uint64 | Asset ID allocated by the creation of an ASA. LogicSigVersion >= 5. |
+| 61 | EvalApplicationID | uint64 | ApplicationID allocated by the creation of an application. LogicSigVersion >= 5. |
 
 
 Additional details in the [opcodes document](TEAL_opcodes.md#txn) on the `txn` op.
@@ -440,13 +447,26 @@ ID (prefixed by "appID"), or an account that has been rekeyed to that
 hash.
 
 Currently, inner transactions may perform `pay`, `axfer`, `acfg`, and
-`afrz` effects.
+`afrz` effects.  After executing an inner transaction with
+`itxn_submit`, the effects of the transaction are visible begining
+with the next instruction with, for example, `balance` and
+`min_balance` checks.
+
+Of the transaction Header fields, only a few fields may be set:
+`Type`/`TypeEnum`, `Sender`, and `Fee`. For the specific fields of
+each transaction types, any field, except `RekeyTo` may be set.  This
+allows, for example, clawback transactions, asset opt-ins, and asset
+creates in addtion to the more common uses of `axfer` and `acfg`.  All
+fields default to the zero value, except those described under
+`itxn_begin`.
 
 | Op | Description |
 | --- | --- |
-| `tx_begin` | Begin preparation of a new inner transaction |
-| `tx_field f` | Set field F of the current inner transaction to X. Fail if X is the wrong type for F. |
-| `tx_submit` | Execute the current inner transaction. Fail if 16 inner transactions have already been executed, or if the transaction fails |
+| `itxn_begin` | Begin preparation of a new inner transaction |
+| `itxn_field f` | Set field F of the current inner transaction to X |
+| `itxn_submit` | Execute the current inner transaction. Fail if 16 inner transactions have already been executed, or if the transaction itself fails. |
+| `itxn f` | push field F of the last inner transaction to stack |
+| `itxna f i` | push Ith valoue of the array field F of the last inner transaction to stack |
 
 
 # Assembler Syntax
