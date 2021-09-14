@@ -380,8 +380,8 @@ Seed
 Informally, the protocol interleaves $\delta_s$ seeds in an alternating
 sequence.  Each seed is derived from a seed $\delta_s$ rounds in the past through
 either a hash function or through a VRF, keyed on the entry
-proposer. Additionally, every $\delta_r$ rounds,  the digest of a previous entry
-(specifically, from round $r - \delta_r$) is hashed into the result. The seed
+proposer. Additionally, every $\delta_s\delta_r$ rounds,  the digest of a previous entry
+(specifically, from round $r - \delta_s\delta_r$) is hashed into the result. The seed
 proof is the corresponding VRF proof, or 0 if the VRF was not used.
 
 More formally, suppose $I$ is a correct proposer in round $r$ and period $p$.
