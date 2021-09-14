@@ -19,7 +19,7 @@ The stack starts empty and contains values of either uint64 or bytes
 arguments from it and pushing results to it.
 
 The maximum stack depth is currently 1000. If the stack depth is
-exceed or if a `bytes` element exceed 4096 bytes, the program fails.
+exceeded or if a `bytes` element exceed 4096 bytes, the program fails.
 
 ## Scratch Space
 
