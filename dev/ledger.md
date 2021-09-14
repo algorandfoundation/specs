@@ -362,6 +362,7 @@ parameters_, which can be encoded as a msgpack struct:
   lengths of `ApprovalProgram` and `ClearStateProgram` may not exceed
   2048*(1+`ExtraProgramPages`) bytes. This field is encoded with
   msgpack field `epp` and may not exceed 3.
+  This `ExtraProgramPages` field is taken into account on application update as well.
 
 - The "global state" (`GlobalState`) associated with this application, stored as
   a [TEAL Key/Value Store][TEAL Key/Value Stores]. This field is encoded with
@@ -426,7 +427,7 @@ the `LocalStateSchema` for that application, described by following formula:
 `28500 * schema.NumUint + 50000 * schema.NumByteSlice` microalgos.
 
 When creating an application, there is a base minimum balance increase
-of 100000 microalgos. There is an additional minimum blance increase
+of 100000 microalgos. There is an additional minimum balance increase
 of `100000 * ExtraProgramPages` microalgos.  Finally, there is an
 additional minimum balance increase based on the `GlobalStateSchema`
 for that application, described by the following formula:
@@ -489,8 +490,9 @@ Accounts can hold up to $Assets_{\max}$ assets (1000 in this protocol).
 An account must hold every asset that it created (even if it holds 0
 units of that asset), until that asset is destroyed.  An account's asset
 holding is simply a map from asset IDs to an integer value indicating
-how many units of that asset is held by the account.  An account that
-holds any asset cannot be closed.
+how many units of that asset is held by the account and a boolean flag
+indicating if the holding is frozen or unfrozen.  An account that holds
+any asset cannot be closed.
 
 # Transactions
 
@@ -536,7 +538,7 @@ transaction contains the following fields:
  - The _fee_ $f$, which is a 64-bit integer that specifies the processing fee
    the sender pays to execute the transaction.
 
- - The first round $r_1$ and last round $r_2$ for which the transaction may be
+ - The _first valid_ $r_1$ and _last valid_ $r_2$ for which the transaction may be
    executed.
 
  - The _lease_ $x$, which is an optional 256-bit integer specifying mutual
@@ -559,7 +561,7 @@ transaction contains the following fields:
  - The _note_ $N$, a sequence of bytes with length at most $N_{\max}$ which
    contains arbitrary data.
 
-
+### Payment Transaction
 A payment transaction additionally has the following fields:
 
  - The _amount_ $a$, which is a 64-bit number that indicates the amount of money
@@ -570,6 +572,8 @@ A payment transaction additionally has the following fields:
 
  - The _closing address_ $I_0$, which is an optional address that collects all
    remaining funds in the account after the transfer to the receiver.
+
+### Key Registration Transaction
 
 A key registration transaction additionally has the following fields:
 
@@ -595,6 +599,19 @@ A key registration transaction additionally has the following fields:
    specifies whether to mark the account offline (if $\nonpart$ is false)
    or nonparticipatory (if $\nonpart$ is true).
 
+For a key registration transaction to be valid, the following needs to apply:
+
+ - The set of \[_vote public key_, _selection public key_, _vote key dilution_\] are required to all be present, or all omitted (clear).
+   Providing the default value or the empty value for any of the members of the set
+   would be interpreted as if these values were omitted.
+ - _vote first_ needs to be less than or equal to _vote last_.
+ - If the set of \[_vote public key_, _selection public key_, _vote key dilution_\] is clear, then _vote first_ and _vote last_ need to be clear as well.
+ - If the set of \[_vote public key_, _selection public key_, _vote key dilution_\] is not clear, the following applies:
+   - _vote last_ needs to be greater than or equal to the current network round _r_.
+   - _vote first_ needs to be less than or equal to (_first valid_+1).
+   - _vote first_ needs to be less than or equal to (_r_+1).
+
+### Application Call Transaction
 An application call transaction additionally has the following fields:
 
 - The ID of the application being called, encoded as msgpack field `apid`. If
@@ -775,7 +792,8 @@ and contains the following fields:
     - `ld` maps an "account offset" to a [`StateDelta`][State Deltas]. Account
       offset 0 is the transaction's sender. Account offsets 1 and greater refer
       to the account specified at that offset minus one in the transaction's
-      `Accounts` slice.
+      `Accounts` slice. An account would have its `LocalDeltas` changes as long
+      as there is at least a single change in that set.
   - Zero or more `Logs` encoded in an array `lg`, recording the arguments
     to each call of the `log` opcode in the called application. The order
     of the entries follows the execution order of the `log`
@@ -788,6 +806,7 @@ and contains the following fields:
     including `ApplyData` that applies to the inner transaction.  Up to 16
     `InnerTxns` may be present.
     - InnerTxns are limited to `pay`, `axfer`, `acfg`, and `afrz` transactions.
+
 
 ### State Deltas
 
@@ -817,11 +836,11 @@ A value delta is composed of three fields:
 Each block contains a _transaction sequence_, an ordered sequence of
 transactions in that block.  The transaction sequence of block $r$ is denoted
 $\TxSeq_r$.  Each valid block contains a _transaction commitment_ $\TxCommit_r$
-which is the commitment to this sequence (a hash of the msgpack encoding of the
-sequence).
-
-There are two differences between how a standalone transaction is encoded,
-and how it appears in the block:
+which is a Merkle tree commitment to this sequence.  The leaves in the Merkle
+tree are hashed as $$\Hash("TL", txid, stibhash)$$.  The txid value is the
+32-byte transaction identifier.  The stibhash value is a 32-byte hash of the
+signed transaction and ApplyData for the transaction, hashed with the
+domain-separation prefix `STIB`, and encoded as follows:
 
 - Transactions in a block are encoded in a slightly different way than
   standalone transactions, for efficiency:
@@ -915,7 +934,9 @@ An asset configuration transaction has the following semantics:
    stored in the creator's account under the newly allocated asset ID.
    The creating account also allocates space to hold asset units of the
    newly allocated asset.  All units of the newly created asset (i.e.,
-   the total specified in the parameters) are held by the creator.
+   the total specified in the parameters) are held by the creator. When
+   the creator holding is initialized it ignores the default freeze flag
+   and is always initialized to unfrozen.
 
  - If the asset ID is non-zero, the transaction must be issued by the
    manager of the asset (based on the asset's current parameters).  A

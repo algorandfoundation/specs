@@ -210,7 +210,7 @@ The following functions are defined on $s$:
 $$
 \CommitteeSize(s) = \left\{
 \begin{array}{rl}
-      9 & : s = \Propose \\
+     20 & : s = \Propose \\
    2990 & : s = \Soft \\
    1500 & : s = \Cert \\
     500 & : s = \Late \\
@@ -275,7 +275,7 @@ unambiguous) if the following conditions are true:
  - If $s \in \{\Propose, \Soft, \Cert, \Late, \Redo\}$, $v \neq \bot$.
    Conversely, if $s = \Down$, $v = \bot$.
 
- - Let $(\pk, B) = (\Record(L, r - \delta_b), I)$,
+ - Let $(\pk, B) = \Record(L, r - \delta_b, I)$,
    $\Bbar = \Stake(L, r - \delta_b)$, $Q = \Seed(L, r - \delta_s)$,
    $\tau = \CommitteeThreshold(s)$, and
    $\taubar = \CommitteeSize(s)$.  
