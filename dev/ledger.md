@@ -110,9 +110,9 @@ The block header contains the following components:
 
  - The block's _expired participation accounts_, which contains an optional slice of
    public keys of accounts. These accounts are expected to have their participation
-   key expire by the end of the round. The msgpack representation of the components are
+   key expire by the end of the round (or was expired before the current round). The msgpack representation of the components are
    described in detail below.  The slice is stored in msgpack key `partupdrmv`.
-
+The block's _expired participation accounts_ slice is valid as long as the participation keys of all the accounts in the slice are expired by the end of the round or were expired before, and the accounts themselves would have been online at the end of the round if they were not included in the slice. A block proposer may not include all such accounts in the slice and may even omit the slice completely.
 
 The block body is the block's transaction sequence, which describes the sequence
 of updates (transactions) to the account state.
