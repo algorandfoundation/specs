@@ -107,7 +107,20 @@ The block header contains the following components:
    issued prior to this block.  This count starts from the first block with a
    protocol version that supported the transaction counter.  The counter is
    stored in msgpack field `tc`.
-   
+
+ - The block's _expired participation accounts_, which contains an optional slice of
+   public keys of accounts. These accounts are expected to have their participation
+   key expire by the end of the round (or was expired before the current round). The
+   msgpack representation of the components are described in detail below.
+   The slice is stored in msgpack key `partupdrmv`.
+
+The block's _expired participation accounts_ slice is valid as long as the participation
+keys of all the accounts in the slice are expired by the end of the round or were
+expired before, the accounts themselves would have been online at the end of the
+round if they were not included in the slice, and the number of elements in the slice is
+less or equal to 32. A block proposer may not include all such
+accounts in the slice and may even omit the slice completely.
+
 The block body is the block's transaction sequence, which describes the sequence
 of updates (transactions) to the account state.
 
@@ -493,6 +506,14 @@ holding is simply a map from asset IDs to an integer value indicating
 how many units of that asset is held by the account and a boolean flag
 indicating if the holding is frozen or unfrozen.  An account that holds
 any asset cannot be closed.
+
+# Participation Updates
+
+Participation updates contains a single list of addresses of accounts which 
+have been deemed to be _expired_. An account is said to be expired when the last
+valid vote round in its participation key is strictly less than the current round
+that is being processed.  Once included in this list, an account will be marked 
+offline as part of applying the block changes to the ledger.
 
 # Transactions
 
