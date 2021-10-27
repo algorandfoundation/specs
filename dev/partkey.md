@@ -6,13 +6,14 @@ abstract: >
     This document specifies the list of keys and their capabilities in Algorand.
 ---
 
-Overview
-========
+# Algorand Key Specification
+
+## Overview
 
 An algorand node interacts with three types of cryptographic keys:
 
- - _root keys_, a key pair ( public and private ) used to control the access to a particular account.
-   These key pair also known as spending keys.
+ - _root keys_, a key pair (public and private) used to control the access to a particular account.
+   These key pairs are also known as spending keys.
 
  - _voting keys_, a set of keys used for authentication, i.e. identify an 
     account. Algorand uses a hierarchical (two\-level) signature scheme that 
@@ -24,8 +25,7 @@ An algorand node interacts with three types of cryptographic keys:
 An agreement vote message is valid only when it contains a proper VRF proof and
 is signed with the correct voting key.
 
-Root Keys
-=========
+## Root Keys
 
 Root keys are used to identify ownership of an account. An algorand node only interacts with
 the public key of a root key. The public key of a root key is also used as the account
@@ -33,15 +33,13 @@ address. Root keys are used to sign transaction messages as well as delegating t
 voting authentication using _voting keys_, unless that specific account was rekeyed. A rekeyed
 account would use the rekeyed key in lieu of the root key.
 
-Voting Keys 
-==================
+## Voting Keys 
 
 \newcommand \KeyDilution {\mathrm{KeyDilution}}
 \newcommand \Batch {\mathrm{Batch}}
 \newcommand \Offset {\mathrm{Offset}}
 
-Algorand's Two\-level Ephemeral Signature Scheme for Authentication
-------------------------------------------------------------------
+### Algorand's Two\-level Ephemeral Signature Scheme for Authentication
 
 An ephemeral subkey is a key pair that produces one\-time signature 
 for messages. It must be deleted after use to ensure forward security.
@@ -49,10 +47,10 @@ Algorand's ephemeral subkeys
 uses [Ed25519 public\-key signature system](https://ed25519.cr.yp.to/).
 
 Algorand uses a two\-level ephemeral signature scheme.
-Instead of signing voting messages directly, a algorand accounts use their
+Instead of signing voting messages directly, Algorand accounts use their
 _voting keys_ to sign an intermediate ephemeral sub-key. 
-This intermediate ephemeral sub-key signs a batch of leaf level ephemeral 
-sub-keys. Hence, each intermediate ephemeral sub-key is associate with a
+This intermediate ephemeral sub-key signs a batch of leaf-level ephemeral 
+sub-keys. Hence, each intermediate ephemeral sub-key is associated with a
 batch number ($\Batch$), and each leaf ephemeral sub-key is associate with a
 batch number (of its parent key) and an offset ($\Offset$, denotes its offset
 within a batch). A voting message is signed hierarchically: 
@@ -60,18 +58,17 @@ the voting keys root key $\rightarrow$ batch sub\-key $\rightarrow$ leaf sub-key
 $\rightarrow$ agreement voting message (more details in next sub-section: One\-time 
 Signature).
 
-Each leaf level ephemeral sub-key is used for voting on a single agreement round,
-and will be deleted afterward. Once a batch of leaf level ephemeral sub-keys run out,
-new batch would be generated. Algorand allows users to set the number of leaf level ephemeral
+Each leaf-level ephemeral sub-key is used for voting on a single agreement round,
+and will be deleted afterward. Once a batch of leaf-level ephemeral sub-keys run out,
+a new batch is generated. Algorand allows users to set the number of leaf-level ephemeral
 sub-key per batch, $\KeyDilution$. For example, the default $\KeyDilution$ 
 value of of the genesis consensus protocol (V17) was $10,000$. 
-An algorand account can change its $\KeyDilution$ via 
+An Algorand account can change its $\KeyDilution$ via 
 key registration transactions (see 
 [the ledger specification](https://github.com/algorandfoundation/specs/blob/master/dev/ledger.md)).
 
 
-One\-time Signature
--------------------
+### One\-time Signature
 
 \newcommand \SubKeyPK {\mathrm{SubKeyPK}}
 \newcommand \OTSSOffsetID {\mathrm{OneTimeSignatureSubkeyOffsetID}}
@@ -93,7 +90,7 @@ fields:
 
  - _Batch_ $\Batch$, batch number of this sub-key.
 
-$\OTSSOffsetID$ identifies an leaf level ephemeral sub-key. $\OTSSOffsetID$
+$\OTSSOffsetID$ identifies an leaf-level ephemeral sub-key. $\OTSSOffsetID$
 is signed with a batch sub-key. It has the following fields:
 
  - _SubKey Public key_ $\SubKeyPK$, the public key of this sub-key.
@@ -103,12 +100,12 @@ is signed with a batch sub-key. It has the following fields:
  - _Offset_ $\Offset$, offset of this sub-key in current batch.
 
 Finally, $\OneTimeSignature$ is a cryptographic signature used in voting
-messages between algorand users. It contains the following fields:
+messages between Algorand users. It contains the following fields:
 
  - _Signature_ $\Sig$, a signature of message under $\PK$
 
  - _Public Key_ $\PK$, the public key of the message signer, 
-   $\PK$ is part of a leaf level ephemeral subkey. 
+   $\PK$ is part of a leaf-level ephemeral subkey. 
 
  - _Old Style Signature_ $\PKSigOld$, **deprecated** field. 
   It is still in the message only for compability reason.
@@ -121,8 +118,8 @@ messages between algorand users. It contains the following fields:
  - _Public Key 2 Signature_ $\PKTwoSig$, a signature of $\OTSSBatchID$ under
    the _voting keys_.
 
-VRF Selection Key
-====================
+## VRF Selection Keys
+
 \newcommand \unauthenticatedVote {\mathrm{unauthenticatedVote}}
 \newcommand \UnauthenticatedCredential {\mathrm{UnauthenticatedCredential}}
 \newcommand \Sender {\mathrm{Sender}}
