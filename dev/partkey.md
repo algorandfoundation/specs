@@ -56,7 +56,7 @@ sub-keys. Hence, each intermediate ephemeral sub-key is associate with a
 batch number ($\Batch$), and each leaf ephemeral sub-key is associate with a
 batch number (of its parent key) and an offset ($\Offset$, denotes its offset
 within a batch). A voting message is signed hierarchically: 
-the root key $\rightarrow$ batch sub\-key $\rightarrow$ leaf sub-key
+the voting keys root key $\rightarrow$ batch sub\-key $\rightarrow$ leaf sub-key
 $\rightarrow$ agreement voting message (more details in next sub-section: One\-time 
 Signature).
 
@@ -86,7 +86,7 @@ One\-time Signature
 
 
 $\OTSSBatchID$ identifies an intermediate level ephemeral sub-key of 
-a batch. $\OTSSBatchID$ is signed by the master key. It has the following
+a batch. $\OTSSBatchID$ is signed by the voting keys root key. It has the following
 fields:
  
  - _SubKey Public key_ $\SubKeyPK$, the public key of this sub-key.
