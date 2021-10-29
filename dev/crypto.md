@@ -1,4 +1,5 @@
 ---
+
 numbersections: true
 title: "Algorand Cryptographic Primitive Specification"
 date: \today
@@ -49,6 +50,7 @@ below specifies each prefix (in quotation marks):
     - "OT1" and "OT2": The first and second layers of keys used for
       [ephemeral signatures](#ephemeral-key-signature).
     - "MA": An internal node in a [Merkle tree](#merkle-tree).
+    - "KP": Is a public key used by the Merkle Keystore [merkle keystore](merklekeystore)
  - In the [Algorand Ledger][ledger-spec]:
     - "BH": A _Block Header_.
     - "BR": A _Balance Record_.
@@ -80,8 +82,9 @@ below specifies each prefix (in quotation marks):
        - "aS": A _Settlement_.
 
 
-## Hash Function
+## Hash Functions
 
+### SHA512-256
 Algorand uses the [SHA-512/256 algorithm][sha] as its primary
 cryptographic hash function.
 
@@ -89,11 +92,29 @@ Algorand uses this hash function to (1) commit to data for signing and
 for the Byzantine Fault Tolerance protocol, and (2) rerandomize its
 random seed.
 
+### SUBSET-SUM
+Algorand uses [SUBSET-SUM algorithm][sumhash] which is quantum resilient hash function.
+This function is used by the [Merkle Keystore](merklekeystore) to commit on
+ephemeral public keys. It is also used to create Merkle trees for the StateProofs. 
 
 ## Digital Signature
 
+### ED25519
+
 Algorand uses the [ed25519][ed25519] digital signature scheme to sign
 data.
+
+
+### FALCON
+
+Algorand uses a deterministic version of [falcon scheme][falcon]. Falcon is quantum resilient and a SNARK friendly digital signature scheme used to sign StateProofs. 
+
+The library defines the following sizes:
+- Publickey = 1793 bytes
+- Privatekey = 2305 bytes
+- Signature = 1241 bytes
+
+For key generation, Algorand uses a shake256 function which is initialized with random seed of 48 bytes.
 
 
 ### Ephemeral-key Signature
@@ -123,6 +144,8 @@ A reasonable strategy for generating a proof is to follow the logic
 of the proof verifier and fill in the expected left- and right-sibling
 values in the proof based on the internal nodes of the Merkle tree built
 up during commitment.
+
+The Merkle tree can be created using one of the supported [hash functions](#hash-functions)
 
 ### Commitment
 
@@ -230,5 +253,8 @@ def verify(elems, proof, root):
 [abft-spec]: https://github.com/algorand/spec/abft.md
 
 [sha]: https://doi.org/10.6028/NIST.FIPS.180-4
+[sumhash]: https://github.com/algorand/go-sumhash/blob/master/spec/sumhash-spec.pdf
 [ed25519]: https://tools.ietf.org/html/rfc8032
 [msgpack]: https://github.com/msgpack/msgpack/blob/master/spec.md
+[merklekeystore]: https://github.com/algorand/spec/partkey.md
+[falcon]: 
