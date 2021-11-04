@@ -93,7 +93,7 @@ for the Byzantine Fault Tolerance protocol, and (2) rerandomize its
 random seed.
 
 ### SUBSET-SUM
-Algorand uses [SUBSET-SUM algorithm][sumhash] which is quantum resilient hash function.
+Algorand uses [SUBSET-SUM algorithm][sumhash] which is a quantum-resilient hash function.
 This function is used by the [Merkle Keystore](merklekeystore) to commit on
 ephemeral public keys. It is also used to create Merkle trees for the StateProofs. 
 
@@ -107,7 +107,7 @@ data.
 
 ### FALCON
 
-Algorand uses a deterministic version of [falcon scheme][falcon]. Falcon is quantum resilient and a SNARK friendly digital signature scheme used to sign StateProofs. 
+Algorand uses a deterministic version of [falcon scheme][falcon]. Falcon is quantum resilient and a SNARK friendly digital signature scheme used to sign in StateProofs. 
 
 The library defines the following sizes:
 - Publickey = 1793 bytes
@@ -195,7 +195,7 @@ array, the verifier runs a variant of the commit procedure to compute
 a candidate root hash, and then checks if the resulting root hash is
 equal to the expected commitment value.  The key difference is that the
 verifier does not have access to the entire list of committed elements;
-the verifier just has some subset of elemens (one or more), along with the
+the verifier just has some subset of elements (one or more), along with the
 positions at which these elements appear.  Thus, the verifier needs to
 know the siblings (the `left` and `right` values used in the `reduce()`
 function above) to compute its candidate root hash.  The list of these
