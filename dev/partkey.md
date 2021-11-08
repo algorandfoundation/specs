@@ -177,14 +177,13 @@ And this verified credential is wrapped in a $\Vote$ struct with _Raw Vote_
 ## Algorand State Proof Keys 
 ### Algorand's Committable Ephemeral Keys Scheme - Merkle Keystore
 
-Algorand archives forward secrecy using the Merkle Keystore scheme. This scheme consists of designate an ephemeral key for each round in which it will be used. The scheme uses a Merkle tree to generate a commitment on those keys. 
+Algorand archives [forward security](https://en.wikipedia.org/wiki/Forward_secrecy) using the Merkle Keystore scheme. This scheme consists of designate an ephemeral key for each round in which it will be used. The scheme uses a Merkle tree to generate a commitment on those keys. 
 The private key must be deleted be the done in order the completely archives forward secrecy.
 
 The ephemeral key can be generated using one of Algorand's supported digital signature algorithms.
 
 
-In order to bound the proofs on this tree, the tree's depth is bound to 16. Hence, the max number 
-of keys which will be created is 2^16.
+In order to bound the proofs on this tree, the tree's depth is bound to 16. Hence, the maximum number of keys which will be created is 2^16.
 
 #### Public Commitment
 
@@ -196,7 +195,7 @@ Note that there might not be a commitment for certain period (i.e does not inclu
 After generating the public key, the scheme uses those keys as leaf to create a Merkle tree in the following manner: \newline
 _leaf_$_{i}$ = hash("KP" || MsgPackEncode(_P_$_{k_{i}}$ || _Round_)) for each corresponding round.
 
-The scheme uses the sumhash function for leaves and internal nodes.
+The scheme uses the sumhash function for calculating hash on leaves and on internal nodes.
 
 #### Signatures
 
@@ -209,5 +208,5 @@ A Signature in the scheme consist of the following elements:
   MsgPackEncode(_algorithm type_||_public key_)
 
 - _Proof_ is an array of hash results used as a proof for the public key within a specific round. 
-  MsgPackEncode([]_digest_||_hash type_)
+  MsgPackEncode([_digest_$_{0}$, ..., _digest_$_{n}$]||_hash type_)
 
