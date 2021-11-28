@@ -257,4 +257,4 @@ def verify(elems, proof, root):
 [ed25519]: https://tools.ietf.org/html/rfc8032
 [msgpack]: https://github.com/msgpack/msgpack/blob/master/spec.md
 [merklekeystore]: https://github.com/algorand/spec/partkey.md
-[falcon]: 
+[falcon]: https://github.com/algorand/falcon/blob/main/falcon-det.pdf

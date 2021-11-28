@@ -605,7 +605,7 @@ A key registration transaction additionally has the following fields:
  - The _selection public key_ $\spk$, public authorization key of
    an account's participation keys ($\pk$). 
 
- - The _state proof public key_ $sppk$, public commitment on the account's
+ - The _state proof public key_ $\sppk$, public commitment on the account's
    state proof keys ($\sppk$). If $\vpk$ , $\spk$ and $\sppk$ are all unset,
    the transaction deregisters the account's participation
    key set, as the result, marks the account offline.
