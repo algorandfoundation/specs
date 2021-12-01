@@ -199,7 +199,7 @@ where:
 
 - _Round_: is a 64-bit, little-endian integer represents the round in which the key _P_$_{k_{i}}$ is valid.
 
-- _P_$_{k_{i}}$: is a 229504-bit string represents the Falcon ephemeral public key.
+- _P_$_{k_{i}}$: is a 14344-bit string represents the Falcon ephemeral public key.
 
 - hash: is a subsetsum hash function
 
@@ -226,7 +226,7 @@ where:
 
 - _Signature_: is a X-bit string represents a Falcon signature in a CT format.
 
-- _VerifyingKey_: is a 229504-bit string
+- _VerifyingKey_: is a 14344-bit string
 
 - _MerkleArrayIndex_: is a 64-bit, little-endian integer
 
