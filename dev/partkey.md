@@ -175,36 +175,35 @@ And this verified credential is wrapped in a $\Vote$ struct with _Raw Vote_
 
 
 ## Algorand State Proof Keys 
-### Algorand's Committable Ephemeral Keys Scheme - Merkle Keystore
+### Algorand's Committable Ephemeral Keys Scheme - Merkle Signature Scheme
 
-Algorand achieves [forward security](https://en.wikipedia.org/wiki/Forward_secrecy) using the Merkle Signature Scheme. This scheme consists of using a different ephemeral key for each round in which it will be used. The scheme uses a Merkle tree to generate a commitment on those keys. 
-The private key must be deleted after it rounds passes in order the completely achieves forward secrecy.
+Algorand achieves [forward security](https://en.wikipedia.org/wiki/Forward_secrecy) using Merkle Signature Scheme. This scheme consists of using a different ephemeral key for each round in which it will be used. The scheme uses vector commitment to generate commitment on those keys. 
+The private key must be deleted after the round passes in order the completely achieves forward secrecy.
 
 The Merkle scheme uses Falcon scheme as the underlying digital signature algorithm.
 
-In order to bound the proofs on this tree, the tree's depth is bound to 16. Hence, the maximum number of keys which will be created is at most 2^16.
+In order to bound verification paths on the tree, the tree's depth is bound to 16. Hence, the maximum number of keys which can be created is at most 2$^{16}$.
 
 #### Public Commitment
 
 The scheme generates multiple keys for the entire participation period. Given _FirstValidRound_, _LastValidRound_ and an _Interval_, a key is generated for each _Round_ that holds:\newline
  _FirstValidRound_ $\leq$ _Round_ $\leq$ _LastValidRound_ and _Round_ % _Interval_ = 0
 
-Note that there might not be an empty commitment for a certain period (i.e a period that does not include any round such that _Round_ % _Interval_  = 0). The value of 0 represents an empty commitment 
+After generating the public keys, the scheme creates a vector commitment using the keys as leaves.
+Leaf hashing is done in the following manner: \newline
 
-After generating the public key, the scheme uses the keys as a leaves for a Merkle tree creation.
-The leaf hashing is done in the following manner: \newline
-_leaf_$_{i}$ = hash("KP" || _Round_ || _P_$_{k_{i}}$) for each corresponding round.
+_leaf_$_{i}$ = hash("KP" || _schemeId_ || _Round_ || _P_$_{k_{i}}$) for each corresponding round.
 
 where:
 
-- _Round_: is a 64-bit, little-endian integer represents the round in which the key _P_$_{k_{i}}$ is valid.
+- _schemeId_ is a 16-bit constant integer with value of 0
 
-- _P_$_{k_{i}}$: is a 14344-bit string represents the Falcon ephemeral public key.
+- _Round_ is a 64-bit, little-endian integer represents the round in which the key _P_$_{k_{i}}$ is valid.
+
+- _P_$_{k_{i}}$ is a 14,344-bit string represents the Falcon ephemeral public key.
 
 - hash: is a subsetsum hash function
 
-
-For more details on the Merkle tree internal node hash calculation, please refer to [Merkle Tree spec](https://github.com/algorandfoundation/specs/blob/master/dev/crypto.md#merkle-tree)
 
 #### Signatures
 
@@ -214,22 +213,43 @@ A Signature in the scheme consist of the following elements:
 
 - _VerifyingKey_ is a Falcon ephemeral public key. 
 
-- _MerkleArrayIndex_ is an index of the ephemeral public key leaf in the Merkle tree.
+- _MerkleArrayIndex_ is an index of the ephemeral public key leaf in the vector commitment.
 
-- _Proof_ is an array of hash results used as a Merkle tree proof for the ephemeral public key. 
+- _Proof_ is an array of size _n_ (_n_ $\leq$ 16  Since the number of keys is bounded) which contains hash results (_digest_$_{0}$,...,_digest_$_{n}$). Proof is used as a Merkle verification path on the ephemeral public key. 
+When the committer gives a depth-_n_ authentication path for index _MerkleArrayIndex_, the verifier must write _MerkleArrayIndex_ as _n_-bit number and read it from MSB to LSB to determine the leaf-to-root path. 
+
 
 When signature is to be hashed, it must be serialized into a binary string according to the following format:
 
-_SignatureBitString_ = (_Signature_ || _VerifyingKey_ || _MerkleArrayIndex_ || _n_ ||_digest_$_{0}$ || ... || _digest_$_{n}$)
+_SignatureBitString_ = (_schemeId_ || _Signature_ || _VerifyingKey_ || _MerkleArrayIndex_ || _Proof_)
 
 where:
 
-- _Signature_: is a X-bit string represents a Falcon signature in a CT format.
+- _schemeId_ is a 16-bit constant integer with value of 0
 
-- _VerifyingKey_: is a 14344-bit string
+- _Signature_ is a 12,304-bit string represents a Falcon signature in a CT format.
 
-- _MerkleArrayIndex_: is a 64-bit, little-endian integer
+- _VerifyingKey_ is a 14,344-bit string
 
-- _n_: is a 32-bit, little-endian integer represents the proof array's length
+- _MerkleArrayIndex_ is a 64-bit, little-endian integer
 
-- _digest_$_{i}$: is a 512bits string represents the sumhash digest output of an element in the Merkle tree proof path.
+- _Proof_ is constructed in the following way:\newline
+
+
+if _n_ = 16:
+
+- _Proof_ = (_n_ || _digest_$_{0}$ || ... || _digest_$_{15}$)
+
+else:
+
+- _Proof_ = (_n_ || _digest_$_{0}$ || ... || _digest_$_{n-1}$ || _zeroDigest_$_{0}$ || ... || _zeroDigest_$_{d-1}$)
+
+where:
+
+- _n_ is a 8-bit string.
+
+- _digest_$_{i}$ is a 512-bit sumhash result.
+
+- _zeroDigest_ is a constant 512-bit string with the value 0.
+
+- _d_ = 16 - _n_

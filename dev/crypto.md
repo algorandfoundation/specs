@@ -107,14 +107,17 @@ data.
 
 ### FALCON
 
-Algorand uses a deterministic version of [falcon scheme][falcon]. Falcon is quantum resilient and a SNARK friendly digital signature scheme used to sign in StateProofs. 
+Algorand uses a deterministic version of [falcon scheme][falcon]. Falcon is quantum resilient and a SNARK friendly digital signature scheme used to sign in StateProofs. Falcon signatures contains 
+salt version. Algorand only accepts signatures with salt version = 0.
 
 The library defines the following sizes:
-- Publickey = 1793 bytes
-- Privatekey = 2305 bytes
-- Signature = 1241 bytes
+ - Publickey = 1793 bytes
+ - Privatekey = 2305 bytes 
+ - Signatures
+    - CT-format = 1538 bytes
+    - Compressed format = variable length up to a maximum size of 1423 bytes .
 
-For key generation, Algorand uses a shake256 function which is initialized with random seed of 48 bytes.
+For key generation, Algorand uses random seed of 48 bytes.
 
 
 ### Ephemeral-key Signature
