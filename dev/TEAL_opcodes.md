@@ -488,10 +488,10 @@ Overflow is an error condition which halts execution and fails the transaction. 
 | 55 | LocalNumByteSlice | uint64 | Number of local state byteslices in ApplicationCall. LogicSigVersion >= 3. |
 | 56 | ExtraProgramPages | uint64 | Number of additional pages for each of the application's approval and clear state programs. An ExtraProgramPages of 1 means 2048 more total bytes, or 1024 for each program. LogicSigVersion >= 4. |
 | 57 | Nonparticipation | uint64 | Marks an account nonparticipating for rewards. LogicSigVersion >= 5. |
-| 58 | Logs | []byte | Log messages emitted by an application call (itxn only). LogicSigVersion >= 5. |
-| 59 | NumLogs | uint64 | Number of Logs (itxn only). LogicSigVersion >= 5. |
-| 60 | CreatedAssetID | uint64 | Asset ID allocated by the creation of an ASA (itxn only). LogicSigVersion >= 5. |
-| 61 | CreatedApplicationID | uint64 | ApplicationID allocated by the creation of an application (itxn only). LogicSigVersion >= 5. |
+| 58 | Logs | []byte | Log messages emitted by an application call (`itxn` only until v6). LogicSigVersion >= 5. Application mode only |
+| 59 | NumLogs | uint64 | Number of Logs (`itxn` only until v6). LogicSigVersion >= 5. Application mode only |
+| 60 | CreatedAssetID | uint64 | Asset ID allocated by the creation of an ASA (`itxn` only until v6). LogicSigVersion >= 5. Application mode only |
+| 61 | CreatedApplicationID | uint64 | ApplicationID allocated by the creation of an application (`itxn` only until v6). LogicSigVersion >= 5. Application mode only |
 
 
 TypeEnum mapping:
@@ -526,12 +526,15 @@ FirstValidTime causes the program to fail. The field is reserved for future use.
 | 3 | ZeroAddress | []byte | 32 byte address of all zero bytes |
 | 4 | GroupSize | uint64 | Number of transactions in this atomic transaction group. At least 1 |
 | 5 | LogicSigVersion | uint64 | Maximum supported TEAL version. LogicSigVersion >= 2. |
-| 6 | Round | uint64 | Current round number. LogicSigVersion >= 2. |
-| 7 | LatestTimestamp | uint64 | Last confirmed block UNIX timestamp. Fails if negative. LogicSigVersion >= 2. |
-| 8 | CurrentApplicationID | uint64 | ID of current application executing. Fails in LogicSigs. LogicSigVersion >= 2. |
-| 9 | CreatorAddress | []byte | Address of the creator of the current application. Fails if no such application is executing. LogicSigVersion >= 3. |
-| 10 | CurrentApplicationAddress | []byte | Address that the current application controls. Fails in LogicSigs. LogicSigVersion >= 5. |
+| 6 | Round | uint64 | Current round number. LogicSigVersion >= 2. Application mode only. |
+| 7 | LatestTimestamp | uint64 | Last confirmed block UNIX timestamp. Fails if negative. LogicSigVersion >= 2. Application mode only. |
+| 8 | CurrentApplicationID | uint64 | ID of current application executing. Fails in LogicSigs. LogicSigVersion >= 2. Application mode only. |
+| 9 | CreatorAddress | []byte | Address of the creator of the current application. Fails if no such application is executing. LogicSigVersion >= 3. Application mode only. |
+| 10 | CurrentApplicationAddress | []byte | Address that the current application controls. Fails in LogicSigs. LogicSigVersion >= 5. Application mode only. |
 | 11 | GroupID | []byte | ID of the transaction group. 32 zero bytes if the transaction is not part of a group. LogicSigVersion >= 5. |
+| 12 | OpcodeBudget | uint64 | The remaining cost that can be spent by opcodes in this program. LogicSigVersion >= 6. |
+| 13 | CallerApplicationID | uint64 | The application ID of the application that called this application. 0 if this application is at the top-level. LogicSigVersion >= 6. Application mode only. |
+| 14 | CallerApplicationAddress | []byte | The application address of the application that called this application. ZeroAddress if this application is at the top-level. LogicSigVersion >= 6. Application mode only. |
 
 
 ## gtxn t f
@@ -862,6 +865,17 @@ When A is a uint64, index 0 is the least significant bit. Setting bit 3 to 1 on 
 - pop a byte-array A and integer B. Extract a range of bytes from A starting at B up to but not including B+8, convert bytes as big endian and push the uint64 result. If B+8 is larger than the array length, the program fails
 - LogicSigVersion >= 5
 
+## base64_decode e
+
+- Opcode: 0x5c {uint8 alphabet index}
+- Pops: *... stack*, []byte
+- Pushes: []byte
+- decode X which was base64-encoded using _encoding alphabet_ E. Fail if X is not base64 encoded with alphabet E
+- **Cost**: 25
+- LogicSigVersion >= 6
+
+decodes X using the base64 encoding alphabet E. Specify the alphabet with an immediate arg either as URL and Filename Safe (`URLAlph`) or Standard (`StdAlph`). See <a href="https://rfc-editor.org/rfc/rfc4648.html#section-4">RFC 4648</a> (sections 4 and 5)
+
 ## balance
 
 - Opcode: 0x60
@@ -871,7 +885,7 @@ When A is a uint64, index 0 is the least significant bit. Setting bit 3 to 1 on 
 - LogicSigVersion >= 2
 - Mode: Application
 
-params: Before v4, Txn.Accounts offset. Since v4, Txn.Accounts offset or an account address that appears in Txn.Accounts or is Txn.Sender). Return: value.
+params: Txn.Accounts offset (or, since v4, an account address that appears in Txn.Accounts or is Txn.Sender), application id (or, since v4, a Txn.ForeignApps offset). Return: value.
 
 ## app_opted_in
 
@@ -904,7 +918,7 @@ params: Txn.Accounts offset (or, since v4, an account address that appears in Tx
 - LogicSigVersion >= 2
 - Mode: Application
 
-params: Txn.Accounts offset (or, since v4, an account address that appears in Txn.Accounts or is Txn.Sender), application id (or, since v4, a Txn.ForeignApps offset), state key. Return: did_exist flag (top of the stack, 1 if the application existed and 0 otherwise), value. The value is zero (of type uint64) if the key does not exist.
+params: Txn.Accounts offset (or, since v4, an account address that appears in Txn.Accounts or is Txn.Sender), application id (or, since v4, a Txn.ForeignApps offset), state key. Return: did_exist flag (top of the stack, 1 if the application and key existed and 0 otherwise), value. The value is zero (of type uint64) if the key does not exist.
 
 ## app_global_get
 
@@ -926,7 +940,7 @@ params: state key. Return: value. The value is zero (of type uint64) if the key 
 - LogicSigVersion >= 2
 - Mode: Application
 
-params: Txn.ForeignApps offset (or, since v4, an application id that appears in Txn.ForeignApps or is the CurrentApplicationID), state key. Return: did_exist flag (top of the stack, 1 if the application existed and 0 otherwise), value. The value is zero (of type uint64) if the key does not exist.
+params: Txn.ForeignApps offset (or, since v4, an application id that appears in Txn.ForeignApps or is the CurrentApplicationID), state key. Return: did_exist flag (top of the stack, 1 if the application and key existed and 0 otherwise), value. The value is zero (of type uint64) if the key does not exist.
 
 ## app_local_put
 
@@ -1057,7 +1071,7 @@ params: Txn.ForeignApps offset or an app id that appears in Txn.ForeignApps. Ret
 - LogicSigVersion >= 3
 - Mode: Application
 
-params: Before v4, Txn.Accounts offset. Since v4, Txn.Accounts offset or an account address that appears in Txn.Accounts or is Txn.Sender). Return: value.
+params: Txn.Accounts offset (or, since v4, an account address that appears in Txn.Accounts or is Txn.Sender), application id (or, since v4, a Txn.ForeignApps offset). Return: value.
 
 ## pushbytes bytes
 
@@ -1304,11 +1318,11 @@ bitlen interprets arrays as big-endian integers, unlike setbit/getbit
 - Opcode: 0xb1
 - Pops: _None_
 - Pushes: _None_
-- begin preparation of a new inner transaction
+- begin preparation of a new inner transaction in a new transaction group
 - LogicSigVersion >= 5
 - Mode: Application
 
-`itxn_begin` initializes Sender to the application address; Fee to the minimum allowable, taking into account MinTxnFee and credit from overpaying in earlier transactions; FirstValid/LastValid to the values in the top-level transaction, and all other fields to zero values.
+`itxn_begin` initializes Sender to the application address; Fee to the minimum allowable, taking into account MinTxnFee and credit from overpaying in earlier transactions; FirstValid/LastValid to the values in the invoking transaction, and all other fields to zero values.
 
 ## itxn_field f
 
@@ -1319,14 +1333,14 @@ bitlen interprets arrays as big-endian integers, unlike setbit/getbit
 - LogicSigVersion >= 5
 - Mode: Application
 
-`itxn_field` fails if X is of the wrong type for F, including a byte array of the wrong size for use as an address when F is an address field. `itxn_field` also fails if X is an account or asset that does not appear in `txn.Accounts` or `txn.ForeignAssets` of the top-level transaction. (Setting addresses in asset creation are exempted from this requirement.)
+`itxn_field` fails if X is of the wrong type for F, including a byte array of the wrong size for use as an address when F is an address field. `itxn_field` also fails if X is an account, asset, or app that does not appear in `txn.Accounts`, `txn.ForeignAssets`, or `txn.ForeignApplications` of the invoking transaction. (Setting addresses in asset creation are exempted from this requirement.)
 
 ## itxn_submit
 
 - Opcode: 0xb3
 - Pops: _None_
 - Pushes: _None_
-- execute the current inner transaction. Fail if 16 inner transactions have already been executed, or if the transaction itself fails.
+- execute the current inner transaction group. Fail if executing this group would exceed the inner transaction limit, or if any transaction in the group fails.
 - LogicSigVersion >= 5
 - Mode: Application
 
@@ -1337,7 +1351,7 @@ bitlen interprets arrays as big-endian integers, unlike setbit/getbit
 - Opcode: 0xb4 {uint8 transaction field index}
 - Pops: _None_
 - Pushes: any
-- push field F of the last inner transaction to stack
+- push field F of the last inner transaction
 - LogicSigVersion >= 5
 - Mode: Application
 
@@ -1346,8 +1360,37 @@ bitlen interprets arrays as big-endian integers, unlike setbit/getbit
 - Opcode: 0xb5 {uint8 transaction field index} {uint8 transaction field array index}
 - Pops: _None_
 - Pushes: any
-- push Ith value of the array field F of the last inner transaction to stack
+- push Ith value of the array field F of the last inner transaction
 - LogicSigVersion >= 5
+- Mode: Application
+
+## itxn_next
+
+- Opcode: 0xb6
+- Pops: _None_
+- Pushes: _None_
+- begin preparation of a new inner transaction in the same transaction group
+- LogicSigVersion >= 6
+- Mode: Application
+
+`itxn_next` initializes the transaction exactly as `itxn_begin` does
+
+## gitxn t f
+
+- Opcode: 0xb7 {uint8 transaction group index} {uint8 transaction field index}
+- Pops: _None_
+- Pushes: any
+- push field F of the Tth transaction in the last inner group
+- LogicSigVersion >= 6
+- Mode: Application
+
+## gitxna t f i
+
+- Opcode: 0xb8 {uint8 transaction group index} {uint8 transaction field index} {uint8 transaction field array index}
+- Pops: _None_
+- Pushes: any
+- push Ith value of the array field F from the Tth transaction in the last inner group
+- LogicSigVersion >= 6
 - Mode: Application
 
 ## txnas f
@@ -1382,3 +1425,12 @@ bitlen interprets arrays as big-endian integers, unlike setbit/getbit
 - push Xth LogicSig argument to stack
 - LogicSigVersion >= 5
 - Mode: Signature
+
+## gloadss
+
+- Opcode: 0xc4
+- Pops: *... stack*, {uint64 A}, {uint64 B}
+- Pushes: any
+- push Bth scratch space index of the Ath transaction in the current group
+- LogicSigVersion >= 6
+- Mode: Application
