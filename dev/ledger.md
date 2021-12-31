@@ -1032,7 +1032,7 @@ An asset freeze transaction has the following semantics:
 When an asset transaction allocates space in an account for an asset,
 whether by creation or opt-in, the sender's minimum balance
 requirement is incremented by 100000 microalgos.  When the space is
-deallocated, whether by asset destruction or close-to, the balance
+deallocated, whether by asset destruction or asset-close-to, the balance
 requirement of the sender is decremented by 100000 microalgos.
 
 ## `ApplicationCall` Transaction Semantics
