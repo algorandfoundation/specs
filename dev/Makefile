@@ -1,10 +1,10 @@
 pdf/%.pdf: %.md
 	@mkdir -p $(@D)
-	pandoc --toc --pdf-engine=xelatex --template template/default.latex -o $@ $<
+	pandoc --toc --template template/default.latex -o $@ $<
 
 html/%.html: %.md
 	@mkdir -p $(@D)
-	pandoc --toc --pdf-engine=xelatex -o $@ -s $< --mathjax
+	pandoc --toc -o $@ -s $< --mathjax
 
 all: pdf html
 .PHONY: all
