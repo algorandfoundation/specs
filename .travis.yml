@@ -1,5 +1,6 @@
 language: minimal
 os: linux
+dist: focal
 before_install:
 - sudo apt-get update -qq
 install:
