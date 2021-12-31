@@ -6,7 +6,7 @@ abstract: >
   Algorand allows transactions to be effectively signed by a small program. If the program evaluates to true then the transaction is allowed. This document defines the language and bytecode format.
 ---
 
-# Transaction Execution Approval Language (TEAL)
+# The Algorand Virtual Machine (AVM) and TEAL.
 
 The AVM is a bytecode based stack interpreter that executes inside
 Algorand transactions. TEAL is an assembly language syntax for
@@ -99,8 +99,8 @@ Constants are pushed onto the stack by `intc`, `intc_[0123]`, `pushint`, `bytec`
 
 An application transaction must indicate the action to be taken following the execution of its approvalProgram or clearStateProgram. The constants below describe the available actions.
 
-| Value | Constant name | Description |
-| --- | --- | --- |
+| Value | Name | Description |
+| - | ---- | -------- |
 | 0 | NoOp | Only execute the `ApprovalProgram` associated with this application ID, with no additional effects. |
 | 1 | OptIn | Before executing the `ApprovalProgram`, allocate local state for this application into the sender's account data. |
 | 2 | CloseOut | After executing the `ApprovalProgram`, clear any local state for this application out of the sender's account data. |
@@ -109,8 +109,9 @@ An application transaction must indicate the action to be taken following the ex
 | 5 | DeleteApplication | After executing the `ApprovalProgram`, delete the application parameters from the account data of the application's creator. |
 
 #### TypeEnum constants
-| Value | Constant name | Description |
-| --- | --- | --- |
+
+| Value | Name | Description |
+| - | --- | ------ |
 | 0 | unknown | Unknown type. Invalid transaction |
 | 1 | pay | Payment |
 | 2 | keyreg | KeyRegistration |
@@ -145,8 +146,8 @@ ease of exposition and clarity concerning their stack positions.
 
 ### Arithmetic, Logic, and Cryptographic Operations
 
-| Op | Description |
-| --- | --- |
+| Opcode | Description |
+| - | -- |
 | `sha256` | SHA256 hash of value A, yields [32]byte |
 | `keccak256` | Keccak256 hash of value A, yields [32]byte |
 | `sha512_256` | SHA512_256 hash of value A, yields [32]byte |
@@ -192,8 +193,8 @@ ease of exposition and clarity concerning their stack positions.
 
 ### Byte Array Manipulation
 
-| Op | Description |
-| --- | --- |
+| Opcode | Description |
+| - | -- |
 | `substring s e` | pop a byte-array A. For immediate values in 0..255 S and E: extract a range of bytes from A starting at S up to but not including E, push the substring result. If E < S, or either is larger than the array length, the program fails |
 | `substring3` | pop a byte-array A and two integers B and C. Extract a range of bytes from A starting at B up to but not including C, push the substring result. If C < B, or either is larger than the array length, the program fails |
 | `extract s l` | pop a byte-array A. For immediate values in 0..255 S and L: extract a range of bytes from A starting at S up to but not including S+L, push the substring result. If L is 0, then extract to the end of the string. If S or S+L is larger than the array length, the program fails |
@@ -215,8 +216,8 @@ explicitly restricted, though only `b*` and `b+` can produce a larger
 output than their inputs, so there is an implicit length limit of 128
 bytes on outputs.
 
-| Op | Description |
-| --- | --- |
+| Opcode | Description |
+| - | -- |
 | `b+` | A plus B, where A and B are byte-arrays interpreted as big-endian unsigned integers |
 | `b-` | A minus B, where A and B are byte-arrays interpreted as big-endian unsigned integers. Fail on underflow. |
 | `b/` | A divided by B (truncated division), where A and B are byte-arrays interpreted as big-endian unsigned integers. Fail if B is zero. |
@@ -235,8 +236,8 @@ same length as the other input.  The returned values are the same
 length as the longer input.  Therefore, unlike array arithmetic,
 these results may contain leading zero bytes.
 
-| Op | Description |
-| --- | --- |
+| Opcode | Description |
+| - | -- |
 | `b\|` | A bitwise-or B, where A and B are byte-arrays, zero-left extended to the greater of their lengths |
 | `b&` | A bitwise-and B, where A and B are byte-arrays, zero-left extended to the greater of their lengths |
 | `b^` | A bitwise-xor B, where A and B are byte-arrays, zero-left extended to the greater of their lengths |
@@ -248,8 +249,8 @@ Opcodes for getting data onto the stack.
 
 Some of these have immediate data in the byte or bytes after the opcode.
 
-| Op | Description |
-| --- | --- |
+| Opcode | Description |
+| - | -- |
 | `intcblock uint ...` | prepare block of uint64 constants for use by intc |
 | `intc i` | push Ith constant from intcblock to stack |
 | `intc_0` | push constant 0 from intcblock to stack |
@@ -294,7 +295,7 @@ Some of these have immediate data in the byte or bytes after the opcode.
 **Transaction Fields**
 
 | Index | Name | Type | Notes |
-| --- | --- | --- | --- |
+| - | ------ | -- | ------- |
 | 0 | Sender | []byte | 32 byte address |
 | 1 | Fee | uint64 | micro-Algos |
 | 2 | FirstValid | uint64 | round number |
@@ -366,7 +367,7 @@ Additional details in the [opcodes document](TEAL_opcodes.md#txn) on the `txn` o
 Global fields are fields that are common to all the transactions in the group. In particular it includes consensus parameters.
 
 | Index | Name | Type | Notes |
-| --- | --- | --- | --- |
+| - | ------ | -- | ------- |
 | 0 | MinTxnFee | uint64 | micro Algos |
 | 1 | MinBalance | uint64 | micro Algos |
 | 2 | MaxTxnLife | uint64 | rounds |
@@ -389,13 +390,13 @@ Global fields are fields that are common to all the transactions in the group. I
 Asset fields include `AssetHolding` and `AssetParam` fields that are used in the `asset_holding_get` and `asset_params_get` opcodes.
 
 | Index | Name | Type | Notes |
-| --- | --- | --- | --- |
+| - | ------ | -- | ------- |
 | 0 | AssetBalance | uint64 | Amount of the asset unit held by this account |
 | 1 | AssetFrozen | uint64 | Is the asset frozen or not |
 
 
 | Index | Name | Type | Notes |
-| --- | --- | --- | --- |
+| - | ------ | -- | ------- |
 | 0 | AssetTotal | uint64 | Total number of units of this asset |
 | 1 | AssetDecimals | uint64 | See AssetParams.Decimals |
 | 2 | AssetDefaultFrozen | uint64 | Frozen by default or not |
@@ -415,7 +416,7 @@ Asset fields include `AssetHolding` and `AssetParam` fields that are used in the
 App fields used in the `app_params_get` opcode.
 
 | Index | Name | Type | Notes |
-| --- | --- | --- | --- |
+| - | ------ | -- | ------- |
 | 0 | AppApprovalProgram | []byte | Bytecode of Approval Program |
 | 1 | AppClearStateProgram | []byte | Bytecode of Clear State Program |
 | 2 | AppGlobalNumUint | uint64 | Number of uint64 values allowed in Global State |
@@ -429,8 +430,8 @@ App fields used in the `app_params_get` opcode.
 
 ### Flow Control
 
-| Op | Description |
-| --- | --- |
+| Opcode | Description |
+| - | -- |
 | `err` | Fail immediately. |
 | `bnz target` | branch to TARGET if value A is not zero |
 | `bz target` | branch to TARGET if value A is zero |
@@ -450,8 +451,8 @@ App fields used in the `app_params_get` opcode.
 
 ### State Access
 
-| Op | Description |
-| --- | --- |
+| Opcode | Description |
+| - | -- |
 | `balance` | get balance for account A, in microalgos. The balance is observed after the effects of previous transactions in the group, and after the fee for the current transaction is deducted. |
 | `min_balance` | get minimum required balance for account A, in microalgos. Required balance is affected by [ASA](https://developer.algorand.org/docs/features/asa/#assets-overview) and [App](https://developer.algorand.org/docs/features/asc1/stateful/#minimum-balance-requirement-for-a-smart-contract) usage. When creating or opting into an app, the minimum balance grows before the app code runs, therefore the increase is visible there. When deleting or closing out, the minimum balance decreases after the app executes. |
 | `app_opted_in` | check if account A opted in for the application B => {0 or 1} |
@@ -510,8 +511,8 @@ and value provided, never considering previously set fields. Illegal
 interactions between fields, such as setting fields that belong to two
 different transaction types, are rejected by `itxn_submit`.
 
-| Op | Description |
-| --- | --- |
+| Opcode | Description |
+| - | -- |
 | `itxn_begin` | begin preparation of a new inner transaction in a new transaction group |
 | `itxn_next` | begin preparation of a new inner transaction in the same transaction group |
 | `itxn_field f` | set field F of the current inner transaction to A |

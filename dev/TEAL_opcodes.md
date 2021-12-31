@@ -64,7 +64,7 @@ The 32 byte public key is the last element on the stack, preceded by the 64 byte
 `ECDSA` Curves:
 
 | Index | Name | Notes |
-| --- | --- | --- |
+| - | ------ | --------- |
 | 0 | Secp256k1 | secp256k1 curve |
 
 
@@ -81,7 +81,7 @@ The 32 byte Y-component of a public key is the last element on the stack, preced
 `ECDSA` Curves:
 
 | Index | Name | Notes |
-| --- | --- | --- |
+| - | ------ | --------- |
 | 0 | Secp256k1 | secp256k1 curve |
 
 
@@ -98,7 +98,7 @@ The 33 byte public key in a compressed form to be decompressed into X and Y (top
 `ECDSA` Curves:
 
 | Index | Name | Notes |
-| --- | --- | --- |
+| - | ------ | --------- |
 | 0 | Secp256k1 | secp256k1 curve |
 
 
@@ -379,7 +379,7 @@ Overflow is an error condition which halts execution and fails the transaction. 
 `txn` Fields (see [transaction reference](https://developer.algorand.org/docs/reference/transactions/)):
 
 | Index | Name | Type | Notes |
-| --- | --- | --- | --- |
+| - | ------ | -- | ------- |
 | 0 | Sender | []byte | 32 byte address |
 | 1 | Fee | uint64 | micro-Algos |
 | 2 | FirstValid | uint64 | round number |
@@ -468,7 +468,7 @@ FirstValidTime causes the program to fail. The field is reserved for future use.
 `global` Fields:
 
 | Index | Name | Type | Notes |
-| --- | --- | --- | --- |
+| - | ------ | -- | ------- |
 | 0 | MinTxnFee | uint64 | micro Algos |
 | 1 | MinBalance | uint64 | micro Algos |
 | 2 | MaxTxnLife | uint64 | rounds |
@@ -899,7 +899,7 @@ Deleting a key which is already absent has no effect on the application global s
 `asset_holding_get` Fields:
 
 | Index | Name | Type | Notes |
-| --- | --- | --- | --- |
+| - | ------ | -- | ------- |
 | 0 | AssetBalance | uint64 | Amount of the asset unit held by this account |
 | 1 | AssetFrozen | uint64 | Is the asset frozen or not |
 
@@ -917,7 +917,7 @@ params: Txn.Accounts offset (or, since v4, an account address that appears in Tx
 `asset_params_get` Fields:
 
 | Index | Name | Type | Notes |
-| --- | --- | --- | --- |
+| - | ------ | -- | ------- |
 | 0 | AssetTotal | uint64 | Total number of units of this asset |
 | 1 | AssetDecimals | uint64 | See AssetParams.Decimals |
 | 2 | AssetDefaultFrozen | uint64 | Frozen by default or not |
@@ -945,7 +945,7 @@ params: Before v4, Txn.ForeignAssets offset. Since v4, Txn.ForeignAssets offset 
 `app_params_get` Fields:
 
 | Index | Name | Type | Notes |
-| --- | --- | --- | --- |
+| - | ------ | -- | ------- |
 | 0 | AppApprovalProgram | []byte | Bytecode of Approval Program |
 | 1 | AppClearStateProgram | []byte | Bytecode of Clear State Program |
 | 2 | AppGlobalNumUint | uint64 | Number of uint64 values allowed in Global State |
