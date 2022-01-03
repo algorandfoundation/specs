@@ -8,21 +8,23 @@ abstract: >
 
 # The Algorand Virtual Machine (AVM) and TEAL.
 
-The AVM is a bytecode based stack interpreter that executes inside
-Algorand transactions. TEAL is an assembly language syntax for
-specifying a program that is ultimately AVM bytecode. These programs
-can be used to check the parameters of the transaction and approve the
-transaction as if by a signature. This use is called a _Smart
-Signature_. Starting with v2, these programs may also execute as
-_Smart Contracts_, which are often called _Applications_. Such
-executions are invoked with explicit application call
-transactions. Programs have read-only access to the transaction they
-are attached to, the other transactions in their atomic transaction
-group, and a few global values. In addition, _Smart Contracts_ have
-access to limited state that is global to the application and
-per-account local state for each account that has opted-in to the
-application. For both types of program, approval is signaled by
-finishing with the stack containing a single non-zero uint64 value.
+The AVM is a bytecode based stack interpreter that executes programs
+asscoiated with Algorand transactions. TEAL is an assembly language
+syntax for specifying a program that is ultimately converted to AVM
+bytecode. These programs can be used to check the parameters of the
+transaction and approve the transaction as if by a signature. This use
+is called a _Smart Signature_. Starting with v2, these programs may
+also execute as _Smart Contracts_, which are often called
+_Applications_. Contract executions are invoked with explicit
+application call transactions.
+
+Programs have read-only access to the transaction they are attached
+to, the other transactions in their atomic transaction group, and a
+few global values. In addition, _Smart Contracts_ have access to
+limited state that is global to the application and per-account local
+state for each account that has opted-in to the application. For both
+types of program, approval is signaled by finishing with the stack
+containing a single non-zero uint64 value.
 
 ## The Stack
 
@@ -33,15 +35,16 @@ arguments from it and pushing results to it. Some operations have
 _immediate_ arguments that are encoded directly into the instruction,
 rather than coming from the stack.
 
-The maximum stack depth is currently 1000. If the stack depth is
-exceed or if a byte-array element exceed 4096 bytes, the program fails.
+The maximum stack depth is 1000. If the stack depth is
+exceeded or if a byte-array element exceed 4096 bytes, the program fails.
 
 ## Scratch Space
 
 In addition to the stack there are 256 positions of scratch
-space. Scratch locations are also uint64-bytes union values, each
-initialized as uint64 zero. Scratch space is acccesed by the `load(s)`
-and `store(s)` ops moving data from or to scratch space, respectively.
+space. Like stack values, scratch locations may be uint64s or
+byte-arrays. Scratch locations are intialized as uint64 zero. Scratch
+space is acccsed by the `load(s)` and `store(s)` opcodes which move
+data from or to scratch space, respectively.
 
 ## Versions
 
@@ -49,7 +52,7 @@ In order to maintain existing semantics for previously written
 programs, AVM code is versioned.  When new opcodes are introduced, or
 behavior is changed, a new version is introduced.  Programs carrying
 old versions are executed with their original semantics. In the AVM
-bytecode, the version is an incrmenting integer, currently 6, and
+bytecode, the version is an incrementing integer, currently 6, and
 denoted vX throughout this document. User friendly version numbers
 that correspond to programmer expectations, such as `AVM 1.0` map to
 these integers.  AVM 0.9 is v4. AVM 1.0 is v5. AVM 1.1 is v6.
@@ -69,11 +72,23 @@ Differences between modes include:
 
 ## Execution Environment for Smart Signatures
 
-Smart Signatures run in Algorand nodes as part of testing a proposed transaction to see if it is valid and authorized to be committed into a block.
+Smart Signatures execute as part of testing a proposed transaction to
+see if it is valid and authorized to be committed into a block. If an
+authorized program executes and finishes with a single non-zero uint64
+value on the stack then that program has validated the transaction it
+is attached to.
 
-If an authorized program executes and finishes with a single non-zero uint64 value on the stack then that program has validated the transaction it is attached to.
-
-The program has access to data from the transaction it is attached to (`txn` op), any transactions in a transaction group it is part of (`gtxn` op), and a few global values like consensus parameters (`global` op). Some "Args" may be attached to a transaction being validated by a program. Args are an array of byte strings. A common pattern would be to have the key to unlock some contract as an Arg. Args are recorded on the blockchain and publicly visible when the transaction is submitted to the network. These Args are _not_ part of the transaction ID nor of the TxGroup hash. They also cannot be read from other programs in the group of transactions.
+The program has access to data from the transaction it is attached to
+(`txn` op), any transactions in a transaction group it is part of
+(`gtxn` op), and a few global values like consensus parameters
+(`global` op). Some "Args" may be attached to a transaction being
+validated by a program. Args are an array of byte strings. A common
+pattern would be to have the key to unlock some contract as an Arg. Be
+aware that Smart Signature Args are recorded on the blockchain and
+publicly visible when the transaction is submitted to the network,
+even before the transaction has been included in a block. These Args
+are _not_ part of the transaction ID nor of the TxGroup hash. They
+also cannot be read from other programs in the group of transactions.
 
 A program can either authorize some delegated action on a normal private key signed or multisig account or be wholly in charge of a contract account.
 
@@ -123,26 +138,27 @@ An application transaction must indicate the action to be taken following the ex
 
 ## Operations
 
-Most operations work with only one type of argument, uint64 or bytes, and panic if the wrong type value is on the stack.
+Most operations work with only one type of argument, uint64 or bytes, and fail if the wrong type value is on the stack.
 
 Many instructions accept values to designate Accounts, Assets, or Applications. Beginning with v4, these values may be given as an _offset_ in the corresponding Txn fields (Txn.Accounts, Txn.ForeignAssets, Txn.ForeignApps) _or_ as the value itself (a byte-array address for Accounts, or a uint64 ID). The values, however, must still be present in the Txn fields. Before v4, most opcodes required the use of an offset, except for reading account local values of assets or applications, which accepted the IDs directly and did not require the ID to be present in they corresponding _Foreign_ array. (Note that beginning with v4, those IDs _are_ required to be present in their corresponding _Foreign_ array.) See individual opcodes for details. In the case of account offsets or application offsets, 0 is specially defined to Txn.Sender or the ID of the current application, respectively.
 
 This summary is supplemented by more detail in the [opcodes document](TEAL_opcodes.md).
 
-Some operations 'panic' and immediately fail the program.
-A transaction checked by a program that panics is not valid.
+Some operations immediately fail the program.
+A transaction checked by a program that fails is not valid.
 An account governed by a buggy program might not have a way to get assets back out of it. Code carefully.
 
 In the documentation for each opcode, the stack arguments that are
 popped are referred to alphabetically, beginning with the deepest
 argument as `A`.  These arguments are shown in the opcode description,
 and if the opcode must be of a specific type, it is noted there.  All
-opcodes panic if a specified type is incorrect.
+opcodes fail if a specified type is incorrect.
 
 If an opcode pushes more than one result, the values are named for
-ease of exposition and clarity concerning their stack positions.
-
-
+ease of exposition and clarity concerning their stack positions.  When
+an opcode manipulates the stack in such a way that a value changes
+position but is otherwise unchanged, the name of the output on the
+return stack matches the name of the input value.
 
 ### Arithmetic, Logic, and Cryptographic Operations
 
@@ -204,14 +220,14 @@ ease of exposition and clarity concerning their stack positions.
 | `extract_uint64` | pop a byte-array A and integer B. Extract a range of bytes from A starting at B up to but not including B+8, convert bytes as big endian and push the uint64 result. If B+8 is larger than the array length, the program fails |
 | `base64_decode e` | decode A which was base64-encoded using _encoding alphabet_ E. Fail if A is not base64 encoded with alphabet E |
 
-These opcodes take byte-array values that are interpreted as
+The following opcodes take byte-array values that are interpreted as
 big-endian unsigned integers.  For mathematical operators, the
 returned values are the shortest byte-array that can represent the
 returned value.  For example, the zero value is the empty
 byte-array. For comparison operators, the returned value is a uint64.
 
-Input lengths are limited to a maximum length of 64 bytes, which
-represents a 512 bit unsigned integer. Output lengths are not
+Input lengths are limited to a maximum length of 64 bytes,
+representing a 512 bit unsigned integer. Output lengths are not
 explicitly restricted, though only `b*` and `b+` can produce a larger
 output than their inputs, so there is an implicit length limit of 128
 bytes on outputs.
@@ -320,44 +336,44 @@ Some of these have immediate data in the byte or bytes after the opcode.
 | 21 | AssetCloseTo | []byte | 32 byte address |
 | 22 | GroupIndex | uint64 | Position of this transaction within an atomic transaction group. A stand-alone transaction is implicitly element 0 in a group of 1 |
 | 23 | TxID | []byte | The computed ID for this transaction. 32 bytes. |
-| 24 | ApplicationID | uint64 | ApplicationID from ApplicationCall transaction. LogicSigVersion >= 2. |
-| 25 | OnCompletion | uint64 | ApplicationCall transaction on completion action. LogicSigVersion >= 2. |
-| 26 | ApplicationArgs | []byte | Arguments passed to the application in the ApplicationCall transaction. LogicSigVersion >= 2. |
-| 27 | NumAppArgs | uint64 | Number of ApplicationArgs. LogicSigVersion >= 2. |
-| 28 | Accounts | []byte | Accounts listed in the ApplicationCall transaction. LogicSigVersion >= 2. |
-| 29 | NumAccounts | uint64 | Number of Accounts. LogicSigVersion >= 2. |
-| 30 | ApprovalProgram | []byte | Approval program. LogicSigVersion >= 2. |
-| 31 | ClearStateProgram | []byte | Clear state program. LogicSigVersion >= 2. |
-| 32 | RekeyTo | []byte | 32 byte Sender's new AuthAddr. LogicSigVersion >= 2. |
-| 33 | ConfigAsset | uint64 | Asset ID in asset config transaction. LogicSigVersion >= 2. |
-| 34 | ConfigAssetTotal | uint64 | Total number of units of this asset created. LogicSigVersion >= 2. |
-| 35 | ConfigAssetDecimals | uint64 | Number of digits to display after the decimal place when displaying the asset. LogicSigVersion >= 2. |
-| 36 | ConfigAssetDefaultFrozen | uint64 | Whether the asset's slots are frozen by default or not, 0 or 1. LogicSigVersion >= 2. |
-| 37 | ConfigAssetUnitName | []byte | Unit name of the asset. LogicSigVersion >= 2. |
-| 38 | ConfigAssetName | []byte | The asset name. LogicSigVersion >= 2. |
-| 39 | ConfigAssetURL | []byte | URL. LogicSigVersion >= 2. |
-| 40 | ConfigAssetMetadataHash | []byte | 32 byte commitment to some unspecified asset metadata. LogicSigVersion >= 2. |
-| 41 | ConfigAssetManager | []byte | 32 byte address. LogicSigVersion >= 2. |
-| 42 | ConfigAssetReserve | []byte | 32 byte address. LogicSigVersion >= 2. |
-| 43 | ConfigAssetFreeze | []byte | 32 byte address. LogicSigVersion >= 2. |
-| 44 | ConfigAssetClawback | []byte | 32 byte address. LogicSigVersion >= 2. |
-| 45 | FreezeAsset | uint64 | Asset ID being frozen or un-frozen. LogicSigVersion >= 2. |
-| 46 | FreezeAssetAccount | []byte | 32 byte address of the account whose asset slot is being frozen or un-frozen. LogicSigVersion >= 2. |
-| 47 | FreezeAssetFrozen | uint64 | The new frozen value, 0 or 1. LogicSigVersion >= 2. |
-| 48 | Assets | uint64 | Foreign Assets listed in the ApplicationCall transaction. LogicSigVersion >= 3. |
-| 49 | NumAssets | uint64 | Number of Assets. LogicSigVersion >= 3. |
-| 50 | Applications | uint64 | Foreign Apps listed in the ApplicationCall transaction. LogicSigVersion >= 3. |
-| 51 | NumApplications | uint64 | Number of Applications. LogicSigVersion >= 3. |
-| 52 | GlobalNumUint | uint64 | Number of global state integers in ApplicationCall. LogicSigVersion >= 3. |
-| 53 | GlobalNumByteSlice | uint64 | Number of global state byteslices in ApplicationCall. LogicSigVersion >= 3. |
-| 54 | LocalNumUint | uint64 | Number of local state integers in ApplicationCall. LogicSigVersion >= 3. |
-| 55 | LocalNumByteSlice | uint64 | Number of local state byteslices in ApplicationCall. LogicSigVersion >= 3. |
-| 56 | ExtraProgramPages | uint64 | Number of additional pages for each of the application's approval and clear state programs. An ExtraProgramPages of 1 means 2048 more total bytes, or 1024 for each program. LogicSigVersion >= 4. |
-| 57 | Nonparticipation | uint64 | Marks an account nonparticipating for rewards. LogicSigVersion >= 5. |
-| 58 | Logs | []byte | Log messages emitted by an application call (`itxn` only until v6). LogicSigVersion >= 5. Application mode only |
-| 59 | NumLogs | uint64 | Number of Logs (`itxn` only until v6). LogicSigVersion >= 5. Application mode only |
-| 60 | CreatedAssetID | uint64 | Asset ID allocated by the creation of an ASA (`itxn` only until v6). LogicSigVersion >= 5. Application mode only |
-| 61 | CreatedApplicationID | uint64 | ApplicationID allocated by the creation of an application (`itxn` only until v6). LogicSigVersion >= 5. Application mode only |
+| 24 | ApplicationID | uint64 | ApplicationID from ApplicationCall transaction. Introduced v2. |
+| 25 | OnCompletion | uint64 | ApplicationCall transaction on completion action. Introduced v2. |
+| 26 | ApplicationArgs | []byte | Arguments passed to the application in the ApplicationCall transaction. Introduced v2. |
+| 27 | NumAppArgs | uint64 | Number of ApplicationArgs. Introduced v2. |
+| 28 | Accounts | []byte | Accounts listed in the ApplicationCall transaction. Introduced v2. |
+| 29 | NumAccounts | uint64 | Number of Accounts. Introduced v2. |
+| 30 | ApprovalProgram | []byte | Approval program. Introduced v2. |
+| 31 | ClearStateProgram | []byte | Clear state program. Introduced v2. |
+| 32 | RekeyTo | []byte | 32 byte Sender's new AuthAddr. Introduced v2. |
+| 33 | ConfigAsset | uint64 | Asset ID in asset config transaction. Introduced v2. |
+| 34 | ConfigAssetTotal | uint64 | Total number of units of this asset created. Introduced v2. |
+| 35 | ConfigAssetDecimals | uint64 | Number of digits to display after the decimal place when displaying the asset. Introduced v2. |
+| 36 | ConfigAssetDefaultFrozen | uint64 | Whether the asset's slots are frozen by default or not, 0 or 1. Introduced v2. |
+| 37 | ConfigAssetUnitName | []byte | Unit name of the asset. Introduced v2. |
+| 38 | ConfigAssetName | []byte | The asset name. Introduced v2. |
+| 39 | ConfigAssetURL | []byte | URL. Introduced v2. |
+| 40 | ConfigAssetMetadataHash | []byte | 32 byte commitment to some unspecified asset metadata. Introduced v2. |
+| 41 | ConfigAssetManager | []byte | 32 byte address. Introduced v2. |
+| 42 | ConfigAssetReserve | []byte | 32 byte address. Introduced v2. |
+| 43 | ConfigAssetFreeze | []byte | 32 byte address. Introduced v2. |
+| 44 | ConfigAssetClawback | []byte | 32 byte address. Introduced v2. |
+| 45 | FreezeAsset | uint64 | Asset ID being frozen or un-frozen. Introduced v2. |
+| 46 | FreezeAssetAccount | []byte | 32 byte address of the account whose asset slot is being frozen or un-frozen. Introduced v2. |
+| 47 | FreezeAssetFrozen | uint64 | The new frozen value, 0 or 1. Introduced v2. |
+| 48 | Assets | uint64 | Foreign Assets listed in the ApplicationCall transaction. Introduced v3. |
+| 49 | NumAssets | uint64 | Number of Assets. Introduced v3. |
+| 50 | Applications | uint64 | Foreign Apps listed in the ApplicationCall transaction. Introduced v3. |
+| 51 | NumApplications | uint64 | Number of Applications. Introduced v3. |
+| 52 | GlobalNumUint | uint64 | Number of global state integers in ApplicationCall. Introduced v3. |
+| 53 | GlobalNumByteSlice | uint64 | Number of global state byteslices in ApplicationCall. Introduced v3. |
+| 54 | LocalNumUint | uint64 | Number of local state integers in ApplicationCall. Introduced v3. |
+| 55 | LocalNumByteSlice | uint64 | Number of local state byteslices in ApplicationCall. Introduced v3. |
+| 56 | ExtraProgramPages | uint64 | Number of additional pages for each of the application's approval and clear state programs. An ExtraProgramPages of 1 means 2048 more total bytes, or 1024 for each program. Introduced v4. |
+| 57 | Nonparticipation | uint64 | Marks an account nonparticipating for rewards. Introduced v5. |
+| 58 | Logs | []byte | Log messages emitted by an application call (`itxn` only until v6). Introduced v5. Application mode only |
+| 59 | NumLogs | uint64 | Number of Logs (`itxn` only until v6). Introduced v5. Application mode only |
+| 60 | CreatedAssetID | uint64 | Asset ID allocated by the creation of an ASA (`itxn` only until v6). Introduced v5. Application mode only |
+| 61 | CreatedApplicationID | uint64 | ApplicationID allocated by the creation of an application (`itxn` only until v6). Introduced v5. Application mode only |
 
 
 Additional details in the [opcodes document](TEAL_opcodes.md#txn) on the `txn` op.
@@ -373,16 +389,16 @@ Global fields are fields that are common to all the transactions in the group. I
 | 2 | MaxTxnLife | uint64 | rounds |
 | 3 | ZeroAddress | []byte | 32 byte address of all zero bytes |
 | 4 | GroupSize | uint64 | Number of transactions in this atomic transaction group. At least 1 |
-| 5 | LogicSigVersion | uint64 | Maximum supported TEAL version. LogicSigVersion >= 2. |
-| 6 | Round | uint64 | Current round number. LogicSigVersion >= 2. Application mode only. |
-| 7 | LatestTimestamp | uint64 | Last confirmed block UNIX timestamp. Fails if negative. LogicSigVersion >= 2. Application mode only. |
-| 8 | CurrentApplicationID | uint64 | ID of current application executing. Fails in LogicSigs. LogicSigVersion >= 2. Application mode only. |
-| 9 | CreatorAddress | []byte | Address of the creator of the current application. Fails if no such application is executing. LogicSigVersion >= 3. Application mode only. |
-| 10 | CurrentApplicationAddress | []byte | Address that the current application controls. Fails in LogicSigs. LogicSigVersion >= 5. Application mode only. |
-| 11 | GroupID | []byte | ID of the transaction group. 32 zero bytes if the transaction is not part of a group. LogicSigVersion >= 5. |
-| 12 | OpcodeBudget | uint64 | The remaining cost that can be spent by opcodes in this program. LogicSigVersion >= 6. |
-| 13 | CallerApplicationID | uint64 | The application ID of the application that called this application. 0 if this application is at the top-level. LogicSigVersion >= 6. Application mode only. |
-| 14 | CallerApplicationAddress | []byte | The application address of the application that called this application. ZeroAddress if this application is at the top-level. LogicSigVersion >= 6. Application mode only. |
+| 5 | LogicSigVersion | uint64 | Maximum supported TEAL version. Introduced v2. |
+| 6 | Round | uint64 | Current round number. Introduced v2. Application mode only. |
+| 7 | LatestTimestamp | uint64 | Last confirmed block UNIX timestamp. Fails if negative. Introduced v2. Application mode only. |
+| 8 | CurrentApplicationID | uint64 | ID of current application executing. Introduced v2. Application mode only. |
+| 9 | CreatorAddress | []byte | Address of the creator of the current application. Introduced v3. Application mode only. |
+| 10 | CurrentApplicationAddress | []byte | Address that the current application controls. Introduced v5. Application mode only. |
+| 11 | GroupID | []byte | ID of the transaction group. 32 zero bytes if the transaction is not part of a group. Introduced v5. |
+| 12 | OpcodeBudget | uint64 | The remaining cost that can be spent by opcodes in this program. Introduced v6. |
+| 13 | CallerApplicationID | uint64 | The application ID of the application that called this application. 0 if this application is at the top-level. Introduced v6. Application mode only. |
+| 14 | CallerApplicationAddress | []byte | The application address of the application that called this application. ZeroAddress if this application is at the top-level. Introduced v6. Application mode only. |
 
 
 **Asset Fields**
@@ -408,7 +424,7 @@ Asset fields include `AssetHolding` and `AssetParam` fields that are used in the
 | 8 | AssetReserve | []byte | Reserve address |
 | 9 | AssetFreeze | []byte | Freeze address |
 | 10 | AssetClawback | []byte | Clawback address |
-| 11 | AssetCreator | []byte | Creator address. LogicSigVersion >= 5. |
+| 11 | AssetCreator | []byte | Creator address. Introduced v5. |
 
 
 **App Fields**
@@ -608,15 +624,15 @@ A '[proto-buf style variable length unsigned int](https://developers.google.com/
 Design and implementation limitations to be aware of with various versions.
 
 * Stateless programs cannot lookup balances of Algos or other
-  assets. (Standard transaction accounting will apply after the
-  LogicSig has run and authorized a transaction. A LogicSig-approved
-  transaction could still be invalid by other accounting rules just as
-  a standard signed transaction could be invalid. e.g. I can't give
-  away money I don't have.)
+  assets. (Standard transaction accounting will apply after the Smart
+  Signature has authorized a transaction. A transaction could still be
+  invalid by other accounting rules just as a standard signed
+  transaction could be invalid. e.g. I can't give away money I don't
+  have.)
 * Programs cannot access information in previous blocks. Programs
   cannot access information in other transactions in the current
   block, unless they are a part of the same atomic transaction group.
-* LogicSigs cannot know exactly what round the current transaction
+* Smart Signatures cannot know exactly what round the current transaction
   will commit in (but it is somewhere in FirstValid through
   LastValid).
 * Programs cannot know exactly what time its transaction is committed.

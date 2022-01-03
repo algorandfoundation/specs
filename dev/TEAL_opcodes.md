@@ -23,8 +23,8 @@ Ops have a 'cost' of 1 unless otherwise specified.
 - Stack: ..., A: []byte &rarr; ..., []byte
 - SHA256 hash of value A, yields [32]byte
 - **Cost**:
-    - 7 (LogicSigVersion = 1)
-    - 35 (LogicSigVersion >= 2)
+    - 7 (v1)
+    - 35 (since v2)
 
 ## keccak256
 
@@ -32,8 +32,8 @@ Ops have a 'cost' of 1 unless otherwise specified.
 - Stack: ..., A: []byte &rarr; ..., []byte
 - Keccak256 hash of value A, yields [32]byte
 - **Cost**:
-    - 26 (LogicSigVersion = 1)
-    - 130 (LogicSigVersion >= 2)
+    - 26 (v1)
+    - 130 (since v2)
 
 ## sha512_256
 
@@ -41,8 +41,8 @@ Ops have a 'cost' of 1 unless otherwise specified.
 - Stack: ..., A: []byte &rarr; ..., []byte
 - SHA512_256 hash of value A, yields [32]byte
 - **Cost**:
-    - 9 (LogicSigVersion = 1)
-    - 45 (LogicSigVersion >= 2)
+    - 9 (v1)
+    - 45 (since v2)
 
 ## ed25519verify
 
@@ -404,44 +404,44 @@ Overflow is an error condition which halts execution and fails the transaction. 
 | 21 | AssetCloseTo | []byte | 32 byte address |
 | 22 | GroupIndex | uint64 | Position of this transaction within an atomic transaction group. A stand-alone transaction is implicitly element 0 in a group of 1 |
 | 23 | TxID | []byte | The computed ID for this transaction. 32 bytes. |
-| 24 | ApplicationID | uint64 | ApplicationID from ApplicationCall transaction. LogicSigVersion >= 2. |
-| 25 | OnCompletion | uint64 | ApplicationCall transaction on completion action. LogicSigVersion >= 2. |
-| 26 | ApplicationArgs | []byte | Arguments passed to the application in the ApplicationCall transaction. LogicSigVersion >= 2. |
-| 27 | NumAppArgs | uint64 | Number of ApplicationArgs. LogicSigVersion >= 2. |
-| 28 | Accounts | []byte | Accounts listed in the ApplicationCall transaction. LogicSigVersion >= 2. |
-| 29 | NumAccounts | uint64 | Number of Accounts. LogicSigVersion >= 2. |
-| 30 | ApprovalProgram | []byte | Approval program. LogicSigVersion >= 2. |
-| 31 | ClearStateProgram | []byte | Clear state program. LogicSigVersion >= 2. |
-| 32 | RekeyTo | []byte | 32 byte Sender's new AuthAddr. LogicSigVersion >= 2. |
-| 33 | ConfigAsset | uint64 | Asset ID in asset config transaction. LogicSigVersion >= 2. |
-| 34 | ConfigAssetTotal | uint64 | Total number of units of this asset created. LogicSigVersion >= 2. |
-| 35 | ConfigAssetDecimals | uint64 | Number of digits to display after the decimal place when displaying the asset. LogicSigVersion >= 2. |
-| 36 | ConfigAssetDefaultFrozen | uint64 | Whether the asset's slots are frozen by default or not, 0 or 1. LogicSigVersion >= 2. |
-| 37 | ConfigAssetUnitName | []byte | Unit name of the asset. LogicSigVersion >= 2. |
-| 38 | ConfigAssetName | []byte | The asset name. LogicSigVersion >= 2. |
-| 39 | ConfigAssetURL | []byte | URL. LogicSigVersion >= 2. |
-| 40 | ConfigAssetMetadataHash | []byte | 32 byte commitment to some unspecified asset metadata. LogicSigVersion >= 2. |
-| 41 | ConfigAssetManager | []byte | 32 byte address. LogicSigVersion >= 2. |
-| 42 | ConfigAssetReserve | []byte | 32 byte address. LogicSigVersion >= 2. |
-| 43 | ConfigAssetFreeze | []byte | 32 byte address. LogicSigVersion >= 2. |
-| 44 | ConfigAssetClawback | []byte | 32 byte address. LogicSigVersion >= 2. |
-| 45 | FreezeAsset | uint64 | Asset ID being frozen or un-frozen. LogicSigVersion >= 2. |
-| 46 | FreezeAssetAccount | []byte | 32 byte address of the account whose asset slot is being frozen or un-frozen. LogicSigVersion >= 2. |
-| 47 | FreezeAssetFrozen | uint64 | The new frozen value, 0 or 1. LogicSigVersion >= 2. |
-| 48 | Assets | uint64 | Foreign Assets listed in the ApplicationCall transaction. LogicSigVersion >= 3. |
-| 49 | NumAssets | uint64 | Number of Assets. LogicSigVersion >= 3. |
-| 50 | Applications | uint64 | Foreign Apps listed in the ApplicationCall transaction. LogicSigVersion >= 3. |
-| 51 | NumApplications | uint64 | Number of Applications. LogicSigVersion >= 3. |
-| 52 | GlobalNumUint | uint64 | Number of global state integers in ApplicationCall. LogicSigVersion >= 3. |
-| 53 | GlobalNumByteSlice | uint64 | Number of global state byteslices in ApplicationCall. LogicSigVersion >= 3. |
-| 54 | LocalNumUint | uint64 | Number of local state integers in ApplicationCall. LogicSigVersion >= 3. |
-| 55 | LocalNumByteSlice | uint64 | Number of local state byteslices in ApplicationCall. LogicSigVersion >= 3. |
-| 56 | ExtraProgramPages | uint64 | Number of additional pages for each of the application's approval and clear state programs. An ExtraProgramPages of 1 means 2048 more total bytes, or 1024 for each program. LogicSigVersion >= 4. |
-| 57 | Nonparticipation | uint64 | Marks an account nonparticipating for rewards. LogicSigVersion >= 5. |
-| 58 | Logs | []byte | Log messages emitted by an application call (`itxn` only until v6). LogicSigVersion >= 5. Application mode only |
-| 59 | NumLogs | uint64 | Number of Logs (`itxn` only until v6). LogicSigVersion >= 5. Application mode only |
-| 60 | CreatedAssetID | uint64 | Asset ID allocated by the creation of an ASA (`itxn` only until v6). LogicSigVersion >= 5. Application mode only |
-| 61 | CreatedApplicationID | uint64 | ApplicationID allocated by the creation of an application (`itxn` only until v6). LogicSigVersion >= 5. Application mode only |
+| 24 | ApplicationID | uint64 | ApplicationID from ApplicationCall transaction. Introduced v2. |
+| 25 | OnCompletion | uint64 | ApplicationCall transaction on completion action. Introduced v2. |
+| 26 | ApplicationArgs | []byte | Arguments passed to the application in the ApplicationCall transaction. Introduced v2. |
+| 27 | NumAppArgs | uint64 | Number of ApplicationArgs. Introduced v2. |
+| 28 | Accounts | []byte | Accounts listed in the ApplicationCall transaction. Introduced v2. |
+| 29 | NumAccounts | uint64 | Number of Accounts. Introduced v2. |
+| 30 | ApprovalProgram | []byte | Approval program. Introduced v2. |
+| 31 | ClearStateProgram | []byte | Clear state program. Introduced v2. |
+| 32 | RekeyTo | []byte | 32 byte Sender's new AuthAddr. Introduced v2. |
+| 33 | ConfigAsset | uint64 | Asset ID in asset config transaction. Introduced v2. |
+| 34 | ConfigAssetTotal | uint64 | Total number of units of this asset created. Introduced v2. |
+| 35 | ConfigAssetDecimals | uint64 | Number of digits to display after the decimal place when displaying the asset. Introduced v2. |
+| 36 | ConfigAssetDefaultFrozen | uint64 | Whether the asset's slots are frozen by default or not, 0 or 1. Introduced v2. |
+| 37 | ConfigAssetUnitName | []byte | Unit name of the asset. Introduced v2. |
+| 38 | ConfigAssetName | []byte | The asset name. Introduced v2. |
+| 39 | ConfigAssetURL | []byte | URL. Introduced v2. |
+| 40 | ConfigAssetMetadataHash | []byte | 32 byte commitment to some unspecified asset metadata. Introduced v2. |
+| 41 | ConfigAssetManager | []byte | 32 byte address. Introduced v2. |
+| 42 | ConfigAssetReserve | []byte | 32 byte address. Introduced v2. |
+| 43 | ConfigAssetFreeze | []byte | 32 byte address. Introduced v2. |
+| 44 | ConfigAssetClawback | []byte | 32 byte address. Introduced v2. |
+| 45 | FreezeAsset | uint64 | Asset ID being frozen or un-frozen. Introduced v2. |
+| 46 | FreezeAssetAccount | []byte | 32 byte address of the account whose asset slot is being frozen or un-frozen. Introduced v2. |
+| 47 | FreezeAssetFrozen | uint64 | The new frozen value, 0 or 1. Introduced v2. |
+| 48 | Assets | uint64 | Foreign Assets listed in the ApplicationCall transaction. Introduced v3. |
+| 49 | NumAssets | uint64 | Number of Assets. Introduced v3. |
+| 50 | Applications | uint64 | Foreign Apps listed in the ApplicationCall transaction. Introduced v3. |
+| 51 | NumApplications | uint64 | Number of Applications. Introduced v3. |
+| 52 | GlobalNumUint | uint64 | Number of global state integers in ApplicationCall. Introduced v3. |
+| 53 | GlobalNumByteSlice | uint64 | Number of global state byteslices in ApplicationCall. Introduced v3. |
+| 54 | LocalNumUint | uint64 | Number of local state integers in ApplicationCall. Introduced v3. |
+| 55 | LocalNumByteSlice | uint64 | Number of local state byteslices in ApplicationCall. Introduced v3. |
+| 56 | ExtraProgramPages | uint64 | Number of additional pages for each of the application's approval and clear state programs. An ExtraProgramPages of 1 means 2048 more total bytes, or 1024 for each program. Introduced v4. |
+| 57 | Nonparticipation | uint64 | Marks an account nonparticipating for rewards. Introduced v5. |
+| 58 | Logs | []byte | Log messages emitted by an application call (`itxn` only until v6). Introduced v5. Application mode only |
+| 59 | NumLogs | uint64 | Number of Logs (`itxn` only until v6). Introduced v5. Application mode only |
+| 60 | CreatedAssetID | uint64 | Asset ID allocated by the creation of an ASA (`itxn` only until v6). Introduced v5. Application mode only |
+| 61 | CreatedApplicationID | uint64 | ApplicationID allocated by the creation of an application (`itxn` only until v6). Introduced v5. Application mode only |
 
 
 TypeEnum mapping:
@@ -474,16 +474,16 @@ FirstValidTime causes the program to fail. The field is reserved for future use.
 | 2 | MaxTxnLife | uint64 | rounds |
 | 3 | ZeroAddress | []byte | 32 byte address of all zero bytes |
 | 4 | GroupSize | uint64 | Number of transactions in this atomic transaction group. At least 1 |
-| 5 | LogicSigVersion | uint64 | Maximum supported TEAL version. LogicSigVersion >= 2. |
-| 6 | Round | uint64 | Current round number. LogicSigVersion >= 2. Application mode only. |
-| 7 | LatestTimestamp | uint64 | Last confirmed block UNIX timestamp. Fails if negative. LogicSigVersion >= 2. Application mode only. |
-| 8 | CurrentApplicationID | uint64 | ID of current application executing. Fails in LogicSigs. LogicSigVersion >= 2. Application mode only. |
-| 9 | CreatorAddress | []byte | Address of the creator of the current application. Fails if no such application is executing. LogicSigVersion >= 3. Application mode only. |
-| 10 | CurrentApplicationAddress | []byte | Address that the current application controls. Fails in LogicSigs. LogicSigVersion >= 5. Application mode only. |
-| 11 | GroupID | []byte | ID of the transaction group. 32 zero bytes if the transaction is not part of a group. LogicSigVersion >= 5. |
-| 12 | OpcodeBudget | uint64 | The remaining cost that can be spent by opcodes in this program. LogicSigVersion >= 6. |
-| 13 | CallerApplicationID | uint64 | The application ID of the application that called this application. 0 if this application is at the top-level. LogicSigVersion >= 6. Application mode only. |
-| 14 | CallerApplicationAddress | []byte | The application address of the application that called this application. ZeroAddress if this application is at the top-level. LogicSigVersion >= 6. Application mode only. |
+| 5 | LogicSigVersion | uint64 | Maximum supported TEAL version. Introduced v2. |
+| 6 | Round | uint64 | Current round number. Introduced v2. Application mode only. |
+| 7 | LatestTimestamp | uint64 | Last confirmed block UNIX timestamp. Fails if negative. Introduced v2. Application mode only. |
+| 8 | CurrentApplicationID | uint64 | ID of current application executing. Introduced v2. Application mode only. |
+| 9 | CreatorAddress | []byte | Address of the creator of the current application. Introduced v3. Application mode only. |
+| 10 | CurrentApplicationAddress | []byte | Address that the current application controls. Introduced v5. Application mode only. |
+| 11 | GroupID | []byte | ID of the transaction group. 32 zero bytes if the transaction is not part of a group. Introduced v5. |
+| 12 | OpcodeBudget | uint64 | The remaining cost that can be spent by opcodes in this program. Introduced v6. |
+| 13 | CallerApplicationID | uint64 | The application ID of the application that called this application. 0 if this application is at the top-level. Introduced v6. Application mode only. |
+| 14 | CallerApplicationAddress | []byte | The application address of the application that called this application. ZeroAddress if this application is at the top-level. Introduced v6. Application mode only. |
 
 
 ## gtxn t f
@@ -929,7 +929,7 @@ params: Txn.Accounts offset (or, since v4, an account address that appears in Tx
 | 8 | AssetReserve | []byte | Reserve address |
 | 9 | AssetFreeze | []byte | Freeze address |
 | 10 | AssetClawback | []byte | Clawback address |
-| 11 | AssetCreator | []byte | Creator address. LogicSigVersion >= 5. |
+| 11 | AssetCreator | []byte | Creator address. Introduced v5. |
 
 
 params: Before v4, Txn.ForeignAssets offset. Since v4, Txn.ForeignAssets offset or an asset id that appears in Txn.ForeignAssets. Return: did_exist flag (1 if the asset existed and 0 otherwise), value.
