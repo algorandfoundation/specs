@@ -378,70 +378,70 @@ Overflow is an error condition which halts execution and fails the transaction. 
 
 `txn` Fields (see [transaction reference](https://developer.algorand.org/docs/reference/transactions/)):
 
-| Index | Name | Type | Notes |
-| - | ------ | -- | ------- |
-| 0 | Sender | []byte | 32 byte address |
-| 1 | Fee | uint64 | micro-Algos |
-| 2 | FirstValid | uint64 | round number |
-| 3 | FirstValidTime | uint64 | Causes program to fail; reserved for future use |
-| 4 | LastValid | uint64 | round number |
-| 5 | Note | []byte | Any data up to 1024 bytes |
-| 6 | Lease | []byte | 32 byte lease value |
-| 7 | Receiver | []byte | 32 byte address |
-| 8 | Amount | uint64 | micro-Algos |
-| 9 | CloseRemainderTo | []byte | 32 byte address |
-| 10 | VotePK | []byte | 32 byte address |
-| 11 | SelectionPK | []byte | 32 byte address |
-| 12 | VoteFirst | uint64 | The first round that the participation key is valid. |
-| 13 | VoteLast | uint64 | The last round that the participation key is valid. |
-| 14 | VoteKeyDilution | uint64 | Dilution for the 2-level participation key |
-| 15 | Type | []byte | Transaction type as bytes |
-| 16 | TypeEnum | uint64 | See table below |
-| 17 | XferAsset | uint64 | Asset ID |
-| 18 | AssetAmount | uint64 | value in Asset's units |
-| 19 | AssetSender | []byte | 32 byte address. Causes clawback of all value of asset from AssetSender if Sender is the Clawback address of the asset. |
-| 20 | AssetReceiver | []byte | 32 byte address |
-| 21 | AssetCloseTo | []byte | 32 byte address |
-| 22 | GroupIndex | uint64 | Position of this transaction within an atomic transaction group. A stand-alone transaction is implicitly element 0 in a group of 1 |
-| 23 | TxID | []byte | The computed ID for this transaction. 32 bytes. |
-| 24 | ApplicationID | uint64 | ApplicationID from ApplicationCall transaction. Introduced v2. |
-| 25 | OnCompletion | uint64 | ApplicationCall transaction on completion action. Introduced v2. |
-| 26 | ApplicationArgs | []byte | Arguments passed to the application in the ApplicationCall transaction. Introduced v2. |
-| 27 | NumAppArgs | uint64 | Number of ApplicationArgs. Introduced v2. |
-| 28 | Accounts | []byte | Accounts listed in the ApplicationCall transaction. Introduced v2. |
-| 29 | NumAccounts | uint64 | Number of Accounts. Introduced v2. |
-| 30 | ApprovalProgram | []byte | Approval program. Introduced v2. |
-| 31 | ClearStateProgram | []byte | Clear state program. Introduced v2. |
-| 32 | RekeyTo | []byte | 32 byte Sender's new AuthAddr. Introduced v2. |
-| 33 | ConfigAsset | uint64 | Asset ID in asset config transaction. Introduced v2. |
-| 34 | ConfigAssetTotal | uint64 | Total number of units of this asset created. Introduced v2. |
-| 35 | ConfigAssetDecimals | uint64 | Number of digits to display after the decimal place when displaying the asset. Introduced v2. |
-| 36 | ConfigAssetDefaultFrozen | uint64 | Whether the asset's slots are frozen by default or not, 0 or 1. Introduced v2. |
-| 37 | ConfigAssetUnitName | []byte | Unit name of the asset. Introduced v2. |
-| 38 | ConfigAssetName | []byte | The asset name. Introduced v2. |
-| 39 | ConfigAssetURL | []byte | URL. Introduced v2. |
-| 40 | ConfigAssetMetadataHash | []byte | 32 byte commitment to some unspecified asset metadata. Introduced v2. |
-| 41 | ConfigAssetManager | []byte | 32 byte address. Introduced v2. |
-| 42 | ConfigAssetReserve | []byte | 32 byte address. Introduced v2. |
-| 43 | ConfigAssetFreeze | []byte | 32 byte address. Introduced v2. |
-| 44 | ConfigAssetClawback | []byte | 32 byte address. Introduced v2. |
-| 45 | FreezeAsset | uint64 | Asset ID being frozen or un-frozen. Introduced v2. |
-| 46 | FreezeAssetAccount | []byte | 32 byte address of the account whose asset slot is being frozen or un-frozen. Introduced v2. |
-| 47 | FreezeAssetFrozen | uint64 | The new frozen value, 0 or 1. Introduced v2. |
-| 48 | Assets | uint64 | Foreign Assets listed in the ApplicationCall transaction. Introduced v3. |
-| 49 | NumAssets | uint64 | Number of Assets. Introduced v3. |
-| 50 | Applications | uint64 | Foreign Apps listed in the ApplicationCall transaction. Introduced v3. |
-| 51 | NumApplications | uint64 | Number of Applications. Introduced v3. |
-| 52 | GlobalNumUint | uint64 | Number of global state integers in ApplicationCall. Introduced v3. |
-| 53 | GlobalNumByteSlice | uint64 | Number of global state byteslices in ApplicationCall. Introduced v3. |
-| 54 | LocalNumUint | uint64 | Number of local state integers in ApplicationCall. Introduced v3. |
-| 55 | LocalNumByteSlice | uint64 | Number of local state byteslices in ApplicationCall. Introduced v3. |
-| 56 | ExtraProgramPages | uint64 | Number of additional pages for each of the application's approval and clear state programs. An ExtraProgramPages of 1 means 2048 more total bytes, or 1024 for each program. Introduced v4. |
-| 57 | Nonparticipation | uint64 | Marks an account nonparticipating for rewards. Introduced v5. |
-| 58 | Logs | []byte | Log messages emitted by an application call (`itxn` only until v6). Introduced v5. Application mode only |
-| 59 | NumLogs | uint64 | Number of Logs (`itxn` only until v6). Introduced v5. Application mode only |
-| 60 | CreatedAssetID | uint64 | Asset ID allocated by the creation of an ASA (`itxn` only until v6). Introduced v5. Application mode only |
-| 61 | CreatedApplicationID | uint64 | ApplicationID allocated by the creation of an application (`itxn` only until v6). Introduced v5. Application mode only |
+| Index | Name | Type | In | Notes |
+| - | ------ | -- | - | --------- |
+| 0 | Sender | []byte |      | 32 byte address |
+| 1 | Fee | uint64 |      | micro-Algos |
+| 2 | FirstValid | uint64 |      | round number |
+| 3 | FirstValidTime | uint64 |      | Causes program to fail; reserved for future use |
+| 4 | LastValid | uint64 |      | round number |
+| 5 | Note | []byte |      | Any data up to 1024 bytes |
+| 6 | Lease | []byte |      | 32 byte lease value |
+| 7 | Receiver | []byte |      | 32 byte address |
+| 8 | Amount | uint64 |      | micro-Algos |
+| 9 | CloseRemainderTo | []byte |      | 32 byte address |
+| 10 | VotePK | []byte |      | 32 byte address |
+| 11 | SelectionPK | []byte |      | 32 byte address |
+| 12 | VoteFirst | uint64 |      | The first round that the participation key is valid. |
+| 13 | VoteLast | uint64 |      | The last round that the participation key is valid. |
+| 14 | VoteKeyDilution | uint64 |      | Dilution for the 2-level participation key |
+| 15 | Type | []byte |      | Transaction type as bytes |
+| 16 | TypeEnum | uint64 |      | See table below |
+| 17 | XferAsset | uint64 |      | Asset ID |
+| 18 | AssetAmount | uint64 |      | value in Asset's units |
+| 19 | AssetSender | []byte |      | 32 byte address. Causes clawback of all value of asset from AssetSender if Sender is the Clawback address of the asset. |
+| 20 | AssetReceiver | []byte |      | 32 byte address |
+| 21 | AssetCloseTo | []byte |      | 32 byte address |
+| 22 | GroupIndex | uint64 |      | Position of this transaction within an atomic transaction group. A stand-alone transaction is implicitly element 0 in a group of 1 |
+| 23 | TxID | []byte |      | The computed ID for this transaction. 32 bytes. |
+| 24 | ApplicationID | uint64 | v2  | ApplicationID from ApplicationCall transaction |
+| 25 | OnCompletion | uint64 | v2  | ApplicationCall transaction on completion action |
+| 26 | ApplicationArgs | []byte | v2  | Arguments passed to the application in the ApplicationCall transaction |
+| 27 | NumAppArgs | uint64 | v2  | Number of ApplicationArgs |
+| 28 | Accounts | []byte | v2  | Accounts listed in the ApplicationCall transaction |
+| 29 | NumAccounts | uint64 | v2  | Number of Accounts |
+| 30 | ApprovalProgram | []byte | v2  | Approval program |
+| 31 | ClearStateProgram | []byte | v2  | Clear state program |
+| 32 | RekeyTo | []byte | v2  | 32 byte Sender's new AuthAddr |
+| 33 | ConfigAsset | uint64 | v2  | Asset ID in asset config transaction |
+| 34 | ConfigAssetTotal | uint64 | v2  | Total number of units of this asset created |
+| 35 | ConfigAssetDecimals | uint64 | v2  | Number of digits to display after the decimal place when displaying the asset |
+| 36 | ConfigAssetDefaultFrozen | uint64 | v2  | Whether the asset's slots are frozen by default or not, 0 or 1 |
+| 37 | ConfigAssetUnitName | []byte | v2  | Unit name of the asset |
+| 38 | ConfigAssetName | []byte | v2  | The asset name |
+| 39 | ConfigAssetURL | []byte | v2  | URL |
+| 40 | ConfigAssetMetadataHash | []byte | v2  | 32 byte commitment to some unspecified asset metadata |
+| 41 | ConfigAssetManager | []byte | v2  | 32 byte address |
+| 42 | ConfigAssetReserve | []byte | v2  | 32 byte address |
+| 43 | ConfigAssetFreeze | []byte | v2  | 32 byte address |
+| 44 | ConfigAssetClawback | []byte | v2  | 32 byte address |
+| 45 | FreezeAsset | uint64 | v2  | Asset ID being frozen or un-frozen |
+| 46 | FreezeAssetAccount | []byte | v2  | 32 byte address of the account whose asset slot is being frozen or un-frozen |
+| 47 | FreezeAssetFrozen | uint64 | v2  | The new frozen value, 0 or 1 |
+| 48 | Assets | uint64 | v3  | Foreign Assets listed in the ApplicationCall transaction |
+| 49 | NumAssets | uint64 | v3  | Number of Assets |
+| 50 | Applications | uint64 | v3  | Foreign Apps listed in the ApplicationCall transaction |
+| 51 | NumApplications | uint64 | v3  | Number of Applications |
+| 52 | GlobalNumUint | uint64 | v3  | Number of global state integers in ApplicationCall |
+| 53 | GlobalNumByteSlice | uint64 | v3  | Number of global state byteslices in ApplicationCall |
+| 54 | LocalNumUint | uint64 | v3  | Number of local state integers in ApplicationCall |
+| 55 | LocalNumByteSlice | uint64 | v3  | Number of local state byteslices in ApplicationCall |
+| 56 | ExtraProgramPages | uint64 | v4  | Number of additional pages for each of the application's approval and clear state programs. An ExtraProgramPages of 1 means 2048 more total bytes, or 1024 for each program. |
+| 57 | Nonparticipation | uint64 | v5  | Marks an account nonparticipating for rewards |
+| 58 | Logs | []byte | v5  | Log messages emitted by an application call (`itxn` only until v6). Application mode only |
+| 59 | NumLogs | uint64 | v5  | Number of Logs (`itxn` only until v6). Application mode only |
+| 60 | CreatedAssetID | uint64 | v5  | Asset ID allocated by the creation of an ASA (`itxn` only until v6). Application mode only |
+| 61 | CreatedApplicationID | uint64 | v5  | ApplicationID allocated by the creation of an application (`itxn` only until v6). Application mode only |
 
 
 TypeEnum mapping:
@@ -467,23 +467,23 @@ FirstValidTime causes the program to fail. The field is reserved for future use.
 
 `global` Fields:
 
-| Index | Name | Type | Notes |
-| - | ------ | -- | ------- |
-| 0 | MinTxnFee | uint64 | micro Algos |
-| 1 | MinBalance | uint64 | micro Algos |
-| 2 | MaxTxnLife | uint64 | rounds |
-| 3 | ZeroAddress | []byte | 32 byte address of all zero bytes |
-| 4 | GroupSize | uint64 | Number of transactions in this atomic transaction group. At least 1 |
-| 5 | LogicSigVersion | uint64 | Maximum supported TEAL version. Introduced v2. |
-| 6 | Round | uint64 | Current round number. Introduced v2. Application mode only. |
-| 7 | LatestTimestamp | uint64 | Last confirmed block UNIX timestamp. Fails if negative. Introduced v2. Application mode only. |
-| 8 | CurrentApplicationID | uint64 | ID of current application executing. Introduced v2. Application mode only. |
-| 9 | CreatorAddress | []byte | Address of the creator of the current application. Introduced v3. Application mode only. |
-| 10 | CurrentApplicationAddress | []byte | Address that the current application controls. Introduced v5. Application mode only. |
-| 11 | GroupID | []byte | ID of the transaction group. 32 zero bytes if the transaction is not part of a group. Introduced v5. |
-| 12 | OpcodeBudget | uint64 | The remaining cost that can be spent by opcodes in this program. Introduced v6. |
-| 13 | CallerApplicationID | uint64 | The application ID of the application that called this application. 0 if this application is at the top-level. Introduced v6. Application mode only. |
-| 14 | CallerApplicationAddress | []byte | The application address of the application that called this application. ZeroAddress if this application is at the top-level. Introduced v6. Application mode only. |
+| Index | Name | Type | In | Notes |
+| - | ------ | -- | - | --------- |
+| 0 | MinTxnFee | uint64 |      | micro Algos |
+| 1 | MinBalance | uint64 |      | micro Algos |
+| 2 | MaxTxnLife | uint64 |      | rounds |
+| 3 | ZeroAddress | []byte |      | 32 byte address of all zero bytes |
+| 4 | GroupSize | uint64 |      | Number of transactions in this atomic transaction group. At least 1 |
+| 5 | LogicSigVersion | uint64 | v2  | Maximum supported TEAL version |
+| 6 | Round | uint64 | v2  | Current round number. Application mode only. |
+| 7 | LatestTimestamp | uint64 | v2  | Last confirmed block UNIX timestamp. Fails if negative. Application mode only. |
+| 8 | CurrentApplicationID | uint64 | v2  | ID of current application executing. Application mode only. |
+| 9 | CreatorAddress | []byte | v3  | Address of the creator of the current application. Application mode only. |
+| 10 | CurrentApplicationAddress | []byte | v5  | Address that the current application controls. Application mode only. |
+| 11 | GroupID | []byte | v5  | ID of the transaction group. 32 zero bytes if the transaction is not part of a group. |
+| 12 | OpcodeBudget | uint64 | v6  | The remaining cost that can be spent by opcodes in this program. |
+| 13 | CallerApplicationID | uint64 | v6  | The application ID of the application that called this application. 0 if this application is at the top-level. Application mode only. |
+| 14 | CallerApplicationAddress | []byte | v6  | The application address of the application that called this application. ZeroAddress if this application is at the top-level. Application mode only. |
 
 
 ## gtxn t f
@@ -899,7 +899,7 @@ Deleting a key which is already absent has no effect on the application global s
 `asset_holding_get` Fields:
 
 | Index | Name | Type | Notes |
-| - | ------ | -- | ------- |
+| - | ------ | -- | --------- |
 | 0 | AssetBalance | uint64 | Amount of the asset unit held by this account |
 | 1 | AssetFrozen | uint64 | Is the asset frozen or not |
 
@@ -916,20 +916,20 @@ params: Txn.Accounts offset (or, since v4, an account address that appears in Tx
 
 `asset_params_get` Fields:
 
-| Index | Name | Type | Notes |
-| - | ------ | -- | ------- |
-| 0 | AssetTotal | uint64 | Total number of units of this asset |
-| 1 | AssetDecimals | uint64 | See AssetParams.Decimals |
-| 2 | AssetDefaultFrozen | uint64 | Frozen by default or not |
-| 3 | AssetUnitName | []byte | Asset unit name |
-| 4 | AssetName | []byte | Asset name |
-| 5 | AssetURL | []byte | URL with additional info about the asset |
-| 6 | AssetMetadataHash | []byte | Arbitrary commitment |
-| 7 | AssetManager | []byte | Manager commitment |
-| 8 | AssetReserve | []byte | Reserve address |
-| 9 | AssetFreeze | []byte | Freeze address |
-| 10 | AssetClawback | []byte | Clawback address |
-| 11 | AssetCreator | []byte | Creator address. Introduced v5. |
+| Index | Name | Type | In | Notes |
+| - | ------ | -- | - | --------- |
+| 0 | AssetTotal | uint64 |      | Total number of units of this asset |
+| 1 | AssetDecimals | uint64 |      | See AssetParams.Decimals |
+| 2 | AssetDefaultFrozen | uint64 |      | Frozen by default or not |
+| 3 | AssetUnitName | []byte |      | Asset unit name |
+| 4 | AssetName | []byte |      | Asset name |
+| 5 | AssetURL | []byte |      | URL with additional info about the asset |
+| 6 | AssetMetadataHash | []byte |      | Arbitrary commitment |
+| 7 | AssetManager | []byte |      | Manager commitment |
+| 8 | AssetReserve | []byte |      | Reserve address |
+| 9 | AssetFreeze | []byte |      | Freeze address |
+| 10 | AssetClawback | []byte |      | Clawback address |
+| 11 | AssetCreator | []byte | v5  | Creator address |
 
 
 params: Before v4, Txn.ForeignAssets offset. Since v4, Txn.ForeignAssets offset or an asset id that appears in Txn.ForeignAssets. Return: did_exist flag (1 if the asset existed and 0 otherwise), value.
@@ -945,7 +945,7 @@ params: Before v4, Txn.ForeignAssets offset. Since v4, Txn.ForeignAssets offset 
 `app_params_get` Fields:
 
 | Index | Name | Type | Notes |
-| - | ------ | -- | ------- |
+| - | ------ | -- | --------- |
 | 0 | AppApprovalProgram | []byte | Bytecode of Approval Program |
 | 1 | AppClearStateProgram | []byte | Bytecode of Clear State Program |
 | 2 | AppGlobalNumUint | uint64 | Number of uint64 values allowed in Global State |
