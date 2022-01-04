@@ -98,6 +98,48 @@ A program can either authorize some delegated action on a normal private key sig
 
 The bytecode plus the length of all Args must add up to no more than 1000 bytes (consensus parameter LogicSigMaxSize). Each opcode has an associated cost and the program cost must total no more than 20,000 (consensus parameter LogicSigMaxCost). Most opcodes have a cost of 1, but a few slow cryptographic operations are much higher. Prior to v4, the program's cost was estimated as the static sum of all the opcode costs in the program (whether they were actually executed or not). Beginning with v4, the program's cost is tracked dynamically, while being evaluated. If the program exceeds its budget, it fails.
 
+## Execution Environment for Smart Contracts (Applications)
+
+Smart Contracts are executed in ApplicationCall transactions. Like
+Smart Signatures, contracts indicate success by leaving a single
+non-zero integer on the stack.  A failed smart contract call is not a
+valid transaction, thus not written to the blockchain. Nodes maintain
+a list of transactions that would succeed, given the current state of
+the blockchain, called the transaction pool. Nodes draw from the pool
+if they are called upon to propose a block.
+
+Smart Contracts have access to everything a Smart Signature may access
+(see previous section), as well as the ability to examine blockchain
+state such as balances and contract state (their own state and the
+state of other contracts).  They also have access to some global
+values that are not visible to Smart Signatures because the values
+change over time.  Since smart contracts access changing state, nodes
+must rerun their code to determine if the ApplicationCall transactions
+in their pool would still succeed each time a block is added to the
+blockchain.
+
+### Resource availability
+
+Smart contracts have limits on their execution budget (700, consensus
+paramter MaxAppProgramCost), and the amount of blockchain state they
+may examine.  Opcodes may only access blockchain resources such as
+Accounts, Assets, and contract state if the given resource is
+_available_. 
+
+ * A resource in the "foreign array" fields of the ApplicationCall
+   transaction (`txn.Accounts`, `txn.ForeignAssets`, and
+   `txn.ForeignApplications`) is _available_.
+
+ * The `global CurrentApplicationID` and `txn.Sender` are _available_.
+
+ * Prior to v4, all assets were considered _available_ to the
+   `asset_holding_get` opcode.
+
+ * Since v6, any asset or contract that was created earlier in the
+   same transaction group is _available_. In addition, any account
+   that is the contract account of a contract that was created earlier
+   in the group is _available_.
+
 ## Constants
 
 Constants are loaded into storage separate from the stack and scratch space. They can then be pushed onto the stack by referring to the type and index. This makes for efficient re-use of byte constants used for account addresses, etc. Constants that are not reused can be pushed with `pushint` or `pushbytes`.
@@ -389,7 +431,7 @@ Global fields are fields that are common to all the transactions in the group. I
 | 2 | MaxTxnLife | uint64 |      | rounds |
 | 3 | ZeroAddress | []byte |      | 32 byte address of all zero bytes |
 | 4 | GroupSize | uint64 |      | Number of transactions in this atomic transaction group. At least 1 |
-| 5 | LogicSigVersion | uint64 | v2  | Maximum supported TEAL version |
+| 5 | LogicSigVersion | uint64 | v2  | Maximum supported version |
 | 6 | Round | uint64 | v2  | Current round number. Application mode only. |
 | 7 | LatestTimestamp | uint64 | v2  | Last confirmed block UNIX timestamp. Fails if negative. Application mode only. |
 | 8 | CurrentApplicationID | uint64 | v2  | ID of current application executing. Application mode only. |
@@ -517,8 +559,8 @@ Fields may be set multiple times, but may not be read. The most recent
 setting is used when `itxn_submit` executes. For this purpose `Type`
 and `TypeEnum` are considered to be the same field. When using
 `itxn_field` to set an array field (`ApplicationArgs` `Accounts`,
-`Assets`, or `Applications`) each use adds an element to end of the
-the array, rather than setting the entire array at once.
+`Assets`, or `Applications`) each use adds an element to the end of
+the the array, rather than setting the entire array at once.
 
 `itxn_field` fails immediately for unsupported fields, unsupported
 transaction types, or improperly typed values for a particular
@@ -553,7 +595,13 @@ Subsequent lines may contain other pragma declarations (i.e., `#pragma <some-spe
 
 ## Constants and Pseudo-Ops
 
-A few pseudo-ops simplify writing code. `int` and `byte` and `addr` followed by a constant record the constant to a `intcblock` or `bytecblock` at the beginning of code and insert an `intc` or `bytec` reference where the instruction appears to load that value. `addr` parses an Algorand account address base32 and converts it to a regular bytes constant.
+A few pseudo-ops simplify writing code. `int`, `byte`, `addr`, and
+`method` followed by a constant record the constant to a `intcblock`
+or `bytecblock` at the beginning of code and insert an `intc` or
+`bytec` reference where the instruction appears to load that
+value. `addr` parses an Algorand account address base32 and converts
+it to a regular byte-array constant. `method` calculates an ARC4
+method selector, and stores a regular uint64 constant.
 
 `byte` constants are:
 ```
@@ -570,7 +618,8 @@ byte "\x01\x02"
 byte "string literal"
 ```
 
-`int` constants may be `0x` prefixed for hex, `0` prefixed for octal, or decimal numbers.
+`int` constants may be `0x` prefixed for hex, `0o` or `0` prefixed for
+octal, `0b` for binary, or decimal numbers.
 
 `intcblock` may be explicitly assembled. It will conflict with the assembler gathering `int` pseudo-ops into a `intcblock` program prefix, but may be used if code only has explicit `intc` references. `intcblock` should be followed by space separated int constants all on one line.
 
@@ -578,7 +627,7 @@ byte "string literal"
 
 ## Labels and Branches
 
-A label is defined by any string not some other op or keyword and ending in ':'. A label can be an argument (without the trailing ':') to a branch instruction.
+A label is defined by any string not some other opcode or keyword and ending in ':'. A label can be an argument (without the trailing ':') to a branching instruction.
 
 Example:
 ```

@@ -474,7 +474,7 @@ FirstValidTime causes the program to fail. The field is reserved for future use.
 | 2 | MaxTxnLife | uint64 |      | rounds |
 | 3 | ZeroAddress | []byte |      | 32 byte address of all zero bytes |
 | 4 | GroupSize | uint64 |      | Number of transactions in this atomic transaction group. At least 1 |
-| 5 | LogicSigVersion | uint64 | v2  | Maximum supported TEAL version |
+| 5 | LogicSigVersion | uint64 | v2  | Maximum supported version |
 | 6 | Round | uint64 | v2  | Current round number. Application mode only. |
 | 7 | LatestTimestamp | uint64 | v2  | Last confirmed block UNIX timestamp. Fails if negative. Application mode only. |
 | 8 | CurrentApplicationID | uint64 | v2  | ID of current application executing. Application mode only. |
@@ -794,7 +794,7 @@ decodes A using the base64 encoding alphabet E. Specify the alphabet with an imm
 - Availability: v2
 - Mode: Application
 
-params: Txn.Accounts offset (or, since v4, an account address that appears in Txn.Accounts or is Txn.Sender), application id (or, since v4, a Txn.ForeignApps offset). Return: value.
+params: Txn.Accounts offset (or, since v4, an _available_ account address), _available_ application id (or, since v4, a Txn.ForeignApps offset). Return: value.
 
 ## app_opted_in
 
@@ -804,7 +804,7 @@ params: Txn.Accounts offset (or, since v4, an account address that appears in Tx
 - Availability: v2
 - Mode: Application
 
-params: Txn.Accounts offset (or, since v4, an account address that appears in Txn.Accounts or is Txn.Sender), application id (or, since v4, a Txn.ForeignApps offset). Return: 1 if opted in and 0 otherwise.
+params: Txn.Accounts offset (or, since v4, an _available_ account address), _available_ application id (or, since v4, a Txn.ForeignApps offset). Return: 1 if opted in and 0 otherwise.
 
 ## app_local_get
 
@@ -814,7 +814,7 @@ params: Txn.Accounts offset (or, since v4, an account address that appears in Tx
 - Availability: v2
 - Mode: Application
 
-params: Txn.Accounts offset (or, since v4, an account address that appears in Txn.Accounts or is Txn.Sender), state key. Return: value. The value is zero (of type uint64) if the key does not exist.
+params: Txn.Accounts offset (or, since v4, an _available_ account address), state key. Return: value. The value is zero (of type uint64) if the key does not exist.
 
 ## app_local_get_ex
 
@@ -824,7 +824,7 @@ params: Txn.Accounts offset (or, since v4, an account address that appears in Tx
 - Availability: v2
 - Mode: Application
 
-params: Txn.Accounts offset (or, since v4, an account address that appears in Txn.Accounts or is Txn.Sender), application id (or, since v4, a Txn.ForeignApps offset), state key. Return: did_exist flag (top of the stack, 1 if the application and key existed and 0 otherwise), value. The value is zero (of type uint64) if the key does not exist.
+params: Txn.Accounts offset (or, since v4, an _available_ account address), _available_ application id (or, since v4, a Txn.ForeignApps offset), state key. Return: did_exist flag (top of the stack, 1 if the application and key existed and 0 otherwise), value. The value is zero (of type uint64) if the key does not exist.
 
 ## app_global_get
 
@@ -844,7 +844,7 @@ params: state key. Return: value. The value is zero (of type uint64) if the key 
 - Availability: v2
 - Mode: Application
 
-params: Txn.ForeignApps offset (or, since v4, an application id that appears in Txn.ForeignApps or is the CurrentApplicationID), state key. Return: did_exist flag (top of the stack, 1 if the application and key existed and 0 otherwise), value. The value is zero (of type uint64) if the key does not exist.
+params: Txn.ForeignApps offset (or, since v4, an _available_ application id), state key. Return: did_exist flag (top of the stack, 1 if the application and key existed and 0 otherwise), value. The value is zero (of type uint64) if the key does not exist.
 
 ## app_local_put
 
@@ -854,7 +854,7 @@ params: Txn.ForeignApps offset (or, since v4, an application id that appears in 
 - Availability: v2
 - Mode: Application
 
-params: Txn.Accounts offset (or, since v4, an account address that appears in Txn.Accounts or is Txn.Sender), state key, value.
+params: Txn.Accounts offset (or, since v4, an _available_ account address), state key, value.
 
 ## app_global_put
 
@@ -872,7 +872,7 @@ params: Txn.Accounts offset (or, since v4, an account address that appears in Tx
 - Availability: v2
 - Mode: Application
 
-params: Txn.Accounts offset (or, since v4, an account address that appears in Txn.Accounts or is Txn.Sender), state key.
+params: Txn.Accounts offset (or, since v4, an _available_ account address), state key.
 
 Deleting a key which is already absent has no effect on the application local state. (In particular, it does _not_ cause the program to fail.)
 
@@ -904,7 +904,7 @@ Deleting a key which is already absent has no effect on the application global s
 | 1 | AssetFrozen | uint64 | Is the asset frozen or not |
 
 
-params: Txn.Accounts offset (or, since v4, an account address that appears in Txn.Accounts or is Txn.Sender), asset id (or, since v4, a Txn.ForeignAssets offset). Return: did_exist flag (1 if the asset existed and 0 otherwise), value.
+params: Txn.Accounts offset (or, since v4, an _available_ address), asset id (or, since v4, a Txn.ForeignAssets offset). Return: did_exist flag (1 if the asset existed and 0 otherwise), value.
 
 ## asset_params_get i
 
@@ -932,7 +932,7 @@ params: Txn.Accounts offset (or, since v4, an account address that appears in Tx
 | 11 | AssetCreator | []byte | v5  | Creator address |
 
 
-params: Before v4, Txn.ForeignAssets offset. Since v4, Txn.ForeignAssets offset or an asset id that appears in Txn.ForeignAssets. Return: did_exist flag (1 if the asset existed and 0 otherwise), value.
+params: Txn.ForeignAssets offset (or, since v4, an _available_ asset id. Return: did_exist flag (1 if the asset existed and 0 otherwise), value.
 
 ## app_params_get i
 
@@ -957,7 +957,7 @@ params: Before v4, Txn.ForeignAssets offset. Since v4, Txn.ForeignAssets offset 
 | 8 | AppAddress | []byte | Address for which this application has authority |
 
 
-params: Txn.ForeignApps offset or an app id that appears in Txn.ForeignApps. Return: did_exist flag (1 if the application existed and 0 otherwise), value.
+params: Txn.ForeignApps offset or an _available_ app id. Return: did_exist flag (1 if the application existed and 0 otherwise), value.
 
 ## min_balance
 
@@ -967,7 +967,7 @@ params: Txn.ForeignApps offset or an app id that appears in Txn.ForeignApps. Ret
 - Availability: v3
 - Mode: Application
 
-params: Txn.Accounts offset (or, since v4, an account address that appears in Txn.Accounts or is Txn.Sender), application id (or, since v4, a Txn.ForeignApps offset). Return: value.
+params: Txn.Accounts offset (or, since v4, an _available_ account address), _available_ application id (or, since v4, a Txn.ForeignApps offset). Return: value.
 
 ## pushbytes bytes
 
@@ -1190,7 +1190,7 @@ bitlen interprets arrays as big-endian integers, unlike setbit/getbit
 - Availability: v5
 - Mode: Application
 
-`itxn_begin` initializes Sender to the application address; Fee to the minimum allowable, taking into account MinTxnFee and credit from overpaying in earlier transactions; FirstValid/LastValid to the values in the invoking transaction, and all other fields to zero values.
+`itxn_begin` initializes Sender to the application address; Fee to the minimum allowable, taking into account MinTxnFee and credit from overpaying in earlier transactions; FirstValid/LastValid to the values in the invoking transaction, and all other fields to zero or empty values.
 
 ## itxn_field f
 
@@ -1200,7 +1200,7 @@ bitlen interprets arrays as big-endian integers, unlike setbit/getbit
 - Availability: v5
 - Mode: Application
 
-`itxn_field` fails if A is of the wrong type for F, including a byte array of the wrong size for use as an address when F is an address field. `itxn_field` also fails if A is an account, asset, or app that does not appear in `txn.Accounts`, `txn.ForeignAssets`, or `txn.ForeignApplications` of the invoking transaction. (Setting addresses in asset creation are exempted from this requirement.)
+`itxn_field` fails if A is of the wrong type for F, including a byte array of the wrong size for use as an address when F is an address field. `itxn_field` also fails if A is an account, asset, or app that is not _available_. (Setting addresses in asset creation transactions need not be _available_.)
 
 ## itxn_submit
 
