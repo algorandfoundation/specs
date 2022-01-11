@@ -778,13 +778,13 @@ When A is a uint64, index 0 is the least significant bit. Setting bit 3 to 1 on 
 
 ## base64_decode e
 
-- Opcode: 0x5c {uint8 alphabet index}
+- Opcode: 0x5c {uint8 encoding index}
 - Stack: ..., A: []byte &rarr; ..., []byte
-- decode A which was base64-encoded using _encoding alphabet_ E. Fail if A is not base64 encoded with alphabet E
+- decode A which was base64-encoded using _encoding_ E. Fail if X is not base64 encoded with encoding E
 - **Cost**: 25
 - Availability: v6
 
-decodes A using the base64 encoding alphabet E. Specify the alphabet with an immediate arg either as URL and Filename Safe (`URLAlph`) or Standard (`StdAlph`). See <a href="https://rfc-editor.org/rfc/rfc4648.html#section-4">RFC 4648</a> (sections 4 and 5)
+Decodes A using the base64 encoding E. Specify the encoding with an immediate arg either as URL and Filename Safe (`URLEncoding`) or Standard (`StdEncoding`). See <a href="https://rfc-editor.org/rfc/rfc4648.html#section-4">RFC 4648</a> (sections 4 and 5). It is assumed that the encoding ends with the exact number of `=` padding characters as required by the RFC. When padding occurs, any unused pad bits in the encoding must be set to zero or the decoding will fail. The special cases of `\n` and `\r` are allowed but completely ignored. An error will result when attempting to decode a string with a character that is not in the encoding alphabet or not one of `=`, `\r`, or `\n`.
 
 ## balance
 
@@ -1051,6 +1051,14 @@ bitlen interprets arrays as big-endian integers, unlike setbit/getbit
 - **Cost**: 10
 - Availability: v4
 
+## bsqrt
+
+- Opcode: 0x96
+- Stack: ..., A: []byte &rarr; ..., []byte
+- The largest integer B such that B^2 <= A. A and B are byte-arrays interpreted as big-endian unsigned integers
+- **Cost**: 40
+- Availability: v6
+
 ## b+
 
 - Opcode: 0xa0
@@ -1200,7 +1208,7 @@ bitlen interprets arrays as big-endian integers, unlike setbit/getbit
 - Availability: v5
 - Mode: Application
 
-`itxn_field` fails if A is of the wrong type for F, including a byte array of the wrong size for use as an address when F is an address field. `itxn_field` also fails if A is an account, asset, or app that is not _available_. (Setting addresses in asset creation transactions need not be _available_.)
+`itxn_field` fails if A is of the wrong type for F, including a byte array of the wrong size for use as an address when F is an address field. `itxn_field` also fails if A is an account, asset, or app that is not _available_. (Addresses set into asset params of acfg transactions need not be _available_.)
 
 ## itxn_submit
 
