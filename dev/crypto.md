@@ -95,6 +95,13 @@ random seed.
 Algorand uses the [ed25519][ed25519] digital signature scheme to sign
 data.
 
+Algorand changes the ed25519 verification algorithm in the following way:
+1 reject small order A (PK)
+2 reject non-canonical A (PK)
+3 reject non-canonical R
+4 reject non-canonical S
+5 use the cofactor equation
+
 
 ### Ephemeral-key Signature
 
