@@ -242,7 +242,7 @@ if _n_ = 16:
 
 else:
 
-- _Proof_ = (_n_ || _digest_$_{0}$ || ... || _digest_$_{n-1}$ || _zeroDigest_$_{0}$ || ... || _zeroDigest_$_{d-1}$)
+- _Proof_ = (_n_ || _zeroDigest_$_{0}$ || ... || _zeroDigest_$_{d-1}$ || _digest_$_{0}$ || ... || _digest_$_{n-1}$)
 
 where:
 
