@@ -825,12 +825,12 @@ and contains the following fields:
     contain the transaction fields, encoded under `txn`, in the same
     way that the top-level transaction is encoded, recursively,
     including `ApplyData` that applies to the inner transaction.
+    - The recursive depth of inner transactions is limited 8.
     - Up to 16 `InnerTxns` may be present in version 5. In version 6,
     the count of all inner transactions across the transaction group
-    must not exceed 16 $*$ the number of top-level ApplicationCall
-    transactions.
+    must not exceed 256.
     - InnerTxns are limited to `pay`, `axfer`, `acfg`, and `afrz`
-      transactions in TEAL programs before version 6. Version 6 alos
+      transactions in TEAL programs before version 6. Version 6 also
       allows `keyreg` and `appl`.
 
 
