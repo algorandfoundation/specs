@@ -187,7 +187,10 @@ In order to bound verification paths on the tree, the tree's depth is bound to 1
 #### Public Commitment
 
 The scheme generates multiple keys for the entire participation period. Given _FirstValidRound_, _LastValidRound_ and an _Interval_, a key is generated for each _Round_ that holds:\newline
- _FirstValidRound_ $\leq$ _Round_ $\leq$ _LastValidRound_ and _Round_ % _Interval_ = 0
+ _FirstValidRound_ $\leq$ _Round_ $\leq$ _LastValidRound_ and _Round_ % _Interval_ = 0\newline
+
+
+Currently, _Interval_ is set to 256.\newline
 
 After generating the public keys, the scheme creates a vector commitment using the keys as leaves.
 Leaf hashing is done in the following manner: \newline
@@ -202,7 +205,7 @@ where:
 
 - _P_$_{k_{i}}$ is a 14,344-bit string represents the Falcon ephemeral public key.
 
-- hash: is a subsetsum hash function
+- hash: is the SUBSET-SUM hash function as defined in the [Algorand Cryptographic Primitives Specification](Crypto.md)
 
 
 #### Signatures
