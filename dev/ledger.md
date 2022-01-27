@@ -635,7 +635,7 @@ For a key registration transaction to be valid, the following needs to apply:
    - _vote last_ needs to be greater than or equal to the current network round _r_.
    - _vote first_ needs to be less than or equal to (_first valid_+1).
    - _vote first_ needs to be less than or equal to (_r_+1).
-- The value (_vote last_ - _vote first_) must be greater than 128*(2$^{16}$)-1.
+- The value (_vote last_ - _vote first_) must be greater than 256*(2$^{16}$)-1.
 
 ### Application Call Transaction
 An application call transaction additionally has the following fields:
