@@ -820,13 +820,18 @@ and contains the following fields:
     of the entries follows the execution order of the `log`
     invocations. The maximum total number of `log` calls is 32, and the
     total size of all logged bytes is limited to 1024.
-  - Zero or more `InnerTxns`, encoded in an array `itx`. Each element of
-    `itx` records a successful invocation of the `tx_submit` opcode. Each
-    element will contain the transaction fields, encoded under `txn`, in
-    the same way that the top-level transaction is encoded, recursively,
-    including `ApplyData` that applies to the inner transaction.  Up to 16
-    `InnerTxns` may be present.
-    - InnerTxns are limited to `pay`, `axfer`, `acfg`, and `afrz` transactions.
+  - Zero or more `InnerTxns`, encoded in an array `itx`. Each element
+    of `itx` records a successful inner transaction. Each element will
+    contain the transaction fields, encoded under `txn`, in the same
+    way that the top-level transaction is encoded, recursively,
+    including `ApplyData` that applies to the inner transaction.
+    - The recursive depth of inner transactions is limited 8.
+    - Up to 16 `InnerTxns` may be present in version 5. In version 6,
+    the count of all inner transactions across the transaction group
+    must not exceed 256.
+    - InnerTxns are limited to `pay`, `axfer`, `acfg`, and `afrz`
+      transactions in TEAL programs before version 6. Version 6 also
+      allows `keyreg` and `appl`.
 
 
 ### State Deltas
@@ -1023,6 +1028,12 @@ An asset freeze transaction has the following semantics:
 
  - The freeze flag of the specified asset in the specified account is updated
    to the flag value from the freeze transaction.
+
+When an asset transaction allocates space in an account for an asset,
+whether by creation or opt-in, the sender's minimum balance
+requirement is incremented by 100000 microalgos.  When the space is
+deallocated, whether by asset destruction or asset-close-to, the balance
+requirement of the sender is decremented by 100000 microalgos.
 
 ## `ApplicationCall` Transaction Semantics
 
