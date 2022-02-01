@@ -1,9 +1,10 @@
 language: minimal
 os: linux
+dist: focal
 before_install:
 - sudo apt-get update -qq
 install:
-- sudo apt-get install -qq pandoc texlive-latex-base texlive-latex-recommended lmodern texlive-fonts-recommended
+- sudo apt-get install -qq pandoc texlive-latex-base texlive-latex-recommended lmodern texlive-fonts-recommended texlive-latex-extra
 before_script: cd dev
 script:
 - mkdir -p ./{pdf,html}
