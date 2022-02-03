@@ -140,7 +140,7 @@ Algorand changes the ed25519 verification algorithm in the following way  (using
 
 ### FALCON
 
-Algorand uses a deterministic version of [falcon scheme][falcon]. Falcon is quantum resilient and a SNARK friendly digital signature scheme used to sign in StateProofs. Falcon signatures contains 
+Algorand uses a [deterministic][deterministic-falcon] version of [falcon scheme][falcon]. Falcon is quantum resilient and a SNARK friendly digital signature scheme used to sign in StateProofs. Falcon signatures contains 
 salt version. Algorand only accepts signatures with salt version = 0.
 
 The library defines the following sizes:
@@ -289,9 +289,11 @@ def verify(elems, proof, root):
 [abft-spec]: https://github.com/algorand/spec/abft.md
 
 [sha]: https://doi.org/10.6028/NIST.FIPS.180-4
-[sumhash]: https://github.com/algorand/go-sumhash/blob/master/spec/sumhash-spec.pdf
+[sumhash]: https://github.com/algorandfoundation/specs/blob/master/dev/cryptographic-specs/sumhash-spec.pdf
 [ed25519]: https://tools.ietf.org/html/rfc8032
 [msgpack]: https://github.com/msgpack/msgpack/blob/master/spec.md
-[merklesignaturescheme]: https://github.com/algorand/spec/partkey.md
-[falcon]: https://github.com/algorand/falcon/blob/main/falcon-det.pdf
-[vector-commitment]:
+[merklesignaturescheme]: https://github.com/algorandfoundation/specs/blob/master/dev/partkey.md
+[falcon]: https://falcon-sign.info/falcon.pdf
+[deterministic-falcon]: https://github.com/algorandfoundation/specs/blob/master/dev/cryptographic-specs/FalconDeterministic.pdf
+[vector-commitment]: fd
+ 
