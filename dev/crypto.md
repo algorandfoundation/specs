@@ -50,7 +50,8 @@ below specifies each prefix (in quotation marks):
     - "OT1" and "OT2": The first and second layers of keys used for
       [ephemeral signatures](#ephemeral-key-signature).
     - "MA": An internal node in a [Merkle tree](#merkle-tree).
-    - "KP": Is a public key used by the Merkle Keystore [merkle keystore](merklekeystore)
+    - "MB": A bottem leaf in a vector commitment [vector commitment](#vector-commitment).
+    - "KP": Is a public key used by the Merkle siganture scheme [Merkle Siganture Scheme](merklesignaturescheme)
  - In the [Algorand Ledger][ledger-spec]:
     - "BH": A _Block Header_.
     - "BR": A _Balance Record_.
@@ -259,5 +260,6 @@ def verify(elems, proof, root):
 [sumhash]: https://github.com/algorand/go-sumhash/blob/master/spec/sumhash-spec.pdf
 [ed25519]: https://tools.ietf.org/html/rfc8032
 [msgpack]: https://github.com/msgpack/msgpack/blob/master/spec.md
-[merklekeystore]: https://github.com/algorand/spec/partkey.md
+[merklesignaturescheme]: https://github.com/algorand/spec/partkey.md
 [falcon]: https://github.com/algorand/falcon/blob/main/falcon-det.pdf
+[vector-commitment]:
