@@ -298,5 +298,5 @@ Algorand uses [Vector Commitments][vector-commitment], which allows for concisel
 [msgpack]: https://github.com/msgpack/msgpack/blob/master/spec.md
 [merklesignaturescheme]: https://github.com/algorandfoundation/specs/blob/master/dev/partkey.md
 [falcon]: https://falcon-sign.info/falcon.pdf
-[deterministic-falcon]: https://github.com/algorandfoundation/specs/blob/master/dev/cryptographic-specs/FalconDeterministic.pdf
+[deterministic-falcon]: https://github.com/algorandfoundation/specs/blob/master/dev/cryptographic-specs/falcon-deterministic.pdf
 [vector-commitment]: https://github.com/algorandfoundation/specs/blob/master/dev/cryptographic-specs/merkle-vc-full.pdf
