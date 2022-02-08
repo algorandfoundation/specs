@@ -283,6 +283,10 @@ def verify(elems, proof, root):
   return verify(nextelems, proof, root)
 ```
 
+## Vector commitment
+
+Algorand uses [Vector Commitments][vector-commitment], which allows for concisely committing to an ordered (indexed) vector of data entries, based on Merkle trees.
+
 
 
 [ledger-spec]: https://github.com/algorand/spec/ledger.md
@@ -295,5 +299,4 @@ def verify(elems, proof, root):
 [merklesignaturescheme]: https://github.com/algorandfoundation/specs/blob/master/dev/partkey.md
 [falcon]: https://falcon-sign.info/falcon.pdf
 [deterministic-falcon]: https://github.com/algorandfoundation/specs/blob/master/dev/cryptographic-specs/FalconDeterministic.pdf
-[vector-commitment]: fd
- 
+[vector-commitment]: https://github.com/algorandfoundation/specs/blob/master/dev/cryptographic-specs/merkle-vc-full.pdf

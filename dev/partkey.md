@@ -216,15 +216,15 @@ A Signature in the scheme consist of the following elements:
 
 - _VerifyingKey_ is a Falcon ephemeral public key. 
 
-- _MerkleArrayIndex_ is an index of the ephemeral public key leaf in the vector commitment.
+- _VectorIndex_ is an index of the ephemeral public key leaf in the vector commitment.
 
 - _Proof_ is an array of size _n_ (_n_ $\leq$ 16  Since the number of keys is bounded) which contains hash results (_digest_$_{0}$,...,_digest_$_{n}$). Proof is used as a Merkle verification path on the ephemeral public key. 
-When the committer gives a depth-_n_ authentication path for index _MerkleArrayIndex_, the verifier must write _MerkleArrayIndex_ as _n_-bit number and read it from MSB to LSB to determine the leaf-to-root path. 
+When the committer gives a depth-_n_ authentication path for index _VectorIndex_, the verifier must write _VectorIndex_ as _n_-bit number and read it from MSB to LSB to determine the leaf-to-root path. 
 
 
 When signature is to be hashed, it must be serialized into a binary string according to the following format:
 
-_SignatureBitString_ = (_schemeId_ || _Signature_ || _VerifyingKey_ || _MerkleArrayIndex_ || _Proof_)
+_SignatureBitString_ = (_schemeId_ || _Signature_ || _VerifyingKey_ || _VectorIndex_ || _Proof_)
 
 where:
 
@@ -234,7 +234,7 @@ where:
 
 - _VerifyingKey_ is a 14,344-bit string
 
-- _MerkleArrayIndex_ is a 64-bit, little-endian integer
+- _VectorIndex_ is a 64-bit, little-endian integer
 
 - _Proof_ is constructed in the following way:\newline
 
