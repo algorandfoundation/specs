@@ -1,0 +1,534 @@
+%% WARNING: THIS IS A DERIVED (FLATTENED) FILE; DO NOT MAKE
+%% SUBSTANTIVE EDITS! EDIT THE ORIGINAL SOURCE FILES INSTEAD.
+
+% flatex input: [merkle.tex]
+\documentclass[11pt,hidelinks]{article}
+\usepackage{fullpage}
+\usepackage{microtype}
+\usepackage{newtxtext}
+\usepackage{xspace}
+
+\usepackage{amsmath,amsfonts,amssymb}
+\usepackage[amsmath,amsthm,thmmarks,hyperref]{ntheorem}
+\usepackage{mathtools}
+% https://tex.stackexchange.com/questions/424686/crefrange-links-to-the-right-line-in-the-wrong-algorithm
+\usepackage[colorlinks,hypertexnames=false]{hyperref}
+\hypersetup{linkcolor=blue,filecolor=blue,citecolor=blue,urlcolor=blue}
+
+\newtheorem{theorem}{Theorem}[section]
+
+\usepackage{algorithm}
+\usepackage[noend]{algpseudocode}
+\renewcommand{\algorithmicrequire}{\textbf{Input:}}
+\renewcommand{\algorithmicensure}{\textbf{Output:}}
+
+\algnewcommand{\IfThenElse}[3]{% \IfThenElse{<if>}{<then>}{<else>}
+  \State \algorithmicif\ #1\ \algorithmicthen\ #2\ \algorithmicelse\ #3}
+
+\usepackage{enumitem}
+\usepackage{breakcites}
+\usepackage{authblk}
+
+% load after hyperref, algpseudocode to get proper behavior
+\usepackage[capitalize,nameinlink,noabbrev]{cleveref}
+
+% remove 'draft' to turn off fixme notes
+\usepackage[draft,multiuser,inline,nomargin]{fixme}
+
+% fixme: register commands for author(s)
+\usepackage{xcolor}
+\FXRegisterAuthor{c}{ec}{\color{red}Chris}
+\FXRegisterAuthor{r}{er}{\color{purple}Riad}
+\fxusetheme{color}
+
+% flatex input: [macros.tex]
+\newcommand{\algo}[1]{\ensuremath{\mathsf{#1}}}
+
+\newcommand{\bit}{\ensuremath{\{0,1\}}}
+\newcommand{\msgspace}{\ensuremath{\mathcal{M}}}
+\newcommand{\hashsp}{\ensuremath{\mathcal{H}}}
+\newcommand{\specialhash}{\ensuremath{\mathbf{0}}}
+
+\newcommand{\MT}{\algo{MT}}
+\newcommand{\VC}{\algo{VC}}
+
+\newcommand{\Build}{\algo{Build}}
+\newcommand{\Commit}{\algo{Commit}}
+\newcommand{\Prove}{\algo{Prove}}
+\newcommand{\Verify}{\algo{Verify}}
+
+\newcommand{\HashEntry}{\algo{HashE}}
+\newcommand{\HashChildren}{\algo{HashC}}
+\newcommand{\RootToLeafPath}{\algo{RootToLeafPath}}
+
+\newcommand{\Sig}{\algo{Sig}}
+\newcommand{\Gen}{\algo{Gen}}
+\newcommand{\Sign}{\algo{Sign}}
+
+\newcommand{\MSS}{\algo{MSS}}
+
+% flatex input end: [macros.tex]
+
+% fixme: register commands for author(s)
+
+\title{Merkle Trees and Signatures}
+
+% date of last substantive edits
+\date{February 8, 2022}
+
+\author{Chris Peikert}
+\author{Idan Meshita}
+\author{Riad Wahby}
+
+\affil{Algorand, Inc.}
+
+\begin{document}
+
+\maketitle
+
+% list of notes to address; appears only in draft mode
+\listoffixmes
+
+% flatex input: [trees.tex]
+
+For a non-negative integer~$k$, let $[k] := \{0, 1, \ldots,
+k-1\}$. Recall that a \emph{collision} in a function~$H$ is a pair of
+distinct inputs $m \neq m'$ such that $H(m) = H(m')$, and a
+\emph{claw} in a pair of functions $H,H'$ is a pair of (not
+necessarily distinct) inputs $m,m'$ such that $H(m) = H'(m')$.
+
+\section{Merkle Trees and Vector Commitments}
+\label{sec:merkle-vc}
+
+This section defines:
+\begin{enumerate}[itemsep=0pt]
+\item a version of Merkle trees, which allows for concisely committing
+  to a possibly large, implicitly \emph{unordered} set of data
+  entries;
+\item a version of vector commitments, which allows for concisely
+  committing to an \emph{ordered} (indexed) vector of data entries,
+  based on Merkle trees.
+\end{enumerate}
+
+\paragraph{Binary trees.}
+
+A \emph{complete} (also known as \emph{almost complete}) binary tree
+is one in which every level is completely filled, except for possibly
+the leaf level, in which the leaves are filled from the left. Such a
+tree~$T$ can be:
+\begin{itemize}[itemsep=0pt]
+\item \emph{empty}, meaning it has zero nodes (not even a root node);
+\item a \emph{leaf}, meaning it has exactly one node (which is its
+  root);
+\item or neither of these, in which case it has a non-empty left child
+  tree denoted $T.\text{left}$, and a (possibly empty) right child
+  tree denoted $T.\text{right}$.
+\end{itemize}
+A \emph{perfect} binary tree is a complete one where every layer,
+including the leaf layer, is completely filled.
+
+\paragraph{Merkle tree overview.}
+
+In the present version of Merkle trees, the data entries are placed at
+the leaves of an (almost) complete binary tree, with one entry per
+leaf. Every binary tree~$T$, even the empty one, has an attribute
+$T.\text{digest}$, which holds a hash digest representing the contents
+of the entire tree:
+\begin{itemize}[itemsep=0pt]
+\item The digest of the empty tree is always defined to be
+  $T.\text{digest} = \specialhash$, a canonical (but arbitrary)
+  digest value.
+\item The digest of a leaf tree is defined to be the hash of its
+  associated data entry, using a specified function for hashing
+  entries.
+\item The digest of a non-empty, non-leaf tree is defined to be the
+  hash of the digests of its left and right child trees, using a
+  specified function for hashing pairs of digests.
+\end{itemize}
+The two hash functions should satisfy certain collision-resistance
+properties individually and together; in particular, they must be
+different functions, but they can be defined using a single
+collision-resistant hash function via appropriate domain
+separation. See \cref{alg:merkle} and \cref{thm:tree-vc} for further
+details.
+
+\medskip
+\noindent The abstract syntax (interface) for Merkle trees is as
+follows (see \cref{alg:merkle} for the formal definitions):
+\begin{itemize}
+\item $\MT.\Build$ takes an (almost) complete tree with a data entry
+  at each one of its leaves, and populates the digests of the tree and
+  all its subtrees, also returning the digest of the entire tree.
+
+\item $\MT.\Prove$ takes a built tree (i.e., one whose digests have
+  been populated by $\MT.\Build$) and a root-to-leaf path specified by
+  a binary string (where~$0$ and~$1$ respectively denote left and
+  right), and returns a proof consisting of one hash digest per bit of
+  the string. If the provided path does not lead from the root to a
+  leaf (because the path is either too short or too long), then the
+  output is an error. In particular, there is no valid path for an
+  empty tree.
+
+\item $\MT.\Verify$ takes a digest representing a commitment to an
+  entire tree (of arbitrary size and topology), a claimed data entry,
+  a root-to-leaf path specified by a binary string of some
+  non-negative length (possibly zero), and a purported proof
+  consisting of one hash digest per bit of the string. It either
+  accepts or rejects, indicating whether these inputs represent a
+  valid proof that the claimed entry is located at the leaf specified
+  by the claimed path.
+\end{itemize}
+
+\paragraph{Vector commitment overview.}
+
+The abstract syntax (interface) for vector commitments is as follows
+(see \cref{alg:vc-merkle} for the formal definitions):
+\begin{itemize}
+\item $\VC.\Commit$ takes an ordered vector of any non-negative number
+  (possibly zero) of data entries, and returns a commitment along with
+  some auxiliary data that is later used for proving individual
+  entries.
+  
+\item $\VC.\Prove$ takes the auxiliary data (as returned by
+  $\VC.\Commit$) and a valid index into the committed vector, and
+  returns a proof.  (Concretely, the proof is an ordered tuple of hash
+  digests, as returned by $\MT.\Prove$.)
+  
+\item $\VC.\Verify$ takes a commitment (concretely, a hash digest) to
+  some vector of any valid dimension, a vector index, a claimed data
+  entry, and a purported proof (concretely, an ordered tuple of some
+  non-negative number of hash digests). It either accepts or rejects,
+  indicating whether these inputs represent a valid proof that the
+  claimed entry is located at the specified index of the committed
+  vector. The provided index must be in $[2^{d}]$, where~$d$ is the
+  number of hash digests in the proof; otherwise $\VC.\Verify$
+  immediately rejects.
+\end{itemize}
+
+The vector commitment scheme $\VC$ is defined essentially as a ``thin
+wrapper'' around the Merkle tree scheme $\MT$, with two pieces
+involved in the translation. First, $\VC$ uses a suitable
+correspondence between vector indices and root-to-leaf paths. Namely,
+index~$i$ corresponds to a path specified by the binary representation
+of~$i$, from \emph{least}- to \emph{most}-significant bit. This
+ordering (which is the ``bit-reversed'' version of the usual indexing
+of leaves in a binary tree) is \emph{essential} for the
+position-binding security property; see \cref{thm:tree-vc} and the
+discussion following it. Note that a given path uniquely defines an
+index (e.g., path $0111$ corresponds to index~$14$), but a given index
+can yield multiple paths (e.g., index~$13$ corresponds to paths
+$1011$, $10110$, $101100$, etc.). However, the $\VC$ functions always
+have additional context that determines the proper path length to use
+(called~$d$ in the pseudocode), and with this context, an index
+uniquely defines a path.
+
+Second, to ensure that $\VC$ provides $\MT$ with a complete tree
+(which is not immediate, due to the above-described indexing),
+$\VC.\Commit$ also pads its input vector with special, distinguished
+`nothing' values to make the vector have a power-of-two length. (These
+`nothing' values must be hashed appropriately, which can be done by
+suitable domain separation.) This ensures that the resulting tree is
+perfect, and hence complete.
+
+\begin{algorithm}
+  \caption{Merkle tree scheme ($\MT$).}
+  \label{alg:merkle}
+
+  \begin{itemize}[itemsep=0pt]
+  \item Let $\msgspace = \bit^{*} \cup \{ \bot \}$, the set of all
+    binary strings together with a distinguished `nothing'
+    value~$\bot$, denote the space of valid vector entries.
+  \item Let $\HashEntry \colon \msgspace \to \hashsp$ be a hash
+    function for vector entries, and let
+    $\HashChildren \colon \hashsp \times \hashsp \to \hashsp$ be a
+    hash function for children of internal nodes. Let
+    $\specialhash \in \hashsp$ denote a special hash digest, which may
+    be arbitrary.
+
+    These hash functions can be instantiated using a single function
+    with appropriate domain separation.
+  \end{itemize}
+
+  \begin{algorithmic}[1]
+    \Function{\MT.\Build}{$T$}
+
+    \Comment{in a \emph{complete} binary tree, compute all digests
+      from its leaf entries (if any); return the tree's digest}
+
+    \If{$T$ is empty} do nothing
+    \Comment{$T.\text{digest} = \specialhash$ already}
+    \ElsIf{$T$ is a leaf}
+    $T.\text{digest} = \HashEntry(T.\text{entry})$
+    \Else\ $T.\text{digest} =
+    \HashChildren(\MT.\Build(T.\text{left}), \MT.\Build(T.\text{right}))$
+    \EndIf
+
+    \State \Return $T.\text{digest}$
+    \EndFunction
+
+    \Function{\MT.\Prove}{$T, p = p_{1}\cdots p_{d} \in \bit^{d}$}
+    \Comment{prove entry at the root-to-leaf path~$p$ of a built tree~$T$}
+
+    \If{$d = 0$} \Comment{path is empty\ldots}
+    \IfThenElse{$T$ is a leaf}{\Return $()$}{\Return error}
+    \Comment{\ldots so tree must be a leaf}
+    \EndIf
+    
+    \If{$T$ is empty or a leaf}
+    \Return error \Comment{path is non-empty, so children are required}
+    \EndIf
+
+    \IfThenElse{$p_{1} = 0$}
+    {$T' = T.\text{left}, \pi=T.\text{right}.\text{digest}$}
+    {$T' = T.\text{right}, \pi=T.\text{left}.\text{digest}$}
+    
+    \State \Return $\pi, \MT.\Prove(T', p_{2}\cdots p_{d})$
+    \Comment{prepend sibling digest to proof for subtree}
+    \EndFunction
+
+    \Function{\MT.\Verify}{$C \in \hashsp, m \in \msgspace, p = p_{1}
+      \cdots p_{d} \in \bit^{d}, \pi = (\pi_{1}, \ldots, \pi_{d}) \in
+      \hashsp^{d}$}
+
+    \Comment{for commitment~$C$, verify a proof~$\pi$ that the entry
+      at root-to-leaf path~$p$ (both of length $d \geq 0$) is~$m$}
+
+    \State let $h_{d} = \HashEntry(m) \in \hashsp$
+
+    \For{$j = d, \ldots, 1$} \Comment{hash from leaf to root (doing
+      nothing if $d=0$)}
+    \IfThenElse{$p_{j} = 0$}
+    {$h_{j-1} = \HashChildren(h_{j}, \pi_{j})$}
+    {$h_{j-1} = \HashChildren(\pi_{j}, h_{j})$}
+    \Comment{hash left then right}
+    \EndFor
+
+    \IfThenElse{$h_{0} = C$}{\Return accept}{\Return reject}
+    
+    \EndFunction
+  \end{algorithmic}
+\end{algorithm}
+
+\begin{algorithm}
+  \caption{Vector-commitment scheme ($\VC$) based on Merkle trees.}
+  \label{alg:vc-merkle}
+  
+  \begin{algorithmic}[1]
+    \Function{\VC.\Commit}{$m_{0}, m_{1}, \ldots, m_{k-1} \in \msgspace$}
+    \Comment{commit to a vector of any dimension $k \geq 0$}
+
+    \State let $d \geq 0$ be the smallest integer such that $2^{d}
+    \geq k$
+
+    \For{$i = k, \ldots, 2^{d}-1$} let $m_{i} = \bot$ \EndFor
+
+    \State construct a perfect depth-$d$ binary tree~$T$, where:
+
+    for each $i \in [2^{d}]$, the entry given by the root-to-leaf path
+    $\RootToLeafPath(d, i)$ is~$m_{i}$.
+
+    \State $C = \MT.\Build(T)$
+
+    \State \Return commitment~$C$ and auxiliary proving data $(T,k,d)$
+
+    \EndFunction
+
+    \Function{\VC.\Prove}{$(T,k,d), i \in [k]$}
+    \Comment{open entry~$i$ of a commitment using auxiliary data $(T,k,d)$}
+
+    \State \Return $\MT.\Prove(T, \RootToLeafPath(d, i))$
+
+    \EndFunction
+
+    \Function{\VC.\Verify}{$C \in \hashsp, i \in [2^{d}], m \in
+      \msgspace; \pi = (\pi_{1}, \ldots, \pi_{d}) \in \hashsp^{d}$}
+
+    \Comment{for commitment~$C$, verify a proof~$\pi$ that entry~$i$
+      is~$m$ (where $d$ is determined by~$\pi$)}
+
+    \If{$i \not\in [2^{d}]$} \Return false
+    \Comment{explicitly reject out-of-bounds indices}
+    \EndIf
+
+    \State \Return $\MT.\Verify(C, m, \RootToLeafPath(d, i), \pi)$
+    \Comment{use the path to the leaf storing entry~$i$}
+
+    \EndFunction
+
+    \Function{\RootToLeafPath}{$d \geq 0, i \in [2^{d}]$} \Comment{the
+      root-to-leaf path $p \in \bit^{d}$ for index~$i$, LSB to MSB}
+
+    \IfThenElse{$d=0$}{\Return $()$}
+    {\Return $(i \bmod 2,
+      \RootToLeafPath(d-1, \lfloor i/2 \rfloor) \in \bit^{d})$}
+
+    \EndFunction
+  \end{algorithmic}
+\end{algorithm}
+
+\begin{theorem}
+  \label{thm:tree-vc}
+  If both~$\HashEntry$ and $\HashChildren$ are collision resistant,
+  and the pair $\HashEntry,\HashChildren$ is claw resistant, then the
+  vector-commitment scheme from \cref{alg:vc-merkle} is position
+  binding.
+
+  That is, it is infeasible for an adversary to output a
+  commitment~$C$, an index~$i$, two \emph{distinct} messages
+  $m,m' \in \msgspace$, and two proofs $\pi, \pi'$ (of any, possibly
+  different lengths) such that both $\VC.\Verify(C,i,m,\pi)$ and
+  $\VC.\Verify(C,i,m',\pi')$ accept.
+\end{theorem}
+
+Note that this theorem crucially relies on the fact that the
+root-to-leaf path to entry~$i$ follows the \emph{LSB-to-MSB} binary
+representation of~$i$. By contrast, using the MSB-to-LSB
+representation (as is done in some Merkle tree implementations)
+\emph{makes it trivially easy to break the position binding
+  property}. (For example, an adversary can easily create a commitment
+and open its entry $i=1$ in two different ways, using proofs of
+different `depths'~$d$.) Therefore, for security it is \emph{vital} to
+use a proper correspondence between indices and paths.
+
+\begin{proof}
+  % First observe that $\HashEntry \colon \msgspace \to \hashsp$ is
+  % collision resistant, because any given collision in $\HashEntry$
+  % yields a collision in~$H$ due to the different prefixes used for
+  % `nothing' and non-`nothing' inputs. Similarly, the pair
+  % $\HashEntry, \HashChildren$ is claw resistant, because any given
+  % claw for those functions immediately yields a claw in
+  % $H, \HashChildren$.
+
+  Consider an attacker against the position binding of $\VC$. Suppose
+  that it successfully outputs some
+  $C \in \hashsp, i \in [2^{d}], m \in \msgspace, \pi=(\pi_{1},
+  \ldots, \pi_{d}) \in \hashsp^{d}, m' \in \msgspace, \pi'=(\pi'_{1},
+  \ldots, \pi'_{d'}) \in \hashsp^{d'}$ where $d \leq d'$ without loss
+  of generality, $m \neq m'$, and both $\VC.\Verify(C, i, m, \pi)$ and
+  $\VC.\Verify(C, i, m', \pi')$ accept. From such an output we show
+  how to efficiently extract a collision in $\HashEntry$ or
+  $\HashChildren$, or a claw in $\HashEntry,\HashChildren$.
+
+  Let
+  \begin{align*}
+    p &= p_{1} p_{1} \cdots p_{d} = \RootToLeafPath(d,i) \in \bit^{d} \\
+    p' &= p'_{1} p'_{1} \cdots p'_{d} = \RootToLeafPath(d',i) \in \bit^{d'}
+         \text{.}
+  \end{align*}
+  By definition of \RootToLeafPath, $p$ is a prefix of~$p'$, i.e.,
+  $p_{j}=p'_{j}$ for all $j \in [d]$. Note that this is where we use
+  the fact that $\RootToLeafPath$ outputs the LSB-to-MSB binary
+  representation of~$i$. (Under the MSB-to-LSB representation, this
+  prefix property would not hold.)
+
+  Let digests $h_{j}, h'_{j} \in \hashsp$ be as in the execution of
+  $\MT.\Verify(C, m, p, \pi)$ and $\Verify(C, m', p', \pi')$,
+  respectively.  By definition, we have $h_{0} = C = h'_{0}$.
+  Let~$j \in \{1, 2, \ldots, d\}$ be the smallest integer such that
+  $(h_{j},\pi_{j}) \neq (h'_{j},\pi'_{j})$, if such an integer
+  exists. We proceed with a case analysis based on whether~$j$ exists
+  and whether $d=d'$.
+
+  First suppose that~$j$ exists. Then if $p_{j}=p'_{j}=0$, we have
+  \[ \HashChildren(h_{j}, \pi_{j}) = h_{j-1} = h'_{j-1} =
+    \HashChildren(h'_{j}, \pi'_{j}) \text{,} \] so
+  $(h_{j},\pi_{j}) \neq (h'_{j}, \pi'_{j})$ is a collision
+  in~$\HashChildren$, as needed. The same reasoning holds if
+  $p_{j}=p'_{j}=1$, but with the arguments to~$\HashChildren$ swapped.
+
+  If no such~$j$ exists, then $h_{d}=h'_{d}$. If $d=d'$, then we have
+  \[ \HashEntry(m) = h_{d} = h'_{d} = \HashEntry(m') \text{,} \] so
+  $m \neq m'$ is a collision in $\HashEntry$, as needed. Otherwise
+  $d < d'$, and if $p'_{d+1}=0$ we have
+  \[ \HashEntry(m) = h_{d} = h'_{d} = \HashChildren(h'_{d+1},
+    \pi'_{d+1}) \text{,} \] so $m, (h'_{d+1},\pi'_{d+1})$ is a claw in
+  the pair $\HashEntry, \HashChildren$, as needed. The same reasoning
+  holds if $p'_{d}=1$, but with the arguments to~$\HashChildren$
+  swapped. This completes the proof.
+\end{proof}
+
+% flatex input end: [trees.tex]
+
+% list of notes to address; appears only in draft mode
+
+% flatex input: [sigs.tex]
+
+\section{Merkle Signatures}
+\label{sec:merkle-signatures}
+
+This section specifies the \emph{Merkle signature scheme} (MSS), which
+generically combines any vector-commitment scheme and a signature
+scheme $\Sig = (\Gen, \Sign, \Verify)$ to get another signature
+scheme.  The key property of MSS is that it generates several
+\emph{ephemeral} public and secret keys, each of which is only useful
+for a limited time, and the secret keys can be deleted once they have
+been used (or expire). This mitigates against the risk of a
+cryptanalytic attack on a long-lived public key.
+
+To implement limited-time keys, MSS extends the usual syntax of a
+signature scheme via the concept of a \emph{round}. The current value
+of the round is maintained externally (e.g., by a clock or a
+blockchain) and is publicly known. The set of rounds for which a given
+MSS key can sign is chosen in advance by the signing party, at the
+time of MSS key generation. The MSS signing algorithm is given the
+current round value, along with (as usual) the secret key and
+message. Finally, the MSS verifier is also given a specified round
+along with (as usual) a public key, message and purported signature,
+and checks that the signature is valid for that specific round.
+
+\begin{algorithm}
+  \caption{Merkle signature scheme ($\MSS$).}
+  \label{alg:mss}
+
+  \begin{algorithmic}[1]
+    \Function{$\MSS.\Gen$}{$r_{0}, r_{1}, \ldots, r_{k-1}$}
+    \Comment{generate keys for signing at each round~$r_{i}$}
+
+    \For{$i \in [k]$} $(pk_{i}, sk_{i}) \gets \Sig.\Gen()$ \EndFor
+
+    \State let
+    $(C, aux) = \VC.\Commit((pk_{0}, r_{0}), \ldots, (pk_{k-1},
+    r_{k-1}))$ \Comment{commit to all key-round pairs}
+
+    \State \Return public key $pk_{\MSS}=C$, non-secret $aux$, and
+    secret key $sk_{\MSS} = (sk_{0}, \ldots, sk_{k-1})$
+
+    \EndFunction
+
+    \Function{$\MSS.\Sign$}{$sk_{\MSS}, aux, r, M \in \bit^{*}$}
+    \Comment{sign~$M$ in round~$r$}
+
+    \State in $aux$, find an index~$i$ for which $r_{i}=r$ (and fail
+    if no such~$i$ exists)
+
+    \State let $\pi = \VC.\Prove(aux, i)$
+
+    \State let $\sigma \gets \Sig.\Sign(sk_{i}, M)$
+
+    \State \Return signature $\sigma_{\MSS} = (i, pk_{i}, \pi, \sigma)$
+    \EndFunction
+
+    \Function{$\MSS.\Verify$}
+    {$pk_{\MSS}, r, M \in \bit^{*}, \sigma_{\MSS} = (i^{*}, pk^{*},
+      \pi^{*}, \sigma^{*})$}
+
+    \Comment{verify a signature on~$M$ for round~$r$}
+
+    \State \Return
+    $\VC.\Verify(pk_{\MSS}, i^{*}, (pk^{*}, r), \pi^{*})$ AND
+    $\Sig.\Verify(pk^{*}, M, \sigma^{*})$
+
+    \EndFunction
+  \end{algorithmic}
+\end{algorithm}
+
+% flatex input end: [sigs.tex]
+
+\end{document}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:
+
+% flatex input end: [merkle.tex]

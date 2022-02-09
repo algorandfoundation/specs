@@ -1,0 +1,575 @@
+%% WARNING: THIS IS A DERIVED (FLATTENED) FILE; DO NOT MAKE
+%% SUBSTANTIVE EDITS! EDIT THE ORIGINAL SOURCE FILES INSTEAD.
+
+% flatex input: [sumhash-spec.tex]
+\documentclass[11pt]{article}
+\usepackage{fullpage}
+\usepackage{microtype}
+\usepackage{newtxtext}
+\usepackage{enumitem}
+\usepackage{xspace}
+
+\usepackage{amssymb,amsmath,amsfonts}
+\usepackage[amsmath,amsthm,thmmarks,hyperref]{ntheorem}
+\usepackage{mathtools}
+\usepackage{hyperref}
+\usepackage[capitalize,nameinlink,noabbrev]{cleveref} % load after hyperref
+
+\usepackage[normalem]{ulem}
+\usepackage{url}
+\usepackage{breakcites}
+\usepackage{authblk}
+
+% remove 'draft' to turn off fixme notes
+\usepackage[multiuser,inline,nomargin]{fixme}
+
+% fixme: register commands for author(s)
+\FXRegisterAuthor{c}{ec}{\color{red}Chris}
+\fxusetheme{color}
+
+% manual import: [head.tex], recursively, removing unused macros
+
+% blackboard symbols
+
+\newcommand{\N}{\ensuremath{\mathbb{N}}}
+\newcommand{\Z}{\ensuremath{\mathbb{Z}}}
+
+\newcommand{\Zq}{\ensuremath{\Z_q}}
+
+% "left-right" pairs of symbols
+
+%% NOTE: this requires \usepackage{mathtools} in the document preamble
+
+% inner product
+\DeclarePairedDelimiter\inner{\langle}{\rangle}
+% absolute value
+\DeclarePairedDelimiter\abs{\lvert}{\rvert}
+% a set
+\DeclarePairedDelimiter\set{\{}{\}}
+% parens
+\DeclarePairedDelimiter\parens{(}{)}
+% floor function
+\DeclarePairedDelimiter\floor{\lfloor}{\rfloor}
+% ceiling function
+\DeclarePairedDelimiter\ceil{\lceil}{\rceil}
+
+% macros for matrices and vectors
+\newcommand{\matA}{\ensuremath{\mathbf{A}}}
+
+\newcommand{\veca}{\ensuremath{\mathbf{a}}}
+\newcommand{\vecx}{\ensuremath{\mathbf{x}}}
+\newcommand{\vecy}{\ensuremath{\mathbf{y}}}
+\newcommand{\vecz}{\ensuremath{\mathbf{z}}}
+\newcommand{\veczero}{\ensuremath{\mathbf{0}}}
+\newcommand{\vecone}{\ensuremath{\mathbf{1}}}
+
+% equation numbering style
+\numberwithin{equation}{section}
+
+% GENERAL COMPUTING STUFF
+
+\newcommand{\bit}{\ensuremath{\set{0,1}}}
+
+\newcommand{\etal}{\textit{et al.}}
+
+\renewcommand{\cal}[1]{\mathcal{#1}}
+
+% show equation numbers only for referenced equations
+% \mathtoolsset{showonlyrefs}
+
+% flatex input: [macros.tex]
+% additional project-specific macros
+\DeclareMathOperator{\pad}{pad}
+
+% flatex input end: [macros.tex]
+
+% fixme: register commands for author(s)
+
+\begin{document}
+
+\title{Subset-Sum Hash Specification}
+
+% date of last substantive change
+\date{September 3, 2021}
+
+\author{Yossi Gilad}
+\author{David Lazar}
+\author{Chris Peikert}
+\affil{Algorand, Inc.}
+
+\maketitle
+
+% list of notes to address; appears only in draft mode
+\listoffixmes
+
+% flatex input: [notation.tex]
+
+\section{Notation and Background}
+\label{sec:notation-background}
+
+All logarithms are base two, i.e., $\log = \log_{2}$, unless otherwise
+indicated by a different subscript.
+
+\paragraph{Binary strings.}
+
+For a positive integer~$L$, $\bit^{< L}$ denotes the set of binary
+strings of length strictly less than~$L$ (including the zero-length
+empty string~$\varepsilon$), and $\bit^{*}$ denotes the set of all
+binary strings of any length. For binary strings $u,v$ of any length,
+$u v$ denotes their concatenation. For a binary string
+$x \in \bit^{*}$, $\abs{x} \geq 0$ denotes its length in bits. For a
+positive integer~$e$ and a non-negative integer~$z < 2^{e}$,
+$\inner{z}_{e} \in \bit^{e}$ denotes the little-endian representation
+of~$z$ as a binary string of exactly~$e$ bits.
+
+\paragraph{Modular integers.}
+
+For a positive integer~$q$, $\Zq := \Z/q\Z$ denotes the (abelian) ring
+of integers modulo~$q$. Formally, $\Zq$ is the set of \emph{cosets} of
+the form
+\[ c = \tilde{c} + q\Z := \set{\ldots, \tilde{c}-2q, \tilde{c}-q,
+    \tilde{c}, \tilde{c}+q, \tilde{c}+2q, \ldots} \] for some integer
+$\tilde{c} \in \Z$, with $\tilde{c} + q\Z = \tilde{c}' + q\Z$ if and
+only if~$q$ divides $\tilde{c}-\tilde{c}'$. In general, a coset can be
+represented by any of its elements, which might even differ from one
+location to the next. To avoid any ambiguity, this specification
+always requires a coset $c \in \Zq$ to be externally read and written
+using its (unique) \emph{distinguished representative}
+$\bar{c} \in \set{0, 1, \ldots, q-1} \cap c$.
+
+\paragraph{Vectors and matrices.}
+
+Vectors are denoted by lower-case bold letters (e.g., $\veca$), and
+matrices by upper-case bold letters (e.g.,~$\matA$). \emph{In this
+  specification, vector and matrix entries are always indexed starting
+  from zero.} A vector's $i$th entry is denoted by the same lower-case
+letter, but without boldface, and with a subscript~$i$; e.g., $x_{i}$
+is the $i$the entry of~$\vecx$. Similarly, the $i$th column of a
+matrix is denoted by the same letter, but in lower case, and with a
+subscript~$i$; e.g.,~$\veca_{i}$ is the $i$th column of~$\matA$.
+
+The set of $n$-dimensional vectors over a set~$X$ is
+denoted~$X^{n}$. In particular, $\Zq^{n}$ is an (abelian) additive
+group, where the group operation is coordinate-wise addition
+(modulo~$q$). Similarly, $X^{n \times m}$ denotes the set of
+$n$-by-$m$-dimensional matrices over~$X$. For convenience, this
+specification sometimes uses standard vector and matrix operations
+(like sums and products) where they are well defined.
+
+
+% flatex input end: [notation.tex]
+
+% list of notes to address; appears only in draft mode
+
+% flatex input: [function.tex]
+
+\section{Compression Function Family}
+\label{sec:function}
+
+This section gives the mathematical definition of the subset-sum
+compression function family, which was first studied and popularized
+in early works
+like~\cite{DBLP:journals/joc/ImpagliazzoN96,ajtai04:_gener_hard_instan_lattic_probl}. For
+specific parameters, the concrete security of the function against
+various kinds of (classical and quantum) cryptanalytic attacks is
+analyzed in a separate work.
+
+\subsection{Parameters}
+\label{sec:parameters}
+
+The subset-sum compression function family is parameterized by:
+\begin{itemize}
+\item a positive integer \emph{modulus} $q \in \N$ (often taken to be
+  a power of two);
+\item a positive integer \emph{dimension} $n \in \N$;
+\item a positive integer \emph{input length} $m \in \N$, where $m > n
+  \log q$.
+\end{itemize}
+
+\subsection{Function Definition}
+\label{sec:function-definition}
+
+The compression function family for parameters $q,n,m$ is defined as
+the collection
+\[ \cal F_{q,n,m} := \set{ f_{\matA} \colon \bit^{m} \to \Zq^{n} :
+    \matA \in \Zq^{n \times m} } \text{,} \] where each
+function~$f_{\matA} \in \cal F_{q,n,m}$ is defined as
+\begin{equation}
+  \label{eq:f_A}
+  f_{\matA}(\vecx) := \matA \vecx = \sum_{i=1}^{m} x_{i} \cdot
+  \veca_{i} = \sum_{i : x_{i}=1} \veca_{i} \in \Zq^{n} \text{.}
+\end{equation}
+The latter summation explains the name ``subset-sum hash'': the output
+is the subset-sum of the columns of~$\matA$ indicated by the bits of
+the input~$\vecx$.
+
+Observe that the condition $m > n \log q$ ensures that the functions
+in the family are \emph{compressing}, i.e., the cardinality of their
+common domain~$\bit^{m}$ is strictly larger than that of their common
+range~$\Zq^{n}$: $2^{m} > 2^{n \log q} = q^{n}$.
+
+When $q = 2^{u}$ is a power of two, $\ell := n \log q = n u$ is called
+the \emph{output length}, and $b := m - \ell > 0$ is called the
+\emph{block length}. In this case, for any $\vecy \in \Zq^{n}$, let
+$\inner{\vecy} \in \bit^{\ell}$ denote the representation of~$\vecy$
+as an $\ell$-bit string, obtained as the concatenation of the
+($u$-bit, little-endian representations of the) distinguished
+representatives $\bar{y}_{i} \in \set{0, 1, \ldots, q-1}$ of the
+coordinates~$y_{i}$:
+\begin{equation}
+  \label{eq:Zqn-rep}
+  \inner{\vecy} := \inner{\bar{y}_{0}}_{u} \inner{\bar{y}_{1}}_{u}
+  \cdots \inner{\bar{y}_{n-1}}_{u} \in \bit^{\ell} \text{.}
+\end{equation}
+
+\subsection{Security Properties}
+\label{sec:security-properties}
+
+\paragraph{Conjectured properties.}
+
+For appropriate parameters, the subset-sum compression function family
+$\cal F_{q,n,m}$ is conjectured to have the following security
+properties:
+\begin{itemize}
+\item \emph{Uninvertibility (UI):} given uniformly random and
+  independent $\matA \in \Zq^{n \times m}$ and $\vecy \in \Zq^{n}$, it
+  is infeasible to find some $\vecx \in \bit^{m}$ such that
+  $f_{\matA}(\vecx) = \matA \vecx = \vecy$.
+
+\item \emph{One-wayness (OW):} given $\matA \in \Zq^{n \times m}$ and
+  $\vecy = f_{\matA}(\vecx) = \matA \vecx \in \Zq^{n}$ (but
+  not~$\vecx$ itself), where $\matA \in \Zq^{n \times m}$ and
+  $\vecx \in \bit^{m}$ are uniformly random and independent, it is
+  infeasible to find some $\vecx' \in \bit^{m}$ (not necessarily
+  different from~$\vecx$) such that $f_{\matA}(\vecx') = \vecy$.
+
+\item \emph{Second-preimage resistance (SPR):} given uniformly random
+  and independent $\matA \in \Zq^{n \times m}$ and
+  $\vecx \in \bit^{m}$, it is infeasible to find some
+  $\vecx' \in \bit^{m}$ such that $\vecx' \neq \vecx$ and
+  $f_{\matA}(\vecx') = f_{\matA}(\vecx)$.
+
+\item \emph{Target-collision resistance (TCR):} it is infeasible to
+  choose some $\vecx \in \bit^{m}$ and then, given a uniformly random
+  $\matA \in \Zq^{n \times m}$, to find some distinct
+  $\vecx' \in \bit^{m} \setminus \set{\vecx}$ such that
+  $f_{\matA}(\vecx) = f_{\matA}(\vecx')$, i.e.,
+  $\matA \vecx = \matA \vecx' \in \Zq^{n}$.
+
+\item \emph{Collision resistance (CR):} given a uniformly random
+  $\matA \in \Zq^{n \times m}$, it is infeasible to find distinct
+  $\vecx, \vecx' \in \bit^{m}$ such that
+  $f_{\matA}(\vecx) = f_{\matA}(\vecx')$, i.e.,
+  $\matA \vecx = \matA \vecx' \in \Zq^{n}$.
+
+  Note that breaking CR is equivalent to finding a nonzero
+  $\vecz \in \set{-1, 0, 1}^{m} \setminus \set{\veczero}$ such that
+  $\matA \vecz = \veczero \in \Zq^{n}$. In one direction, given such
+  $\vecx, \vecx'$, define
+  $\vecz = \vecx - \vecx' \in \set{-1, 0, 1}^{m} \setminus
+  \set{\veczero}$ and observe that
+  $\matA \vecz = \matA \vecx - \matA \vecx' = \veczero$. In the other
+  direction, given such~$\vecz$, let $\vecx \in \bit^{m}$ be~$1$
+  (respectively,~$0$) wherever~$\vecz$ is~$1$ (resp.,~$0$ or $-1$),
+  and similarly let $\vecx' \in \bit^{m}$ be~$1$ (respectively,~$0$)
+  wherever~$\vecz$ is~$-1$ (resp.,~$0$ or~$1$). Then
+  $\vecz = \vecx - \vecx'$, and since
+  $\veczero = \matA \vecz = \matA(\vecx - \vecx')$, we have
+  $\matA \vecx = \matA \vecx'$, as desired.
+\end{itemize}
+It is well known that CR tightly implies TCR generically (i.e., for
+any compression function family), because breaking TCR immediately
+yields a collision. Moreover, TCR tightly implies SPR generically,
+because being able to find a collision with a uniformly random input
+(that is independent of~$\matA$) in particular means being able to
+find a collision with an input of one's choice (since that input may
+just be chosen uniformly). Furthermore, for parameters that yield
+significant compression (i.e., for $m \gg n \log q$), it is well known
+that SPR tightly implies OW generically, and that OW implies UI for
+the subset-sum family.
+
+While none of the converse directions is known to hold generically,
+for the subset-sum family with significant compression, a
+\emph{relaxed} form of UI implies CR, thus implying that all four
+security properties are closely related.\@ Specifically, any attack
+that breaks CR with probability~$\delta$ can be used to successfully
+attack relaxed-UI in essentially the same amount of time and with
+probability $\approx \delta/(2m)$, where in relaxed-UI the
+output~$\vecx$ may be taken from $\set{-1,0,1}^{m}$ (it is not limited
+to $\bit^{m}$).
+
+\paragraph{Non-conjectured properties.}
+
+On the other hand, the family $\cal F_{q,n,m}$ is \emph{not
+  conjectured to have}, or is even \emph{known not to have}, the
+following security properties:
+\begin{itemize}
+\item \emph{Unpredictability/Pseudorandomness:} outputs of~$f_{\matA}$
+  on different inputs do not appear random or uncorrelated, even if
+  parts of the corresponding inputs are unknown to the attacker. This
+  is because~$f_{\matA}$ is linear:
+  \[ f_{\matA}(\vecx + \vecx') = \matA(\vecx + \vecx') = \matA \vecx +
+    \matA \vecx' = f_{\matA}(\vecx) + f_{\matA}(\vecx') \text{,} \] as
+  long as $\vecx, \vecx', \vecx+\vecx' \in \bit^{m}$, which is easy to
+  arrange in many contexts. In particular, any~$0$ bits of~$\vecx$ can
+  be changed to~$1$s by adding an~$\vecx'$ that is~$1$ in the suitable
+  position(s), and~$0$ wherever~$\vecx$ is~$1$.
+
+\item \emph{Random oracle:} for the same reasons as above, $f_{\matA}$
+  does not ``behave like a random oracle'' in many of the ways that
+  are typically expected. Therefore, it should not be used to
+  instantiate a random oracle in any cryptosystems or protocols.
+\end{itemize}
+
+% flatex input end: [function.tex]
+
+% list of notes to address; appears only in draft mode
+
+% flatex input: [arbitrary.tex]
+
+\section{Hashing Arbitrary-Length Messages}
+\label{sec:arbitrary}
+
+The compression functions defined in \cref{sec:function} map a
+\emph{fixed-length} $m$-bit input to an output of length
+$\ell := n \log q < m$. As is standard, a message of \emph{arbitrary}
+length is hashed to a fixed-length output by invoking the compression
+function one or more times, using the Merkle--Damg{\aa}rd (MD)
+transform~\cite{DBLP:conf/crypto/Merkle89,DBLP:conf/crypto/Damgard89a}.
+
+\subsection{Padding}
+\label{sec:padding}
+
+The transform uses the following padding method, which maps a binary
+string of any bounded length into a strictly longer one whose length
+is a multiple of the block length $b := m - \ell > 0$. Formally, for
+any positive integer~$e$, define the padding function
+$\pad_{b,e} \colon \bit^{< 2^{e}} \to \bit^{*}$ as
+\begin{equation}
+  \label{eq:pad}
+  \pad_{b,e}(x) = x 1 0^{z} \inner{\abs{x}}_{e} \text{,}
+\end{equation}
+where $z \geq 0$ is the smallest non-negative integer for which
+$\abs{x}+1+z+e$ is a multiple of~$b$. That is,
+$r := b \cdot \ceil{k/b} - k \in \set{0, 1, \ldots, b-1}$, where
+$k=\abs{x}+1+e$. Note especially that $\pad_{b,e}(x)$
+\emph{unconditionally} appends at least $1+e$ bits to~$x$, even
+if~$\abs{x}$ itself is a multiple of~$b$.
+
+The purpose of the padding function is to produce a string whose
+length is a multiple of the block length, and so that the MD transform
+preserves collision resistance. That is, any collision in the full
+hash function immediately yields a collision in the underlying
+compression function.
+
+\subsection{Hash Functions}
+\label{sec:hash-functions}
+
+Fix subset-sum parameters $q, n, m$ where $q=2^{u}$ is a power of two
+for some positive integer~$u$.  Let $\ell := n \log q = n u$ be the
+output length in bits, and let $b := m - \ell > 0$ be the block
+length.
+
+This specification defines two functions on arbitrary-length input
+strings: an ``unsalted'' mode that takes only the string as input, and
+a ``salted'' mode, originally defined
+in~\cite{DBLP:conf/crypto/HaleviK06}, that additionally takes a public
+salt value (which should typically be chosen uniformly at random, or
+pseudorandomly).
+
+\subsubsection{Unsalted Mode}
+\label{sec:unsalted-mode}
+
+For any matrix $\matA \in \Zq^{n \times m}$ defining the compression
+function $f_{\matA} \colon \bit^{m} \to \Zq^{n}$ (\cref{sec:function})
+and a positive integer $e > 0$, define the unsalted hash function
+\begin{align}
+  \label{eq:H}
+  H_{\matA,e} &\colon \bit^{< 2^{e}} \to \bit^{\ell} \nonumber \\
+  H_{\matA,e}(x) &:= H'_{\matA}(0^{\ell}, \pad_{b,e}(x)) \text{,}
+\end{align}
+where the chaining function
+$H'_{\matA} \colon \bit^{\ell} \times \parens*{\bigcup_{i=0}^{\infty}
+  \bit^{ib}} \to \bit^{\ell}$ is defined as
+\begin{align}
+  H'_{\matA}(h, w) &:= \begin{cases}
+    h & \text{if } w = \varepsilon \\
+    H'_{\matA}(\inner{f_{\matA}(h u)}, v) & \text{where } w = u v
+    \text{ for } u \in \bit^{b} \text{.}
+  \end{cases}
+\end{align}
+(Recall that representation $\inner{\vecy} \in \bit^{\ell}$ for
+$\vecy \in \Zq^{n}$ is defined in \cref{sec:function-definition}.)
+
+\subsubsection{Salted Mode}
+\label{sec:salted-mode}
+
+For any matrix $\matA \in \Zq^{n \times m}$ defining the compression
+function $f_{\matA} \colon \bit^{m} \to \Zq^{n}$ (\cref{sec:function})
+and a positive integer $e > 0$, define the salted hash function
+\begin{align}
+  \label{eq:H-tilde}
+  \tilde{H}_{\matA,e} &\colon \bit^{< 2^{e}} \uwave{\times \bit^{b}} \to
+                        \bit^{\ell} \nonumber \\
+  \tilde{H}_{\matA,e}(x, \uwave{r}) &:= \tilde{H}'_{\matA}(0^{\ell},
+                                     \pad_{b,e}(\uwave{0^{b}} x), \uwave{r})
+\end{align}
+where the chaining function
+$\tilde{H}'_{\matA} \colon \bit^{\ell} \times
+\parens*{\bigcup_{i=0}^{\infty} \bit^{ib}} \uwave{\times \bit^{b}} \to
+\bit^{\ell}$ is defined as
+\begin{align}
+  \tilde{H}'_{\matA}(h, w, \uwave{r}) &:= \begin{cases}
+    h & \text{if } w = \varepsilon \\
+    \tilde{H}'_{\matA}(\inner{f_{\matA}(h \uwave{\tilde{u}})},
+    v, \uwave{r}) &
+    \text{where } w = u v \text{ for } u \in \bit^{b} \uwave{\text{ and }
+    \tilde{u} = u \oplus r} \text{.}
+  \end{cases}
+\end{align}
+
+The only differences between the salted-mode functions
+$\tilde{H}_{\matA,e}, \tilde{H}'_{\matA}$ and their corresponding
+unsalted-mode functions $H_{\matA,e}, H'_{\matA}$ are depicted above
+with \uwave{wavy underlines}, and are as follows:
+\begin{enumerate}
+\item Each function $\tilde{H}_{\matA,e}, \tilde{H}'_{\matA}$ takes an
+  additional salt input $r \in \bit^{b}$, whose length is the block
+  length.
+
+\item The function~$\tilde{H}_{\matA,e}(x,r)$ prepends an all-zeros
+  block $0^{b} \in \bit^{b}$ to the input~$x$ (before padding it
+  using~$\pad_{b,e}$ and inputting the result to the appropriate
+  chaining function, as in the unsalted case). Note that this
+  prepended zeros block counts toward the total input length in the
+  padding function.
+
+\item The chaining function~$\tilde{H}'_{\matA}$ XORs each block
+  $u \in \bit^{b}$ of the padded input---including the initial,
+  prepended all-zeros block---with the salt value $r \in \bit^{b}$
+  (before inputting the result together with the previous chaining
+  value~$h$ to the compression function, as in the unsalted case).
+\end{enumerate}
+
+% flatex input end: [arbitrary.tex]
+
+% list of notes to address; appears only in draft mode
+
+% flatex input: [instantiation.tex]
+
+\section{Concrete Instantiations}
+\label{sec:instantiations}
+
+\newcommand{\xof}{\text{XOF}}
+\newcommand{\pack}{\text{pack}}
+
+The fully specified hash functions are merely instantiations of the
+unsalted function~$H_{\matA,e}$ (\cref{eq:H}) and salted
+function~$\tilde{H}_{\matA,e}$ (\cref{eq:H-tilde}) for specific
+subset-sum parameters $q, n, m$, matrices
+$\matA \in \Zq^{n \times m}$, and input-length representation bit
+lengths~$e$.
+
+\subsection{Deriving $\matA$}
+\label{sec:deriving-A}
+
+It is well known that for typical parameters, it is easy to generate a
+matrix $\matA \in \Zq^{n \times m}$ that is indistinguishable from
+uniformly random, together with some \emph{known collisions} in the
+associated subset-sum compression function~$f_{\matA}$. This may allow
+the party that generated~$\matA$ to violate the security of
+constructions that use this function. Therefore, it is very important
+to generate a random-looking~$\matA$ in a ``nothing up my sleeve''
+manner that is highly unlikely to admit any such backdoor.
+
+Let $q=2^{u}, n, m$ be subset-sum parameters where~$u$ is a positive
+integer, and let $\xof \colon \bit^{*} \to \bit^{\infty}$ represent a
+suitable cryptographic \emph{extendable-output function}, such as
+SHAKE-256. Then for any identifier $id \in \bit^{*}$, define the
+matrix $\matA_{\xof, id} \in \Zq^{n \times m}$ as:
+\begin{equation}
+  \label{eq:A_XOF}
+  \matA_{\xof,id} := \pack_{u,n,m}\parens[\big]{ \xof
+    \parens*{\inner{u}_{16}\, \inner{n}_{16}\,
+      \inner{m}_{16}\, id}_{0, \ldots, unm-1}} \in \Zq^{n \times m} \text{,}
+\end{equation}
+where $\pack_{u,n,m} \colon \bit^{u n m} \to \Zq^{n \times m}$
+constructs its output matrix from its input string in row-major order,
+using~$u$ bits per entry. That is, for all $i = 0, \ldots, n-1$ and
+$j = 0, \ldots, m-1$, the distinguished representative of the
+$(i,j)$th entry~$a_{i,j} \in \Zq$ of $\matA = \pack_{u,n,m}(w)$ has
+binary representation
+\[ \inner{\bar{a}_{i,j}}_{u} = w_{u(im+j), \ldots, u(im+j) + (u-1)}
+  \text{.} \]
+
+\subsection{Concrete Parameters}
+\label{sec:concrete-parameters}
+
+The implemented functions are (unsalted) $H := H_{\matA,e}$ and
+(salted) $\tilde{H} := \tilde{H}_{\matA,e}$, where:
+\begin{itemize}
+\item the modulus $q=2^{64}$, so $u = \log q = 64=2^{6}$;
+\item the dimension $n = 8 = 2^{3}$, so the output length is
+  $\ell = n \log q = 512 = 2^{9}$;
+\item the input length $m = 1024 = 2^{10}$, so the block length is
+  $b = m - \ell = 512 = 2^{9}$;
+\item the representation length (of the hash input length) is $e = 128
+  = 2^{7}$;
+\item the extendable-output function is $\xof = \text{SHAKE-256}$;
+\item the matrix is $\matA := \matA_{\xof,id}$ where $id$ is the ASCII
+  representation of \verb=Algorand=.
+\end{itemize}
+
+% flatex input end: [instantiation.tex]
+
+% list of notes to address; appears only in draft mode
+
+%FLATEX-REM:\bibliography{common/lattices,common/crypto}
+%*flatex input: [sumhash-spec.bbl]
+\begin{thebibliography}{Dam89}
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{doi:\discretionary{}{}{}#1}\else
+  \providecommand{\doi}{doi:\discretionary{}{}{}\begingroup
+  \urlstyle{rm}\Url}\fi
+
+\bibitem[Ajt96]{ajtai04:_gener_hard_instan_lattic_probl}
+M.~Ajtai.
+\newblock Generating hard instances of lattice problems.
+\newblock \emph{Quaderni di Matematica}, 13:1--32, 2004.
+\newblock Preliminary version in STOC 1996.
+
+\bibitem[Dam89]{DBLP:conf/crypto/Damgard89a}
+I.~Damg{\aa}rd.
+\newblock A design principle for hash functions.
+\newblock In \emph{CRYPTO}, pages 416--427. 1989.
+
+\bibitem[HK06]{DBLP:conf/crypto/HaleviK06}
+S.~Halevi and H.~Krawczyk.
+\newblock Strengthening digital signatures via randomized hashing.
+\newblock In \emph{CRYPTO}, pages 41--59. 2006.
+
+\bibitem[IN89]{DBLP:journals/joc/ImpagliazzoN96}
+R.~Impagliazzo and M.~Naor.
+\newblock Efficient cryptographic schemes provably as secure as subset sum.
+\newblock \emph{J. Cryptology}, 9(4):199--216, 1996.
+\newblock Preliminary version in FOCS 1989.
+
+\bibitem[Mer89]{DBLP:conf/crypto/Merkle89}
+R.~C. Merkle.
+\newblock A certified digital signature.
+\newblock In \emph{CRYPTO}, pages 218--238. 1989.
+
+\end{thebibliography}
+
+% flatex input end: [sumhash-spec.bbl]
+%FLATEX-REM:\bibliographystyle{common/alphaabbrvprelim}
+
+\end{document}
+
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:
+
+% flatex input end: [sumhash-spec.tex]

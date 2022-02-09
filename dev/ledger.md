@@ -525,6 +525,7 @@ offline as part of applying the block changes to the ledger.
 
 \newcommand \vpk {\mathrm{vpk}}
 \newcommand \spk {\mathrm{spk}}
+\newcommand \sppk {\mathrm{sppk}}
 \newcommand \vf {\mathrm{vf}}
 \newcommand \vl {\mathrm{vl}}
 \newcommand \vkd {\mathrm{vkd}}
@@ -602,8 +603,11 @@ A key registration transaction additionally has the following fields:
    of an account's participation keys ($\pk$).
 
  - The _selection public key_ $\spk$, public authorization key of
-   an account's participation keys ($\pk$). If either $\vpk$ or
-   $\spk$ is unset, the transaction deregisters the account's participation
+   an account's participation keys ($\pk$). 
+
+ - The _state proof public key_ $\sppk$, public commitment on the account's
+   state proof keys ($\sppk$). If $\vpk$ , $\spk$ and $\sppk$ are all unset,
+   the transaction deregisters the account's participation
    key set, as the result, marks the account offline.
 
  - The _vote first_ $\vf$, first valid round (inclusive) of
@@ -622,15 +626,16 @@ A key registration transaction additionally has the following fields:
 
 For a key registration transaction to be valid, the following needs to apply:
 
- - The set of \[_vote public key_, _selection public key_, _vote key dilution_\] are required to all be present, or all omitted (clear).
+ - The set of \[_vote public key_, _selection public key_, _state proof public key_, _vote key dilution_\] are required to all be present, or all omitted (clear).
    Providing the default value or the empty value for any of the members of the set
    would be interpreted as if these values were omitted.
  - _vote first_ needs to be less than or equal to _vote last_.
- - If the set of \[_vote public key_, _selection public key_, _vote key dilution_\] is clear, then _vote first_ and _vote last_ need to be clear as well.
- - If the set of \[_vote public key_, _selection public key_, _vote key dilution_\] is not clear, the following applies:
+ - If the set of \[_vote public key_, _selection public key_, _state proof public key_, _vote key dilution_\] is clear, then _vote first_ and _vote last_ need to be clear as well.
+ - If the set of \[_vote public key_, _selection public key_, _state proof public key_, _vote key dilution_\] is not clear, the following applies:
    - _vote last_ needs to be greater than or equal to the current network round _r_.
    - _vote first_ needs to be less than or equal to (_first valid_+1).
    - _vote first_ needs to be less than or equal to (_r_+1).
+- The value (_vote last_ - _vote first_) must be greater than 256*(2$^{16}$)-1.
 
 ### Application Call Transaction
 An application call transaction additionally has the following fields:
@@ -1163,7 +1168,7 @@ block to be valid, each transaction in its transaction sequence must be valid at
 the block's round $r$ and for the block's genesis identifier $\GenesisID_B$.
 
 For a transaction
-$$\Tx = (\GenesisID, \TxType, r_1, r_2, I, I', I_0, f, a, x, N, \pk, \nonpart,
+$$\Tx = (\GenesisID, \TxType, r_1, r_2, I, I', I_0, f, a, x, N, \pk, \sppk, \nonpart,
   \ldots)$$
 (where $\ldots$ represents fields specific to asset transaction types)
 to be valid at the intermediate state $\rho$ in round $r$ for the genesis
@@ -1190,7 +1195,7 @@ identifier $\GenesisID_B$, the following conditions must all hold:
     - If $I_0 \neq 0$, $I$ cannot hold any assets.
  - If $\TxType$ is "keyreg",
     - $p_{\rho, I} \ne 2$ (i.e., nonparticipatory accounts may not issue keyreg transactions)
-    - If $\nonpart$ is true then $\pk = 0$
+    - If $\nonpart$ is true then $\spk = 0$ ,$\pk = 0$ and $\sppk = 0$
 
 Given that a transaction is valid, it produces the following updated account
 state for intermediate state $\rho+1$:
