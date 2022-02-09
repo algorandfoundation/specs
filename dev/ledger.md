@@ -692,11 +692,14 @@ An application call transaction additionally has the following fields:
 - Clear state program, encoded as msgpack field `apsu`. This field is used for
   both application creation and updates, and sets the corresponding
   application's `ClearStateProgram`.
+  - The Approval program and the Clear state program must have the
+    same version number if either is 6 or higher.
 
 Furthermore, the sum of the number of Accounts in `apat`, Application IDs in
 `apfa`, and Asset IDs in `apas` is limited to 8.
 
 
+### Asset Configuration Transaction
 An asset configuration transaction additionally has the following fields:
 
  - The ID of the asset being configured, encoded as msgpack field `caid`.
@@ -706,6 +709,7 @@ An asset configuration transaction additionally has the following fields:
    msgpack field `apar`.  If this value is omitted (zero value), this
    transaction is deleting the asset.
 
+### Asset Transfer Transaction
 An asset transfer transaction additionally has the following fields:
 
  - The ID of the asset being transferred, encoded as msgpack field `xaid`.
@@ -723,6 +727,7 @@ An asset transfer transaction additionally has the following fields:
    to close out this account's holdings of this asset, encoded as msgpack
    field `aclose`.
 
+### Asset Freeze Transaction
 An asset freeze transaction additionally has the following fields:
 
  - The address of the account whose holdings of an asset should be frozen
@@ -824,7 +829,8 @@ and contains the following fields:
     to each call of the `log` opcode in the called application. The order
     of the entries follows the execution order of the `log`
     invocations. The maximum total number of `log` calls is 32, and the
-    total size of all logged bytes is limited to 1024.
+    total size of all logged bytes is limited to 1024. No Logs are
+    included if a Clear state program fails.
   - Zero or more `InnerTxns`, encoded in an array `itx`. Each element
     of `itx` records a successful inner transaction. Each element will
     contain the transaction fields, encoded under `txn`, in the same
@@ -837,7 +843,7 @@ and contains the following fields:
     - InnerTxns are limited to `pay`, `axfer`, `acfg`, and `afrz`
       transactions in TEAL programs before version 6. Version 6 also
       allows `keyreg` and `appl`.
-
+    - A `ClearStateProgram` execution may not have any InnerTxns.
 
 ### State Deltas
 
@@ -1113,10 +1119,12 @@ point must be discarded and the entire transaction rejected.
         - Delete the application’s parameters from the creator’s account data.
           (Note: this does not affect any local state). **SUCCEED.**
     - If `OnCompletion == UpdateApplication`
-        - Update the Approval and ClearState programs for this application
-          according to the programs specified in this `ApplicationCall`
-          transaction. The new programs are not executed in this transaction.
-          **SUCCEED.**
+        - If the existing programs are version 6 or higher and either
+          program is a downgrade from the existing version **FAIL**
+        - Update the Approval and ClearState programs for this
+          application according to the programs specified in this
+          `ApplicationCall` transaction. The new programs are not executed in
+          this transaction.  **SUCCEED.**
 
 ### Application Stateful TEAL Execution Semantics
 
