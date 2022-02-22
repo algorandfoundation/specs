@@ -381,16 +381,14 @@ parameters_, which can be encoded as a msgpack struct:
   msgpack field `gs`.
 
 Parameters for applications created by an account are stored alongside the
-account state, indexed by a pair (address, application ID).
-There is no limit on amount of application an account can create.
-Creating one application increases the minimum balance
+account state, denoted by a pair (address, application ID).
+Each application created increases the minimum balance
 requirements of the creator by 100000 microalgos, plus the [`GlobalStateSchema`
 Minimum Balance contribution][App Minimum Balance Increases].
 
 `LocalState` for applications that an account has opted in to are also stored alongside
-the account state, indexed by a pair (address, application ID).
-There is no limit on amount of application an account can opt in to.
-Opting in to one application increases the minimum
+the account state, denoted by a pair (address, application ID).
+Each application opted in to increases the minimum
 balance requirements of the opting-in account by 100000 microalgos plus the
 [`LocalStateSchema` Minimum Balance contribution][App Minimum Balance Increases].
 
@@ -496,7 +494,7 @@ which can be encoded as a msgpack struct:
    from arbitrary source addresses.
 
 Parameters for assets created by an account are stored alongside the
-account state, indexed by a pair (address, asset ID).
+account state, denoted by a pair (address, asset ID).
 
 Accounts can create and hold any number of assets.
 An account must hold every asset that it created (even if it holds 0
