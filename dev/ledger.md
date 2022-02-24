@@ -31,7 +31,6 @@ The Algorand Ledger is parameterized by the following values:
    Currently defined as 140,000.
  - $\omega_r$, the rate at which the reward rate is refreshed.
  - $A$, the size of an earning unit.
- - $Assets_{\max}$, the maximum number of assets held by an account.
 
 ## States
 
@@ -381,17 +380,15 @@ parameters_, which can be encoded as a msgpack struct:
   a [TEAL Key/Value Store][TEAL Key/Value Stores]. This field is encoded with
   msgpack field `gs`.
 
-Parameters for applications created by an account are stored in a map in the
-account state, indexed by the application ID. This map is encoded as msgpack
-field `appp`. The maximum number of applications that a single account may
-create is 10. Creating one application increases the minimum balance
+Parameters for applications created by an account are stored alongside the
+account state, denoted by a pair (address, application ID).
+Each application created increases the minimum balance
 requirements of the creator by 100000 microalgos, plus the [`GlobalStateSchema`
 Minimum Balance contribution][App Minimum Balance Increases].
 
-`LocalState` for applications that an account has opted in to are also stored in
-a map in the account state, indexed by the application ID. This map is encoded
-as msgpack field `appl`. The maximum number of applications that a single
-account may opt in to is 10. Opting in to one application increases the minimum
+`LocalState` for applications that an account has opted in to are also stored alongside
+the account state, denoted by a pair (address, application ID).
+Each application opted in to increases the minimum
 balance requirements of the opting-in account by 100000 microalgos plus the
 [`LocalStateSchema` Minimum Balance contribution][App Minimum Balance Increases].
 
@@ -496,10 +493,10 @@ which can be encoded as a msgpack struct:
    The clawback address is used to issue asset transfer transactions
    from arbitrary source addresses.
 
-Parameters for assets created by an account are stored in a map in the
-account state, indexed by the asset ID.
+Parameters for assets created by an account are stored alongside the
+account state, denoted by a pair (address, asset ID).
 
-Accounts can hold up to $Assets_{\max}$ assets (1000 in this protocol).
+Accounts can create and hold any number of assets.
 An account must hold every asset that it created (even if it holds 0
 units of that asset), until that asset is destroyed.  An account's asset
 holding is simply a map from asset IDs to an integer value indicating
@@ -779,10 +776,6 @@ The _authorizer address_, a 32 byte string, determines against what to verify th
   - An optional array of byte strings _arg_ which are arguments supplied to the program in _l_. (_arg_ bytes are not covered by _sig_ or _msig_)
 
   The logic signature is valid if exactly one of _sig_ or _msig_ is a valid signature of the program by the authorizer address of the transaction, or if neither _sig_ nor _msig_ is set and the hash of the program is equal to the authorizer address. Also the program must execute and finish with a single non-zero value on the stack. See [TEAL documentation](TEAL.md) for details on program execution.
-
-A transaction must be rejected if its inclusion in a block would cause an
-account's minimum balance to exceed the _maximum minimum balance_ of 100100000
-microalgos.
 
 ## ApplyData
 
@@ -1243,9 +1236,6 @@ all following conditions hold:
  - For all addresses $I \notin \{I_{pool}, I_f\}$, either $\Stake(\rho+1, I) = 0$ or
    $\Stake(\rho+1, I) \geq b_{\min} \times (1 + NA)$, where $NA$ is the number of
    assets held by that account.
-
- - For all addresses, the number of assets held by that address must be less than
-   $Assets_{\max}$.
 
  - $\sum_I \Stake(\rho+1, I) = \sum_I \Stake(\rho, I)$.
 
