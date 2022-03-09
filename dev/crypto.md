@@ -52,14 +52,14 @@ below specifies each prefix (in quotation marks):
     - "MA": An internal node in a [Merkle tree](#merkle-tree).
     - "MB": A bottem leaf in a vector commitment [vector commitment](#vector-commitment).
     - "KP": Is a public key used by the Merkle siganture scheme [Merkle Siganture Scheme](merklesignaturescheme)
- - In the [Algorand Ledger][ledger-spec]:
+ - In the [Algorand Ledger](./ledger.md):
     - "BH": A _Block Header_.
     - "BR": A _Balance Record_.
     - "GE": A _Genesis_ configuration.
     - "STIB": A _SignedTxnInBlock_ that appears as part of the leaf in the Merkle tree of transactions.
     - "TL": A leaf in the Merkle tree of transactions.
     - "TX": A _Transaction_.
- - In the [Algorand Byzantine Fault Tolerance protocol][abft-spec]:
+ - In the [Algorand Byzantine Fault Tolerance protocol](./abft.md):
     - "AS": An _Agreement Selector_, which is also a [VRF][Verifiable
       Random Function] input.
     - "CR": A _Credential_.
@@ -94,7 +94,7 @@ for the Byzantine Fault Tolerance protocol, and (2) rerandomize its
 random seed.
 
 ### SUBSET-SUM
-Algorand uses [SUBSET-SUM algorithm][sumhash] which is a quantum-resilient hash function.
+Algorand uses [SUBSET-SUM algorithm](./cryptographic-specs/sumhash-spec.pdf) which is a quantum-resilient hash function.
 This function is used by the [Merkle Keystore](merklekeystore) to commit on
 ephemeral public keys. It is also used to create Merkle trees for the StateProofs. 
 
@@ -140,7 +140,7 @@ Algorand changes the ed25519 verification algorithm in the following way  (using
 
 ### FALCON
 
-Algorand uses a [deterministic][deterministic-falcon] version of [falcon scheme][falcon]. Falcon is quantum resilient and a SNARK friendly digital signature scheme used to sign in StateProofs. Falcon signatures contains 
+Algorand uses a [deterministic](./cryptographic-specs/falcon-deterministic.pdf) version of [falcon scheme][falcon]. Falcon is quantum resilient and a SNARK friendly digital signature scheme used to sign in StateProofs. Falcon signatures contains
 salt version. Algorand only accepts signatures with salt version = 0.
 
 The library defines the following sizes:
@@ -285,18 +285,10 @@ def verify(elems, proof, root):
 
 ## Vector commitment
 
-Algorand uses [Vector Commitments][vector-commitment], which allows for concisely committing to an ordered (indexed) vector of data entries, based on Merkle trees.
+Algorand uses [Vector Commitments](./cryptographic-specs/merkle-vc-full.pdf), which allows for concisely committing to an ordered (indexed) vector of data entries, based on Merkle trees.
 
-
-
-[ledger-spec]: https://github.com/algorand/spec/ledger.md
-[abft-spec]: https://github.com/algorand/spec/abft.md
 
 [sha]: https://doi.org/10.6028/NIST.FIPS.180-4
-[sumhash]: https://github.com/algorandfoundation/specs/blob/master/dev/cryptographic-specs/sumhash-spec.pdf
 [ed25519]: https://tools.ietf.org/html/rfc8032
 [msgpack]: https://github.com/msgpack/msgpack/blob/master/spec.md
-[merklesignaturescheme]: https://github.com/algorandfoundation/specs/blob/master/dev/partkey.md
 [falcon]: https://falcon-sign.info/falcon.pdf
-[deterministic-falcon]: https://github.com/algorandfoundation/specs/blob/master/dev/cryptographic-specs/falcon-deterministic.pdf
-[vector-commitment]: https://github.com/algorandfoundation/specs/blob/master/dev/cryptographic-specs/merkle-vc-full.pdf

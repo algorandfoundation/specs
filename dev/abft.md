@@ -74,7 +74,7 @@ _address_.
 Each player owns exactly one _participation keypair_. A participation
 keypair consists of a _public key_ $\pk$ and a _secret key_ $\sk$.
 A keypair is an opaque object which is defined in the [specification
-of participation keys in Algorand][partkey-spec].
+of participation keys in Algorand](./partkey.md).
 
 Let $m, m'$ be arbitrary sequences of bits, $B_k, \Bbar$ be 64-bit integers,
 $\tau, \taubar$ be 32-bit integers, and $Q$ be a 256-bit string.  Let
@@ -1075,6 +1075,3 @@ attempts to resynchronize.  Then,
 Finally, the player broadcasts all $\Vote(I, r, p, \Late, v) \in V$, all
 $\Vote(I, r, p, \Redo, v) \in V$, and all $\Vote(I, r, p, \Down, \bot) \in V$
 that it has observed.
-
-
-[partkey-spec]: https://github.com/algorand/spec/partkey.md

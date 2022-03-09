@@ -274,7 +274,7 @@ A valid block's reward state matches the expected reward state.
 The _balances_ are a set of mappings from _addresses_, 256-bit integers, to
 _balance records_.  A _balance record_ contains the following fields: the
 account _raw balance_, the account _status_, the account _rewards base_ and
-_total awarded amount_, the account _spending key_, and the account [_participation keys_][partkey-spec].
+_total awarded amount_, the account _spending key_, and the account [_participation keys_](./partkey.md).
 
 The account raw balance $a_I$ is a 64-bit unsigned integer which determines how
 much money the address has.
@@ -313,7 +313,7 @@ The account's spending key determines how transactions from this account must be
 Transactions from this account must have this value (or, if this value zero, the account's address) as their authorization address. This is described in the [Authorization and Signatures][Authorization and Signatures] section below.
 
 The account's participation keys $\pk$ are defined in Algorand's [specification
-of participation keys][partkey-spec].
+of participation keys](./partkey.md).
 
 An account's participation keys and voting stake from a recent round is returned
 by the $\Record$ procedure in the [Byzantine Agreement Protocol][abft-spec].
@@ -1265,7 +1265,3 @@ In this case every occurrence is counted independently in validation.
 Validation process checks all non-empty signatures are valid and their count
 not less than the threshold. Validation fails if any of signatures is invalid
 even if count of all remaining correct signatures is greater or equals than the threshold.
-
-
-[abft-spec]: https://github.com/algorand/spec/abft.md
-[partkey-spec]: https://github.com/algorand/spec/partkey.md
