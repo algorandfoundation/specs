@@ -14,7 +14,7 @@ Ops have a 'cost' of 1 unless otherwise specified.
 ## err
 
 - Opcode: 0x00
-- Stack: ... &rarr; ...
+- Stack: ... &rarr; _exits_
 - Fail immediately.
 
 ## sha256
@@ -58,14 +58,15 @@ The 32 byte public key is the last element on the stack, preceded by the 64 byte
 - Opcode: 0x05 {uint8 curve index}
 - Stack: ..., A: []byte, B: []byte, C: []byte, D: []byte, E: []byte &rarr; ..., uint64
 - for (data A, signature B, C and pubkey D, E) verify the signature of the data against the pubkey => {0 or 1}
-- **Cost**: 1700
+- **Cost**:  Secp256k1=1700 Secp256r1=2500
 - Availability: v5
 
 `ECDSA` Curves:
 
-| Index | Name | Notes |
-| - | ------ | --------- |
-| 0 | Secp256k1 | secp256k1 curve |
+| Index | Name | In | Notes |
+| - | ------ | - | --------- |
+| 0 | Secp256k1 |      | secp256k1 curve, used in Bitcoin |
+| 1 | Secp256r1 | v7  | secp256r1 curve, NIST standard |
 
 
 The 32 byte Y-component of a public key is the last element on the stack, preceded by X-component of a pubkey, preceded by S and R components of a signature, preceded by the data that is fifth element on the stack. All values are big-endian encoded. The signed data must be 32 bytes long, and signatures in lower-S form are only accepted.
@@ -75,15 +76,8 @@ The 32 byte Y-component of a public key is the last element on the stack, preced
 - Opcode: 0x06 {uint8 curve index}
 - Stack: ..., A: []byte &rarr; ..., X: []byte, Y: []byte
 - decompress pubkey A into components X, Y
-- **Cost**: 650
+- **Cost**:  Secp256k1=650 Secp256r1=2400
 - Availability: v5
-
-`ECDSA` Curves:
-
-| Index | Name | Notes |
-| - | ------ | --------- |
-| 0 | Secp256k1 | secp256k1 curve |
-
 
 The 33 byte public key in a compressed form to be decompressed into X and Y (top) components. All values are big-endian encoded.
 
@@ -94,13 +88,6 @@ The 33 byte public key in a compressed form to be decompressed into X and Y (top
 - for (data A, recovery id B, signature C, D) recover a public key
 - **Cost**: 2000
 - Availability: v5
-
-`ECDSA` Curves:
-
-| Index | Name | Notes |
-| - | ------ | --------- |
-| 0 | Secp256k1 | secp256k1 curve |
-
 
 S (top) and R elements of a signature, recovery id and data (bottom) are expected on the stack and used to deriver a public key. All values are big-endian encoded. The signed data must be 32 bytes long.
 
@@ -198,13 +185,13 @@ Overflow is an error condition which halts execution and fails the transaction. 
 
 - Opcode: 0x16
 - Stack: ..., A: uint64 &rarr; ..., []byte
-- converts uint64 A to big endian bytes
+- converts uint64 A to big-endian byte array, always of length 8
 
 ## btoi
 
 - Opcode: 0x17
 - Stack: ..., A: []byte &rarr; ..., uint64
-- converts bytes A as big endian to uint64
+- converts big-endian byte array A to uint64. Fails if len(A) > 8. Padded by leading 0s if len(A) < 8.
 
 `btoi` fails if the input is longer than 8 bytes.
 
@@ -401,7 +388,7 @@ The notation J,K indicates that two uint64 values J and K are interpreted as a u
 | 16 | TypeEnum | uint64 |      | See table below |
 | 17 | XferAsset | uint64 |      | Asset ID |
 | 18 | AssetAmount | uint64 |      | value in Asset's units |
-| 19 | AssetSender | []byte |      | 32 byte address. Causes clawback of all value of asset from AssetSender if Sender is the Clawback address of the asset. |
+| 19 | AssetSender | []byte |      | 32 byte address. Moves asset from AssetSender if Sender is the Clawback address of the asset. |
 | 20 | AssetReceiver | []byte |      | 32 byte address |
 | 21 | AssetCloseTo | []byte |      | 32 byte address |
 | 22 | GroupIndex | uint64 |      | Position of this transaction within an atomic transaction group. A stand-alone transaction is implicitly element 0 in a group of 1 |
@@ -422,7 +409,7 @@ The notation J,K indicates that two uint64 values J and K are interpreted as a u
 | 37 | ConfigAssetUnitName | []byte | v2  | Unit name of the asset |
 | 38 | ConfigAssetName | []byte | v2  | The asset name |
 | 39 | ConfigAssetURL | []byte | v2  | URL |
-| 40 | ConfigAssetMetadataHash | []byte | v2  | 32 byte commitment to some unspecified asset metadata |
+| 40 | ConfigAssetMetadataHash | []byte | v2  | 32 byte commitment to unspecified asset metadata |
 | 41 | ConfigAssetManager | []byte | v2  | 32 byte address |
 | 42 | ConfigAssetReserve | []byte | v2  | 32 byte address |
 | 43 | ConfigAssetFreeze | []byte | v2  | 32 byte address |
@@ -445,19 +432,7 @@ The notation J,K indicates that two uint64 values J and K are interpreted as a u
 | 60 | CreatedAssetID | uint64 | v5  | Asset ID allocated by the creation of an ASA (only with `itxn` in v5). Application mode only |
 | 61 | CreatedApplicationID | uint64 | v5  | ApplicationID allocated by the creation of an application (only with `itxn` in v5). Application mode only |
 | 62 | LastLog | []byte | v6  | The last message emitted. Empty bytes if none were emitted. Application mode only |
-
-
-TypeEnum mapping:
-
-| Index | "Type" string | Description |
-| --- | --- | --- |
-| 0 | unknown | Unknown type. Invalid transaction |
-| 1 | pay | Payment |
-| 2 | keyreg | KeyRegistration |
-| 3 | acfg | AssetConfig |
-| 4 | axfer | AssetTransfer |
-| 5 | afrz | AssetFreeze |
-| 6 | appl | ApplicationCall |
+| 63 | StateProofPK | []byte | v6  | 64 byte state proof public key commitment |
 
 
 FirstValidTime causes the program to fail. The field is reserved for future use.
@@ -595,7 +570,7 @@ for notes on transaction fields available, see `txn`. If top of stack is _i_, `g
 
 ## bnz target
 
-- Opcode: 0x40 {int16 branch offset, big endian}
+- Opcode: 0x40 {int16 branch offset, big-endian}
 - Stack: ..., A: uint64 &rarr; ...
 - branch to TARGET if value A is not zero
 
@@ -605,7 +580,7 @@ At v2 it became allowed to branch to the end of the program exactly after the la
 
 ## bz target
 
-- Opcode: 0x41 {int16 branch offset, big endian}
+- Opcode: 0x41 {int16 branch offset, big-endian}
 - Stack: ..., A: uint64 &rarr; ...
 - branch to TARGET if value A is zero
 - Availability: v2
@@ -614,7 +589,7 @@ See `bnz` for details on how branches work. `bz` inverts the behavior of `bnz`.
 
 ## b target
 
-- Opcode: 0x42 {int16 branch offset, big endian}
+- Opcode: 0x42 {int16 branch offset, big-endian}
 - Stack: ... &rarr; ...
 - branch unconditionally to TARGET
 - Availability: v2
@@ -624,7 +599,7 @@ See `bnz` for details on how branches work. `b` always jumps to the offset.
 ## return
 
 - Opcode: 0x43
-- Stack: ..., A: uint64 &rarr; ...
+- Stack: ..., A: uint64 &rarr; _exits_
 - use A as success value; end
 - Availability: v2
 
@@ -671,7 +646,7 @@ See `bnz` for details on how branches work. `b` always jumps to the offset.
 ## select
 
 - Opcode: 0x4d
-- Stack: ..., A, B, C &rarr; ..., A or B
+- Stack: ..., A, B, C: uint64 &rarr; ..., A or B
 - selects one of two values based on top-of-stack: B if C != 0, else A
 - Availability: v3
 
@@ -716,7 +691,7 @@ See `bnz` for details on how branches work. `b` always jumps to the offset.
 
 - Opcode: 0x53
 - Stack: ..., A, B: uint64 &rarr; ..., uint64
-- Bth bit of (byte-array or integer) A.
+- Bth bit of (byte-array or integer) A. If B is greater than or equal to the bit length of the value (8*byte length), the program fails
 - Availability: v3
 
 see explanation of bit ordering in setbit
@@ -725,7 +700,7 @@ see explanation of bit ordering in setbit
 
 - Opcode: 0x54
 - Stack: ..., A, B: uint64, C: uint64 &rarr; ..., any
-- Copy of (byte-array or integer) A, with the Bth bit set to (0 or 1) C
+- Copy of (byte-array or integer) A, with the Bth bit set to (0 or 1) C. If B is greater than or equal to the bit length of the value (8*byte length), the program fails
 - Availability: v3
 
 When A is a uint64, index 0 is the least significant bit. Setting bit 3 to 1 on the integer 0 yields 8, or 2^3. When A is a byte array, index 0 is the leftmost bit of the leftmost byte. Setting bits 0 through 11 to 1 in a 4-byte-array of 0s yields the byte array 0xfff00000. Setting bit 3 to 1 on the 1-byte-array 0x00 yields the byte array 0x10.
@@ -734,14 +709,14 @@ When A is a uint64, index 0 is the least significant bit. Setting bit 3 to 1 on 
 
 - Opcode: 0x55
 - Stack: ..., A: []byte, B: uint64 &rarr; ..., uint64
-- Bth byte of A, as an integer
+- Bth byte of A, as an integer. If B is greater than or equal to the array length, the program fails
 - Availability: v3
 
 ## setbyte
 
 - Opcode: 0x56
 - Stack: ..., A: []byte, B: uint64, C: uint64 &rarr; ..., []byte
-- Copy of A with the Bth byte set to small integer (between 0..255) C
+- Copy of A with the Bth byte set to small integer (between 0..255) C. If B is greater than or equal to the array length, the program fails
 - Availability: v3
 
 ## extract s l
@@ -778,6 +753,55 @@ When A is a uint64, index 0 is the least significant bit. Setting bit 3 to 1 on 
 - Stack: ..., A: []byte, B: uint64 &rarr; ..., uint64
 - A uint64 formed from a range of big-endian bytes from A starting at B up to but not including B+8. If B+8 is larger than the array length, the program fails
 - Availability: v5
+
+## replace2 s
+
+- Opcode: 0x5c {uint8 start position}
+- Stack: ..., A: []byte, B: []byte &rarr; ..., []byte
+- Copy of A with the bytes starting at S replaced by the bytes of B. Fails if S+len(B) exceeds len(A)
+- Availability: v7
+
+## replace3
+
+- Opcode: 0x5d
+- Stack: ..., A: []byte, B: uint64, C: []byte &rarr; ..., []byte
+- Copy of A with the bytes starting at B replaced by the bytes of C. Fails if B+len(C) exceeds len(A)
+- Availability: v7
+
+## base64_decode e
+
+- Opcode: 0x5e {uint8 encoding index}
+- Stack: ..., A: []byte &rarr; ..., []byte
+- Decode Base-64 encoded byte-array A. Fail if A is not properly encoded.
+- **Cost**: 1 + 1 per 16 bytes of A
+- Availability: v7
+
+`base64` Encodings:
+
+| Index | Name | Notes |
+| - | ------ | --------- |
+| 0 | URLEncoding |  |
+| 1 | StdEncoding |  |
+
+
+A must be encoded as specified by <a href="https://rfc-editor.org/rfc/rfc4648.html">RFC 4648</a>.  Padding (`=`) characters may be present as specified by the RFC, or omitted entirely.  The encoding must follow the 'canonical' rules of section 3.5. `\n` and `\r` are allowed but completely ignored. No bytes other than those of the encoding alphabet, `=`, `\r`, and `\n` may appear.
+
+## json_ref r
+
+- Opcode: 0x5f {uint8 return type}
+- Stack: ..., A: []byte, B: []byte &rarr; ..., any
+- Return key B's value from a [valid](jsonspec.md) utf-8 encoded json object string A. Fail if B's value can not be represented by the type R.
+- **Cost**: 25 + 2 per 7 bytes of A
+- Availability: v7
+
+`json_ref` Types:
+
+| Index | Name | Type | Notes |
+| - | ------ | -- | --------- |
+| 0 | JSONString | []byte |  |
+| 1 | JSONUint64 | uint64 |  |
+| 2 | JSONObject | []byte |  |
+
 
 ## balance
 
@@ -889,7 +913,7 @@ Deleting a key which is already absent has no effect on the application global s
 - Availability: v2
 - Mode: Application
 
-`asset_holding_get` Fields:
+`asset_holding` Fields:
 
 | Index | Name | Type | Notes |
 | - | ------ | -- | --------- |
@@ -907,7 +931,7 @@ params: Txn.Accounts offset (or, since v4, an _available_ address), asset id (or
 - Availability: v2
 - Mode: Application
 
-`asset_params_get` Fields:
+`asset_params` Fields:
 
 | Index | Name | Type | In | Notes |
 | - | ------ | -- | - | --------- |
@@ -918,7 +942,7 @@ params: Txn.Accounts offset (or, since v4, an _available_ address), asset id (or
 | 4 | AssetName | []byte |      | Asset name |
 | 5 | AssetURL | []byte |      | URL with additional info about the asset |
 | 6 | AssetMetadataHash | []byte |      | Arbitrary commitment |
-| 7 | AssetManager | []byte |      | Manager commitment |
+| 7 | AssetManager | []byte |      | Manager address |
 | 8 | AssetReserve | []byte |      | Reserve address |
 | 9 | AssetFreeze | []byte |      | Freeze address |
 | 10 | AssetClawback | []byte |      | Clawback address |
@@ -935,7 +959,7 @@ params: Txn.ForeignAssets offset (or, since v4, an _available_ asset id. Return:
 - Availability: v5
 - Mode: Application
 
-`app_params_get` Fields:
+`app_params` Fields:
 
 | Index | Name | Type | Notes |
 | - | ------ | -- | --------- |
@@ -960,7 +984,7 @@ params: Txn.ForeignApps offset or an _available_ app id. Return: did_exist flag 
 - Availability: v6
 - Mode: Application
 
-`acct_params_get` Fields:
+`acct_params` Fields:
 
 | Index | Name | Type | Notes |
 | - | ------ | -- | --------- |
@@ -997,9 +1021,17 @@ pushbytes args are not added to the bytecblock during assembly processes
 
 pushint args are not added to the intcblock during assembly processes
 
+## ed25519verify_bare
+
+- Opcode: 0x84
+- Stack: ..., A: []byte, B: []byte, C: []byte &rarr; ..., uint64
+- for (data A, signature B, pubkey C) verify the signature of the data against the pubkey => {0 or 1}
+- **Cost**: 1900
+- Availability: v7
+
 ## callsub target
 
-- Opcode: 0x88 {int16 branch offset, big endian}
+- Opcode: 0x88 {int16 branch offset, big-endian}
 - Stack: ... &rarr; ...
 - branch unconditionally to TARGET, saving the next instruction on the call stack
 - Availability: v4

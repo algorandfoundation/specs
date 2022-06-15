@@ -188,6 +188,9 @@ _available_.
    associated account of a contract that was created earlier in the
    group is _available_.
 
+ * Since v7, the account associated with any contract present in the
+   `txn.ForeignApplications` field is _available_.
+
 ## Constants
 
 Constants can be pushed onto the stack in two different ways:
@@ -275,7 +278,9 @@ return stack matches the name of the input value.
 | `sha256` | SHA256 hash of value A, yields [32]byte |
 | `keccak256` | Keccak256 hash of value A, yields [32]byte |
 | `sha512_256` | SHA512_256 hash of value A, yields [32]byte |
+| `sha3_256` | SHA3_256 hash of value A, yields [32]byte |
 | `ed25519verify` | for (data A, signature B, pubkey C) verify the signature of ("ProgData" \|\| program_hash \|\| data) against the pubkey => {0 or 1} |
+| `ed25519verify_bare` | for (data A, signature B, pubkey C) verify the signature of the data against the pubkey => {0 or 1} |
 | `ecdsa_verify v` | for (data A, signature B, C and pubkey D, E) verify the signature of the data against the pubkey => {0 or 1} |
 | `ecdsa_pk_recover v` | for (data A, recovery id B, signature C, D) recover a public key |
 | `ecdsa_pk_decompress v` | decompress pubkey A into components X, Y |
@@ -298,8 +303,8 @@ return stack matches the name of the input value.
 | `!=` | A is not equal to B => {0 or 1} |
 | `!` | A == 0 yields 1; else 0 |
 | `len` | yields length of byte value A |
-| `itob` | converts uint64 A to big endian bytes |
-| `btoi` | converts bytes A as big endian to uint64 |
+| `itob` | converts uint64 A to big-endian byte array, always of length 8 |
+| `btoi` | converts big-endian byte array A to uint64. Fails if len(A) > 8. Padded by leading 0s if len(A) < 8. |
 | `%` | A modulo B. Fail if B == 0. |
 | `\|` | A bitwise-or B |
 | `&` | A bitwise-and B |
@@ -310,10 +315,10 @@ return stack matches the name of the input value.
 | `divw` | A,B / C. Fail if C == 0 or if result overflows. |
 | `divmodw` | W,X = (A,B / C,D); Y,Z = (A,B modulo C,D) |
 | `expw` | A raised to the Bth power as a 128-bit result in two uint64s. X is the high 64 bits, Y is the low. Fail if A == B == 0 or if the results exceeds 2^128-1 |
-| `getbit` | Bth bit of (byte-array or integer) A. |
-| `setbit` | Copy of (byte-array or integer) A, with the Bth bit set to (0 or 1) C |
-| `getbyte` | Bth byte of A, as an integer |
-| `setbyte` | Copy of A with the Bth byte set to small integer (between 0..255) C |
+| `getbit` | Bth bit of (byte-array or integer) A. If B is greater than or equal to the bit length of the value (8*byte length), the program fails |
+| `setbit` | Copy of (byte-array or integer) A, with the Bth bit set to (0 or 1) C. If B is greater than or equal to the bit length of the value (8*byte length), the program fails |
+| `getbyte` | Bth byte of A, as an integer. If B is greater than or equal to the array length, the program fails |
+| `setbyte` | Copy of A with the Bth byte set to small integer (between 0..255) C. If B is greater than or equal to the array length, the program fails |
 | `concat` | join A and B |
 
 ### Byte Array Manipulation
@@ -327,6 +332,10 @@ return stack matches the name of the input value.
 | `extract_uint16` | A uint16 formed from a range of big-endian bytes from A starting at B up to but not including B+2. If B+2 is larger than the array length, the program fails |
 | `extract_uint32` | A uint32 formed from a range of big-endian bytes from A starting at B up to but not including B+4. If B+4 is larger than the array length, the program fails |
 | `extract_uint64` | A uint64 formed from a range of big-endian bytes from A starting at B up to but not including B+8. If B+8 is larger than the array length, the program fails |
+| `replace2 s` | Copy of A with the bytes starting at S replaced by the bytes of B. Fails if S+len(B) exceeds len(A) |
+| `replace3` | Copy of A with the bytes starting at B replaced by the bytes of C. Fails if B+len(C) exceeds len(A) |
+| `base64_decode e` | Decode Base-64 encoded byte-array A. Fail if A is not properly encoded. |
+| `json_ref r` | Return key B's value from a [valid](jsonspec.md) utf-8 encoded json object string A. Fail if B's value can not be represented by the type R. |
 
 The following opcodes take byte-array values that are interpreted as
 big-endian unsigned integers.  For mathematical operators, the
@@ -440,7 +449,7 @@ Some of these have immediate data in the byte or bytes after the opcode.
 | 16 | TypeEnum | uint64 |      | See table below |
 | 17 | XferAsset | uint64 |      | Asset ID |
 | 18 | AssetAmount | uint64 |      | value in Asset's units |
-| 19 | AssetSender | []byte |      | 32 byte address. Causes clawback of all value of asset from AssetSender if Sender is the Clawback address of the asset. |
+| 19 | AssetSender | []byte |      | 32 byte address. Moves asset from AssetSender if Sender is the Clawback address of the asset. |
 | 20 | AssetReceiver | []byte |      | 32 byte address |
 | 21 | AssetCloseTo | []byte |      | 32 byte address |
 | 22 | GroupIndex | uint64 |      | Position of this transaction within an atomic transaction group. A stand-alone transaction is implicitly element 0 in a group of 1 |
@@ -461,7 +470,7 @@ Some of these have immediate data in the byte or bytes after the opcode.
 | 37 | ConfigAssetUnitName | []byte | v2  | Unit name of the asset |
 | 38 | ConfigAssetName | []byte | v2  | The asset name |
 | 39 | ConfigAssetURL | []byte | v2  | URL |
-| 40 | ConfigAssetMetadataHash | []byte | v2  | 32 byte commitment to some unspecified asset metadata |
+| 40 | ConfigAssetMetadataHash | []byte | v2  | 32 byte commitment to unspecified asset metadata |
 | 41 | ConfigAssetManager | []byte | v2  | 32 byte address |
 | 42 | ConfigAssetReserve | []byte | v2  | 32 byte address |
 | 43 | ConfigAssetFreeze | []byte | v2  | 32 byte address |
@@ -484,7 +493,8 @@ Some of these have immediate data in the byte or bytes after the opcode.
 | 60 | CreatedAssetID | uint64 | v5  | Asset ID allocated by the creation of an ASA (only with `itxn` in v5). Application mode only |
 | 61 | CreatedApplicationID | uint64 | v5  | ApplicationID allocated by the creation of an application (only with `itxn` in v5). Application mode only |
 | 62 | LastLog | []byte | v6  | The last message emitted. Empty bytes if none were emitted. Application mode only |
-| 63 | StateProofPK | []byte | v6  | 64 byte state proof public key commitment.|
+| 63 | StateProofPK | []byte | v6  | 64 byte state proof public key commitment |
+
 
 Additional details in the [opcodes document](TEAL_opcodes.md#txn) on the `txn` op.
 
@@ -530,7 +540,7 @@ Asset fields include `AssetHolding` and `AssetParam` fields that are used in the
 | 4 | AssetName | []byte |      | Asset name |
 | 5 | AssetURL | []byte |      | URL with additional info about the asset |
 | 6 | AssetMetadataHash | []byte |      | Arbitrary commitment |
-| 7 | AssetManager | []byte |      | Manager commitment |
+| 7 | AssetManager | []byte |      | Manager address |
 | 8 | AssetReserve | []byte |      | Reserve address |
 | 9 | AssetFreeze | []byte |      | Freeze address |
 | 10 | AssetClawback | []byte |      | Clawback address |
@@ -626,7 +636,8 @@ In v5, inner transactions may perform `pay`, `axfer`, `acfg`, and
 with the next instruction with, for example, `balance` and
 `min_balance` checks. In v6, inner transactions may also perform
 `keyreg` and `appl` effects. Inner `appl` calls fail if they attempt
-to invoke a program with version less than v6.
+to invoke a program with version less than v4, or if they attempt to
+opt-in to an app with a ClearState Program less than v4.
 
 In v5, only a subset of the transaction's header fields may be set: `Type`/`TypeEnum`,
 `Sender`, and `Fee`. In v6, header fields `Note` and `RekeyTo` may
