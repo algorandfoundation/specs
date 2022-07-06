@@ -905,6 +905,16 @@ The transaction commitment for a block covers the transaction encodings
 with the changes described above.  Individual transaction signatures
 cover the original encoding of transactions as standalone.
 
+In addtion to _transaction commitment_, each block will also contains _SHA256 transaction commitment_.
+It can allow a verifier which does not support SHA512_256 function to verify proofs of membership on Algorand's transcation.
+In order to consturct this commitment we use Vector Commitment. The leaves in the Vector Commitment
+tree are hashed as $$SHA256("TL", txidSha256, stibSha256)$$.  Where txidSha256 and stibSha256 are computed in the following manner:
+
+- txidSha256 = SHA256(`TX` || transcation)
+- txidSha256 = SHA256(`STIB` || signed transaction || ApplyData)
+
+We use SHA256 for creating the internal node of the vector commitment as well.
+
 A valid transaction sequence contains no duplicates: each transaction in the
 transaction sequence appears exactly once.  We can call the set of these
 transactions the _transaction set_.  (For convenience, we may also write
