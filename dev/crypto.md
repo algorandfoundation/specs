@@ -52,10 +52,14 @@ below specifies each prefix (in quotation marks):
     - "MA": An internal node in a [Merkle tree](#merkle-tree).
     - "MB": A bottem leaf in a vector commitment [vector commitment](#vector-commitment).
     - "KP": Is a public key used by the Merkle siganture scheme [Merkle Siganture Scheme](merklesignaturescheme)
+    - "spc": A coin used as part of the state proofs construction.
+    - "spp": Participant's information (state proof pk and weight) used for state proofs.
+    - "sps": A signature from a specific participant that is used for state proofs.
  - In the [Algorand Ledger][ledger-spec]:
     - "BH": A _Block Header_.
     - "BR": A _Balance Record_.
     - "GE": A _Genesis_ configuration.
+    - "spm": A state proof message.
     - "STIB": A _SignedTxnInBlock_ that appears as part of the leaf in the Merkle tree of transactions.
     - "TL": A leaf in the Merkle tree of transactions.
     - "TX": A _Transaction_.
@@ -287,6 +291,52 @@ def verify(elems, proof, root):
 
 Algorand uses [Vector Commitments][vector-commitment], which allows for concisely committing to an ordered (indexed) vector of data entries, based on Merkle trees.
 
+# State Proofs
+
+State proofs (aka Compact Certificates) allow external parties to efficiently validate
+Algorand blocks.  The [technical report][compactcert] provides the
+overall approach of state proofs; this section describes the
+specific details of how state proofs are realized in Algorand.
+
+As a brief summary of the technical report, state proofs operate
+in three steps:
+
+- The first step is to commit to a set of participants that are eligible
+  to produce signatures, along with a weight for each participant.
+  In Algorand's case, these end up being the online accounts, and the
+  weights are the account balances.
+
+- The second step is for each participant to sign the same message, and
+  broadcast this signature to others.  In Algorand's case, the message would contain
+  a commitment on blocks in a specific period.
+
+- The third step is for relays to collect these signatures from a
+  large fraction of participants (by weight) and generate a state 
+  proof.  Given a sufficient number of signatures, a relay
+  can form a state proof, which effectively consists of a
+  small number of signatures, pseudo-randomly chosen out of all of
+  the signatures.
+
+The resulting state proof proves that at least some `provenWeight`
+of participants have signed the message.  The actual weight of
+all participants that have signed the message must be greater than
+`provenWeight`.
+
+## Participant commitment
+
+The state proof scheme requires a commitment to a dense array of participants, 
+in some well-defined order. In order to grantee this property, Algorand uses Vector Commitment.
+Leaf hashing is done in the following manner: \newline
+
+_leaf_ = hash("spp" || _Weight_ || _KeyLifeTime_ || _StateProofPK_) for each online participant.
+
+where:
+
+- _Weight_ is a 64-bit integer represents the participant's weight in MicroAlgos
+
+- _KeyLifeTime_ is a 64-bit constant integer with value of 256
+
+- _StateProofPK_ is a 512-bit represents the participant's merkle signature scheme commitment.
 
 
 [ledger-spec]: https://github.com/algorand/spec/ledger.md
@@ -300,3 +350,4 @@ Algorand uses [Vector Commitments][vector-commitment], which allows for concisel
 [falcon]: https://falcon-sign.info/falcon.pdf
 [deterministic-falcon]: https://github.com/algorandfoundation/specs/blob/master/dev/cryptographic-specs/falcon-deterministic.pdf
 [vector-commitment]: https://github.com/algorandfoundation/specs/blob/master/dev/cryptographic-specs/merkle-vc-full.pdf
+[compactcert]: https://eprint.iacr.org/2020/1568]
