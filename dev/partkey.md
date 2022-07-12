@@ -65,7 +65,7 @@ sub-key per batch, $\KeyDilution$. For example, the default $\KeyDilution$
 value of of the genesis consensus protocol (V17) was $10,000$. 
 An Algorand account can change its $\KeyDilution$ via 
 key registration transactions (see 
-[the ledger specification](https://github.com/algorandfoundation/specs/blob/master/dev/ledger.md)).
+[the ledger specification](./ledger.md)).
 
 
 ### One\-time Signature
@@ -138,7 +138,7 @@ messages between Algorand users. It contains the following fields:
 To check the validity of a voting message, its VRF selection key
 needs to be verified. Algorand uses Verifiable Random Function (VRF) to 
 generate selection keys (more details in 
-[crypto specification](https://github.com/algorandfoundation/specs/blob/master/dev/crypto.md)).
+[crypto specification](./crypto.md)).
 
 More specifically, an unverified vote ($\unauthenticatedVote$) has the
 following fields:
@@ -146,7 +146,7 @@ following fields:
  - _Raw Vote_ $\mathrm{R}$, an inner struct contains $\Sender$, $\Round$, $\Period$, 
    $\Step$, and $\Proposal$.
 
- - _Unverified Credential_ $\Cred$. $\Cred$ contains 
+ - _Unverified Credential_ $\Cred$. $\Cred$ contains
    a single field $\mathrm{Proof}$, which is a VRF proof.
 
  - _Signature_ $\Sig$, one-time signature of the vote.
