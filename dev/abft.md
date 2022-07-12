@@ -53,7 +53,7 @@ The protocol is parameterized by the following constants:
 For convenience, we define $\delta_b$ (the "balance lookback") to be
 $2\delta_s\delta_r$.
 
-Algorand v1 sets $\delta_s = 2$, $\delta_r = 80$, $\lambda = 4$ seconds,
+Algorand v1 sets $\delta_s = 2$, $\delta_r = 80$, $\lambda = 2$ seconds,
 $\lambda_f = 5$ minutes, and $\Lambda = 17$ seconds.
 
 Identity, Authorization, and Authentication

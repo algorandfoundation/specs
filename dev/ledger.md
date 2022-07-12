@@ -14,14 +14,23 @@ abstract: >
 The Algorand Ledger is parameterized by the following values:
 
  - $t_{\delta}$, the maximum difference between successive timestamps.
+   Currently defined as 25 seconds.
  - $T_{\max}$, the length of the _transaction tail_.
+   Currently defined as 1000.
  - $B_{\max}$, the maximum number of transaction bytes in a block.
+   Currently defined as 1,000,000.
  - $b_{\min}$, the minimum balance for any address.
+   Currently defined as 100,000 microAlgos.
  - $f_{\min}$, the minimum processing fee for any transaction.
+   Currently defined as 1000 microAlgos.
  - $V_{\max}$, the maximum length of protocol version strings.
+   Currently defined as 128.
  - $N_{\max}$, the maximum length of a transaction note string.
+   Currently defined as 1024 bytes.
  - $G_{\max}$, the maximum number of transactions allowed in a transaction group.
+   Currently defined as 16.
  - $\tau$, the number of votes needed to execute a protocol upgrade.
+   Currently defined as 9000.
  - $\delta_d$, the number of rounds over with an upgrade proposal is open.
    Currently defined as 10,000.
  - $\delta_{x_{\min}}$ and $\delta_{x_{\max}}$, the minimum and maximum number
@@ -30,7 +39,9 @@ The Algorand Ledger is parameterized by the following values:
  - $\delta_x$, the default number of rounds needed to prepare for an upgrade.
    Currently defined as 140,000.
  - $\omega_r$, the rate at which the reward rate is refreshed.
+   Currently defined as 500,000.
  - $A$, the size of an earning unit.
+   Currently defined as 1,000,000 microAlgos.
 
 ## States
 
