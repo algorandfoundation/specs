@@ -339,6 +339,84 @@ where:
 - _StateProofPK_ is a 512-bit represents the participant's merkle signature scheme commitment.
 
 
+## Signature format 
+
+Similarly to the participant commitment, the state proof scheme requires a commitment
+to a signature array. Leaf hashing is done in the following manner: \newline
+
+
+_leaf_ = hash("sps" || _L_ || _serializedMerkleSignature_) for each online participant.
+
+where:
+
+-  _L_ is a 64-bit integer represents the participant's `L` value as described in the technical report.
+
+- _serializedMerkleSignature_ represents a merkleSignature of the participant  [merkle signature binary representation](https://github.com/algorandfoundation/specs/blob/master/dev/partkey.md#signatures)
+
+## Choice of revealed signatures
+
+As described in the [technical report][compactcert] section IV.A, a
+state proof contains a pseudorandomly chosen set of signatures.
+The choice is made using a coin.  In Algorand's implementation, the
+coin derivation is made in the following manner:  \newline
+
+_Hin_ = ("spc" || _version_ || _participantCommitment_ || _LnProvenWeight_ || _signatureCommitment_ || _singedWeight_ || _stateproofMessageHash_ )
+
+where:
+
+_version_ is a 8-bit constant value of 0
+
+_participantCommitment_ is a 64-bit string represents the vector commitment root on the participant array
+
+_LnProvenWeight_ is a 8-bit string represents the value of the $\ln(ProvenWeight)$ with 16 bits of precision (TODO: LINK weights paper here  HERE)
+
+_signatureCommitment_ is a 512-bit string represents the vector commitment root on the signature array
+
+_singedWeight_ is a 64-bit integer represents the state proof signed weight
+
+_stateproofMessageHash_ is a 256-bit string represents the message that would be verified by the state proof. (would be the hash result of the state proof message)
+
+
+We compute: \newline
+_R_ = SHAKE256(_Hin_)
+
+For every reveal, we squeeze 64-bit string and use rejection sampling
+to have a uniform random coin in [0,signedWeight).
+
+## State proof format
+
+A State proof consists of five fields:
+
+- The Merkle root commitment to the array of signatures, under msgpack
+  key `c`.
+
+- The total weight of all signers whose signatures appear in the array
+  of signatures, under msgpack key `w`.
+
+- The set of revealed signatures, chosen as described in section IV.A
+  of the [technical report][compactcert], under msgpack key `r`.  This set is stored as a
+  msgpack map.  The key of the map is the position in the array of the
+  participant whose signature is being revealed.  The value in the map
+  is a msgpack struct with the following fields:
+
+  -- The participant information, encoded as described [above](#participant-commitment),
+    under msgpack key `p`.
+
+  -- The signature information, encoded as described [above](#signature-format),
+    under msgpack key `s`.
+
+- The Merkle proof for the signatures revealed above, under msgpack
+  key `S`.  The Merkle proof is an array of 32-byte hash digests.
+
+- The Merkle proof for the participants revealed above, under msgpack
+  key `P`.
+
+Note that, although the compact certificate contains a commitment to
+the signatures, it does not contain a commitment to the participants.
+The set of participants must already be known in order to verify a
+compact certificate.  In practice, a commitment to the participants is
+stored in the block header of an earlier block.
+
 [ledger-spec]: https://github.com/algorand/spec/ledger.md
 [abft-spec]: https://github.com/algorand/spec/abft.md
 
