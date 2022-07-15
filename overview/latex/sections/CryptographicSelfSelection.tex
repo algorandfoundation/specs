@@ -1,0 +1,41 @@
+\documentclass[../main.tex]{subfiles}
+
+\begin{document}
+
+For every round $r$, Algorand runs a fast, partition-resilient Byzantine consensus protocol to agree on a block $B^r$ of transactions. 
+A block is finalized if it has an associated certificate. 
+A certificate for a block consists of a set of valid 
+credentials from committee members (randomly selected via cryptographic self-selection for the round $r$) and their signatures of the block.  
+Next, we outline how randomness is generated and how cryptographic self-selection is performed. 
+
+\paragraph{The random seed $Q^r$.} 
+Each block $B^r$ contains a seed $Q^r$, which will be used for committee election in the consensus protocol of a future round. $Q^{r+2}$ is computed deterministically by the proposer of $B^{r+2}$ from $Q^r$ and the proposer's own VRF keys.
+
+At genesis block, we set $Q^0 = H(S^0)$, where $H$ is a cryptographic hash function specified by the system.
+The seeds for future rounds are frequently re-randomized by different block proposers, ensuring liveness and safety.
+
+\paragraph{Cryptographic self-selection for committees using VRFs.}
+A round of the consensus protocol consists of multiple periods (attempts to reach consensus) divided into protocol steps.
+
+For each step, a committee has each of its members secretly self-select at random using the seed $Q^{r-2}$ and the balance table from $S^{r-322}$. 
+For every round $r$, all {\em online} users' balances at round $r-322$ are added up to compute a total \emph{online} stake $StakeOn_{r-322}$.
+
+To get elected into the committee for round $r$, period $p$, step $s$, an \emph{online} user applies the VRF (keyed on her VRF secret key) to $(Q^{r-2}, r, p, s)$, and gets elected if the output of this computation is small enough, where ``small enough'' is a function of her balance $b_u^{r-322}$ and the total online stake $StakeOn_{r-322}$.
+
+Committee election is fair, in the sense that for each online user, each token in her balance in round $r-322$ represents one lottery ticket with a fixed probability of winning. 
+A user with $100$ tokens has $100$ lottery tickets, whether she keeps them all together or pretends that they are owned by $10$ or $100$ different users. 
+A user gains no advantage from splitting his stake into more than $1$ user.
+
+The cryptographic self-selection for round $r$ uses $S^{r-322}$ partly because users need to commit to their 
+participation VRF keys prior to seeing the seed. (Otherwise, a malicious user could 
+have chosen a VRF key to bias her committee selection probability.)
+
+\paragraph{User timer and clock.}
+
+Each user $u$ keeps a local timer $timer_u$. 
+Algorand \emph{does not} assume any synchronicity between the users' timers. 
+$timer_u$ may be reset by $u$ and, when queried, it returns the time that passed, in seconds, since the latest reset. 
+Users' timers are only used for the consensus protocol (for instance, a user needs to decide when to move to the next step in the protocol). 
+The consensus protocol assumes that users' timers progress at the same rate for liveness. 
+
+\end{document}

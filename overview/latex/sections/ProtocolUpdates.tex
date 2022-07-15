@@ -1,0 +1,17 @@
+\documentclass[../main.tex]{subfiles}
+
+\begin{document}
+
+Algorand Foundation governs the development of the blockchain. 
+Updates to the core blockchain protocol are done in a few steps: 
+\begin{enumerate}
+
+\item Algorand Foundation announces and posts a specification of the protocol in a public git repository. The URL of the repository commit is used as a ``protocol version'' identifier. This URL must contain a hash that corresponds to the git commit.
+
+\item Any update to the protocol must be supported by the community \emph{on chain} via voting by the block proposers. A block proposer ``supports'' a proposal by including it as the next protocol version. An update is accepted if for an interval of $10000$ rounds, at least $8000$ of the finalized blocks support the same next protocol version.
+
+\item After the end of the $10000$-round voting interval, users are given another $10000$ rounds to update their software. The new specification then takes effect and, from that point on, blocks are produced based on the updated protocol rules.
+
+\end{enumerate}
+
+\end{document}

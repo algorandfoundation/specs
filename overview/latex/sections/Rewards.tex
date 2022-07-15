@@ -1,0 +1,19 @@
+\documentclass[../main.tex]{subfiles}
+
+\begin{document}
+In every round $r$, users in the system receive rewards proportional to the balance in their account at round $r-322$, i.e., as it appears in the balance table $S^{r-322}$. 
+Rewards are earned regardless of a user's online/offline status in round $r$ or round $r-322$.
+These rewards are drawn from a special \Rewards{} account, 
+which cannot be used for any other purpose.
+Any account may transfer tokens to \Rewards{} and, in particular, it is refilled by Algorand Foundation at its discretion.
+Every half million rounds, 
+the balance of \Rewards{} is used to determine the rewards distributed in the next half million rounds.
+Specifically, at each round $r$ divisible by 500,000, the total amount of rewards for each of the next 500,000 rounds (i.e., round $r'$ for $r' \in (r,r+500,000]$) is determined as $X^r=\frac{b}{500,000}$, 
+where $b = b^r_\textit{\footnotesize\Rewards{}}-0.1$, as $0.1$ is the minimum account balance. 
+
+Rewards earned by a user $u$ in a round are accumulated in the system and are immediately spendable by $u$. 
+When $u$ is involved in a transaction of any type, say in a round $r$, the rewards he earned since the last time his balance was updated will be added to his balance, and $u$'s updated balance after round $r$ will earn future rewards since round $r+322$.
+
+If a user $u$ closes his account at round $r$, then $u$ will not earn rewards in rounds  $r,r+1,\ldots,r+321$.
+
+\end{document}

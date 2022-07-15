@@ -1,0 +1,83 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{subfiles}
+\usepackage{hyperref}
+\usepackage{nameref}
+\usepackage{geometry}
+
+\newcommand{\APK}{\textit{APK}}
+\newcommand{\ASK}{\textit{ASK}}
+\newcommand{\VRFPK}{\textit{VRFPK}}
+\newcommand{\VRFSK}{\textit{VRFSK}}
+\newcommand{\PartPK}{\textit{PartPK}}
+\newcommand{\PartSK}{\textit{PartSK}}
+\newcommand{\EPK}{\textit{EPK}}
+\newcommand{\ESK}{\textit{ESK}}
+
+\newcommand{\PK}{\textit{PK}}
+\newcommand{\SK}{\textit{SK}}
+
+\newcommand{\ESIG}{\textit{ESIG}}
+
+\newcommand{\CS}{\textit{CS}}
+\newcommand{\CT}{\textit{CT}}
+\newcommand{\StakeOn}{\textit{StakeOn}}
+\newcommand{\Rewards}{\textit{RewardsPool}}
+
+\newcommand{\timer}{\textit{timer}}
+
+\newcommand{\Poisson}{\textit{Poisson}}
+\newcommand{\Binomial}{\textit{Binomial}}
+
+\title{Algorand Blockchain Features Specification\\ Version~1.0}
+
+\begin{document}
+
+\maketitle
+
+This document provides a high-level description of the core features of Version~1.0 of the Algorand blockchain.  It is not intended to be a detailed and exhaustive specification review. Rather, it is a simple guide to help users understand primary components in the source code.
+
+\setcounter{tocdepth}{1}
+\tableofcontents
+
+\section{Blockchain and Balance Table}\label{section:Blockchain}
+\subfile{sections/Blockchain}
+
+%\section{Balance Table}
+%\label{section:BalanceTable}
+\subfile{sections/BalanceTable}
+
+\section{Key Management}\label{section:KeyManagement}
+\subfile{sections/KeyManagement}
+
+\section{Cryptographic Self-Selection}\label{section:CryptographicSelfSelection}
+\subfile{sections/CryptographicSelfSelection}
+
+\section{Security Model}
+\label{section:SecurityModel}
+\subfile{sections/SecurityModel}
+
+\section{Transactions}
+\label{section:Transactions}
+\subfile{sections/Transactions}
+
+\section{Rewards}
+\label{section:Rewards}
+\subfile{sections/Rewards}
+
+\section{Consensus Protocol}
+\label{section:DetailedConsensus}
+\subfile{sections/DetailedConsensus}
+
+\section{Protocol Updates}
+\label{section:ProtocolUpdates}
+\subfile{sections/ProtocolUpdates}
+
+\appendix
+
+\section{Parameters}
+\label{section:Appendix}
+\subsection{Parameter Table}
+\subfile{appendix/ParameterTable}
+
+\end{document}
