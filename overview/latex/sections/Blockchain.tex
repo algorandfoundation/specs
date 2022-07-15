@@ -1,0 +1,34 @@
+\documentclass[../main.tex]{subfiles}
+
+\begin{document}
+
+The Algorand blockchain is a sequence of \emph{blocks}.
+Initially, it consists of a single block $B^0$, called the \emph{genesis block}.
+New blocks are appended to the blockchain incrementally.
+Once block $B^r$ is finalized, a consensus protocol is run to generate and finalize block $B^{r+1}$. 
+We refer to the $r$th execution of the consensus protocol, which finalizes $B^r$, as \emph{round} $r$.
+A nominal round 0 denotes the initialization of the blockchain, 
+and rounds of negative value denote round 0.
+For example, $B^{-1} = B^0$.
+
+Block $B^r$ contains a set of \emph{transactions} and a random \emph{seed} $Q^r$, 
+together with metadata that support cryptographic proofs that everything is valid. 
+Transactions are described in Section~\ref{section:Transactions}.
+The seed $Q^r$ is used in round $r+2$ 
+as described in Sections~\ref{section:CryptographicSelfSelection} and~\ref{section:DetailedConsensus}.
+
+The Algorand blockchain maintains a set of \emph{accounts} owned by \emph{users}.
+Each account is owned by a nominally distinct user, 
+so there is a one-one correspondence between users and accounts.
+
+An account is identified by its \emph{account public key (APK)}, 
+a unique $32$-byte string in the Algorand blockchain.
+This string may correspond to a public key from a Ed25519 signature scheme or a hash of a collection of Ed25519 public keys for a multi-signature account. 
+
+In any round, a user may be \emph{online} or \emph{offline};
+this is called the user's \emph{status}.
+Online users participate in the consensus protocol to determine the next block;
+offline users do not (but may still issue transactions).
+Online users must maintain some additional information, described below.
+
+\end{document}
