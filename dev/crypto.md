@@ -63,6 +63,7 @@ below specifies each prefix (in quotation marks):
     - "STIB": A _SignedTxnInBlock_ that appears as part of the leaf in the Merkle tree of transactions.
     - "TL": A leaf in the Merkle tree of transactions.
     - "TX": A _Transaction_.
+    - "SpecialAddr": A prefix used to generate designated addresses for specific functions, such as sending state proof transactions.
  - In the [Algorand Byzantine Fault Tolerance protocol][abft-spec]:
     - "AS": An _Agreement Selector_, which is also a [VRF][Verifiable
       Random Function] input.
