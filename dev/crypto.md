@@ -385,13 +385,22 @@ to have a uniform random coin in [0,signedWeight).
 
 ## State proof format
 
-A State proof consists of five fields:
+A State proof consists of seven fields:
 
-- The Merkle root commitment to the array of signatures, under msgpack
+- The Vector commitment root to the array of signatures, under msgpack
   key `c`.
 
 - The total weight of all signers whose signatures appear in the array
   of signatures, under msgpack key `w`.
+
+- The Vector commitment proof for the signatures revealed above, under msgpack
+  key `S`.
+
+- The Vector commitment proof for the participants revealed above, under msgpack
+  key `P`.
+
+- The Falcon signature salt version, under msgpack key `v`, is expected salt version of 
+every signature in the state proof.
 
 - The set of revealed signatures, chosen as described in section IV.A
   of the [technical report][compactcert], under msgpack key `r`.  This set is stored as a
@@ -405,17 +414,17 @@ A State proof consists of five fields:
   -- The signature information, encoded as described [above](#signature-format),
     under msgpack key `s`.
 
-- The Merkle proof for the signatures revealed above, under msgpack
-  key `S`.  The Merkle proof is an array of 32-byte hash digests.
+- A sequence of positions, under msgpack key `pr`, the sequence defines the order of the
+  participant whose signature is being revealed. i.e \newline
+  _PositionToReveal_ = [IntToInd(coin$_{0}$),...,IntToInd(coin$_{numReveals-1}$)]
 
-- The Merkle proof for the participants revealed above, under msgpack
-  key `P`.
 
-Note that, although the compact certificate contains a commitment to
+Note that, although the state proof contains a commitment to
 the signatures, it does not contain a commitment to the participants.
 The set of participants must already be known in order to verify a
-compact certificate.  In practice, a commitment to the participants is
-stored in the block header of an earlier block.
+state proof.  In practice, a commitment to the participants is
+stored in the block header of an earlier block, and in the state proof message that was
+proven by the previous state proof.
 
 [ledger-spec]: https://github.com/algorand/spec/ledger.md
 [abft-spec]: https://github.com/algorand/spec/abft.md
