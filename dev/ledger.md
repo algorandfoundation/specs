@@ -109,6 +109,9 @@ The block header contains the following components:
  - A cryptographic commitment to the block's _transaction sequence_, described
    below, stored under msgpack key `txn`.
 
+ - A cryptographic commitment, using a SHA256 hash function, to the block's _transaction sequence_, described
+   below, stored under msgpack key `txn256`.
+
  - The block's _previous hash_, which is the cryptographic hash of the previous
    block in the sequence.  (The previous hash of the genesis block is 0.)  The
    previous hash is stored under msgpack key `prev`.
@@ -522,6 +525,25 @@ have been deemed to be _expired_. An account is said to be expired when the last
 valid vote round in its participation key is strictly less than the current round
 that is being processed.  Once included in this list, an account will be marked 
 offline as part of applying the block changes to the ledger.
+
+# Light Block Header
+
+A light block header is a structure contains subset of fields for Algorand's  _block header_
+Light block header contains the following components:
+
+- The block's _seed_, under msgpack key `s`.
+
+- The block's _genesis hash_, under msgpack key `gh`.
+
+- The block's _round_, under msgpack key `r`.
+
+- The block's SHA256 Transaction commitment, under msgpack key `tc`.
+
+# Light Block Header Commitment
+
+Light Block Header Commitment for rounds (_X_$\times$$\delta_{SP}$,...,(_X_+1)$\times$$\delta_{SP}$] for some number _X_, defined as
+the root of a vector commitment whose leaves are light block headers for rounds  _X_$\times$$\delta_{SP}$,...,(_X_+1)$\times$$\delta_{SP}$ respectively.
+
 
 # Transactions
 
