@@ -42,6 +42,15 @@ The Algorand Ledger is parameterized by the following values:
    Currently defined as 500,000.
  - $A$, the size of an earning unit.
    Currently defined as 1,000,000 microAlgos.
+ - Several parameters for state proofs; namely:
+   - $\delta_{SP}$, the number of rounds between state proofs.
+   - $\delta_{SPR}$, the number of $\delta_{SP}$ that the network will try to catch-up with.
+   - $\delta_{SPB}$, the delay (lookback) in rounds for online participant
+     information committed to in the block header for state proofs.
+   - $N_{SP}$, the maximum number of online accounts that are included
+     in the Vector commitment of state proofs participants.
+   - $KQ_{SP}$, the security parameter for state proof. We use either k+q (for pre-quantum security) or k+2q (for post-quantum security).
+   - $f_{SP}$, the fraction of participants that are proven to have signed by a state proof.
 
 ## States
 
@@ -541,8 +550,78 @@ Light block header contains the following components:
 
 # Light Block Header Commitment
 
-Light Block Header Commitment for rounds (_X_$\times$$\delta_{SP}$,...,(_X_+1)$\times$$\delta_{SP}$] for some number _X_, defined as
-the root of a vector commitment whose leaves are light block headers for rounds  _X_$\times$$\delta_{SP}$,...,(_X_+1)$\times$$\delta_{SP}$ respectively.
+Light Block Header Commitment for rounds (_X_$\cdot$$\delta_{SP}$,...,(_X_+1)$\cdot$$\delta_{SP}$] for some number _X_, defined as
+the root of a vector commitment whose leaves are light block headers for rounds  _X_$\cdot$$\delta_{SP}$,...,(_X_+1)$\cdot$$\delta_{SP}$ respectively. We use SHA256 hash function to create this vector commitment.
+
+# State Proof message
+
+A state proof message for rounds (_X_$\cdot$$\delta_{SP}$,...,(_X_+1)$\cdot$$\delta_{SP}$] for some number _X_, 
+contains the following components:
+
+ - Light block headers commitment for rounds (_X_$\cdot$$\delta_{SP}$,...,(_X_+1)$\cdot$$\delta_{SP}$], under msgpack key `b`.
+
+ - First attested round which would be equal to _X_$\cdot$$\delta_{SP}$ + 1, under msgpack key `f`. 
+
+ - Last attested round which would be equal to (_X_+1)$\cdot$$\delta_{SP}$, under msgpack key `l`. 
+
+# State Proof Tracking
+
+Each block header keeps track of the state needed to construct, validate,
+and record state proofs.  
+This tracking data is stored in a map under the msgpack key `spt` in the block header.
+The map is indexed by the type of the state proof; at the moment, only
+type 0 is supported.  In the future, other types of state proofs
+might be added.
+
+For type 0, $KQ_{SP}=256$, $f_{SP}$ is $2^{32}*30/100$
+(as the numerator of a fraction out of $2^{32}$), $N_{SP}=1024$,
+$\delta_{SP}=256$, $\delta_{SPR}=10$  and $\delta_{SPB}=16$ .
+
+The value of the tracking data is a msgpack map with three
+elements:
+
+- Under key `n`, the next expected round of a state proof that
+  should be formed.  When upgrading from an earlier consensus protocol
+  to a protocol that supports state proofs, the `n` field is
+  set to the lowest value such that `n` is a multiple of $\delta_{SP}$
+  and so that the `n` is at least the first round of the new protocol
+  (supporting state proofs) plus $\delta_{SPB}+\delta_{SP}$.
+  This field is set in every block.
+
+- Under key `v`, the root of the Vector commitment to an array of
+  participants that are eligible to vote in the state proof at
+  round $\delta_{SP}$ from the current block.  Only blocks whose round
+  number is a multiple of $\delta_{SP}$ have a non-zero `v` field.
+
+- Under key `t`, the total weight of participants in the Vector commitment.
+
+The participants committed to by the Vector commitment are chosen in a
+specific fashion:
+
+- First off, because it takes some time to collect all of the online
+  participants (more than the target assembly time for a block), the
+  set of participants appearing in a commitment in block at round $r$
+  are actually based on the account state from round $r-\delta_{SPB}$.
+
+- The participants are sorted by the number of microAlgos they currently
+  hold (including any pending rewards).  This enables more compact
+  proofs of pseudorandomly-chosen participants weighted by their
+  microAlgo holdings.  Only accounts in the online state are included
+  in this list of participants.
+
+- To limit the worst-case size of this Vector commitment, the array of
+  participants contains just the top $N_{SP}$ participants.  Efficiently
+  computing the top $N_{SP}$ accounts by their algo balance is difficult
+  in the presence of pending rewards.  Thus, to make this top-$N_{SP}$
+  calculation more efficient, we choose the top accounts based on a
+  normalized balance.  The normalized balance is a hypothetical balance
+  that a given account would need to have at round 0 to achieve its
+  current balance (without pending rewards) as of the last round at
+  which the account was touched (i.e., its pending rewards were added
+  to the account's balance).  Specifically, for an account $a$ with raw
+  balance $a_I$ and rewards base $a'_I$, the normalized balance is $a_I *
+  RewardUnit / (a'_I + RewardUnit)$.
+
 
 
 # Transactions
