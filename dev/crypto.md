@@ -354,6 +354,10 @@ where:
 
 - _serializedMerkleSignature_ represents a merkleSignature of the participant  [merkle signature binary representation](https://github.com/algorandfoundation/specs/blob/master/dev/partkey.md#signatures)
 
+
+When a signature is missing in the signature array, i.e the prover didn't receive a signature for this slot. The slot would be 
+decoded as an empty string. As a result the vector commitment leaf of this slot would be the hash of the bottom leaf.
+
 ## Choice of revealed signatures
 
 As described in the [technical report][compactcert] section IV.A, a
@@ -417,7 +421,7 @@ every signature in the state proof.
 
 - A sequence of positions, under msgpack key `pr`, the sequence defines the order of the
   participant whose signature is being revealed. i.e \newline
-  _PositionToReveal_ = [IntToInd(coin$_{0}$),...,IntToInd(coin$_{numReveals-1}$)]
+  _PositionsToReveal_ = [IntToInd(coin$_{0}$),...,IntToInd(coin$_{numReveals-1}$)]
 
 
 Note that, although the state proof contains a commitment to
@@ -426,6 +430,36 @@ The set of participants must already be known in order to verify a
 state proof.  In practice, a commitment to the participants is
 stored in the block header of an earlier block, and in the state proof message that was
 proven by the previous state proof.
+
+
+## State proof validity
+
+A state proof is valid for the message hash, 
+with respect to a commitment to the array of participants,
+if:
+
+- The vector commitment proofs for the signature and the participant information
+  should be less than or equal to 20.
+
+- All falcon signatures should have the same salt version and it should 
+  by equal to the salt version specified in state proof
+
+- The number of reveals in the state proof should be less than of equal to ????? 1024 ???????
+
+- Using the trusted Proven Weight (supplied by the verifier), The state proof should pass
+  the [SNARK-Friendly  Weight Threshold Verification] check
+  (#https://github.com/algorandfoundation/spec???)
+
+- All of the participant and signature information that appears in
+  the reveals is validated by the Vector commitment proofs for the participants
+  (against the commitment to participants, supplied by the verifier) 
+  and signatures (against the commitment in the state proof itself), respectively.
+
+- All of the signatures are valid signatures for the message hash.
+
+- For every i $\in$ {0,...,numReveals-1} there is a reveal in map denote by _r_$_{i}$, where  _r_$_{i}$ $\gets$ T[_PositionsToReveal_[_i_]]
+  and _r_$_{i}$.Sig.L <= _coin_$_{i}$ <  _r_$_{i}$.Sig.L + _r_$_{i}$.Part.Weight 
+
 
 [ledger-spec]: https://github.com/algorand/spec/ledger.md
 [abft-spec]: https://github.com/algorand/spec/abft.md
