@@ -564,6 +564,11 @@ contains the following components:
 
  - Last attested round which would be equal to (_X_+1)$\cdot$$\delta_{SP}$, under msgpack key `l`. 
 
+ - Participant commitment used to verify state proof for rounds ((_X_+1)$\cdot$$\delta_{SP}$,...,(_X_+2)$\cdot$$\delta_{SP}$], 
+   under msgpack key `v`. 
+
+ - The $\ln(ProvenWeight)$ with 16 bits of precision that would used to verify state proof for rounds ((_X_+1)$\cdot$$\delta_{SP}$,...,(_X_+2)$\cdot$$\delta_{SP}$], under msgpack key `P`. 
+
 # State Proof Tracking
 
 Each block header keeps track of the state needed to construct, validate,
@@ -851,6 +856,47 @@ An asset freeze transaction additionally has the following fields:
 
 The cryptographic hash of the fields above is called the _transaction
 identifier_.  This is written as $\Hash(\Tx)$.
+
+## State proof transaction
+
+A special transaction is used to disseminate and store state 
+proofs.  The type of a state proof transaction is `stpf`.
+This type of transaction must always be issued from a special sender
+address, which is the hash of the domain-separation prefix `SpecialAddr`
+with the string `StateProofSender`.  The transaction must not have any
+signature, must not have any fee, must have an empty note, must not have
+the rekeying field set, must not have any lease, and must not be part
+of a transaction group.
+The state proof transaction includes four additional fields:
+
+ - Under msgpack key `sptype`, the type of the state proof; currently always zero.
+ - Under msgpack key `sprnd`, the last round that this state proof attest to.
+ - Under msgpack key `sp`, the state proof fields as defined in the state proof format subsection 
+   of the cryptographic primitive specification document.
+ - Under msgpack key `spmsg`, a structure that compose the state proof message, whose hash is being attested
+   by the state proof. This structure defined [above](#state-proof-message)
+
+In order for a state proof transaction to be valid, the round of
+the state proof (`sprnd`) must be exactly equal to the next
+expected state proof round in the block header, as described
+[above](#state-proof-tracking).  When a state proof
+transaction is applied to the state, the next expected state proof round
+for that type of state proof is incremented by $\delta_{SP}$.
+To encourage the formation of shorter state proof, the rule for
+validity of state proof transactions is dependent on the round
+number of the block in which a state proof transaction appears.
+In particular, the signed weight of a state proof must be:
+
+- Equal to the full weight of all participants, `TotalWeight`, if the
+  containing block's round number is no greater than the proof's
+  `sprnd` plus $\delta_{SP}/2$.
+- At least the minimum weight being proven by the proof,
+  `ProvenWeight, if the containing block's round number is no less than
+  the proof's `sprnd` plus $\delta_{SP}`.
+- At least $ProvenWeight + (TotalWeight - ProvenWeight) * Offset / (\delta_{SP} / 2)$,
+  if the containing block's round number is the proof's `sprnd` plus
+  $\delta_{SP}/2+Offset$.
+
 
 Authorization and Signatures
 ----------------------------
