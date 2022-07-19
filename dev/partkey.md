@@ -186,11 +186,11 @@ In order to bound verification paths on the tree, the tree's depth is bound to 1
 
 #### Public Commitment
 
-The scheme generates multiple keys for the entire participation period. Given _FirstValidRound_, _LastValidRound_ and an _Interval_, a key is generated for each _Round_ that holds:\newline
- _FirstValidRound_ $\leq$ _Round_ $\leq$ _LastValidRound_ and _Round_ % _Interval_ = 0\newline
+The scheme generates multiple keys for the entire participation period. Given _FirstValidRound_, _LastValidRound_ and an _keyLifeTime_, a key is generated for each _Round_ that holds:\newline
+ _FirstValidRound_ $\leq$ _Round_ $\leq$ _LastValidRound_ and _Round_ % _keyLifeTime_ = 0\newline
 
 
-Currently, _Interval_ is set to 256.\newline
+Currently, _keyLifeTime_ is set to 256.\newline
 
 After generating the public keys, the scheme creates a vector commitment using the keys as leaves.
 Leaf hashing is done in the following manner: \newline
@@ -201,7 +201,8 @@ where:
 
 - _schemeId_ is a 16-bit constant integer with value of 0
 
-- _Round_ is a 64-bit, little-endian integer represents the round in which the key _P_$_{k_{i}}$ is valid.
+- _Round_ is a 64-bit, little-endian integer represents the start round for which the key _P_$_{k_{i}}$ is valid.
+  The key would be valid for all rounds in [_Round_,...,_Round_ + _keyLifeTime_ - 1]
 
 - _P_$_{k_{i}}$ is a 14,344-bit string represents the Falcon ephemeral public key.
 
@@ -256,3 +257,17 @@ where:
 - _zeroDigest_ is a constant 512-bit string with the value 0.
 
 - _d_ = 16 - _n_
+
+
+#### Verifying Signatures
+
+A signature _s_ for a message _m_ at round _r_ is valid under the public commitment _pk_ and _keyLifeTime_ if:
+
+  - The falcon signature _s.Signature_ is valid for the message _m_ under the public key _s.VerifyingKey_
+
+  - The proof _s.Proof_ is a valid vector commitment proof for the entry _leaf_ at index _s.VectorIndex_ with respect to 
+  the vector commitment root _pk_ where: \newline
+  
+    - _leaf_ := "KP" || _schemeId_ || _Round_ || _s.VerifyingKey_
+    
+    - _Round_ :=  _r_ - ( _r_ % _keyLifeTime_)
