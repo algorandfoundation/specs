@@ -118,7 +118,7 @@ The block header contains the following components:
  - A cryptographic commitment to the block's _transaction sequence_, described
    below, stored under msgpack key `txn`.
 
- - A cryptographic commitment, using a SHA256 hash function, to the block's _transaction sequence_, described
+ - A cryptographic commitment, using SHA256 hash function, to the block's _transaction sequence_, described
    below, stored under msgpack key `txn256`.
 
  - The block's _previous hash_, which is the cryptographic hash of the previous
@@ -537,7 +537,7 @@ offline as part of applying the block changes to the ledger.
 
 # Light Block Header
 
-A light block header is a structure contains subset of fields for Algorand's  _block header_
+A light block header is a structure contains a subset of fields from Algorand's  _block header_.
 Light block header contains the following components:
 
 - The block's _seed_, under msgpack key `s`.
@@ -891,8 +891,8 @@ In particular, the signed weight of a state proof must be:
   containing block's round number is no greater than the proof's
   `sprnd` plus $\delta_{SP}/2$.
 - At least the minimum weight being proven by the proof,
-  `ProvenWeight, if the containing block's round number is no less than
-  the proof's `sprnd` plus $\delta_{SP}`.
+  `ProvenWeight`, if the containing block's round number is no less than
+  the proof's `sprnd` plus $\delta_{SP}$.
 - At least $ProvenWeight + (TotalWeight - ProvenWeight) * Offset / (\delta_{SP} / 2)$,
   if the containing block's round number is the proof's `sprnd` plus
   $\delta_{SP}/2+Offset$.
@@ -1053,14 +1053,14 @@ with the changes described above.  Individual transaction signatures
 cover the original encoding of transactions as standalone.
 
 In addtion to _transaction commitment_, each block will also contains _SHA256 transaction commitment_.
-It can allow a verifier which does not support SHA512_256 function to verify proofs of membership on Algorand's transcation.
+It can allow a verifier which does not support SHA512_256 function to verify proof of membership on transcation.
 In order to consturct this commitment we use Vector Commitment. The leaves in the Vector Commitment
-tree are hashed as $$SHA256("TL", txidSha256, stibSha256)$$.  Where txidSha256 and stibSha256 are computed in the following manner:
+tree are hashed as $$SHA256("TL", txidSha256, stibSha256)$$.  Where:\newline
 
 - txidSha256 = SHA256(`TX` || transcation)
 - txidSha256 = SHA256(`STIB` || signed transaction || ApplyData)
 
-We use SHA256 for creating the internal node of the vector commitment as well.
+The vector commitment uses SHA256 for internal nodes as well.
 
 A valid transaction sequence contains no duplicates: each transaction in the
 transaction sequence appears exactly once.  We can call the set of these

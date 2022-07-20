@@ -371,15 +371,15 @@ where:
 
 _version_ is a 8-bit constant value of 0
 
-_participantCommitment_ is a 64-bit string represents the vector commitment root on the participant array
+_participantCommitment_ is a 512-bit string represents the vector commitment root on the participant array
 
-_LnProvenWeight_ is a 8-bit string represents the value of the $\ln(ProvenWeight)$ with 16 bits of precision (TODO: LINK weights paper here  HERE)
+_LnProvenWeight_ is a 8-bit string represents the value of the $\ln(ProvenWeight)$ with 16 bits of precision [SNARK-Friendly  Weight Threshold Verification][weight-threshold]
 
 _signatureCommitment_ is a 512-bit string represents the vector commitment root on the signature array
 
 _singedWeight_ is a 64-bit integer represents the state proof signed weight
 
-_stateproofMessageHash_ is a 256-bit string represents the message that would be verified by the state proof. (would be the hash result of the state proof message)
+_stateproofMessageHash_ is a 256-bit string represents the message that would be verified by the state proof. (it would be the hash result of the state proof message)
 
 
 We compute: \newline
@@ -404,7 +404,7 @@ A State proof consists of seven fields:
 - The Vector commitment proof for the participants revealed above, under msgpack
   key `P`.
 
-- The Falcon signature salt version, under msgpack key `v`, is expected salt version of 
+- The Falcon signature salt version, under msgpack key `v`, is the expected salt version of 
 every signature in the state proof.
 
 - The set of revealed signatures, chosen as described in section IV.A
@@ -419,7 +419,7 @@ every signature in the state proof.
   -- The signature information, encoded as described [above](#signature-format),
     under msgpack key `s`.
 
-- A sequence of positions, under msgpack key `pr`, the sequence defines the order of the
+- A sequence of positions, under msgpack key `pr`. The sequence defines the order of the
   participant whose signature is being revealed. i.e \newline
   _PositionsToReveal_ = [IntToInd(coin$_{0}$),...,IntToInd(coin$_{numReveals-1}$)]
 
@@ -447,8 +447,8 @@ if:
 - The number of reveals in the state proof should be less than of equal to ????? 1024 ???????
 
 - Using the trusted Proven Weight (supplied by the verifier), The state proof should pass
-  the [SNARK-Friendly  Weight Threshold Verification] check
-  (#https://github.com/algorandfoundation/spec???)
+  the [SNARK-Friendly  Weight Threshold Verification][weight-threshold] check
+
 
 - All of the participant and signature information that appears in
   the reveals is validated by the Vector commitment proofs for the participants
@@ -472,4 +472,5 @@ if:
 [falcon]: https://falcon-sign.info/falcon.pdf
 [deterministic-falcon]: https://github.com/algorandfoundation/specs/blob/master/dev/cryptographic-specs/falcon-deterministic.pdf
 [vector-commitment]: https://github.com/algorandfoundation/specs/blob/master/dev/cryptographic-specs/merkle-vc-full.pdf
-[compactcert]: https://eprint.iacr.org/2020/1568]
+[compactcert]: https://eprint.iacr.org/2020/1568
+[weight-threshold]: https://github.com/algorandfoundation/specs/blob/master/dev/cryptographic-specs/weight-thresh.pdf
