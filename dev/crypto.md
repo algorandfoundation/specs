@@ -98,6 +98,11 @@ Algorand uses this hash function to (1) commit to data for signing and
 for the Byzantine Fault Tolerance protocol, and (2) rerandomize its
 random seed.
 
+### SHA512-256
+Algorand uses [SHA-256 algorithm][sha256] to allow verification of Algorand's state and transactions
+on environments where SHA512_256 is not supported.
+
+
 ### SUBSET-SUM
 Algorand uses [SUBSET-SUM algorithm][sumhash] which is a quantum-resilient hash function.
 This function is used by the [Merkle Keystore](merklekeystore) to commit on
@@ -465,6 +470,7 @@ if:
 [abft-spec]: https://github.com/algorand/spec/abft.md
 
 [sha]: https://doi.org/10.6028/NIST.FIPS.180-4
+[sha256]: https://datatracker.ietf.org/doc/html/rfc4634
 [sumhash]: https://github.com/algorandfoundation/specs/blob/master/dev/cryptographic-specs/sumhash-spec.pdf
 [ed25519]: https://tools.ietf.org/html/rfc8032
 [msgpack]: https://github.com/msgpack/msgpack/blob/master/spec.md
