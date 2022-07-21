@@ -18,7 +18,7 @@ The Algorand Ledger is parameterized by the following values:
  - $T_{\max}$, the length of the _transaction tail_.
    Currently defined as 1000.
  - $B_{\max}$, the maximum number of transaction bytes in a block.
-   Currently defined as 1,000,000.
+   Currently defined as 5,242,880.
  - $b_{\min}$, the minimum balance for any address.
    Currently defined as 100,000 microAlgos.
  - $f_{\min}$, the minimum processing fee for any transaction.
