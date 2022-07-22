@@ -1112,9 +1112,9 @@ point must be discarded and the entire transaction rejected.
         - Delete the application’s parameters from the creator’s account data.
           (Note: this does not affect any local state). **SUCCEED.**
     - If `OnCompletion == UpdateApplication`
-        - If an existing program is version 4 or higher program and
-          the supplied program is a downgrade from the existing
-          version **FAIL**
+        - If an existing program is version 4 or higher, and the
+          supplied program is a downgrade from the existing version
+          **FAIL**
         - Update the Approval and ClearState programs for this
           application according to the programs specified in this
           `ApplicationCall` transaction. The new programs are not executed in
