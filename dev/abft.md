@@ -44,17 +44,26 @@ All integers described in this document are unsigned.
 Parameters
 ==========
 
+\newcommand \FilterTimeout {\mathrm{FilterTimeout}}
+
 The protocol is parameterized by the following constants:
 
- - $\lambda, \lambda_f, \Lambda$ are values representing durations of time.
+ - $\lambda, \lambda_0, \lambda_f, \Lambda$ are values representing durations of time.
  - $\delta_s, \delta_r$ are positive integers (the "seed lookback" and
    "seed refresh interval").
 
 For convenience, we define $\delta_b$ (the "balance lookback") to be
 $2\delta_s\delta_r$.
 
+We define $\FilterTimeout(p)$ on period $p$ as follows:
+
+  - If $p = 0$:
+    - $\FilterTimeout(p) = 2\lambda_0$
+  - If $p \ne 0$:
+    - $\FilterTimeout(p) = 2\lambda$
+
 Algorand v1 sets $\delta_s = 2$, $\delta_r = 80$, $\lambda = 2$ seconds,
-$\lambda_f = 5$ minutes, and $\Lambda = 17$ seconds.
+$\lambda_0 = 1.75$ seconds, $\lambda_f = 5$ minutes, and $\Lambda = 17$ seconds.
 
 Identity, Authorization, and Authentication
 ===========================================
@@ -779,7 +788,7 @@ New Step
 
 A player may also update its step after receiving a timeout event.
 
-On observing a timeout event of $2\lambda$, the player sets
+On observing a timeout event of $\FilterTimeout(p)$ for period $p$, the player sets
 $s := \Cert$.
 
 On observing a timeout event of $\max\{4\lambda, \Lambda\}$, the
@@ -793,7 +802,7 @@ $s := s_t$.
 In other words,
 $$
 \begin{aligned}
-  &N((r, p, s, \sbar, V, P, \vbar), L, t(2\lambda, p))
+  &N((r, p, s, \sbar, V, P, \vbar), L, t(\FilterTimeout(p), p))
  &&= ((r, p, \Cert, \sbar, V, P, \vbar), L', \ldots) \\
   &N((r, p, s, \sbar, V, P, \vbar), L, t(\max\{4\lambda, \Lambda\}, p))
  &&= ((r, p, \Next_0, \sbar, V, P, \vbar), L', \ldots) \\
@@ -933,7 +942,7 @@ $$
 Filtering
 ---------
 
-On observing a timeout event of $2\lambda$ (where
+On observing a timeout event of $\FilterTimeout(p)$ (where
 $\mu = (H, H', l, p_\mu) = \mu(S, r, p)$),
 
  - if $\mu \neq \bot$ and if
@@ -952,15 +961,15 @@ $\mu = (H, H', l, p_\mu) = \mu(S, r, p)$),
 
 In other words, in the first case above,
 $$
-N(S, L, t(2\lambda, p)) = (S, L, \Vote(I, r, p, \Soft, \mu));
+N(S, L, t(\FilterTimeout(p), p)) = (S, L, \Vote(I, r, p, \Soft, \mu));
 $$
 while in the second case above,
 $$
-N(S, L, t(2\lambda, p)) = (S, L, \Vote(I, r, p, \Soft, \vbar));
+N(S, L, t(\FilterTimeout(p), p)) = (S, L, \Vote(I, r, p, \Soft, \vbar));
 $$
 and if neither case is true,
 $$
-N(S, L, t(2\lambda, p)) = (S, L, \epsilon).
+N(S, L, t(\FilterTimeout(p), p)) = (S, L, \epsilon).
 $$
 
 Certifying
