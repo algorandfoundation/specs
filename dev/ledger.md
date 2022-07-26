@@ -42,7 +42,7 @@ The Algorand Ledger is parameterized by the following values:
    Currently defined as 500,000.
  - $A$, the size of an earning unit.
    Currently defined as 1,000,000 microAlgos.
- - Several parameters for state proofs; namely:
+ - Several parameters for state proofs; namely: (current values provided in the "State Proof Tracking" section)
    - $\delta_{SP}$, the number of rounds between state proofs.
    - $\delta_{SPR}$, the number of $\delta_{SP}$ that the network will try to catch-up with.
    - $\delta_{SPB}$, the delay (lookback) in rounds for online participant
@@ -567,7 +567,7 @@ contains the following components:
  - Participant commitment used to verify state proof for rounds ((_X_+1)$\cdot$$\delta_{SP}$,...,(_X_+2)$\cdot$$\delta_{SP}$], 
    under msgpack key `v`. 
 
- - The $\ln(ProvenWeight)$ with 16 bits of precision that would used to verify state proof for rounds ((_X_+1)$\cdot$$\delta_{SP}$,...,(_X_+2)$\cdot$$\delta_{SP}$], under msgpack key `P`. 
+ - The $\ln(ProvenWeight)$ with 16 bits of precision that would used to verify state proof for rounds ((_X_+1)$\cdot$$\delta_{SP}$,...,(_X_+2)$\cdot$$\delta_{SP}$], under msgpack key `P`. This field is calculated based on the total weight of the participants [see state-proof-transaction](#state-proof-transaction) 
 
 # State Proof Tracking
 
@@ -598,7 +598,7 @@ elements:
   round $\delta_{SP}$ from the current block.  Only blocks whose round
   number is a multiple of $\delta_{SP}$ have a non-zero `v` field.
 
-- Under key `t`, the total weight of participants in the Vector commitment.
+- Under key `t`, the total online stake at round $\delta_{SP}$.
 
 The participants committed to by the Vector commitment are chosen in a
 specific fashion:
@@ -621,7 +621,7 @@ specific fashion:
   calculation more efficient, we choose the top accounts based on a
   normalized balance.  The normalized balance is a hypothetical balance
   that a given account would need to have at round 0 to achieve its
-  current balance (without pending rewards) as of the last round at
+  balance (without pending rewards) as of the last round at
   which the account was touched (i.e., its pending rewards were added
   to the account's balance).  Specifically, for an account $a$ with raw
   balance $a_I$ and rewards base $a'_I$, the normalized balance is $a_I *
@@ -866,7 +866,8 @@ address, which is the hash of the domain-separation prefix `SpecialAddr`
 with the string `StateProofSender`.  The transaction must not have any
 signature, must not have any fee, must have an empty note, must not have
 the rekeying field set, must not have any lease, and must not be part
-of a transaction group.
+of a transaction group. 
+State proof transaction verification does not apply any special constrains on the first and last valid parameter.
 The state proof transaction includes four additional fields:
 
  - Under msgpack key `sptype`, the type of the state proof; currently always zero.
@@ -883,19 +884,21 @@ expected state proof round in the block header, as described
 transaction is applied to the state, the next expected state proof round
 for that type of state proof is incremented by $\delta_{SP}$.
 To encourage the formation of shorter state proof, the rule for
-validity of state proof transactions is dependent on the round
-number of the block in which a state proof transaction appears.
+validity of state proof transactions is dependent on the first valid `fv` round
+number in the transaction.
 In particular, the signed weight of a state proof must be:
 
 - Equal to the full weight of all participants, `TotalWeight`, if the
-  containing block's round number is no greater than the proof's
+  first valid round number on the transaction is no greater than the proof's
   `sprnd` plus $\delta_{SP}/2$.
-- At least the minimum weight being proven by the proof,
-  `ProvenWeight`, if the containing block's round number is no less than
-  the proof's `sprnd` plus $\delta_{SP}$.
 - At least $ProvenWeight + (TotalWeight - ProvenWeight) * Offset / (\delta_{SP} / 2)$,
-  if the containing block's round number is the proof's `sprnd` plus
+  if the first valid round number on the transaction is the proof's `sprnd` plus
   $\delta_{SP}/2+Offset$.
+- At least the minimum weight being proven by the proof,
+  `ProvenWeight`, if the first valid round number on the transaction is no less than
+  the proof's `sprnd` plus $\delta_{SP}$.
+
+Where `ProvenWeight` = (`TotalWeight` * $f_{SP}$)  / 2^32
 
 
 Authorization and Signatures
@@ -1055,7 +1058,7 @@ cover the original encoding of transactions as standalone.
 In addtion to _transaction commitment_, each block will also contains _SHA256 transaction commitment_.
 It can allow a verifier which does not support SHA512_256 function to verify proof of membership on transcation.
 In order to consturct this commitment we use Vector Commitment. The leaves in the Vector Commitment
-tree are hashed as $$SHA256("TL", txidSha256, stibSha256)$$.  Where:\newline
+tree are hashed as $$SHA256("TL", txidSha256, stibSha256)$$.  Where:
 
 - txidSha256 = SHA256(`TX` || transcation)
 - txidSha256 = SHA256(`STIB` || signed transaction || ApplyData)

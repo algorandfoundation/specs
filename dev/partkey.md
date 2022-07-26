@@ -186,20 +186,20 @@ In order to bound verification paths on the tree, the tree's depth is bound to 1
 
 #### Public Commitment
 
-The scheme generates multiple keys for the entire participation period. Given _FirstValidRound_, _LastValidRound_ and an _keyLifeTime_, a key is generated for each _Round_ that holds:\newline
- _FirstValidRound_ $\leq$ _Round_ $\leq$ _LastValidRound_ and _Round_ % _keyLifeTime_ = 0\newline
+The scheme generates multiple keys for the entire participation period. Given _FirstValidRound_, _LastValidRound_ and an _keyLifeTime_, a key is generated for each _Round_ that holds:
 
+ _FirstValidRound_ $\leq$ _Round_ $\leq$ _LastValidRound_ and _Round_ % _keyLifeTime_ = 0
 
-Currently, _keyLifeTime_ is set to 256.\newline
+Currently, _keyLifeTime_ is set to 256.
 
 After generating the public keys, the scheme creates a vector commitment using the keys as leaves.
-Leaf hashing is done in the following manner: \newline
+Leaf hashing is done in the following manner:
 
 _leaf_$_{i}$ = hash("KP" || _schemeId_ || _Round_ || _P_$_{k_{i}}$) for each corresponding round.
 
 where:
 
-- _schemeId_ is a 16-bit constant integer with value of 0
+- _schemeId_ is a 16-bit, little-endian constant integer with value of 0
 
 - _Round_ is a 64-bit, little-endian integer represents the start round for which the key _P_$_{k_{i}}$ is valid.
   The key would be valid for all rounds in [_Round_,...,_Round_ + _keyLifeTime_ - 1]
@@ -229,7 +229,7 @@ _SignatureBitString_ = (_schemeId_ || _Signature_ || _VerifyingKey_ || _VectorIn
 
 where:
 
-- _schemeId_ is a 16-bit constant integer with value of 0
+- _schemeId_ is a 16-bit, little-endian constant integer with value of 0
 
 - _Signature_ is a 12,304-bit string represents a Falcon signature in a CT format.
 
@@ -237,7 +237,7 @@ where:
 
 - _VectorIndex_ is a 64-bit, little-endian integer
 
-- _Proof_ is constructed in the following way:\newline
+- _Proof_ is constructed in the following way:
 
 
 if _n_ = 16:
@@ -266,7 +266,7 @@ A signature _s_ for a message _m_ at round _r_ is valid under the public commitm
   - The falcon signature _s.Signature_ is valid for the message _m_ under the public key _s.VerifyingKey_
 
   - The proof _s.Proof_ is a valid vector commitment proof for the entry _leaf_ at index _s.VectorIndex_ with respect to 
-  the vector commitment root _pk_ where: \newline
+  the vector commitment root _pk_ where:
   
     - _leaf_ := "KP" || _schemeId_ || _Round_ || _s.VerifyingKey_
     

@@ -90,7 +90,7 @@ below specifies each prefix (in quotation marks):
 
 ## Hash Functions
 
-### SHA512-256
+### SHA512/256
 Algorand uses the [SHA-512/256 algorithm][sha] as its primary
 cryptographic hash function.
 
@@ -98,7 +98,7 @@ Algorand uses this hash function to (1) commit to data for signing and
 for the Byzantine Fault Tolerance protocol, and (2) rerandomize its
 random seed.
 
-### SHA512-256
+### SHA256
 Algorand uses [SHA-256 algorithm][sha256] to allow verification of Algorand's state and transactions
 on environments where SHA512_256 is not supported.
 
@@ -332,15 +332,15 @@ all participants that have signed the message must be greater than
 
 The state proof scheme requires a commitment to a dense array of participants, 
 in some well-defined order. In order to grantee this property, Algorand uses Vector Commitment.
-Leaf hashing is done in the following manner: \newline
+Leaf hashing is done in the following manner:
 
 _leaf_ = hash("spp" || _Weight_ || _KeyLifeTime_ || _StateProofPK_) for each online participant.
 
 where:
 
-- _Weight_ is a 64-bit integer represents the participant's weight in MicroAlgos
+- _Weight_ is a 64-bit, little-endian integer represents the participant's weight in MicroAlgos
 
-- _KeyLifeTime_ is a 64-bit constant integer with value of 256
+- _KeyLifeTime_ is a 64-bit, little-endian constant integer with value of 256
 
 - _StateProofPK_ is a 512-bit represents the participant's merkle signature scheme commitment.
 
@@ -348,14 +348,14 @@ where:
 ## Signature format 
 
 Similarly to the participant commitment, the state proof scheme requires a commitment
-to a signature array. Leaf hashing is done in the following manner: \newline
+to a signature array. Leaf hashing is done in the following manner:
 
 
 _leaf_ = hash("sps" || _L_ || _serializedMerkleSignature_) for each online participant.
 
 where:
 
--  _L_ is a 64-bit integer represents the participant's `L` value as described in the technical report.
+-  _L_ is a 64-bit, little-endian integer represents the participant's `L` value as described in the technical report.
 
 - _serializedMerkleSignature_ represents a merkleSignature of the participant  [merkle signature binary representation](https://github.com/algorandfoundation/specs/blob/master/dev/partkey.md#signatures)
 
@@ -368,9 +368,9 @@ decoded as an empty string. As a result the vector commitment leaf of this slot 
 As described in the [technical report][compactcert] section IV.A, a
 state proof contains a pseudorandomly chosen set of signatures.
 The choice is made using a coin.  In Algorand's implementation, the
-coin derivation is made in the following manner:  \newline
+coin derivation is made in the following manner:
 
-_Hin_ = ("spc" || _version_ || _participantCommitment_ || _LnProvenWeight_ || _signatureCommitment_ || _singedWeight_ || _stateproofMessageHash_ )
+_Hin_ = ("spc" || _version_ || _participantCommitment_ || _LnProvenWeight_ || _signatureCommitment_ || _signedWeight_ || _stateproofMessageHash_ )
 
 where:
 
@@ -382,7 +382,7 @@ _LnProvenWeight_ is a 8-bit string represents the value of the $\ln(ProvenWeight
 
 _signatureCommitment_ is a 512-bit string represents the vector commitment root on the signature array
 
-_singedWeight_ is a 64-bit integer represents the state proof signed weight
+_signedWeight_ is a 64-bit, little-endian integer represents the state proof signed weight
 
 _stateproofMessageHash_ is a 256-bit string represents the message that would be verified by the state proof. (it would be the hash result of the state proof message)
 
@@ -443,7 +443,7 @@ A state proof is valid for the message hash,
 with respect to a commitment to the array of participants,
 if:
 
-- The vector commitment proofs for the signature and the participant information
+- The depth of the vector commitment for the signature and the participant information
   should be less than or equal to 20.
 
 - All falcon signatures should have the same salt version and it should 
