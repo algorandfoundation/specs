@@ -888,7 +888,7 @@ validity of state proof transactions is dependent on the first valid `fv` round
 number in the transaction.
 In particular, the signed weight of a state proof must be:
 
-- Equal to the full weight of all participants, `TotalWeight`, if the
+- Equal to the total online stake, `TotalWeight`, if the
   first valid round number on the transaction is no greater than the proof's
   `sprnd` plus $\delta_{SP}/2$.
 - At least $ProvenWeight + (TotalWeight - ProvenWeight) * Offset / (\delta_{SP} / 2)$,
