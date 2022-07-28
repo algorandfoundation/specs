@@ -338,7 +338,7 @@ _leaf_ = hash("spp" || _Weight_ || _KeyLifeTime_ || _StateProofPK_) for each onl
 
 where:
 
-- _Weight_ is a 64-bit, little-endian integer represents the total online stake in MicroAlgos
+- _Weight_ is a 64-bit, little-endian integer represents the participant's balance in MicroAlgos
 
 - _KeyLifeTime_ is a 64-bit, little-endian constant integer with value of 256
 
