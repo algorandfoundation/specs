@@ -757,8 +757,7 @@ This requirement is enforced as follows:
   
 * Compute the largest version number across all the transactions in a group (of size 1 or more), call it `maxVerNo`. If any transaction in this group has a program with a version smaller than `maxVerNo`, then that program will fail.
 
-In addition, applications must be v6 or greater to be eligible for
-being called in an inner transaction.
+In addition, applications must be v4 or greater to be called in an inner transaction.
 
 ## Varuint
 
