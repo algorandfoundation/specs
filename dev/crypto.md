@@ -449,7 +449,7 @@ if:
 - All falcon signatures should have the same salt version and it should 
   by equal to the salt version specified in state proof
 
-- The number of reveals in the state proof should be less than of equal to ????? 1024 ???????
+- The number of reveals in the state proof should be less than of equal to 640
 
 - Using the trusted Proven Weight (supplied by the verifier), The state proof should pass
   the [SNARK-Friendly  Weight Threshold Verification][weight-threshold] check
