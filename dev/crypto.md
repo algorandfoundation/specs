@@ -338,11 +338,11 @@ _leaf_ = hash("spp" || _Weight_ || _KeyLifeTime_ || _StateProofPK_) for each onl
 
 where:
 
-- _Weight_ is a 64-bit, little-endian integer represents the participant's balance in MicroAlgos
+- _Weight_ is a 64-bit, little-endian integer representing the participant's balance in MicroAlgos
 
 - _KeyLifeTime_ is a 64-bit, little-endian constant integer with value of 256
 
-- _StateProofPK_ is a 512-bit represents the participant's merkle signature scheme commitment.
+- _StateProofPK_ is a 512-bit string representing the participant's merkle signature scheme commitment.
 
 
 ## Signature format 
@@ -355,9 +355,9 @@ _leaf_ = hash("sps" || _L_ || _serializedMerkleSignature_) for each online parti
 
 where:
 
--  _L_ is a 64-bit, little-endian integer represents the participant's `L` value as described in the technical report.
+-  _L_ is a 64-bit, little-endian integer representing the participant's `L` value as described in the [technical report][compactcert].
 
-- _serializedMerkleSignature_ represents a merkleSignature of the participant  [merkle signature binary representation](https://github.com/algorandfoundation/specs/blob/master/dev/partkey.md#signatures)
+- _serializedMerkleSignature_ representing a merkleSignature of the participant  [merkle signature binary representation](https://github.com/algorandfoundation/specs/blob/master/dev/partkey.md#signatures)
 
 
 When a signature is missing in the signature array, i.e the prover didn't receive a signature for this slot. The slot would be 
@@ -374,20 +374,22 @@ _Hin_ = ("spc" || _version_ || _participantCommitment_ || _LnProvenWeight_ || _s
 
 where:
 
-_version_ is a 8-bit constant value of 0
+_version_ is an 8-bit constant with value of 0
 
-_participantCommitment_ is a 512-bit string represents the vector commitment root on the participant array
+_participantCommitment_ is a 512-bit string representing the vector commitment root on the participant array
 
-_LnProvenWeight_ is a 8-bit string represents the value of the $\ln(ProvenWeight)$ with 16 bits of precision [SNARK-Friendly  Weight Threshold Verification][weight-threshold]
+_LnProvenWeight_ an 8-bit string representing the natural logarithm value $\ln(ProvenWeight)$ with 16 bits of precision, as described in
+[SNARK-Friendly  Weight Threshold Verification][weight-threshold]
 
-_signatureCommitment_ is a 512-bit string represents the vector commitment root on the signature array
+_signatureCommitment_ is a 512-bit string representing the vector commitment root on the signature array
 
-_signedWeight_ is a 64-bit, little-endian integer represents the state proof signed weight
+_signedWeight_ is a 64-bit, little-endian integer representing the state proof signed weight
 
-_stateproofMessageHash_ is a 256-bit string represents the message that would be verified by the state proof. (it would be the hash result of the state proof message)
+_stateproofMessageHash_ is a 256-bit string representing the message that would be verified by the state proof. (it would be the hash result of the state proof message)
 
 
-We compute: \newline
+We compute:
+
 _R_ = SHAKE256(_Hin_)
 
 For every reveal, we squeeze 64-bit string and use rejection sampling
@@ -425,8 +427,11 @@ every signature in the state proof.
     under msgpack key `s`.
 
 - A sequence of positions, under msgpack key `pr`. The sequence defines the order of the
-  participant whose signature is being revealed. i.e \newline
+  participant whose signature is being revealed. i.e
+
   _PositionsToReveal_ = [IntToInd(coin$_{0}$),...,IntToInd(coin$_{numReveals-1}$)]
+
+where IntToInd and numReveals are defined in the [technical report][compactcert], section IV.
 
 
 Note that, although the state proof contains a commitment to
@@ -463,7 +468,9 @@ if:
 - All of the signatures are valid signatures for the message hash.
 
 - For every i $\in$ {0,...,numReveals-1} there is a reveal in map denote by _r_$_{i}$, where  _r_$_{i}$ $\gets$ T[_PositionsToReveal_[_i_]]
-  and _r_$_{i}$.Sig.L <= _coin_$_{i}$ <  _r_$_{i}$.Sig.L + _r_$_{i}$.Part.Weight 
+  and _r_$_{i}$.Sig.L <= _coin_$_{i}$ <  _r_$_{i}$.Sig.L + _r_$_{i}$.Part.Weight. 
+  
+  T is defined in the [technical report][compactcert], section IV.
 
 
 [ledger-spec]: https://github.com/algorand/spec/ledger.md
@@ -478,5 +485,5 @@ if:
 [falcon]: https://falcon-sign.info/falcon.pdf
 [deterministic-falcon]: https://github.com/algorandfoundation/specs/blob/master/dev/cryptographic-specs/falcon-deterministic.pdf
 [vector-commitment]: https://github.com/algorandfoundation/specs/blob/master/dev/cryptographic-specs/merkle-vc-full.pdf
-[compactcert]: https://eprint.iacr.org/2020/1568
+[compactcert]: https://eprint.iacr.org/archive/2020/1568/20210330:194331
 [weight-threshold]: https://github.com/algorandfoundation/specs/blob/master/dev/cryptographic-specs/weight-thresh.pdf

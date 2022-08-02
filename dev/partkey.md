@@ -177,7 +177,7 @@ And this verified credential is wrapped in a $\Vote$ struct with _Raw Vote_
 ## Algorand State Proof Keys 
 ### Algorand's Committable Ephemeral Keys Scheme - Merkle Signature Scheme
 
-Algorand achieves [forward security](https://en.wikipedia.org/wiki/Forward_secrecy) using Merkle Signature Scheme. This scheme consists of using a different ephemeral key for each round in which it will be used. The scheme uses vector commitment to generate commitment on those keys. 
+Algorand achieves [forward security](https://en.wikipedia.org/wiki/Forward_secrecy) using Merkle Signature Scheme. This scheme consists of using a different ephemeral key for each round in which it will be used. The scheme uses vector commitment to generate commitment to those keys. 
 The private key must be deleted after the round passes in order the completely achieves forward secrecy.
 
 The Merkle scheme uses Falcon scheme as the underlying digital signature algorithm.
@@ -201,10 +201,10 @@ where:
 
 - _schemeId_ is a 16-bit, little-endian constant integer with value of 0
 
-- _Round_ is a 64-bit, little-endian integer represents the start round for which the key _P_$_{k_{i}}$ is valid.
+- _Round_ is a 64-bit, little-endian integer representing the start round for which the key _P_$_{k_{i}}$ is valid.
   The key would be valid for all rounds in [_Round_,...,_Round_ + _keyLifeTime_ - 1]
 
-- _P_$_{k_{i}}$ is a 14,344-bit string represents the Falcon ephemeral public key.
+- _P_$_{k_{i}}$ is a 14,344-bit string representing the Falcon ephemeral public key.
 
 - hash: is the SUBSET-SUM hash function as defined in the [Algorand Cryptographic Primitives Specification](Crypto.md)
 
@@ -231,7 +231,7 @@ where:
 
 - _schemeId_ is a 16-bit, little-endian constant integer with value of 0
 
-- _Signature_ is a 12,304-bit string represents a Falcon signature in a CT format.
+- _Signature_ is a 12,304-bit string representing a Falcon signature in a CT format.
 
 - _VerifyingKey_ is a 14,344-bit string
 
@@ -252,7 +252,7 @@ where:
 
 - _n_ is a 8-bit string.
 
-- _digest_$_{i}$ is a 512-bit sumhash result.
+- _digest_$_{i}$ is a 512-bit string representing sumhash result.
 
 - _zeroDigest_ is a constant 512-bit string with the value 0.
 
