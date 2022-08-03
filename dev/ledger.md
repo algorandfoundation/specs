@@ -550,24 +550,24 @@ Light block header contains the following components:
 
 # Light Block Header Commitment
 
-Light Block Header Commitment for rounds (_X_$\cdot$$\delta_{SP}$,...,(_X_+1)$\cdot$$\delta_{SP}$] for some number _X_, defined as
-the root of a vector commitment whose leaves are light block headers for rounds  _X_$\cdot$$\delta_{SP}$,...,(_X_+1)$\cdot$$\delta_{SP}$ respectively. We use SHA256 hash function to create this vector commitment.
+Light Block Header Commitment for rounds (_X_ $\cdot$ $\delta_{SP}$,...,(_X_+1) $\cdot$ $\delta_{SP}$] for some number _X_, defined as
+the root of a vector commitment whose leaves are light block headers for rounds  _X_ $\cdot$ $\delta_{SP}$,...,(_X_+1) $\cdot$ $\delta_{SP}$ respectively. We use SHA256 hash function to create this vector commitment.
 
 # State Proof message
 
-A state proof message for rounds (_X_$\cdot$$\delta_{SP}$,...,(_X_+1)$\cdot$$\delta_{SP}$] for some number _X_, 
+A state proof message for rounds (_X_ $\cdot$ $\delta_{SP}$,...,(_X_+1) $\cdot$ $\delta_{SP}$] for some number _X_, 
 contains the following components:
 
- - Light block headers commitment for rounds (_X_$\cdot$$\delta_{SP}$,...,(_X_+1)$\cdot$$\delta_{SP}$], under msgpack key `b`.
+ - Light block headers commitment for rounds (_X_ $\cdot$ $\delta_{SP}$,...,(_X_+1) $\cdot$ $\delta_{SP}$], under msgpack key `b`.
 
- - First attested round which would be equal to _X_$\cdot$$\delta_{SP}$ + 1, under msgpack key `f`. 
+ - First attested round which would be equal to _X_ $\cdot$ $\delta_{SP}$ + 1, under msgpack key `f`. 
 
- - Last attested round which would be equal to (_X_+1)$\cdot$$\delta_{SP}$, under msgpack key `l`. 
+ - Last attested round which would be equal to (_X_+1) $\cdot$ $\delta_{SP}$, under msgpack key `l`. 
 
- - Participant commitment used to verify state proof for rounds ((_X_+1)$\cdot$$\delta_{SP}$,...,(_X_+2)$\cdot$$\delta_{SP}$], 
+ - Participant commitment used to verify state proof for rounds ((_X_+1) $\cdot$ $\delta_{SP}$,...,(_X_+2) $\cdot$ $\delta_{SP}$], 
    under msgpack key `v`. 
 
- - The value $\ln(ProvenWeight)$ with 16 bits of precision that would used to verify state proof for rounds ((_X_+1)$\cdot$$\delta_{SP}$,...,(_X_+2)$\cdot$$\delta_{SP}$], under msgpack key `P`. This field is calculated based on the total weight of the participants [see state-proof-transaction](#state-proof-transaction) 
+ - The value $\ln(ProvenWeight)$ with 16 bits of precision that would used to verify state proof for rounds ((_X_+1) $\cdot$ $\delta_{SP}$,...,(_X_+2) $\cdot$ $\delta_{SP}$], under msgpack key `P`. This field is calculated based on the total weight of the participants [see state-proof-transaction](#state-proof-transaction) 
 
 # State Proof Tracking
 
@@ -872,8 +872,7 @@ The state proof transaction includes four additional fields:
 
  - Under msgpack key `sptype`, the type of the state proof; currently always zero.
  - Under msgpack key `sprnd`, the last round that this state proof attest to.
- - Under msgpack key `sp`, the state proof fields as defined in the state proof format subsection 
-   of the cryptographic primitive specification document.
+ - Under msgpack key `sp`, the state proof fields as defined in the [state proof format](https://github.com/algorandfoundation/specs/blob/master/dev/crypto.md#state-proof-format).
  - Under msgpack key `spmsg`, a structure that compose the state proof message, whose hash is being attested
    by the state proof. This structure defined [above](#state-proof-message)
 

@@ -50,7 +50,7 @@ below specifies each prefix (in quotation marks):
     - "OT1" and "OT2": The first and second layers of keys used for
       [ephemeral signatures](#ephemeral-key-signature).
     - "MA": An internal node in a [Merkle tree](#merkle-tree).
-    - "MB": A bottem leaf in a vector commitment [vector commitment](#vector-commitment).
+    - "MB": A bottom leaf in a vector commitment [vector commitment](#vector-commitment).
     - "KP": Is a public key used by the Merkle siganture scheme [Merkle Siganture Scheme](merklesignaturescheme)
     - "spc": A coin used as part of the state proofs construction.
     - "spp": Participant's information (state proof pk and weight) used for state proofs.
@@ -361,7 +361,7 @@ where:
 
 
 When a signature is missing in the signature array, i.e the prover didn't receive a signature for this slot. The slot would be 
-decoded as an empty string. As a result the vector commitment leaf of this slot would be the hash of the bottom leaf.
+decoded as an empty string. As a result the vector commitment leaf of this slot would be the hash  value of the constant domain separator "MB" (the bottom leaf)
 
 ## Choice of revealed signatures
 
@@ -388,12 +388,17 @@ _signedWeight_ is a 64-bit, little-endian integer representing the state proof s
 _stateproofMessageHash_ is a 256-bit string representing the message that would be verified by the state proof. (it would be the hash result of the state proof message)
 
 
+For short, we refer below to the revealed signatures simply as 'reveals'
+
 We compute:
 
 _R_ = SHAKE256(_Hin_)
 
-For every reveal, we squeeze 64-bit string and use rejection sampling
-to have a uniform random coin in [0,signedWeight).
+For every reveal,
+- Extract a 64-bit string from _R_. 
+- use rejection sampling and extract additional 64-bit string from _R_ if needed
+
+This would grantee having a uniform random coin in [0,signedWeight).
 
 ## State proof format
 
