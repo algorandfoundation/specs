@@ -745,10 +745,12 @@ fields from breaking assumptions made by programs written before they
 existed. If one of the transactions in a group will execute a program
 whose version predates a transaction type or field that can violate
 expectations, that transaction type or field must not be used anywhere
-in the transaction group. A v1 program included in a transaction group
-that includes a ApplicationCall transaction, or a non-zero RekeyTo
-field, will fail regardless of the other contents of the program
-itself.
+in the transaction group.
+
+Concretely, the above requirement is translated as follows: A v1
+program included in a transaction group that includes a
+ApplicationCall transaction or a non-zero RekeyTo field will fail
+regardless of the program itself.
 
 This requirement is enforced as follows:
 
