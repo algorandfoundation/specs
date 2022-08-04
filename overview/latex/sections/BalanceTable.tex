@@ -1,0 +1,38 @@
+\documentclass[../main.tex]{subfiles}
+
+\begin{document}
+Each block $B^r$ is associated with a \emph{balance table} $S^r$, which captures current information about all accounts in the system. 
+$S^0$ is computed from $B^0$;
+$S^r$ is computed from $B^r$ and $S^{r-1}$. 
+
+The balance table $S^r$ contains a balance entry for each user in the system.
+The balance entry for a user $u$ records the following information:
+\begin{itemize}
+\item $\APK_u$: account public key (the corresponding secret key is kept privately by the user). 
+\item $b_u^r$: account balance.
+\item $u$'s status.
+\end{itemize}
+A user's balance entry may optionally include additional information, which is needed to participate in the consensus protocol:
+\begin{itemize}
+\item $\VRFPK_u$: Verifiable Random Function (VRF) public key used for cryptographic sortition.
+\item $\PartPK_u$: participation signing public key. 
+\item $[v,w]$ : A range of rounds for which the user's participation signing key is valid. 
+\end{itemize}
+$\VRFPK$ and $\PartPK$ are described in more detail in Section~\ref{section:KeyManagement}; 
+as usual, their corresponding secret keys are kept privately by the user.
+
+\paragraph{User status}
+
+The status of user $u$ is determined as follows:
+\begin{itemize}
+\item A user $u$ is considered \emph{online} at round $r$ if and only if she had a nonempty $\VRFPK_u$ specified in her balance entry at round $r-322$ and her $\PartPK_u$ is still valid at round $r$. 
+(Here, $322$ refers to a balance lock-back parameter).
+\item Otherwise, $u$ is considered \emph{offline} and doesn't participate in round $r$ consensus.
+\end{itemize} 
+
+\paragraph{Minimum account balance.}
+Balances in the account entries must maintain a minimum account balance of $0.1$ Algo. This restriction is set to mitigate account spamming attacks.
+
+\paragraph{Smallest Algo amount.}
+The smallest Algo amount the system keeps is 1 {\em micro Algo}, which is $10^{-6}$ Algo.
+\end{document}
