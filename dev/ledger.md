@@ -42,6 +42,15 @@ The Algorand Ledger is parameterized by the following values:
    Currently defined as 500,000.
  - $A$, the size of an earning unit.
    Currently defined as 1,000,000 microAlgos.
+ - Several parameters for state proofs; namely: (current values provided in the "State Proof Tracking" section)
+   - $\delta_{SP}$, the number of rounds between state proofs.
+   - $\delta_{SPR}$, the number of $\delta_{SP}$ that the network will try to catch-up with.
+   - $\delta_{SPB}$, the delay (lookback) in rounds for online participant
+     information committed to in the block header for state proofs.
+   - $N_{SP}$, the maximum number of online accounts that are included
+     in the Vector commitment of state proofs participants.
+   - $KQ_{SP}$, the security parameter for state proof. We use either k+q (for pre-quantum security) or k+2q (for post-quantum security).
+   - $f_{SP}$, the fraction of participants that are proven to have signed by a state proof.
 
 ## States
 
@@ -108,6 +117,9 @@ The block header contains the following components:
 
  - A cryptographic commitment to the block's _transaction sequence_, described
    below, stored under msgpack key `txn`.
+
+ - A cryptographic commitment, using SHA256 hash function, to the block's _transaction sequence_, described
+   below, stored under msgpack key `txn256`.
 
  - The block's _previous hash_, which is the cryptographic hash of the previous
    block in the sequence.  (The previous hash of the genesis block is 0.)  The
@@ -523,6 +535,105 @@ valid vote round in its participation key is strictly less than the current roun
 that is being processed.  Once included in this list, an account will be marked 
 offline as part of applying the block changes to the ledger.
 
+# Light Block Header
+
+A light block header is a structure contains a subset of fields from Algorand's  _block header_.
+Light block header contains the following components:
+
+- The block's _seed_, under msgpack key `s`.
+
+- The block's _genesis hash_, under msgpack key `gh`.
+
+- The block's _round_, under msgpack key `r`.
+
+- The block's SHA256 Transaction commitment, under msgpack key `tc`.
+
+# Light Block Header Commitment
+
+Light Block Header Commitment for rounds (_X_ $\cdot$ $\delta_{SP}$,...,(_X_+1) $\cdot$ $\delta_{SP}$] for some number _X_, defined as
+the root of a vector commitment whose leaves are light block headers for rounds  _X_ $\cdot$ $\delta_{SP}$,...,(_X_+1) $\cdot$ $\delta_{SP}$ respectively. We use SHA256 hash function to create this vector commitment.
+
+# State Proof message
+
+A state proof message for rounds (_X_ $\cdot$ $\delta_{SP}$,...,(_X_+1) $\cdot$ $\delta_{SP}$] for some number _X_, 
+contains the following components:
+
+ - Light block headers commitment for rounds (_X_ $\cdot$ $\delta_{SP}$,...,(_X_+1) $\cdot$ $\delta_{SP}$], under msgpack key `b`.
+
+ - First attested round which would be equal to _X_ $\cdot$ $\delta_{SP}$ + 1, under msgpack key `f`. 
+
+ - Last attested round which would be equal to (_X_+1) $\cdot$ $\delta_{SP}$, under msgpack key `l`. 
+
+ - Participant commitment used to verify state proof for rounds ((_X_+1) $\cdot$ $\delta_{SP}$,...,(_X_+2) $\cdot$ $\delta_{SP}$], 
+   under msgpack key `v`. 
+
+ - The value $\ln(ProvenWeight)$ with 16 bits of precision that would used to verify state proof for rounds ((_X_+1) $\cdot$ $\delta_{SP}$,...,(_X_+2) $\cdot$ $\delta_{SP}$], under msgpack key `P`. This field is calculated based on the total weight of the participants [see state-proof-transaction](#state-proof-transaction) 
+
+# State Proof Tracking
+
+Each block header keeps track of the state needed to construct, validate,
+and record state proofs.  
+This tracking data is stored in a map under the msgpack key `spt` in the block header.
+The map is indexed by the type of the state proof; at the moment, only
+type 0 is supported.  In the future, other types of state proofs
+might be added.
+
+For type 0, $KQ_{SP}=256$, $f_{SP}$ is $2^{32}*30/100$
+(as the numerator of a fraction out of $2^{32}$), $N_{SP}=1024$,
+$\delta_{SP}=256$, $\delta_{SPR}=10$  and $\delta_{SPB}=16$ .
+
+The value of the tracking data is a msgpack map with three
+elements:
+
+- Under key `n`, the next expected round of a state proof that
+  should be formed.  When upgrading from an earlier consensus protocol
+  to a protocol that supports state proofs, the `n` field is
+  set to the lowest value such that `n` is a multiple of $\delta_{SP}$
+  and so that the `n` is at least the first round of the new protocol
+  (supporting state proofs) plus $\delta_{SPB}+\delta_{SP}$.
+  This field is set in every block.
+
+- Under key `v`, the root of the Vector commitment to an array of
+  participants that are eligible to vote in the state proof at
+  round $\delta_{SP}$ from the current block.  Only blocks whose round
+  number is a multiple of $\delta_{SP}$ have a non-zero `v` field.
+
+- Under key `t`, the total online stake at round $\delta_{SP}$.
+
+The participants committed to by the Vector commitment are chosen in a
+specific fashion:
+
+- First off, because it takes some time to collect all of the online
+  participants (more than the target assembly time for a block), the
+  set of participants appearing in a commitment in block at round $r$
+  are actually based on the account state from round $r-\delta_{SPB}$.
+
+- The participants are sorted by the number of microAlgos they currently
+  hold (including any pending rewards).  This enables more compact
+  proofs of pseudorandomly-chosen participants weighted by their
+  microAlgo holdings.  Only accounts in the online state are included
+  in this list of participants.
+
+- To limit the worst-case size of this Vector commitment, the array of
+  participants contains just the top $N_{SP}$ participants.  Efficiently
+  computing the top $N_{SP}$ accounts by their algo balance is difficult
+  in the presence of pending rewards.  Thus, to make this top-$N_{SP}$
+  calculation more efficient, we choose the top accounts based on a
+  normalized balance, denoted below by $n_I$. 
+
+  The normalized balance is a hypothetical balance: Consider an account $I$ with current balance $a_I$. If an account had balance $n_I$ in the genesis block, and did not perform any transactions since then, then its balance by the current round (when rewards are included) will be $a_I$, except perhaps due to rounding effects.
+  In more detail, let $r$ be the last round in which a transaction touched account $I$ (and therefore all pending rewards were added to it). Consider the following quantities, as defined in the [Account State](#account-state):
+  
+  - The raw balance $a_I$  of account $I$ at round $r$ is its total balance on that round.
+  - The rewards base $a'_I$ is meant to capture the total rewards that were allocated to all accounts upto round $r$, expressed as a fraction of the total stake (with limited precision as described below).
+
+  Given these two quantities, the normalized balance of an online account $I$ is $a_I/(1+a'_I)$. For example, if the total amount of rewards distributed upto round $r$ is 20% of the total stake, then the normalized balance is $a_I/1.2$.
+
+  To limit the required precision in this calculation, the system uses a parameter $ru$ that specifies the rewards-earning unit, namely accounts only earn rewards for a whole number of $ru$ microAlgos. (Currently $ru=1,000,000$, so the rewards-earning unit is one Algo.)
+
+  The parameter $a'_I$ above is an integer such that $a'_I/ru$ is the desired fraction, rounded down to precision of $1/ru$. The normalized balance is computed as $n_I = \lfloor a_I \cdot ru  / (a'_I + ru) \rfloor$.
+
+
 # Transactions
 
 \newcommand \Tx {\mathrm{Tx}}
@@ -613,7 +724,7 @@ A key registration transaction additionally has the following fields:
  - The _selection public key_ $\spk$, public authorization key of
    an account's participation keys ($\pk$). 
 
- - The _state proof public key_ $\sppk$, public commitment on the account's
+ - The _state proof public key_ $\sppk$, public commitment to the account's
    state proof keys ($\sppk$). If $\vpk$ , $\spk$ and $\sppk$ are all unset,
    the transaction deregisters the account's participation
    key set, as the result, marks the account offline.
@@ -643,7 +754,7 @@ For a key registration transaction to be valid, the following needs to apply:
    - _vote last_ needs to be greater than or equal to the current network round _r_.
    - _vote first_ needs to be less than or equal to (_first valid_+1).
    - _vote first_ needs to be less than or equal to (_r_+1).
-- The value (_vote last_ - _vote first_) must be greater than 256*(2$^{16}$)-1.
+- The value (_vote last_ - _vote first_) must be not be greater than 256*(2$^{16}$)-1.
 
 ### Application Call Transaction
 An application call transaction additionally has the following fields:
@@ -750,6 +861,49 @@ An asset freeze transaction additionally has the following fields:
 
 The cryptographic hash of the fields above is called the _transaction
 identifier_.  This is written as $\Hash(\Tx)$.
+
+## State proof transaction
+
+A special transaction is used to disseminate and store state 
+proofs.  The type of a state proof transaction is `stpf`.
+This type of transaction must always be issued from a special sender
+address, which is the hash of the domain-separation prefix `SpecialAddr`
+with the string `StateProofSender`.  The transaction must not have any
+signature, must not have any fee, must have an empty note, must not have
+the rekeying field set, must not have any lease, and must not be part
+of a transaction group. 
+State proof transaction verification does not apply any special constrains on the first and last valid parameter.
+The state proof transaction includes four additional fields:
+
+ - Under msgpack key `sptype`, the type of the state proof; currently always zero.
+ - Under msgpack key `sprnd`, the last round that this state proof attest to.
+ - Under msgpack key `sp`, the state proof fields as defined in the [state proof format](https://github.com/algorandfoundation/specs/blob/master/dev/crypto.md#state-proof-format).
+ - Under msgpack key `spmsg`, a structure that compose the state proof message, whose hash is being attested
+   by the state proof. This structure defined [above](#state-proof-message)
+
+In order for a state proof transaction to be valid, the round of
+the state proof (`sprnd`) must be exactly equal to the next
+expected state proof round in the block header, as described
+[above](#state-proof-tracking).  When a state proof
+transaction is applied to the state, the next expected state proof round
+for that type of state proof is incremented by $\delta_{SP}$.
+To encourage the formation of shorter state proof, the rule for
+validity of state proof transactions is dependent on the first valid `fv` round
+number in the transaction.
+In particular, the signed weight of a state proof must be:
+
+- Equal to the total online stake, `TotalWeight`, if the
+  first valid round number on the transaction is no greater than the proof's
+  `sprnd` plus $\delta_{SP}/2$.
+- At least $ProvenWeight + (TotalWeight - ProvenWeight) * Offset / (\delta_{SP} / 2)$,
+  if the first valid round number on the transaction is the proof's `sprnd` plus
+  $\delta_{SP}/2+Offset$.
+- At least the minimum weight being proven by the proof,
+  `ProvenWeight`, if the first valid round number on the transaction is no less than
+  the proof's `sprnd` plus $\delta_{SP}$.
+
+Where `ProvenWeight` = (`TotalWeight` * $f_{SP}$)  / 2^32
+
 
 Authorization and Signatures
 ----------------------------
@@ -904,6 +1058,16 @@ domain-separation prefix `STIB`, and encoded as follows:
 The transaction commitment for a block covers the transaction encodings
 with the changes described above.  Individual transaction signatures
 cover the original encoding of transactions as standalone.
+
+In addtion to _transaction commitment_, each block will also contains _SHA256 transaction commitment_.
+It can allow a verifier which does not support SHA512_256 function to verify proof of membership on transcation.
+In order to consturct this commitment we use Vector Commitment. The leaves in the Vector Commitment
+tree are hashed as $$SHA256("TL", txidSha256, stibSha256)$$.  Where:
+
+- txidSha256 = SHA256(`TX` || transcation)
+- txidSha256 = SHA256(`STIB` || signed transaction || ApplyData)
+
+The vector commitment uses SHA256 for internal nodes as well.
 
 A valid transaction sequence contains no duplicates: each transaction in the
 transaction sequence appears exactly once.  We can call the set of these
