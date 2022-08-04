@@ -1,0 +1,64 @@
+\documentclass[../main.tex]{subfiles}
+
+\begin{document}
+
+\paragraph{Spending Keys.}
+
+Algorand uses the Ed25519 signature scheme based on RFC 8032. 
+
+\paragraph{Multi-signature Addresses.} 
+
+Algorand supports threshold multi-signature addresses as follows. 
+Suppose a user wants to create a threshold multi-signature address consisting of three keys, where at least two keys 
+must co-sign any transaction. To accomplish this, the user must: 
+\begin{itemize}
+\item Sample 3 key pairs $(\PK1, \SK1), (\PK2, \SK2), (\PK3, \SK3)$. (These keys may be samples on independent devices).
+\item Compute account public key: 
+\[
+\APK = Hash(\PK1, \PK2, \PK3, \textit{threshold}=2)
+\]
+\end{itemize}
+
+Now, suppose the user has some tokens in the balance table associated with her unique APK. 
+A valid transaction with respect to $\APK$ includes the hash pre-image of $\APK$ and signatures of the same transaction under at least 2 of the keys $(\PK1, \PK2, \PK3)$. 
+The committee members in the consensus protocol check that the hash of the pre-image matches $\APK$ registered on chain, 
+and that a sufficient number of signatures under the public keys are provided. 
+
+\paragraph{Verifiable Random Function (VRF) Keys.} 
+
+To participate in the consensus protocol, a user must register a VRF public key in her balance entry, with a corresponding public/secret key pair $(VRFPK,VRFSK)$. We use $VRF(x)$ to denote $VRFSK$'s signature of $x$.
+Algorand follows the EC-VRF specifications outlined in draft-irtf-cfrg-vrf-04.\\
+
+The VRF that Algorand uses is secure against malicious key registration. 
+That is, even if a user maliciously samples and registers a $\VRFPK$ on chain, all outputs she obtains are still unique and cannot be biased.
+This is accomplished partly because of the following: 
+for a fixed $\VRFPK$, in round $r$ the VRF is applied on inputs $(Q^{r-2}, \APK)$, where $\VRFPK$ must have been in the blockchain by round $r-322$, and $\APK$ is the unique account public key of the user.
+
+
+
+\paragraph{Participation Keys.} 
+
+Algorand uses the Ed25519 digital signature scheme for participation keys. If a user $u$ wants to participate in the consensus protocol, 
+she samples a key-pair $(\PartPK_u, \PartSK_u)$ and a collection of ephemeral keys for a range of rounds $[v,w]$
+\[
+(\EPK_u^v, \ESK_u^v, \ldots, \EPK_u^w, \ESK_u^w).
+\]
+
+Using $\PartSK_u$, she then signs each ephemeral key $\EPK_u^i$ and the corresponding round number $i$ to obtain a signature $\sigma_i$. 
+After signing all ephemeral keys, the node deletes $\PartSK_u$ and stores the collection: 
+\[
+\big((\EPK_u^v, \ESK_u^v, \sigma_v), \ldots, (\EPK_u^w, \ESK_u^w, \sigma_w)\big).
+\] 
+
+We use $ESIG_u^r(x)$ to denote $ESK_u^r$'s signature of $x$.
+To participate in the consensus protocol the user registers $\PartPK_u$ and the range $[v,w]$ for which it generated the ephemeral keys. 
+Now, suppose a user is chosen by cryptographic self-selection to sign a message $M$ at round $r$. 
+\begin{enumerate}
+\item The user uses secret key $\ESK_u^r$ to sign $M$ to obtain signature $\sigma_M$. 
+\item The user propagates $(\sigma_M, \EPK^r_u, \sigma_r)$ through the network.
+\item The tuple ($\EPK^r_u, \sigma_r$) can be verified with respect to $\PartPK_u$ registered on chain to ensure that indeed $\ESK^r_u$ was authorized to sign messages for round $r$. 
+\item After the user observes the confirmation of $B^r$, the user deletes $\ESK^r_u$. After deletion, the user can never sign any other message for round $r$. 
+\end{enumerate} 
+
+
+\end{document}

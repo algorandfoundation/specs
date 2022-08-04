@@ -1,0 +1,20 @@
+\documentclass[../main.tex]{subfiles}
+\begin{document}
+\begin{itemize}
+    \item \emph{Basic spend transactions.} Users can perform basic transfers from one account to another. Any transaction must be cryptographically signed with the secret key of the sender. 
+    \item \emph{Account status change: \emph{online} vs \emph{offline}.} A special transaction allows a user to register a VRF public key and a participation signing key on chain to participate in the consensus protocol.
+
+    Registered users are considered \emph{online} during rounds for which their participation signing keys are valid. 
+
+    A similar special transaction can be issued to move the user to \emph{offline} status. Offline users are removed from participation in consensus. 
+\end{itemize}
+
+Any transaction propagated through the network must also specify a round validity interval and a transaction fee. 
+
+\paragraph{Transaction validity interval.}
+Each transaction must include a validity interval $[r_1,r_2]$. The transaction is valid and can be included only in blocks in that range. This interval is used to decide whether the transaction has appeared on the blockchain or not: a user only needs to look back into blocks in range $[r_1, r-1]$ to determine if the transaction is valid for block $r$. 
+
+\paragraph{Transaction fees.}
+Each transaction must include a transaction fee of $0.001$ Algos or higher. Assuming blocks are not full, a minimal fee should suffice to be included in a block. The minimum fee exists to make spamming more costly for adversaries.
+
+\end{document}
