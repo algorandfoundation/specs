@@ -70,6 +70,8 @@ $\bot$ denotes a specific string of the same length as $H$'s output but is not i
 
 \item $\lambda$: intuitively corresponds to the time that it takes a small message (e.g. a vote) to propagate in good network conditions.
 
+\item $\lambda_0$: intuitively corresponds to the time that it takes a small message (e.g. a vote) to propagate under ideal network conditions for period $0$, failling back to $\lambda$ in future periods if $\lambda_0$ was not sufficient to make progress.
+
 \item $\Lambda$: intuitively corresponds to the time it takes a big message (e.g. a block) to propagate in good network conditions.
 
 \item $\lambda_f$: the frequency at which the fast partition recovery steps are repeated.
@@ -103,7 +105,7 @@ When $timer_u = 0$:
 
 \end{itemize}
 
-\item[{\sc Step 1:}] [Filtering] When $\timer_u = 2\lambda$:
+\item[{\sc Step 1:}] [Filtering] When $\timer_u = 2\lambda$ if $p>0$, or $\timer_u = 2\lambda_0$ if $p=0$:
 \begin{itemize}
 
 \item[--] If $p=0$ or if $p>0$ and $u$ has received a next-quorum for $\bot$ from period $(r,p-1)$,

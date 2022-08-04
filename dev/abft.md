@@ -62,7 +62,7 @@ We define $\FilterTimeout(p)$ on period $p$ as follows:
   - If $p \ne 0$:
     - $\FilterTimeout(p) = 2\lambda$
 
-Algorand v1 sets $\delta_s = 2$, $\delta_r = 80$, $\lambda = 2$ seconds,
+Algorand sets $\delta_s = 2$, $\delta_r = 80$, $\lambda = 2$ seconds,
 $\lambda_0 = 1.7$ seconds, $\lambda_f = 5$ minutes, and $\Lambda = 17$ seconds.
 
 Identity, Authorization, and Authentication
