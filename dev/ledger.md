@@ -619,14 +619,19 @@ specific fashion:
   computing the top $N_{SP}$ accounts by their algo balance is difficult
   in the presence of pending rewards.  Thus, to make this top-$N_{SP}$
   calculation more efficient, we choose the top accounts based on a
-  normalized balance.  The normalized balance is a hypothetical balance
-  that a given account would need to have at round 0 to achieve its
-  balance (without pending rewards) as of the last round at
-  which the account was touched (i.e., its pending rewards were added
-  to the account's balance).  Specifically, for an account $a$ with raw
-  balance $a_I$ and rewards base $a'_I$, the normalized balance is $a_I *
-  RewardUnit / (a'_I + RewardUnit)$.
+  normalized balance. normalized balance, denoted below by $n_I$. 
 
+  The normalized balance is a hypothetical balance: Consider an account $I$ with current balance $a_I$. If an account had balance $n_I$ in the genesis block, and did not perform any transactions since then, then its balance by the current round (when rewards are included) will be $a_I$, except perhaps due to rounding effects.
+  In more detail, let $r$ be the last round in which a transaction touched account $I$ (and therefore all pending rewards were added to it). Consider the following quantities, as defined in the [Account State](#account-state):
+  
+  - The raw balance $a_I$  of account $I$ at round $r$  is its total balance.
+  - The rewards base $a'_I$ is meant to capture the total rewards that were allocated to all accounts upto round $r$, expressed as a fraction of the total stake (with limited precision as described below).
+
+  Given these two quantities, the normalized balance of an online account $I$ is $a_I/(1+a'_I)$. For example, if the total amount of rewards distributed upto round $r$ is 20% of the total stake, then the normalized balance is $a_I/1.2$.
+
+  To limit the required precision in this calculation, the system uses a parameter $ru$ that specifies the rewards-earning unit, namely accounts only earn rewards for a whole number of $ru$ microAlgos. (Currently $ru=1,000,000$, so the rewards-earning unit is one Algo.)
+
+  The parameter $a'_I$ above is an integer such that $a'_I/ru$ is the desired fraction, rounded down to precision of $1/ru$. The normalized balance is them computed as $n_I = \lfloor a_I \cdot ru  / (a'_I + ru) \rfloor$.
 
 
 # Transactions
