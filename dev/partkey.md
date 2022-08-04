@@ -177,7 +177,7 @@ And this verified credential is wrapped in a $\Vote$ struct with _Raw Vote_
 ## Algorand State Proof Keys 
 ### Algorand's Committable Ephemeral Keys Scheme - Merkle Signature Scheme
 
-Algorand achieves [forward security](https://en.wikipedia.org/wiki/Forward_secrecy) using Merkle Signature Scheme. This scheme consists of using a different ephemeral key for each round in which it will be used. The scheme uses vector commitment to generate commitment on those keys. 
+Algorand achieves [forward security](https://en.wikipedia.org/wiki/Forward_secrecy) using Merkle Signature Scheme. This scheme consists of using a different ephemeral key for each round in which it will be used. The scheme uses vector commitment to generate commitment to those keys. 
 The private key must be deleted after the round passes in order the completely achieves forward secrecy.
 
 The Merkle scheme uses Falcon scheme as the underlying digital signature algorithm.
@@ -186,24 +186,25 @@ In order to bound verification paths on the tree, the tree's depth is bound to 1
 
 #### Public Commitment
 
-The scheme generates multiple keys for the entire participation period. Given _FirstValidRound_, _LastValidRound_ and an _Interval_, a key is generated for each _Round_ that holds:\newline
- _FirstValidRound_ $\leq$ _Round_ $\leq$ _LastValidRound_ and _Round_ % _Interval_ = 0\newline
+The scheme generates multiple keys for the entire participation period. Given _FirstValidRound_, _LastValidRound_ and an _keyLifeTime_, a key is generated for each _Round_ that holds:
 
+ _FirstValidRound_ $\leq$ _Round_ $\leq$ _LastValidRound_ and _Round_ % _keyLifeTime_ = 0
 
-Currently, _Interval_ is set to 256.\newline
+Currently, _keyLifeTime_ is set to 256.
 
 After generating the public keys, the scheme creates a vector commitment using the keys as leaves.
-Leaf hashing is done in the following manner: \newline
+Leaf hashing is done in the following manner:
 
 _leaf_$_{i}$ = hash("KP" || _schemeId_ || _Round_ || _P_$_{k_{i}}$) for each corresponding round.
 
 where:
 
-- _schemeId_ is a 16-bit constant integer with value of 0
+- _schemeId_ is a 16-bit, little-endian constant integer with value of 0
 
-- _Round_ is a 64-bit, little-endian integer represents the round in which the key _P_$_{k_{i}}$ is valid.
+- _Round_ is a 64-bit, little-endian integer representing the start round for which the key _P_$_{k_{i}}$ is valid.
+  The key would be valid for all rounds in [_Round_,...,_Round_ + _keyLifeTime_ - 1]
 
-- _P_$_{k_{i}}$ is a 14,344-bit string represents the Falcon ephemeral public key.
+- _P_$_{k_{i}}$ is a 14,344-bit string representing the Falcon ephemeral public key.
 
 - hash: is the SUBSET-SUM hash function as defined in the [Algorand Cryptographic Primitives Specification](Crypto.md)
 
@@ -228,15 +229,15 @@ _SignatureBitString_ = (_schemeId_ || _Signature_ || _VerifyingKey_ || _VectorIn
 
 where:
 
-- _schemeId_ is a 16-bit constant integer with value of 0
+- _schemeId_ is a 16-bit, little-endian constant integer with value of 0
 
-- _Signature_ is a 12,304-bit string represents a Falcon signature in a CT format.
+- _Signature_ is a 12,304-bit string representing a Falcon signature in a CT format.
 
 - _VerifyingKey_ is a 14,344-bit string
 
 - _VectorIndex_ is a 64-bit, little-endian integer
 
-- _Proof_ is constructed in the following way:\newline
+- _Proof_ is constructed in the following way:
 
 
 if _n_ = 16:
@@ -251,8 +252,22 @@ where:
 
 - _n_ is a 8-bit string.
 
-- _digest_$_{i}$ is a 512-bit sumhash result.
+- _digest_$_{i}$ is a 512-bit string representing sumhash result.
 
 - _zeroDigest_ is a constant 512-bit string with the value 0.
 
 - _d_ = 16 - _n_
+
+
+#### Verifying Signatures
+
+A signature _s_ for a message _m_ at round _r_ is valid under the public commitment _pk_ and _keyLifeTime_ if:
+
+  - The falcon signature _s.Signature_ is valid for the message _m_ under the public key _s.VerifyingKey_
+
+  - The proof _s.Proof_ is a valid vector commitment proof for the entry _leaf_ at index _s.VectorIndex_ with respect to 
+  the vector commitment root _pk_ where:
+  
+    - _leaf_ := "KP" || _schemeId_ || _Round_ || _s.VerifyingKey_
+    
+    - _Round_ :=  _r_ - ( _r_ % _keyLifeTime_)

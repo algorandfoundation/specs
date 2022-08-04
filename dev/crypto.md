@@ -50,15 +50,20 @@ below specifies each prefix (in quotation marks):
     - "OT1" and "OT2": The first and second layers of keys used for
       [ephemeral signatures](#ephemeral-key-signature).
     - "MA": An internal node in a [Merkle tree](#merkle-tree).
-    - "MB": A bottem leaf in a vector commitment [vector commitment](#vector-commitment).
+    - "MB": A bottom leaf in a vector commitment [vector commitment](#vector-commitment).
     - "KP": Is a public key used by the Merkle siganture scheme [Merkle Siganture Scheme](merklesignaturescheme)
+    - "spc": A coin used as part of the state proofs construction.
+    - "spp": Participant's information (state proof pk and weight) used for state proofs.
+    - "sps": A signature from a specific participant that is used for state proofs.
  - In the [Algorand Ledger][ledger-spec]:
     - "BH": A _Block Header_.
     - "BR": A _Balance Record_.
     - "GE": A _Genesis_ configuration.
+    - "spm": A state proof message.
     - "STIB": A _SignedTxnInBlock_ that appears as part of the leaf in the Merkle tree of transactions.
     - "TL": A leaf in the Merkle tree of transactions.
     - "TX": A _Transaction_.
+    - "SpecialAddr": A prefix used to generate designated addresses for specific functions, such as sending state proof transactions.
  - In the [Algorand Byzantine Fault Tolerance protocol][abft-spec]:
     - "AS": An _Agreement Selector_, which is also a [VRF][Verifiable
       Random Function] input.
@@ -85,13 +90,18 @@ below specifies each prefix (in quotation marks):
 
 ## Hash Functions
 
-### SHA512-256
+### SHA512/256
 Algorand uses the [SHA-512/256 algorithm][sha] as its primary
 cryptographic hash function.
 
 Algorand uses this hash function to (1) commit to data for signing and
 for the Byzantine Fault Tolerance protocol, and (2) rerandomize its
 random seed.
+
+### SHA256
+Algorand uses [SHA-256 algorithm][sha256] to allow verification of Algorand's state and transactions
+on environments where SHA512_256 is not supported.
+
 
 ### SUBSET-SUM
 Algorand uses [SUBSET-SUM algorithm][sumhash] which is a quantum-resilient hash function.
@@ -287,12 +297,192 @@ def verify(elems, proof, root):
 
 Algorand uses [Vector Commitments][vector-commitment], which allows for concisely committing to an ordered (indexed) vector of data entries, based on Merkle trees.
 
+# State Proofs
+
+State proofs (aka Compact Certificates) allow external parties to efficiently validate
+Algorand blocks.  The [technical report][compactcert] provides the
+overall approach of state proofs; this section describes the
+specific details of how state proofs are realized in Algorand.
+
+As a brief summary of the technical report, state proofs operate
+in three steps:
+
+- The first step is to commit to a set of participants that are eligible
+  to produce signatures, along with a weight for each participant.
+  In Algorand's case, these end up being the online accounts, and the
+  weights are the account balances.
+
+- The second step is for each participant to sign the same message, and
+  broadcast this signature to others.  In Algorand's case, the message would contain
+  a commitment on blocks in a specific period.
+
+- The third step is for relays to collect these signatures from a
+  large fraction of participants (by weight) and generate a state 
+  proof.  Given a sufficient number of signatures, a relay
+  can form a state proof, which effectively consists of a
+  small number of signatures, pseudo-randomly chosen out of all of
+  the signatures.
+
+The resulting state proof proves that at least some `provenWeight`
+of participants have signed the message.  The actual weight of
+all participants that have signed the message must be greater than
+`provenWeight`.
+
+## Participant commitment
+
+The state proof scheme requires a commitment to a dense array of participants, 
+in some well-defined order. In order to grantee this property, Algorand uses Vector Commitment.
+Leaf hashing is done in the following manner:
+
+_leaf_ = hash("spp" || _Weight_ || _KeyLifeTime_ || _StateProofPK_) for each online participant.
+
+where:
+
+- _Weight_ is a 64-bit, little-endian integer representing the participant's balance in MicroAlgos
+
+- _KeyLifeTime_ is a 64-bit, little-endian constant integer with value of 256
+
+- _StateProofPK_ is a 512-bit string representing the participant's merkle signature scheme commitment.
+
+
+## Signature format 
+
+Similarly to the participant commitment, the state proof scheme requires a commitment
+to a signature array. Leaf hashing is done in the following manner:
+
+
+_leaf_ = hash("sps" || _L_ || _serializedMerkleSignature_) for each online participant.
+
+where:
+
+-  _L_ is a 64-bit, little-endian integer representing the participant's `L` value as described in the [technical report][compactcert].
+
+- _serializedMerkleSignature_ representing a merkleSignature of the participant  [merkle signature binary representation](https://github.com/algorandfoundation/specs/blob/master/dev/partkey.md#signatures)
+
+
+When a signature is missing in the signature array, i.e the prover didn't receive a signature for this slot. The slot would be 
+decoded as an empty string. As a result the vector commitment leaf of this slot would be the hash  value of the constant domain separator "MB" (the bottom leaf)
+
+## Choice of revealed signatures
+
+As described in the [technical report][compactcert] section IV.A, a
+state proof contains a pseudorandomly chosen set of signatures.
+The choice is made using a coin.  In Algorand's implementation, the
+coin derivation is made in the following manner:
+
+_Hin_ = ("spc" || _version_ || _participantCommitment_ || _LnProvenWeight_ || _signatureCommitment_ || _signedWeight_ || _stateproofMessageHash_ )
+
+where:
+
+_version_ is an 8-bit constant with value of 0
+
+_participantCommitment_ is a 512-bit string representing the vector commitment root on the participant array
+
+_LnProvenWeight_ an 8-bit string representing the natural logarithm value $\ln(ProvenWeight)$ with 16 bits of precision, as described in
+[SNARK-Friendly  Weight Threshold Verification][weight-threshold]
+
+_signatureCommitment_ is a 512-bit string representing the vector commitment root on the signature array
+
+_signedWeight_ is a 64-bit, little-endian integer representing the state proof signed weight
+
+_stateproofMessageHash_ is a 256-bit string representing the message that would be verified by the state proof. (it would be the hash result of the state proof message)
+
+
+For short, we refer below to the revealed signatures simply as 'reveals'
+
+We compute:
+
+_R_ = SHAKE256(_Hin_)
+
+For every reveal,
+- Extract a 64-bit string from _R_. 
+- use rejection sampling and extract additional 64-bit string from _R_ if needed
+
+This would grantee having a uniform random coin in [0,signedWeight).
+
+## State proof format
+
+A State proof consists of seven fields:
+
+- The Vector commitment root to the array of signatures, under msgpack
+  key `c`.
+
+- The total weight of all signers whose signatures appear in the array
+  of signatures, under msgpack key `w`.
+
+- The Vector commitment proof for the signatures revealed above, under msgpack
+  key `S`.
+
+- The Vector commitment proof for the participants revealed above, under msgpack
+  key `P`.
+
+- The Falcon signature salt version, under msgpack key `v`, is the expected salt version of 
+every signature in the state proof.
+
+- The set of revealed signatures, chosen as described in section IV.A
+  of the [technical report][compactcert], under msgpack key `r`.  This set is stored as a
+  msgpack map.  The key of the map is the position in the array of the
+  participant whose signature is being revealed.  The value in the map
+  is a msgpack struct with the following fields:
+
+  -- The participant information, encoded as described [above](#participant-commitment),
+    under msgpack key `p`.
+
+  -- The signature information, encoded as described [above](#signature-format),
+    under msgpack key `s`.
+
+- A sequence of positions, under msgpack key `pr`. The sequence defines the order of the
+  participant whose signature is being revealed. i.e
+
+  _PositionsToReveal_ = [IntToInd(coin$_{0}$),...,IntToInd(coin$_{numReveals-1}$)]
+
+where IntToInd and numReveals are defined in the [technical report][compactcert], section IV.
+
+
+Note that, although the state proof contains a commitment to
+the signatures, it does not contain a commitment to the participants.
+The set of participants must already be known in order to verify a
+state proof.  In practice, a commitment to the participants is
+stored in the block header of an earlier block, and in the state proof message that was
+proven by the previous state proof.
+
+
+## State proof validity
+
+A state proof is valid for the message hash, 
+with respect to a commitment to the array of participants,
+if:
+
+- The depth of the vector commitment for the signature and the participant information
+  should be less than or equal to 20.
+
+- All falcon signatures should have the same salt version and it should 
+  by equal to the salt version specified in state proof
+
+- The number of reveals in the state proof should be less than of equal to 640
+
+- Using the trusted Proven Weight (supplied by the verifier), The state proof should pass
+  the [SNARK-Friendly  Weight Threshold Verification][weight-threshold] check
+
+
+- All of the participant and signature information that appears in
+  the reveals is validated by the Vector commitment proofs for the participants
+  (against the commitment to participants, supplied by the verifier) 
+  and signatures (against the commitment in the state proof itself), respectively.
+
+- All of the signatures are valid signatures for the message hash.
+
+- For every i $\in$ {0,...,numReveals-1} there is a reveal in map denote by _r_$_{i}$, where  _r_$_{i}$ $\gets$ T[_PositionsToReveal_[_i_]]
+  and _r_$_{i}$.Sig.L <= _coin_$_{i}$ <  _r_$_{i}$.Sig.L + _r_$_{i}$.Part.Weight. 
+  
+  T is defined in the [technical report][compactcert], section IV.
 
 
 [ledger-spec]: https://github.com/algorand/spec/ledger.md
 [abft-spec]: https://github.com/algorand/spec/abft.md
 
 [sha]: https://doi.org/10.6028/NIST.FIPS.180-4
+[sha256]: https://datatracker.ietf.org/doc/html/rfc4634
 [sumhash]: https://github.com/algorandfoundation/specs/blob/master/dev/cryptographic-specs/sumhash-spec.pdf
 [ed25519]: https://tools.ietf.org/html/rfc8032
 [msgpack]: https://github.com/msgpack/msgpack/blob/master/spec.md
@@ -300,3 +490,5 @@ Algorand uses [Vector Commitments][vector-commitment], which allows for concisel
 [falcon]: https://falcon-sign.info/falcon.pdf
 [deterministic-falcon]: https://github.com/algorandfoundation/specs/blob/master/dev/cryptographic-specs/falcon-deterministic.pdf
 [vector-commitment]: https://github.com/algorandfoundation/specs/blob/master/dev/cryptographic-specs/merkle-vc-full.pdf
+[compactcert]: https://eprint.iacr.org/archive/2020/1568/20210330:194331
+[weight-threshold]: https://github.com/algorandfoundation/specs/blob/master/dev/cryptographic-specs/weight-thresh.pdf

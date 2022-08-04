@@ -1,0 +1,178 @@
+\documentclass[11pt,hidelinks]{article}
+\usepackage{fullpage}
+\usepackage{url}
+\usepackage{amssymb,amsmath,amsfonts,amsthm}
+\usepackage{mathtools}
+\usepackage{authblk}
+
+\usepackage[colorlinks]{hyperref}
+  \hypersetup{linkcolor=blue,filecolor=blue,citecolor=blue,urlcolor=blue}
+
+% load after hyperref, algpseudocode to get proper behavior
+\usepackage[capitalize,nameinlink,noabbrev]{cleveref}
+
+% remove 'draft' to turn off fixme notes
+\usepackage[draft,multiuser,inline,nomargin]{fixme}
+
+% fixme: register commands for author(s)
+\usepackage{xcolor}
+\FXRegisterAuthor{c}{ec}{\color{red}Chris}
+\FXRegisterAuthor{l}{el}{\color{blue}Leo}
+\fxusetheme{color}
+
+\newtheorem*{thm*}{Theorem}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{claim}[theorem]{Claim}
+
+\newcommand{\numreveals}{\mathsf{numReveals}}
+\newcommand{\sigwt}{\mathsf{signedWt}}
+\newcommand{\provwt}{\mathsf{provenWt}}
+\newcommand{\target}{\mathsf{target}}
+
+\pagestyle{plain}
+
+\author{Xiong Fan}
+\author{Chris Peikert}
+
+\affil{Algorand, Inc.}
+
+\begin{document}
+
+\title{SNARK-Friendly Weight Threshold Verification}
+
+\maketitle
+
+\section{Derivation}
+\label{sec:derivation}
+
+For the compact certificate verifier, our goal is to provide a SNARK-friendly verification of the inequality
+\begin{equation}
+    \label{equ:goal}
+    \numreveals\cdot (\log_2(\sigwt) - \log_2(\provwt)) \geq \target
+\end{equation}
+for given positive integers $\numreveals, \sigwt, \provwt$, and a fixed positive integer $\target$.
+Since SNARKs cannot compute the exact values of logarithms, we need to use suitable approximation bounds, and wish to do so in relatively low complexity and with little approximation loss.
+
+By changing the base-2 logarithms to natural logarithms, \cref{equ:goal} is equivalent to
+\begin{equation}
+\label{equ:goal-ln}
+    \numreveals\cdot (\ln(\sigwt) - \ln(\provwt)) \geq \target \cdot \ln(2).
+\end{equation}
+
+Note that $\provwt$ is provided as trusted information (from the previous state proof).
+Therefore, a trusted, precise upper bound on its natural-base logarithm can also be given as input.
+So, we mainly focus on approximating $\ln(\sigwt)$ well enough to establish \cref{equ:goal-ln} without much approximation loss.
+
+\begin{claim}
+\label{clm:sufficient}
+Suppose that $\sigwt/2^d \geq 1$ for some integer $d \geq 0$, let $p = P/2^b \geq \ln(\provwt)$, $t = T/2^b \geq \ln(2) > (T - 1)/2^b > 0$ for some integers $b, P, T \geq 0$, and let
+\[ Y = \sigwt^2 + 4 \cdot 2^d \cdot \sigwt + 2^{2d} > 0. \] 
+Then \cref{equ:goal-ln} holds if
+\begin{equation}
+    \label{equ:condition}
+    \numreveals \cdot \left( 3\cdot 2^b \cdot (\sigwt^2 - 2^{2d}) + d \cdot (T - 1) \cdot Y\right) \geq (\target \cdot T + \numreveals \cdot P) \cdot Y .
+\end{equation}
+\end{claim}
+Observe that \cref{equ:condition} is equivalent to the following two conditions, which may be more convenient to use when constructing (rather than just verifying) a certificate, since they give a direct bound on $\numreveals$:
+\begin{align}
+    D := 3\cdot 2^b \cdot (\sigwt^2 - 2^{2d}) + (d \cdot (T - 1) - P) \cdot Y &> 0 , \\
+\numreveals &\geq \frac{\target \cdot T \cdot Y}{D} .
+\end{align}
+Also note that it is possible for~$D$ to be negative---e.g., if $\sigwt$ is equal to, or even slightly larger than, both $2^d$ and~$\provwt$---but in this case it is impossible to satisfy \cref{equ:condition}.
+
+\begin{proof}[Proof of \cref{clm:sufficient}]
+First of all, dividing by $2^b \cdot Y > 0$, \cref{equ:condition} implies that
+\begin{align}
+    \MoveEqLeft \numreveals \cdot \left( \frac{3(\sigwt^2 - 2^{2d})}{Y} + d\ln(2) - p\right) \nonumber \\
+    &>  \numreveals \cdot \left( \frac{3(\sigwt^2 - 2^{2d})}{Y} + d \cdot \frac{T - 1}{2^b} - p\right) \nonumber \\
+    &\geq \target \cdot t. \label{equ:condition-ln}
+\end{align}
+
+Next, Pad{\'e} expansion~\cite[Table~3]{pade} gives the lower bound (valid for all $x \geq 1$)
+\begin{equation}
+    \label{equ:pade-lower}
+    \ln x \geq \frac{3(x^2 - 1)}{x^2 + 4x + 1}.
+\end{equation}
+
+So, we have
+ \begin{align*}
+    \MoveEqLeft \numreveals \cdot (\ln(\sigwt) - \ln(\provwt)) \\
+     &\geq \numreveals \cdot \left(\ln\frac{\sigwt}{2^d} + d\ln(2) - p\right) & \text{($p \geq \ln(\provwt)$)} \\
+     &\geq \numreveals \cdot \left(\frac{3(\sigwt^2 - 2^{2d})}{Y} + d\ln(2) - p\right) & \text{(\cref{equ:pade-lower}, $\sigwt/2^d \geq 1$)} \\
+     &> \target \cdot t & \text{(\cref{equ:condition-ln})} \\
+     &\geq \target \cdot \ln(2). & \text{($t \geq \ln(2)$)}
+\end{align*}
+This establishes \cref{equ:goal-ln}, as desired.
+\end{proof}
+ 
+Observe that both sides of \cref{equ:condition} involve only integer operations, and are positive.
+We now show that for typical parameters, both sides are much smaller than the size of the SNARK's underlying field, so there is no overflow in their computation by the SNARK.
+Since $\sigwt$ and $\provwt$ are denominated in micro-Algos, and there can be at most $10^{10}$ Algos in circulation, both quantities are bounded by $10^{16} < 2^{54}$, so also $d \leq 54$.
+Now suppose that $\numreveals$ is upper bounded by (say) $2^{10}$, and the bounds on $\ln(2)$ and $\ln(\provwt)$ are given with up to~$16$ bits of precision, i.e., $b \leq 16$, so~$T$ and~$P$ are upper bounded by $2^{16}$ and $2^{22}$, respectively.
+
+Therefore, the left-hand side of \cref{equ:condition} is upper bounded by $2^{142}$, which is much less than the capacity of the SNARK's underlying field (more than $2^{254}$).
+For the right-hand side of \cref{equ:condition}, $\target$ will be no more than $512$, so that side is also upper bounded by $2^{142}$ (regardless of whether the inequality holds).
+
+\section{Approximation Analysis}
+\label{sec:analysis}
+
+To analyze the relative cost of using approximations in place of exact amounts, we compare the minimum values of $\numreveals$ that satisfy \cref{equ:goal} versus \cref{equ:condition}, and consider their ratio.
+In summary, for all realistic values of the parameters, the cost is a less-than-$1\%$ increase in the value of $\numreveals$.
+
+For \cref{equ:condition}, we take
+\[ \numreveals = \frac{\target \cdot T \cdot Y}{3\cdot 2^b \cdot (\sigwt^2 - 2^{2d}) + (d \cdot (T - 1) - P) \cdot Y}, \]
+and for \cref{equ:goal} we take
+\[ \numreveals' = \frac{\target}{\log_2(\sigwt/\provwt)}. \]
+The ratio of the above two quantities is
+\begin{equation}
+\label{equ:reveals-ratio}
+\gamma = \frac{\numreveals}{\numreveals'} 
+= \frac{T \cdot Y \cdot \log_2(\sigwt/\provwt)}{3\cdot 2^b \cdot (\sigwt^2 - 2^{2d}) + (d \cdot (T - 1) - P) \cdot Y} .
+\end{equation}
+
+To analyze the ratio~$\gamma$ for realistic values of the parameters, we wrote a simple python program to compute \cref{equ:reveals-ratio} (see below).
+We let~$d = \lfloor \log_2(\sigwt) \rfloor$ in order to minimize $\sigwt/2^d \geq 1$, and fixed $b=16$, i.e., we approximate $\ln(2)$ and $\ln(\provwt)$ with~$16$ bits of precision, and let $T = \lceil 2^b \cdot \ln(2) \rceil$ and $P = \lceil 2^b \cdot \ln(\provwt) \rceil$.
+We use the \texttt{Decimal} type with a moderately large (fixed) amount of precision in order to ensure sufficient accuracy of the calculations.
+
+The ratio~$\gamma$ is smallest when $\sigwt$ is a power of two, i.e., $\sigwt/2^d = 1$.
+In this case, there is no error at all in the Pad{\'e} approximation, so~$\gamma$ is extremely close to~$1$.
+(There is still some slight approximation error in~$T$ and~$P$, but it is very small due to the use of $b=16$ bits of precision.)
+Conversely,~$\gamma$ is largest when $\sigwt$ is slightly less than a power of two, i.e., $\sigwt = 2^{d+1} - 1$, because the error from the Pad{\'e} approximation of $\ln(x)$ increases with~$x$, and here $x=\sigwt/2^d \approx 2$ is essentially maximized.
+
+Using realistic values $\sigwt \in \{2^{40} - 1, 2^{38} - 1, 2^{36} - 1, 2^{32} - 1, 2^{16} - 1\}$ and $\sigwt/\provwt \in \{1.1, 1.2, 1.3, \ldots, 2\}$, the ratio~$\gamma$ is always less than~$1.01$.
+That is, the minimal value of $\numreveals$ obtained from \cref{equ:condition} is less than 1\% larger than the one obtained from \cref{equ:goal}.
+The magnitude of $\sigwt$ has almost no effect on~$\gamma$, whereas the weight ratio $\sigwt/\provwt$ has a minor effect: as it increases from~$1.1$ to~$2$, the value of~$\gamma$ decreases from about $1.009$ to about $1.001$.
+So, the relatively large weight ratios that we typically expect to see in practice correspond to lower costs of approximation.
+
+\paragraph{Python code.}
+
+\begin{verbatim}
+from math import log, floor, ceil
+from decimal import *
+
+getcontext().prec = 32
+b = 16
+two = Decimal(2)
+B = two**b
+T = Decimal(ceil(B * Decimal.ln(two)))
+
+def ratio(sigWt, weightRatio):
+    d = floor(Decimal.ln(sigWt) / Decimal.ln(two))
+    Y = sigWt**2 + two**(d+2) * sigWt + two**(2*d)
+    P = Decimal(ceil(B * Decimal.ln(sigWt/weightRatio)))
+    denom = 3 * B * (sigWt**2 - two**(2*d)) + (d*(T - 1) - P)*Y
+    num = T * Y * Decimal.ln(weightRatio) / Decimal.ln(two)
+    return num / denom
+
+for j in range(0, 10):
+    sigWt = two**(40 - j) - 1
+    for i in range(0, 10):
+        weightRatio = Decimal(2 - i/10)
+        result = ratio(sigWt, weightRatio)
+        print(f"{40-j},{2-i/10}: {result}")
+\end{verbatim}
+
+\bibliographystyle{plain} 
+\bibliography{extra}
+
+\end{document}
