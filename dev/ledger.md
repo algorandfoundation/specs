@@ -598,7 +598,7 @@ elements:
   round $\delta_{SP}$ from the current block.  Only blocks whose round
   number is a multiple of $\delta_{SP}$ have a non-zero `v` field.
 
-- Under key `t`, the total online stake at round $\delta_{SP}$.
+- Under key `t`, the total online stake at round $\delta_{SP}$ (with pending rewards).
 
 The participants committed to by the Vector commitment are chosen in a
 specific fashion:
