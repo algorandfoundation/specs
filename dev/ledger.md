@@ -49,7 +49,7 @@ The Algorand Ledger is parameterized by the following values:
      information committed to in the block header for state proofs.
    - $N_{SP}$, the maximum number of online accounts that are included
      in the Vector commitment of state proofs participants.
-   - $KQ_{SP}$, the security parameter for state proof. We use either k+q (for pre-quantum security) or k+2q (for post-quantum security).
+   - $KQ_{SP}$, the security parameter for state proof.
    - $f_{SP}$, the fraction of participants that are proven to have signed by a state proof.
 
 ## States
@@ -633,6 +633,12 @@ specific fashion:
 
   The parameter $a'_I$ above is an integer such that $a'_I/ru$ is the desired fraction, rounded down to precision of $1/ru$. The normalized balance is computed as $n_I = \lfloor a_I \cdot ru  / (a'_I + ru) \rfloor$.
 
+# State Proof Parameters
+
+- To limit the resources allocated for creating state proofs, state proof parameters are set to $N_{SP}=1024$, $\delta_{SP}=256$, $\delta_{SPR}=10$ and $\delta_{SPB}=16$.
+- The desired security according to section IV.A of the [technical report][compactcert] is k+q = 128. In order to achieve post-quantum security for state proofs, we need to set k+2q = 256. i.e $KQ_{SP}=256$.
+- On Algorand we assume that at least 70% of the participating stake is honest. Under this assumption there can't be a malicious state proof that would be accepted by the verifier and has a signed weight of more than 30% of the total online stake. Hence, we set the ProvenWeight to be $f_{SP}$=$2^{32}*30/100$
+(as the numerator of a fraction out of $2^{32}$)
 
 # Transactions
 
