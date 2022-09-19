@@ -16,14 +16,14 @@ which is reset whenever $u$ starts a new period.
 For each step $(r,p,s)$, a committee is elected to vote. Each step $(r,p,s)$ has two associated parameters, which depend only on $s$:
 \begin{itemize}
     \item $\textit{\CS}_s$: The expected committee size for that step.
-    \item $\textit{\CT}_t$: The committee threshold. A set of votes of total weight $\textit{\CT}_s$ constitutes a \textit{quorum} for step $(r,p,s)$
+    \item $\textit{\CT}_s$: The committee threshold. A set of votes of total weight $\textit{\CT}_s$ constitutes a \textit{quorum} for step $(r,p,s)$
 \end{itemize}
 For each $s$, the following list gives the step name and the associated parameters:
 
 \begin{center}
 \begin{tabular}{ |c|c|c|c| } 
  \hline
- Step number $s$ & Step Name & $\CS_t$ & $\CT_s$ \\
+ Step number $s$ & Step Name & $\CS_s$ & $\CT_s$ \\
  \hline
  0 & propose & 20 & N/A \\ 
  1 & soft & 2990 & 2267 \\ 
