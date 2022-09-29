@@ -478,10 +478,23 @@ if:
 
 ## Setting security strength
 
-We define two parameters for security strength:
-
-- ${target_C}$: "classical" security strength. This is set to ${k+q}$, (${k+q}$ are defined in section IV.A of the [technical report][compactcert]). The goal is to have ${<= 1/2^{k}}$ probability of breaking the state proof by an attacker that makes up to ${2^{q}}$ hash evaluations/queries. We use ${target_C}$ = 192, which corresponds to, for example, ${k=128}$ and ${q=64}$, or ${k=96}$ and ${q=96}$.
+- ${target_C}$: "classical" security strength. This is set to ${k+q}$ (${k+q}$ are defined in section IV.A of the [technical report][compactcert]). The goal is to have ${<= 1/2^{k}}$ probability of breaking the state proof by an attacker that makes up to ${2^{q}}$ hash evaluations/queries. We use ${target_C}$ = 192, which corresponds to, for example, ${k=128}$ and ${q=64}$, or ${k=96}$ and ${q=96}$.
 - ${target_{PQ}}$: "post-quantum" security strength. This is set to ${k+2q}$, because at a cost of about ${2^q}$, a quantum attacker can search among up to ${2^{2q}}$ hash evaluations (this is a highly attacker-favorable estimate). We use ${target_{PQ} = 256}$, which corresponds to, for example, ${k=128}$ and ${q=64}$, or ${k=96}$ and ${q=80}$.
+
+## Bounding The Number of Reveals
+
+In order for the SNARK prover for State Proofs to be efficient enough, we must impose an upper bound ${MaxReveals_{C}}$ on the number of "reveals" the SP can contain, while still reaching its target security strength ${target_C = 192}$. Concretely, for now we wish to set  ${MaxReveals_{C} = 480}$.
+
+Similarly, the quantum-secure verifier aims for a larger security strength of ${target_{PQ} = 256}$, and we can also impose an upper bound ${MaxReveals_{PQ}}$ on the number of reveals it can handle. (Recall that a smaller number of reveals means that signedWeight/provenWeight must be larger in order to reach a particular security strength, so we cannot set ${MaxReveals_{C}}$ or ${MaxReveals_{PQ}}$ too low.)
+
+To generate a SNARK proof, we need to be able to "downgrade" a valid SP with ${target_{PQ}}$ strength into one with merely ${target_{C}}$ strength, by truncating some of the reveals to stay within the bounds.
+
+So, for a given ${MaxReveals_{C}}$ and the desired security strengths, we need to calculate a suitable ${target_{PQ}}$ bound so that the following property holds:
+
+Any valid SP with strength >= ${target_{PQ}}$ and <= ${MaxReveals_{PQ}}$ reveals can be truncated to a valid SP with strength >= ${target_{C}}$ and <= ${MaxReveals_{C}}$ reveals.
+
+According to the SNARK-friendly weight-verification formula used by the SP verifiers, using any ${MaxReveals_{PQ}}$ <= floor(${MaxReveals_{C}} * {target_{PQ}} / {target_C}$) guarantees that the above property holds. Since the quantum-secure verifier is not bottlenecked by reveals, we can take this to be an equality, i.e., ${MaxReveals_{PQ}}$ = floor(...).
+
 
 
 [ledger-spec]: https://github.com/algorand/spec/ledger.md
