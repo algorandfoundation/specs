@@ -636,7 +636,7 @@ specific fashion:
 # State Proof Parameters
 
 - To limit the resources allocated for creating state proofs, state proof parameters are set to $N_{SP}=1024$, $\delta_{SP}=256$, $\delta_{SPR}=10$ and $\delta_{SPB}=16$.
-- The desired security according to section IV.A of the [technical report][compactcert] is k+q = 128. In order to achieve post-quantum security for state proofs, we need to set k+2q = 256. i.e $KQ_{SP}=256$.
+- Setting $KQ_{SP}={target_{PQ}}$ to achieve post-quantum security for state proofs. see [state proof crypto spec][sp-crypto-spec] for details.
 - On Algorand we assume that at least 70% of the participating stake is honest. Under this assumption there can't be a malicious state proof that would be accepted by the verifier and has a signed weight of more than 30% of the total online stake. Hence, we set the ProvenWeight to be $f_{SP}$=$2^{32}*30/100$
 (as the numerator of a fraction out of $2^{32}$)
 
@@ -1449,5 +1449,6 @@ not less than the threshold. Validation fails if any of signatures is invalid
 even if count of all remaining correct signatures is greater or equals than the threshold.
 
 
+[sp-crypto-spec]: https://github.com/algorandfoundation/specs/blob/master/dev/crypto.md#state-proofs
 [abft-spec]: https://github.com/algorand/spec/abft.md
 [partkey-spec]: https://github.com/algorand/spec/partkey.md

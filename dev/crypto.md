@@ -462,8 +462,7 @@ if:
 - The number of reveals in the state proof should be less than of equal to 640
 
 - Using the trusted Proven Weight (supplied by the verifier), The state proof should pass
-  the [SNARK-Friendly  Weight Threshold Verification][weight-threshold] check
-
+  the [SNARK-Friendly  Weight Threshold Verification][weight-threshold] check.
 
 - All of the participant and signature information that appears in
   the reveals is validated by the Vector commitment proofs for the participants
@@ -476,6 +475,13 @@ if:
   and _r_$_{i}$.Sig.L <= _coin_$_{i}$ <  _r_$_{i}$.Sig.L + _r_$_{i}$.Part.Weight. 
   
   T is defined in the [technical report][compactcert], section IV.
+
+## Setting security strength
+
+We define two parameters for security strength:
+
+- ${target_C}$: "classical" security strength. This is set to ${k+q}$, (${k+q}$ are defined in section IV.A of the [technical report][compactcert]). The goal is to have ${<= 1/2^{k}}$ probability of breaking the state proof by an attacker that makes up to ${2^{q}}$ hash evaluations/queries. We use ${target_C}$ = 192, which corresponds to, for example, ${k=128}$ and ${q=64}$, or ${k=96}$ and ${q=96}$.
+- ${target_{PQ}}$: "post-quantum" security strength. This is set to ${k+2q}$, because at a cost of about ${2^q}$, a quantum attacker can search among up to ${2^{2q}}$ hash evaluations (this is a highly attacker-favorable estimate). We use ${target_{PQ} = 256}$, which corresponds to, for example, ${k=128}$ and ${q=64}$, or ${k=96}$ and ${q=80}$.
 
 
 [ledger-spec]: https://github.com/algorand/spec/ledger.md
