@@ -809,11 +809,11 @@ An application call transaction additionally has the following fields:
   the same group may access for reading or modification when the
   reference matches the running programs app ID. This field is encoded
   as msgpack field `apbx`, each element of which is encoded as a
-  msgpack object containing an application ID (`i`) and name
-  (`n`). The maximum number of entries in this field is 8. A 0 value
-  for the application ID is interpreted as the application ID of this
-  transaction (`apid`, or the ID that is allocated for the created app
-  when `apid` is 0).
+  msgpack object containing an index (`i`) and name (`n`). The maximum
+  number of entries in this field is 8. The index (`i`) is a 1-based
+  index in the ForeignApps (`apfa`) array. A 0 index is interpreted as
+  the application ID of this transaction (`apid`, or the ID that is
+  allocated for the created app when `apid` is 0).
 - Local state schema, encoded as msgpack field `apls`. This field is only used
   during application creation, and sets bounds on the size of the local state
   for users who opt in to this application.
@@ -833,7 +833,7 @@ An application call transaction additionally has the following fields:
     same version number if either is 6 or higher.
 
 Furthermore, the sum of the number of Accounts in `apat`, Application
-IDs in `apfa`, Asset IDs in `apas`, and Box References ins `apbx` is
+IDs in `apfa`, Asset IDs in `apas`, and Box References in `apbx` is
 limited to 8.
 
 
