@@ -493,7 +493,7 @@ So, for a given ${MaxReveals_{C}}$ and the desired security strengths, we need t
 
 Any valid SP with strength >= ${target_{PQ}}$ and <= ${MaxReveals_{PQ}}$ reveals can be truncated to a valid SP with strength >= ${target_{C}}$ and <= ${MaxReveals_{C}}$ reveals.
 
-According to the SNARK-friendly weight-verification formula used by the SP verifiers, using any ${MaxReveals_{PQ}}$ <= floor(${MaxReveals_{C}} * {target_{PQ}} / {target_C}$) guarantees that the above property holds. Since the quantum-secure verifier is not bottlenecked by reveals, we can take this to be an equality, i.e., ${MaxReveals_{PQ}}$ = floor(...).
+According to the SNARK-friendly weight-verification formula used by the SP verifiers, using any ${MaxReveals_{PQ}}$ <= floor(${MaxReveals_{C}} * {target_{PQ}} / {target_C}$) guarantees that the above property holds. Since the quantum-secure verifier is not bottlenecked by reveals, we can take this to be an equality, i.e., ${MaxReveals_{PQ}}$ = floor(...). Therefore we need to set ${MaxReveals_{PQ}}$ to 640. 
 
 
 
