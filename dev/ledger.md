@@ -1335,8 +1335,8 @@ point must be discarded and the entire transaction rejected.
 ### Application Stateful Execution Semantics
 
 - Before the execution of the first ApplicationCall transaction in a
-  group, the combined size all boxes referred to in the box references
-  of all transactions in the group must be less than 1,024 times the
+  group, the combined size of all boxes referred to in the box references
+  of all transactions in the group must be less than the I/O budget, i.e., 1,024 times the
   total number of box references in the group, or else the group
   fails.
 - During the execution of an `ApprovalProgram` or `ClearStateProgram`,
@@ -1349,13 +1349,13 @@ point must be discarded and the entire transaction rejected.
   than 64 bytes, will likewise cause the program to fail on the
   offending instruction.
 - During the execution of an `ApprovalProgram`, the total size of all
-  pending "dirty" boxes (caused by creation or modification of a box)
-  in the group must not exceed 1,024 times the total number of box
-  references in the group, or else the group fails.  The program's
+ boxes that are created or modified
+  in the group must not exceed the I/O budget
+  or else the group fails.  The program's
   execution will fail on the first instruction that would cause the
   constraint to be violated.
 - Global state may only be read for the application ID whose program
-  is executing, or for an _available) application ID. An attempt to
+  is executing, or for an _available_ application ID. An attempt to
   read global state for another application that is not _available_
   will cause the program execution to fail.
 - Asset parameters may only be read for assets whose ID is
