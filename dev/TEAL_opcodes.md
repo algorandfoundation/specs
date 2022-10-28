@@ -1282,6 +1282,7 @@ The notation A,B indicates that A and B are interpreted as a uint128 value, with
 - Availability: v9
 
 [(-1)^A * B * 10^widthB] ^ [(-1)^C * D * 10^widthD] = (-1)^X * Y * 10^widthY. widthB, widthD and widthY are uint64. widthY output precision is guaranteed.
+Calculation is based on the following identity: q^w = exp(ln(q)/w).
 
 ## bexp widthB widthY
 
@@ -1292,6 +1293,7 @@ The notation A,B indicates that A and B are interpreted as a uint128 value, with
 - Availability: v9
 
 exp[(-1)^A * B * 10^widthB] = Y * 10^widthY. widthB and widthY are uint64. widthY output precision is guaranteed.
+Calculation is based on the Taylor expansion of e^q.
 
 ## bln widthA widthY
 
@@ -1302,6 +1304,7 @@ exp[(-1)^A * B * 10^widthB] = Y * 10^widthY. widthB and widthY are uint64. width
 - Availability: v9
 
 ln[A * 10^widthA] = (-1)^X * Y * 10^widthY. widthA and widthY are uint64. widthY output precision is guaranteed.
+Calculation is based on the following identity: ln(q) = log2(q) / log2(e)
 
 ## blog2 widthA widthY
 
@@ -1312,6 +1315,7 @@ ln[A * 10^widthA] = (-1)^X * Y * 10^widthY. widthA and widthY are uint64. widthY
 - Availability: v9
 
 log2[A * 10^widthA] = (-1)^X * Y * 10^widthY. widthA and widthY are uint64. widthY output precision is guaranteed.
+Calculation is based on the on a binary appromixation that allows arbitrary precision.
 
 ## blog10 widthA widthY
 
@@ -1322,6 +1326,7 @@ log2[A * 10^widthA] = (-1)^X * Y * 10^widthY. widthA and widthY are uint64. widt
 - Availability: v9
 
 log10[A * 10^widthA] = (-1)^X * Y * 10^widthY. widthA and widthY are uint64. widthY output precision is guaranteed.
+Calculation is based on the following identity: log10(q) = log2(q) / log2(10)
 
 ## log
 
