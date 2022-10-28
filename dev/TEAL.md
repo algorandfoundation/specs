@@ -343,7 +343,8 @@ returned value.  For example, the zero value is the empty
 byte-array. For comparison operators, the returned value is a uint64.
 
 Decimals are interpreted as follows:
-Given A: uint64, B: []byte, width: uint64, interpret B as a big-endian unsigned integer and multiply that with (-1)^A*10^width
+Given A: uint64, B: []byte, width: uint64, E: uint64 interpret B as a big-endian unsigned integer and multiply that with:
+(-1)^A * 10^((-1)^E * width)
 
 Input lengths are limited to a maximum length of 64 bytes,
 representing a 512 bit unsigned integer. Output lengths are not
