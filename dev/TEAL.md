@@ -337,10 +337,13 @@ return stack matches the name of the input value.
 | `json_ref r` | key B's value, of type R, from a [valid](jsonspec.md) utf-8 encoded json object A |
 
 The following opcodes take byte-array values that are interpreted as
-big-endian unsigned integers.  For mathematical operators, the
+decimals.  For mathematical operators, the
 returned values are the shortest byte-array that can represent the
 returned value.  For example, the zero value is the empty
 byte-array. For comparison operators, the returned value is a uint64.
+
+Decimals are interpreted as follows:
+Given A: uint64, B: []byte, width: uint64, interpret B as a big-endian unsigned integer and multiply that with (-1)^A*10^width
 
 Input lengths are limited to a maximum length of 64 bytes,
 representing a 512 bit unsigned integer. Output lengths are not
@@ -350,18 +353,23 @@ bytes on outputs.
 
 | Opcode | Description |
 | - | -- |
-| `b+` | A plus B. A and B are interpreted as big-endian unsigned integers |
-| `b-` | A minus B. A and B are interpreted as big-endian unsigned integers. Fail on underflow. |
-| `b/` | A divided by B (truncated division). A and B are interpreted as big-endian unsigned integers. Fail if B is zero. |
-| `b*` | A times B. A and B are interpreted as big-endian unsigned integers. |
-| `b<` | 1 if A is less than B, else 0. A and B are interpreted as big-endian unsigned integers |
-| `b>` | 1 if A is greater than B, else 0. A and B are interpreted as big-endian unsigned integers |
-| `b<=` | 1 if A is less than or equal to B, else 0. A and B are interpreted as big-endian unsigned integers |
-| `b>=` | 1 if A is greater than or equal to B, else 0. A and B are interpreted as big-endian unsigned integers |
-| `b==` | 1 if A is equal to B, else 0. A and B are interpreted as big-endian unsigned integers |
-| `b!=` | 0 if A is equal to B, else 1. A and B are interpreted as big-endian unsigned integers |
+| `b+` | Addition of decimals. |
+| `b-` | Subtraction of decimals. Fail on underflow. |
+| `b/` | Division of decimals (truncated division). Fail if B is zero. |
+| `b*` | Multilpication of decimals. |
+| `b<` | Less than, 1 if true, else 0. |
+| `b>` | Greater than, 1 if true, else 0. |
+| `b<=` | Less than xor equal, 1 if true, else 0. |
+| `b>=` | Greater than xor equal, 1 if true, else 0. |
+| `b==` | Equal, 1 if true, else 0. |
+| `b!=` | Not equal, 1 if true, else 0. |
 | `b%` | A modulo B. A and B are interpreted as big-endian unsigned integers. Fail if B is zero. |
-| `bsqrt` | The largest integer I such that I^2 <= A. A and I are interpreted as big-endian unsigned integers |
+| `bsqrt` | The largest integer I such that I^2 <= A. A and I are interpreted as big-endian unsigned integers. |
+| `bpow` | Decimal to the power of a decimal. |
+| `bexp` | e to the power of a decimal. |
+| `bln` | Natural logarithm of a decimal. |
+| `blog2` | Logarithm base 2 of a decimal. |
+| `blog10` | Logarithm base 10 of a decimal. |
 
 These opcodes operate on the bits of byte-array values.  The shorter
 input array is interpreted as though left padded with zeros until it is the
