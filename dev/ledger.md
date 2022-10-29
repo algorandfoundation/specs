@@ -1349,11 +1349,11 @@ point must be discarded and the entire transaction rejected.
   than 64 bytes, will likewise cause the program to fail on the
   offending instruction.
 - During the execution of an `ApprovalProgram`, the total size of all
- boxes that are created or modified
-  in the group must not exceed the I/O budget
-  or else the group fails.  The program's
-  execution will fail on the first instruction that would cause the
-  constraint to be violated.
+  boxes that are created or modified in the group must not exceed the
+  I/O budget or else the group fails.  The program's execution will
+  fail on the first instruction that would cause the constraint to be
+  violated. If a box is deleted after creation or modification, its
+  size is not considered in this sum.
 - Global state may only be read for the application ID whose program
   is executing, or for an _available_ application ID. An attempt to
   read global state for another application that is not _available_
@@ -1371,6 +1371,9 @@ point must be discarded and the entire transaction rejected.
   for any other account will cause program execution to fail.
   Further, in programs version 4 or later, asset balances may only be
   read for assets whose parameters are also _available_.
+- Only _available_ boxes may be accessed. An attempt to access any other box
+  will cause the program exection to fail.
+- Boxes may not be accessed by an app's `ClearStateProgram`.
 
 ## Validity and State Changes
 
