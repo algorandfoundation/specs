@@ -467,6 +467,9 @@ byte-array) to values of type byte-array. The key is a pair in which
 the first value corresponds to an existing (or previously existing)
 application ID, and the second is a _box name_, 1 to 64 bytes in
 length.  The value is a byte-array of length not greater than 32,768.
+Unlike global/local state keys, an empty array is not a valid box
+name. However, empty box names may appear in transactions to increase
+the I/O budget (see below).
 
 When an application executes an opcode that creates or destroys a box,
 the minimum balance of the associated application account (whose
