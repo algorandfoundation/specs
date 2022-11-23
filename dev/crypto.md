@@ -489,13 +489,34 @@ Similarly, the quantum-secure verifier aims for a larger security strength of ${
 
 To generate a SNARK proof, we need to be able to "downgrade" a valid SP with ${target_{PQ}}$ strength into one with merely ${target_{C}}$ strength, by truncating some of the reveals to stay within the bounds.
 
-So, for a given ${MaxReveals_{C}}$ and the desired security strengths, we need to calculate a suitable ${target_{PQ}}$ bound so that the following property holds:
 
-Any valid SP with strength >= ${target_{PQ}}$ and <= ${MaxReveals_{PQ}}$ reveals can be truncated to a valid SP with strength >= ${target_{C}}$ and <= ${MaxReveals_{C}}$ reveals.
+First, let us prove that a valid SP with ${NumReveals_{PQ}}$ number of reveals that satisfies Equation (5) in [SNARK-Friendly Weight Threshold Verification][weight-threshold] for a given  ${target_{C}}$ can be "downgrade" to have ${NumReveals_{C}}$ = ceiling(${NumReveals_{PQ}}$ * ${target_{C}}$ / ${target_{PQ}}$).
+We remark that values d, b, T, Y, and D (in [SNARK-Friendly Weight Threshold Verification][weight-threshold) only depend on signedWeight, but not the number of reveals nor the target.
+Hence, we just need to prove that:
 
-According to the SNARK-friendly weight-verification formula used by the SP verifiers, using any ${MaxReveals_{PQ}}$ <= floor(${MaxReveals_{C}} * {target_{PQ}} / {target_C}$) guarantees that the above property holds. Since the quantum-secure verifier is not bottlenecked by reveals, we can take this to be an equality, i.e., ${MaxReveals_{PQ}}$ = floor(...). Therefore we need to set ${MaxReveals_{PQ}}$ to 640. 
+${NumReveals_{C}}$ >= ${target_{C}}$ * T * Y / D
 
+Which implies it is sufficient to prove:
 
+${NumReveals_{PQ}}$ * ${target_{C}}$ / ${target_{PQ}}$ >= ${target_{C}}$ * T * Y / D
+
+Since ${target_{C}}$ > 0 and  ${target_{PQ}}$ > 0, we get just need to prove that:
+
+${NumReveals_{PQ}}$ >= ${target_{PQ}}$ * T * Y / D. 
+
+This last inequality holds since the SP satisfies Equation (5).
+
+For a given ${MaxReveals_{C}}$ and the desired security strengths, we need to calculate a suitable ${target_{PQ}}$ bound so that the following property holds:
+
+Since the "downgraded" state proof has ${NumReveals_{C}}$ = ceiling(${NumReveals_{PQ}}$ * ${target_{C}}$ / ${target_{PQ}}$), and ${NumReveals_{PQ}}$ <= ${MaxReveals_{PQ}}$, and ${NumReveals_{C}}$ <= ${MaxReveals_{C}}$ we get
+
+${MaxReveals_{C}}$ <= ceiling(${MaxReveals_{PQ}}$ * ${target_{C}}$ / ${target_{PQ}}$)
+
+and we can set
+
+${MaxReveals_{C}}$ <= ceiling(${MaxReveals_{PQ}}$ * ${target_{C}}$ / ${target_{PQ}}$)
+
+Since the quantum-secure verifier is not bottlenecked by reveals, we can take ${MaxReveals_{PQ}}$ <= floor(${MaxReveals_{C}} * {target_{PQ}} / {target_C}$) to be an equality, i.e., ${MaxReveals_{PQ}}$ = floor(...). Therefore we need to set ${MaxReveals_{PQ}}$ to 640. 
 
 [ledger-spec]: https://github.com/algorand/spec/ledger.md
 [abft-spec]: https://github.com/algorand/spec/abft.md
