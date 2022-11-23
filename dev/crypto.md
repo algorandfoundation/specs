@@ -462,8 +462,7 @@ if:
 - The number of reveals in the state proof should be less than of equal to 640
 
 - Using the trusted Proven Weight (supplied by the verifier), The state proof should pass
-  the [SNARK-Friendly  Weight Threshold Verification][weight-threshold] check
-
+  the [SNARK-Friendly  Weight Threshold Verification][weight-threshold] check.
 
 - All of the participant and signature information that appears in
   the reveals is validated by the Vector commitment proofs for the participants
@@ -477,6 +476,47 @@ if:
   
   T is defined in the [technical report][compactcert], section IV.
 
+## Setting security strength
+
+- ${target_C}$: "classical" security strength. This is set to ${k+q}$ (${k+q}$ are defined in section IV.A of the [technical report][compactcert]). The goal is to have ${<= 1/2^{k}}$ probability of breaking the state proof by an attacker that makes up to ${2^{q}}$ hash evaluations/queries. We use ${target_C}$ = 192, which corresponds to, for example, ${k=128}$ and ${q=64}$, or ${k=96}$ and ${q=96}$.
+- ${target_{PQ}}$: "post-quantum" security strength. This is set to ${k+2q}$, because at a cost of about ${2^q}$, a quantum attacker can search among up to ${2^{2q}}$ hash evaluations (this is a highly attacker-favorable estimate). We use ${target_{PQ} = 256}$, which corresponds to, for example, ${k=128}$ and ${q=64}$, or ${k=96}$ and ${q=80}$.
+
+## Bounding The Number of Reveals
+
+In order for the SNARK prover for State Proofs to be efficient enough, we must impose an upper bound ${MaxReveals_{C}}$ on the number of "reveals" the SP can contain, while still reaching its target security strength ${target_C = 192}$. Concretely, for now we wish to set  ${MaxReveals_{C} = 480}$.
+
+Similarly, the quantum-secure verifier aims for a larger security strength of ${target_{PQ} = 256}$, and we can also impose an upper bound ${MaxReveals_{PQ}}$ on the number of reveals it can handle. (Recall that a smaller number of reveals means that signedWeight/provenWeight must be larger in order to reach a particular security strength, so we cannot set ${MaxReveals_{C}}$ or ${MaxReveals_{PQ}}$ too low.)
+
+To generate a SNARK proof, we need to be able to "downgrade" a valid SP with ${target_{PQ}}$ strength into one with merely ${target_{C}}$ strength, by truncating some of the reveals to stay within the bounds.
+
+
+First, let us prove that a valid SP with ${NumReveals_{PQ}}$ number of reveals that satisfies Equation (5) in [SNARK-Friendly Weight Threshold Verification][weight-threshold] for a given  ${target_{C}}$ can be "downgrade" to have ${NumReveals_{C}}$ = ceiling(${NumReveals_{PQ}}$ * ${target_{C}}$ / ${target_{PQ}}$).
+We remark that values d, b, T, Y, and D (in [SNARK-Friendly Weight Threshold Verification][weight-threshold) only depend on signedWeight, but not the number of reveals nor the target.
+Hence, we just need to prove that:
+
+${NumReveals_{C}}$ >= ${target_{C}}$ * T * Y / D
+
+Which implies it is sufficient to prove:
+
+${NumReveals_{PQ}}$ * ${target_{C}}$ / ${target_{PQ}}$ >= ${target_{C}}$ * T * Y / D
+
+Since ${target_{C}}$ > 0 and  ${target_{PQ}}$ > 0, we get just need to prove that:
+
+${NumReveals_{PQ}}$ >= ${target_{PQ}}$ * T * Y / D. 
+
+This last inequality holds since the SP satisfies Equation (5).
+
+For a given ${MaxReveals_{C}}$ and the desired security strengths, we need to calculate a suitable ${target_{PQ}}$ bound so that the following property holds:
+
+Since the "downgraded" state proof has ${NumReveals_{C}}$ = ceiling(${NumReveals_{PQ}}$ * ${target_{C}}$ / ${target_{PQ}}$), and ${NumReveals_{PQ}}$ <= ${MaxReveals_{PQ}}$, and ${NumReveals_{C}}$ <= ${MaxReveals_{C}}$ we get
+
+${MaxReveals_{C}}$ <= ceiling(${MaxReveals_{PQ}}$ * ${target_{C}}$ / ${target_{PQ}}$)
+
+and we can set
+
+${MaxReveals_{C}}$ <= ceiling(${MaxReveals_{PQ}}$ * ${target_{C}}$ / ${target_{PQ}}$)
+
+Since the quantum-secure verifier is not bottlenecked by reveals, we can take ${MaxReveals_{PQ}}$ <= floor(${MaxReveals_{C}} * {target_{PQ}} / {target_C}$) to be an equality, i.e., ${MaxReveals_{PQ}}$ = floor(...). Therefore we need to set ${MaxReveals_{PQ}}$ to 640. 
 
 [ledger-spec]: https://github.com/algorand/spec/ledger.md
 [abft-spec]: https://github.com/algorand/spec/abft.md
