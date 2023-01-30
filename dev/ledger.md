@@ -44,7 +44,6 @@ The Algorand Ledger is parameterized by the following values:
    Currently defined as 1,000,000 microAlgos.
  - Several parameters for state proofs; namely: (current values provided in the "State Proof Tracking" section)
    - $\delta_{SP}$, the number of rounds between state proofs.
-   - $\delta_{SPR}$, the number of $\delta_{SP}$ that the network will try to catch-up with.
    - $\delta_{SPB}$, the delay (lookback) in rounds for online participant
      information committed to in the block header for state proofs.
    - $N_{SP}$, the maximum number of online accounts that are included
@@ -592,7 +591,7 @@ might be added.
 
 For type 0, $KQ_{SP}=256$, $f_{SP}$ is $2^{32}*30/100$
 (as the numerator of a fraction out of $2^{32}$), $N_{SP}=1024$,
-$\delta_{SP}=256$, $\delta_{SPR}=10$  and $\delta_{SPB}=16$ .
+$\delta_{SP}=256$ and $\delta_{SPB}=16$ .
 
 The value of the tracking data is a msgpack map with three
 elements:
@@ -647,7 +646,7 @@ specific fashion:
 
 # State Proof Parameters
 
-- To limit the resources allocated for creating state proofs, state proof parameters are set to $N_{SP}=1024$, $\delta_{SP}=256$, $\delta_{SPR}=10$ and $\delta_{SPB}=16$.
+- To limit the resources allocated for creating state proofs, state proof parameters are set to $N_{SP}=1024$, $\delta_{SP}=256$, and $\delta_{SPB}=16$.
 - Setting $KQ_{SP}={target_{PQ}}$ to achieve post-quantum security for state proofs. see [state proof crypto spec][sp-crypto-spec] for details.
 - On Algorand we assume that at least 70% of the participating stake is honest. Under this assumption there can't be a malicious state proof that would be accepted by the verifier and has a signed weight of more than 30% of the total online stake. Hence, we set the ProvenWeight to be $f_{SP}$=$2^{32}*30/100$
 (as the numerator of a fraction out of $2^{32}$)
@@ -893,14 +892,8 @@ identifier_.  This is written as $\Hash(\Tx)$.
 ## State proof transaction
 
 A special transaction is used to disseminate and store state 
-proofs.  The type of a state proof transaction is `stpf`.
-This type of transaction must always be issued from a special sender
-address, which is the hash of the domain-separation prefix `SpecialAddr`
-with the string `StateProofSender`.  The transaction must not have any
-signature, must not have any fee, must have an empty note, must not have
-the rekeying field set, must not have any lease, and must not be part
-of a transaction group. 
-State proof transaction verification does not apply any special constrains on the first and last valid parameter.
+proofs.
+
 The state proof transaction includes four additional fields:
 
  - Under msgpack key `sptype`, the type of the state proof; currently always zero.
@@ -909,12 +902,15 @@ The state proof transaction includes four additional fields:
  - Under msgpack key `spmsg`, a structure that compose the state proof message, whose hash is being attested
    by the state proof. This structure defined [above](#state-proof-message)
 
-In order for a state proof transaction to be valid, the round of
-the state proof (`sprnd`) must be exactly equal to the next
-expected state proof round in the block header, as described
-[above](#state-proof-tracking).  When a state proof
-transaction is applied to the state, the next expected state proof round
-for that type of state proof is incremented by $\delta_{SP}$.
+
+In order for a state proof transaction to be valid the following conditions should be meet:
+ - The type of a state proof transaction is `stpf`.
+ - Sender address should be equal to a special sender address, which is the hash of the domain-separation prefix `SpecialAddr` with the string `StateProofSender`.
+ - The transaction must not have any signature, must not have any fee, must have an empty note, must not have the rekeying field set, must not have any lease, and must not be part of a transaction group. 
+ - The round of the state proof (`sprnd`) must be exactly equal to the next expected state proof round in the block header, as described [above](#state-proof-tracking).
+ - The state proof verification code should return `True` (see [state proof validity](https://github.com/algorandfoundation/specs/blob/master/dev/crypto.md#state-proof-validity)), given the state proof message, the state proof fields extracted from the transaction. In addtion, the verifer should also be given a trusted commitment to the participant array and Proven Weight value. The trusted data should be taken from the on-chain data at the relevent round. 
+ 
+
 To encourage the formation of shorter state proof, the rule for
 validity of state proof transactions is dependent on the first valid `fv` round
 number in the transaction.
@@ -931,6 +927,10 @@ In particular, the signed weight of a state proof must be:
   the proof's `sprnd` plus $\delta_{SP}$.
 
 Where `ProvenWeight` = (`TotalWeight` * $f_{SP}$)  / 2^32
+
+When a state proof transaction is applied to the state, the next expected state proof round for that type of state proof is incremented by $\delta_{SP}$.
+
+A node should be able to verify state proof transaction at any point in time (even if `fv` is greater than next expected state proof round in the block header).
 
 
 Authorization and Signatures
