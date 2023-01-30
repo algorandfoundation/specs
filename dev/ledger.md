@@ -908,7 +908,7 @@ In order for a state proof transaction to be valid the following conditions shou
  - Sender address should be equal to a special sender address, which is the hash of the domain-separation prefix `SpecialAddr` with the string `StateProofSender`.
  - The transaction must not have any signature, must not have any fee, must have an empty note, must not have the rekeying field set, must not have any lease, and must not be part of a transaction group. 
  - The round of the state proof (`sprnd`) must be exactly equal to the next expected state proof round in the block header, as described [above](#state-proof-tracking).
- - The state proof verification code should return `True` (see [state proof validity](https://github.com/algorandfoundation/specs/blob/master/dev/crypto.md#state-proof-validity)), given the state proof message, the state proof fields extracted from the transaction. In addtion, the verifer should also be given a trusted commitment to the participant array and Proven Weight value. The trusted data should be taken from the on-chain data at the relevent round. 
+ - The state proof verification code should return `True` (see [state proof validity](https://github.com/algorandfoundation/specs/blob/master/dev/crypto.md#state-proof-validity)), given the state proof message, the state proof fields extracted from the transaction. In addition, the verifier should also be given a trusted commitment to the participant array and Proven Weight value. The trusted data should be taken from the on-chain data at the relevant round. 
  
 
 To encourage the formation of shorter state proof, the rule for
