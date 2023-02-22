@@ -39,7 +39,7 @@ _immediate_ arguments that are encoded directly into the instruction,
 rather than coming from the stack.
 
 The maximum stack depth is 1000. If the stack depth is exceeded or if
-a byte-array element exceed 4096 bytes, the program fails. If an
+a byte-array element exceeds 4096 bytes, the program fails. If an
 opcode is documented to access a position in the stack that does not
 exist, the operation fails. Most often, this is an attempt to access
 an element below the stack -- the simplest example is an operation
@@ -201,6 +201,40 @@ _available_.
 
  * Since v7, the account associated with any contract present in the
    `txn.ForeignApplications` field is _available_.
+   
+ * Since v9, there is group-level resource sharing. Any resource that
+   is available in _some_ top-level transaction in a transaction group
+   is available in _all_ v9 or later application calls in the group,
+   whether those application calls are top-level or inner.
+   
+ * When considering whether an asset holding or application local
+   state is available by group-level resource sharing, the holding or
+   local state must be available in a top-level transaction without
+   considering group sharing. For example, if account A is made
+   available in one transaction, and asset X is made available in
+   another, group resource sharing does _not_ make A's X holding
+   available.
+     
+ * Top-level transactions that are not application calls also make
+   resources available to group-level resource sharing. The following
+   resources are made available other transaction types.
+
+     1. `pay` - `txn.Sender`, `txn.Receiver`, and `txn.CloseRemainderTo`
+
+     1. `keyreg` - `txn.Sender`
+
+     1. `acfg` - `txn.Sender`, `txn.ConfigAsset`, and the
+        `txn.ConfigAsset` holding of `txn.Sender`.
+
+     1. `axfer` - `txn.Sender`, `txn.AssetSender`, `txnAssetCloseTo`,
+        `txn.XferAsset` and the `txn.XferAsset` holding of each of
+        those accounts.
+
+     1. `afrz` - `txn.Sender`, `txn.FreezeAccount`, `txn.FreezeAsset`,
+        and the `txn.FreezeAsset` holding of `txn.FreezeAccount`. The
+        `txn.FreezeAsset` holding of `txn.Sender` is _not_ made
+        available.
+
 
  * A Box is _available_ to an Approval Program if _any_ transaction in
    the same group contains a box reference (`txn.Boxes`) that denotes
@@ -220,7 +254,7 @@ Constants can be pushed onto the stack in two different ways:
 
 2. Constants can be loaded into storage separate from the stack and
    scratch space, using two opcodes `intcblock` and
-   `bytecblock`. Then, constants from this storage can be pushed
+   `bytecblock`. Then, constants from this storage can be
    pushed onto the stack by referring to the type and index using
    `intc`, `intc_[0123]`, `bytec`, and `bytec_[0123]`. This method is
    more efficient for constants that are used multiple times.
