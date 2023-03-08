@@ -35,6 +35,6 @@ jobs:
             html/*
             pdf/*
             specs.tar.gz
-          tag_name: ${{ github.sha }}
+          tag_name: ${{ github.sha | truncate(8, '') }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
