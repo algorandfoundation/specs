@@ -52,11 +52,14 @@ $endif$
 \fi
 % use upquote if available, for straight quotes in verbatim environments
 \IfFileExists{upquote.sty}{\usepackage{upquote}}{}
-% use microtype if available
-\IfFileExists{microtype.sty}{%
-\usepackage[$for(microtypeoptions)$$microtypeoptions$$sep$,$endfor$]{microtype}
-\UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
-}{}
+% % use microtype if available
+% % we do not use microtype as it creates the following error
+% % Argument of \T1\^ has an extra }.
+% % with \subsection{\^{}}
+% \IfFileExists{microtype.sty}{%
+% \usepackage[$for(microtypeoptions)$$microtypeoptions$$sep$,$endfor$]{microtype}
+% \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+% }{}
 \PassOptionsToPackage{hyphens}{url} % url is loaded by hyperref
 $if(verbatim-in-note)$
 \usepackage{fancyvrb}

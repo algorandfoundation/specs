@@ -2,7 +2,7 @@ dev/html
 dev/pdf
 
 .DS_Store
-
+.idea
 # Latex files
 
 ## Core latex/pdflatex auxiliary files:
