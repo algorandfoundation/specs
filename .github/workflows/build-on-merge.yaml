@@ -1,0 +1,46 @@
+name: Build and Deploy Specs
+on:
+  push:
+    branches:
+      - master
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Update apt cache
+        run: sudo apt-get update -qq
+
+      - name: Install Dependencies
+        run: |
+          sudo apt-get install -qq pandoc texlive-latex-base texlive-latex-recommended lmodern texlive-fonts-recommended texlive-latex-extra
+
+      - name: Build specs
+        run: |
+          cd dev
+          mkdir -p ./{pdf,html}
+          make
+          tar -czvf specs.tar.gz html pdf
+
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.sha }}
+          release_name: ${{ github.sha }}
+          draft: false
+          prerelease: false
+
+      - name: Upload Release Asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./dev/specs.tar.gz
+          asset_name: specs.tar.gz
+          asset_content_type: application/gzip
