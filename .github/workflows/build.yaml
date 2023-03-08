@@ -1,0 +1,40 @@
+name: Build and Test
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - "*"
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
+
+      - name: Install Dependencies
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -qq pandoc texlive-latex-base texlive-latex-recommended lmodern texlive-fonts-recommended texlive-latex-extra
+
+      - name: Build
+        run: |
+          cd dev
+          mkdir -p ./{pdf,html}
+          make
+          tar -czvf specs.tar.gz html pdf
+
+      - name: Publish Release
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            html/*
+            pdf/*
+            specs.tar.gz
+          tag_name: ${{ github.sha }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
