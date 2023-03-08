@@ -27,6 +27,11 @@ jobs:
           make
           tar -czvf specs.tar.gz html pdf
 
+      - name: Get short SHA
+        if: github.ref == 'refs/heads/master' && github.event_name == 'push'
+        id: vars
+        run: echo "sha_short=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+
       - name: Publish Release
         if: github.ref == 'refs/heads/master' && github.event_name == 'push'
         uses: softprops/action-gh-release@v1
@@ -35,6 +40,6 @@ jobs:
             html/*
             pdf/*
             specs.tar.gz
-          tag_name: ${{ github.sha | truncate(8, '') }}
+          tag_name: ${{ steps.vars.outputs.sha_short }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
