@@ -10,6 +10,10 @@ on:
 
 jobs:
   build-and-test:
+    defaults:
+      run:
+        working-directory: 'dev'
+
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
@@ -22,7 +26,6 @@ jobs:
 
       - name: Build
         run: |
-          cd dev
           mkdir -p ./{pdf,html}
           make
           tar -czvf specs.tar.gz html pdf
