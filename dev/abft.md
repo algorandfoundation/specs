@@ -825,7 +825,7 @@ identified with the address $I$ and possesses the secret key $\sk$,
 and the agreement is occurring on the ledger $L$.  Then the player
 constructs a vote $\Vote(I, r, p, s, v)$ by doing the following:
 
- - Let $(\pk, B) = \Record(L, r - \delta_b, I)$,
+ - Let $(B, \pk) = \Record(L, r - \delta_b, I)$,
    $\Bbar = \Stake(L, r - \delta_b)$, $Q = \Seed(L, r - \delta_s)$,
    $\tau = \CommitteeThreshold(s)$, $\taubar = \CommitteeSize(s).$
 
