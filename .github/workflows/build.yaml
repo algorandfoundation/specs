@@ -39,10 +39,12 @@ jobs:
         if: github.ref == 'refs/heads/master' && github.event_name == 'push'
         uses: softprops/action-gh-release@v1
         with:
+          # According to https://github.com/softprops/action-gh-release/issues/158 working-directory doesn't work, need to
+          # specify path
           files: |
-            html/*
-            pdf/*
-            specs.tar.gz
+            dev/html/*
+            dev/pdf/*
+            dev/specs.tar.gz
           tag_name: ${{ steps.vars.outputs.sha_short }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
