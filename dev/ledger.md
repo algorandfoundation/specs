@@ -609,15 +609,15 @@ elements:
   round $\delta_{SP}$ from the current block.  Only blocks whose round
   number is a multiple of $\delta_{SP}$ have a non-zero `v` field.
 
-- Under key `t`, the total online stake at round $\delta_{SP}$ (with pending rewards) calculated at $\delta_{SPB}$ rounds before this state proof interval starts.
+- Under key `t`, the total online stake at round $\delta_{SP}$ (with pending rewards).
 
 The participants committed to by the Vector commitment are chosen in a
 specific fashion:
 
 - First off, because it takes some time to collect all of the online
   participants (more than the target assembly time for a block), the
-  set of participants appearing in a commitment in block at round $r$
-  are actually based on the account state from round $r-\delta_{SPB}$.
+  set of participants and total online non-expired stake appearing in a commitment
+  in block at round $r$ are actually based on the account state from round $r-\delta_{SPB}$.
 
 - The participants are sorted by the number of microAlgos they currently
   hold (including any pending rewards).  This enables more compact
