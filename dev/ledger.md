@@ -609,7 +609,7 @@ elements:
   round $\delta_{SP}$ from the current block.  Only blocks whose round
   number is a multiple of $\delta_{SP}$ have a non-zero `v` field.
 
-- Under key `t`, the total online stake at round $\delta_{SP}$ (with pending rewards).
+- Under key `t`, the total online stake at round $\delta_{SP}$ (with pending rewards) calculated at $\delta_{SPB}$ rounds before this state proof interval starts.
 
 The participants committed to by the Vector commitment are chosen in a
 specific fashion:
