@@ -70,6 +70,8 @@ Identity, Authorization, and Authentication
 
 \newcommand \pk {\mathrm{pk}}
 \newcommand \sk {\mathrm{sk}}
+\newcommand \fv {\text{first}}
+\newcommand \lv {\text{last}}
 \newcommand \Sign {\mathrm{Sign}}
 \newcommand \Verify {\mathrm{Verify}}
 \newcommand \Rand {\mathrm{Rand}}
@@ -83,7 +85,8 @@ _address_.
 Each player owns exactly one _participation keypair_. A participation
 keypair consists of a _public key_ $\pk$ and a _secret key_ $\sk$.
 A keypair is an opaque object which is defined in the [specification
-of participation keys in Algorand][partkey-spec].
+of participation keys in Algorand][partkey-spec]. Each participation
+keypair is valid for a range of rounds $(r_\fv, r_\lv)$.
 
 Let $m, m'$ be arbitrary sequences of bits, $B_k, \Bbar$ be 64-bit integers,
 $\tau, \taubar$ be 32-bit integers, and $Q$ be a 256-bit string.  Let
@@ -161,13 +164,17 @@ The following functions are defined on $L$:
 
  - _Seed Lookup_: If $e_r = (o_r, Q_r)$, then $\Seed(L, r)$ = $Q_r$.
 
- - _Record Lookup_: $\Record(L, r, I_k) = (\pk_{k,r}, B_{k,r})$ for
+ - _Record Lookup_: $\Record(L, r, I_k) = (\pk_{k,r}, B_{k,r}, r_\fv, r_\lv)$ for
    some address $I_k$, some public key $\pk_{k,r}$, and some 64-bit
-   integer $B_{k,r}$.
+   integer $B_{k,r}$. $r_\fv$ and $r_\lv$ define the first valid and last
+   valid rounds for this participating account.
 
  - _Digest Lookup_: $\DigestLookup(L, r) = \Digest(e_r)$.
 
- - _Total Stake Lookup_: $\Stake(L, r) = \sum_k \Record(L, r, I_k)$.
+ - _Total Stake Lookup_: We use $\mathcal{K}_{r_b,r_v}$ to represent all players with participation keys
+   at $r_b$ that are eligible to vote at $r_v$. 
+   Let $\mathcal{K}_{r_b,r_v}$ be the set of all $k$ for which $(\pk_{k,r_b}, B_{k,r_b}, r_\fv, r_\lv) = \Record(L, r_b, I_k)$ and $r_\fv \leq r_v \leq r_\lv$ holds. 
+   Then $\Stake(L, r_b, r_v) = \sum_{k \in \mathcal{K}_{r_b,r_v}} B_{k,r_b}$.
 
 A ledger may support an opaque _entry generation_ procedure
 $$
@@ -284,11 +291,12 @@ unambiguous) if the following conditions are true:
  - If $s \in \{\Propose, \Soft, \Cert, \Late, \Redo\}$, $v \neq \bot$.
    Conversely, if $s = \Down$, $v = \bot$.
 
- - Let $(\pk, B) = \Record(L, r - \delta_b, I)$,
-   $\Bbar = \Stake(L, r - \delta_b)$, $Q = \Seed(L, r - \delta_s)$,
+ - Let $(\pk, B, r_\fv, r_\lv) = \Record(L, r - \delta_b, I)$,
+   $\Bbar = \Stake(L, r - \delta_b, r)$, $Q = \Seed(L, r - \delta_s)$,
    $\tau = \CommitteeThreshold(s)$, and
-   $\taubar = \CommitteeSize(s)$.  
-   Then $\Verify(y, x, x', \pk, B, \Bbar, Q, \tau, \taubar) \neq 0$.
+   $\taubar = \CommitteeSize(s)$.
+   Then $\Verify(y, x, x', \pk, B, \Bbar, Q, \tau, \taubar) \neq 0$ and
+   $r_\fv \leq r \leq r_\lv$.
 
 Observe that valid votes contain outputs of the $\Sign$ procedure;
 i.e., $y := \Sign(x, x', \sk, B, \Bbar, Q, \tau, \taubar)$.
@@ -309,7 +317,8 @@ Informally, these conditions check the following:
  - The last condition checks that the vote was properly signed by a voter who
    was selected to serve on the committee for this round, period, and step,
    where the committee selection process uses the voter's stake and keys as of
-   $\delta_b$ rounds before the vote.
+   $\delta_b$ rounds before the vote. It also checks if the vote's round is
+   within the range associated with the voter's participation key.
 
 An _equivocation vote pair_ or _equivocation vote_
 $\Equivocation(I, r, p, s)$ is a pair of votes which differ in
@@ -377,8 +386,11 @@ unambiguous) if the following conditions are true:
 
  - The seed $s$ and seed proof are valid as specified in the following section.
 
- - Let $(B, \pk) = \Record(L, r - \delta_b, I)$.
+ - Let $(B, \pk, r_\fv, r_\lv) = \Record(L, r - \delta_b, I)$.
    If $p = 0$, then $\Verify(y, Q_0, Q_0, \pk, 0, 0, 0, 0, 0) \neq 0$.
+
+ - Let $(B, \pk, r_\fv, r_\lv) = \Record(L, r - \delta_b, I)$.
+   Then $r_\fv \leq r \leq r_\lv$.
 
 If $e$ matches $v$, we write $e = \Proposal(v)$.
 
@@ -394,7 +406,7 @@ proposer. Additionally, every $\delta_s\delta_r$ rounds,  the digest of a previo
 proof is the corresponding VRF proof, or 0 if the VRF was not used.
 
 More formally, suppose $I$ is a correct proposer in round $r$ and period $p$.
-Let $(B, \pk) = \Record(L, r - \delta_b, I)$ and $\sk$ be the secret key
+Let $(B, \pk, r_\fv, r_\lv) = \Record(L, r - \delta_b, I)$ and $\sk$ be the secret key
 corresponding to $\pk$.  Let $\alpha$ be a 256-bit integer.  Then $I$ computes
 the seed proof $y$ for a new entry as follows:
 
@@ -417,7 +429,7 @@ $$
 
 The seed is valid if the following verification procedure succeeds:
 
-1. Let $(B, \pk) = \Record(L, r - \delta_b, I)$; let $q_0 = \Seed(L, r-\delta_s)$.
+1. Let $(B, \pk, r_\fv, r_\lv) = \Record(L, r - \delta_b, I)$; let $q_0 = \Seed(L, r-\delta_s)$.
 
 2. If $p = 0$, check $\mathrm{VRF.Verify}(y, q_0, \pk)$, immediately returning
    failure if verification fails. Let
@@ -825,7 +837,7 @@ identified with the address $I$ and possesses the secret key $\sk$,
 and the agreement is occurring on the ledger $L$.  Then the player
 constructs a vote $\Vote(I, r, p, s, v)$ by doing the following:
 
- - Let $(B, \pk) = \Record(L, r - \delta_b, I)$,
+ - Let $(B, \pk, r_\fv, r_\lv) = \Record(L, r - \delta_b, I)$,
    $\Bbar = \Stake(L, r - \delta_b)$, $Q = \Seed(L, r - \delta_s)$,
    $\tau = \CommitteeThreshold(s)$, $\taubar = \CommitteeSize(s).$
 
