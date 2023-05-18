@@ -88,7 +88,8 @@ A keypair is an opaque object which is defined in the [specification
 of participation keys in Algorand][partkey-spec]. Each participation
 keypair is valid for a range of rounds $(r_\fv, r_\lv)$.
 
-Let $m, m'$ be arbitrary sequences of bits, $B_k, \Bbar$ be 64-bit integers,
+Let $m, m'$ be arbitrary sequences of bits, $B_k, \Bbar$ be 64-bit integers
+representing balances in microalgos with rewards applied,
 $\tau, \taubar$ be 32-bit integers, and $Q$ be a 256-bit string.  Let
 $(\pk_k, \sk_k)$ be some valid keypair.
 
@@ -386,10 +387,10 @@ unambiguous) if the following conditions are true:
 
  - The seed $s$ and seed proof are valid as specified in the following section.
 
- - Let $(B, \pk, r_\fv, r_\lv) = \Record(L, r - \delta_b, I)$.
+ - Let $(\pk, B, r_\fv, r_\lv) = \Record(L, r - \delta_b, I)$.
    If $p = 0$, then $\Verify(y, Q_0, Q_0, \pk, 0, 0, 0, 0, 0) \neq 0$.
 
- - Let $(B, \pk, r_\fv, r_\lv) = \Record(L, r - \delta_b, I)$.
+ - Let $(\pk, B, r_\fv, r_\lv) = \Record(L, r - \delta_b, I)$.
    Then $r_\fv \leq r \leq r_\lv$.
 
 If $e$ matches $v$, we write $e = \Proposal(v)$.
@@ -406,7 +407,7 @@ proposer. Additionally, every $\delta_s\delta_r$ rounds,  the digest of a previo
 proof is the corresponding VRF proof, or 0 if the VRF was not used.
 
 More formally, suppose $I$ is a correct proposer in round $r$ and period $p$.
-Let $(B, \pk, r_\fv, r_\lv) = \Record(L, r - \delta_b, I)$ and $\sk$ be the secret key
+Let $(\pk, B, r_\fv, r_\lv) = \Record(L, r - \delta_b, I)$ and $\sk$ be the secret key
 corresponding to $\pk$.  Let $\alpha$ be a 256-bit integer.  Then $I$ computes
 the seed proof $y$ for a new entry as follows:
 
@@ -429,7 +430,7 @@ $$
 
 The seed is valid if the following verification procedure succeeds:
 
-1. Let $(B, \pk, r_\fv, r_\lv) = \Record(L, r - \delta_b, I)$; let $q_0 = \Seed(L, r-\delta_s)$.
+1. Let $(\pk, B, r_\fv, r_\lv) = \Record(L, r - \delta_b, I)$; let $q_0 = \Seed(L, r-\delta_s)$.
 
 2. If $p = 0$, check $\mathrm{VRF.Verify}(y, q_0, \pk)$, immediately returning
    failure if verification fails. Let
@@ -837,7 +838,7 @@ identified with the address $I$ and possesses the secret key $\sk$,
 and the agreement is occurring on the ledger $L$.  Then the player
 constructs a vote $\Vote(I, r, p, s, v)$ by doing the following:
 
- - Let $(B, \pk, r_\fv, r_\lv) = \Record(L, r - \delta_b, I)$,
+ - Let $(\pk, B, r_\fv, r_\lv) = \Record(L, r - \delta_b, I)$,
    $\Bbar = \Stake(L, r - \delta_b)$, $Q = \Seed(L, r - \delta_s)$,
    $\tau = \CommitteeThreshold(s)$, $\taubar = \CommitteeSize(s).$
 
