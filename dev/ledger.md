@@ -616,8 +616,8 @@ specific fashion:
 
 - First off, because it takes some time to collect all of the online
   participants (more than the target assembly time for a block), the
-  set of participants appearing in a commitment in block at round $r$
-  are actually based on the account state from round $r-\delta_{SPB}$.
+  set of participants and total online non-expired stake appearing in a commitment
+  in block at round $r$ are actually based on the account state from round $r-\delta_{SPB}$.
 
 - The participants are sorted by the number of microAlgos they currently
   hold (including any pending rewards).  This enables more compact
