@@ -1219,79 +1219,109 @@ The notation A,B indicates that A and B are interpreted as a uint128 value, with
 - **Cost**: 130
 - Availability: v7
 
-## b+
+## b+ widthB widthD widthY
 
 - Opcode: 0xa0
-- Stack: ..., A: []byte, B: []byte &rarr; ..., []byte
-- A plus B. A and B are interpreted as big-endian unsigned integers
+- Stack: ..., A: uint64, B: []byte, C: uint64, D: []byte, E: uint64, F: uint64, G: uint64 &rarr; ..., X: uint64, Y: []byte
+- Addition of decimals. B and D are interpreted as big-endian unsigned integers.
 - **Cost**: 10
-- Availability: v4
+- Availability: v9
 
-## b-
+wB = (-1)^E * widthB ; wD = (-1)^F * widthD ; wY = (-1)^G * widthY
+[(-1)^A * B * 10^wB] + [(-1)^C * D * 10^wD] = (-1)^X * Y * 10^wY. widthB, widthD and widthY are uint64. widthY decimal output precision is guaranteed.
+
+## b- widthB widthD widthY
 
 - Opcode: 0xa1
-- Stack: ..., A: []byte, B: []byte &rarr; ..., []byte
-- A minus B. A and B are interpreted as big-endian unsigned integers. Fail on underflow.
+- Stack: ..., A: uint64, B: []byte, C: uint64, D: []byte, E: uint64, F: uint64, G: uint64 &rarr; ..., X: uint64, Y: []byte
+- Subtraction of decimals. B and D are interpreted as big-endian unsigned integers. Fail on underflow.
 - **Cost**: 10
-- Availability: v4
+- Availability: v9
 
-## b/
+wB = (-1)^E * widthB ; wD = (-1)^F * widthD ; wY = (-1)^G * widthY
+[(-1)^A * B * 10^wB] - [(-1)^C * D * 10^wD] = (-1)^X * Y * 10^wY. widthB, widthD and widthY are uint64. widthY output precision is guaranteed.
+
+## b/ widthB widthD widthY
 
 - Opcode: 0xa2
-- Stack: ..., A: []byte, B: []byte &rarr; ..., []byte
-- A divided by B (truncated division). A and B are interpreted as big-endian unsigned integers. Fail if B is zero.
+- Stack: ..., A: uint64, B: []byte, C: uint64, D: []byte, E: uint64, F: uint64, G: uint64 &rarr; ..., X: uint64, Y: []byte
+- Division of decimals (truncated division). B and D are interpreted as big-endian unsigned integers. Fail if D is zero.
 - **Cost**: 20
-- Availability: v4
+- Availability: v9
 
-## b*
+wB = (-1)^E * widthB ; wD = (-1)^F * widthD ; wY = (-1)^G * widthY
+[(-1)^A * B * 10^wB] / [(-1)^C * D * 10^wD] = (-1)^X * Y * 10^wY. widthB, widthD and widthY are uint64. widthY output precision is guaranteed.
+
+## b* widthB widthD widthY
 
 - Opcode: 0xa3
-- Stack: ..., A: []byte, B: []byte &rarr; ..., []byte
-- A times B. A and B are interpreted as big-endian unsigned integers.
+- Stack: ..., A: uint64, B: []byte, C: uint64, D: []byte, E: uint64, F: uint64, G: uint64 &rarr; ..., X: uint64, Y: []byte
+- Multilpication of decimals. B and D are interpreted as big-endian unsigned integers.
 - **Cost**: 20
-- Availability: v4
+- Availability: v9
 
-## b<
+wB = (-1)^E * widthB ; wD = (-1)^F * widthD ; wY = (-1)^G * widthY
+[(-1)^A * B * 10^wB] * [(-1)^C * D * 10^wD] = (-1)^X * Y * 10^wY. widthB, widthD and widthY are uint64. widthY output precision is guaranteed.
+
+## b< widthB widthD
 
 - Opcode: 0xa4
-- Stack: ..., A: []byte, B: []byte &rarr; ..., uint64
-- 1 if A is less than B, else 0. A and B are interpreted as big-endian unsigned integers
-- Availability: v4
+- Stack: ..., A: uint, B: []byte, C: uint, D: []byte, E: uint64, F: uint64 &rarr; ..., uint64
+- Less than, 1 if true, else 0. B and D are interpreted as big-endian unsigned integers.
+- Availability: v9
 
-## b>
+wB = (-1)^E * widthB ; wD = (-1)^F * widthD
+(-1)^A * B * 10^wB < (-1)^C * D * 10^wD. widthB and widthD are uint.
+
+## b> widthB widthD
 
 - Opcode: 0xa5
-- Stack: ..., A: []byte, B: []byte &rarr; ..., uint64
-- 1 if A is greater than B, else 0. A and B are interpreted as big-endian unsigned integers
-- Availability: v4
+- Stack: ..., A: uint, B: []byte, C: uint, D: []byte, E: uint64, F: uint64 &rarr; ..., uint64
+- Greater than, 1 if true, else 0. B and D are interpreted as big-endian unsigned integers.
+- Availability: v9
 
-## b<=
+wB = (-1)^E * widthB ; wD = (-1)^F * widthD
+(-1)^A * B * 10^wB > (-1)^C * D * 10^wD. widthB and widthD are uint.
+
+## b<= widthB widthD
 
 - Opcode: 0xa6
-- Stack: ..., A: []byte, B: []byte &rarr; ..., uint64
-- 1 if A is less than or equal to B, else 0. A and B are interpreted as big-endian unsigned integers
-- Availability: v4
+- Stack: ..., A: uint, B: []byte, C: uint, D: []byte, E: uint64, F: uint64 &rarr; ..., uint64
+- Less than xor equal, 1 if true, else 0. B and D are interpreted as big-endian unsigned integers.
+- Availability: v9
 
-## b>=
+wB = (-1)^E * widthB ; wD = (-1)^F * widthD
+(-1)^A * B * 10^wB <= (-1)^C * D * 10^wD. widthB and widthD are uint.
+
+## b>= widthB widthD
 
 - Opcode: 0xa7
-- Stack: ..., A: []byte, B: []byte &rarr; ..., uint64
-- 1 if A is greater than or equal to B, else 0. A and B are interpreted as big-endian unsigned integers
-- Availability: v4
+- Stack: ..., A: uint, B: []byte, C: uint, D: []byte, E: uint64, F: uint64 &rarr; ..., uint64
+- Greater than xor equal, 1 if true, else 0. B and D are interpreted as big-endian unsigned integers.
+- Availability: v9
 
-## b==
+wB = (-1)^E * widthB ; wD = (-1)^F * widthD
+(-1)^A * B * 10^wB >= (-1)^C * D * 10^wD. widthB and widthD are uint.
+
+## b== widthB widthD
 
 - Opcode: 0xa8
-- Stack: ..., A: []byte, B: []byte &rarr; ..., uint64
-- 1 if A is equal to B, else 0. A and B are interpreted as big-endian unsigned integers
-- Availability: v4
+- Stack: ..., A: uint, B: []byte, C: uint, D: []byte, E: uint64, F: uint64 &rarr; ..., uint64
+- Equal, 1 if true, else 0. B and D are interpreted as big-endian unsigned integers.
+- Availability: v9
 
-## b!=
+wB = (-1)^E * widthB ; wD = (-1)^F * widthD
+(-1)^A * B * 10^wB == (-1)^C * D * 10^wD. widthB and widthD are uint.
+
+## b!= widthB widthD
 
 - Opcode: 0xa9
-- Stack: ..., A: []byte, B: []byte &rarr; ..., uint64
-- 0 if A is equal to B, else 1. A and B are interpreted as big-endian unsigned integers
-- Availability: v4
+- Stack: ..., A: uint, B: []byte, C: uint, D: []byte, E: uint64, F: uint64 &rarr; ..., uint64
+- Not equal, 1 if true, else 0. B and D are interpreted as big-endian unsigned integers.
+- Availability: v9
+
+wB = (-1)^E * widthB ; wD = (-1)^F * widthD
+(-1)^A * B * 10^wB != (-1)^C * D * 10^wD. widthB and widthD are uint.
 
 ## b%
 
@@ -1339,6 +1369,66 @@ The notation A,B indicates that A and B are interpreted as a uint128 value, with
 - Stack: ..., A: uint64 &rarr; ..., []byte
 - zero filled byte-array of length A
 - Availability: v4
+
+## bpow widthB widthD widthY
+
+- Opcode: 0x??
+- Stack: ..., A: uint, B: []byte, C: uint, D: []byte, E: uint64, F: uint64, G: uint64 &rarr; ..., X: uint, Y: []byte
+- Decimal to the power of a decimal. B and D are interpreted as big-endian unsigned integers.
+- **Cost**: base cost plus cost dependent on widthY
+- Availability: v9
+
+wB = (-1)^E * widthB ; wD = (-1)^F * widthD ; wY = (-1)^G * widthY
+[(-1)^A * B * 10^wB] ^ [(-1)^C * D * 10^wD] = (-1)^X * Y * 10^wY. widthB, widthD and widthY are uint64. widthY output precision is guaranteed.
+Calculation is based on the following identity: q^w = exp(ln(q)/w).
+
+## bexp widthB widthY
+
+- Opcode: 0x??
+- Stack: ..., A: uint, B: []byte, E: uint64, F: uint64 &rarr; ..., Y: []byte
+- e to the power of a decimal. B is interpreted as big-endian unsigned integers.
+- **Cost**: base cost plus cost dependent on widthY
+- Availability: v9
+
+wB = (-1)^E * widthB ; wY = (-1)^F * widthY
+exp[(-1)^A * B * 10^wB] = Y * 10^wY. widthB and widthY are uint64. widthY output precision is guaranteed.
+Calculation is based on the Taylor expansion of e^q.
+
+## bln widthA widthY
+
+- Opcode: 0x??
+- Stack: ..., A: []byte, E: uint64, F: uint64 &rarr; ..., X: uint, Y: []byte
+- Natural logarithm of a decimal. A is interpreted as big-endian unsigned integers.
+- **Cost**: base cost plus cost dependent on widthY
+- Availability: v9
+
+wA = (-1)^E * widthA ; wY = (-1)^F * widthY
+ln[A * 10^wA] = (-1)^X * Y * 10^wY. widthA and widthY are uint64. widthY output precision is guaranteed.
+Calculation is based on the following identity: ln(q) = log2(q) / log2(e)
+
+## blog2 widthA widthY
+
+- Opcode: 0x??
+- Stack: ..., A: []byte, E: uint64, F: uint64 &rarr; ..., X: uint, Y: []byte
+- Logarithm base 2 of a decimal. A is interpreted as big-endian unsigned integers.
+- **Cost**: base cost plus cost dependent on widthY
+- Availability: v9
+
+wA = (-1)^E * widthA ; wY = (-1)^F * widthY
+log2[A * 10^wA] = (-1)^X * Y * 10^wY. widthA and widthY are uint64. widthY output precision is guaranteed.
+Calculation is based on the on a binary appromixation that allows arbitrary precision.
+
+## blog10 widthA widthY
+
+- Opcode: 0x??
+- Stack: ..., A: []byte, E: uint64, F: uint64 &rarr; ..., X: uint, Y: []byte
+- Logarithm base 10 of a decimal. A is interpreted as big-endian unsigned integers.
+- **Cost**: base cost plus cost dependent on widthY
+- Availability: v9
+
+wA = (-1)^E * widthA ; wY = (-1)^F * widthY
+log10[A * 10^wA] = (-1)^X * Y * 10^wY. widthA and widthY are uint64. widthY output precision is guaranteed.
+Calculation is based on the following identity: log10(q) = log2(q) / log2(10)
 
 ## log
 
