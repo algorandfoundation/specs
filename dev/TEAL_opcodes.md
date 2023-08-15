@@ -1671,7 +1671,7 @@ Groups
 | 0 | BN254g1 | G1 of the BN254 curve. Points encoded as 32 byte X following by 32 byte Y |
 | 1 | BN254g2 | G2 of the BN254 curve. Points encoded as 64 byte X following by 64 byte Y |
 | 2 | BLS12_381g1 | G1 of the BLS 12-381 curve. Points encoded as 48 byte X following by 48 byte Y |
-| 3 | BLS12_381g2 | G2 of the BLS 12-381 curve. Points encoded as 96 byte X following by 48 byte Y |
+| 3 | BLS12_381g2 | G2 of the BLS 12-381 curve. Points encoded as 96 byte X following by 96 byte Y |
 
 
 A and B are curve points in affine representation: field element X concatenated with field element Y. Field element `Z` is encoded as follows.
@@ -1702,22 +1702,22 @@ A is a curve point encoded and checked as described in `ec_add`. Scalar B is int
 - Bytecode: 0xe2 {uint8}
 - Stack: ..., A: []byte, B: []byte &rarr; ..., uint64
 - 1 if the product of the pairing of each point in A with its respective point in B is equal to the identity element of the target group Gt, else 0
-- **Cost**:  BN254g1=1 + 180 per 64 bytes of B; BN254g2=1 + 180 per 128 bytes of B; BLS12_381g1=450 + 400 per 96 bytes of B; BLS12_381g2=450 + 400 per 192 bytes of B
+- **Cost**:  BN254g1=1 + 18000 per 64 bytes of B; BN254g2=1 + 18000 per 128 bytes of B; BLS12_381g1=45000 + 40000 per 96 bytes of B; BLS12_381g2=45000 + 40000 per 192 bytes of B
 - Availability: v10
 
-A and B are concatenated points, encoded and checked as described in `ec_add`. A contains points of the group G, B contains points of the associated group (G2 if G is G1, and vice versa). Fails if A and B have a different number of points, or if any point is not in its described group or outside the main prime-order subgroup - a stronger condition than other opcodes AVM values are limited to 4096 bytes, so `ec_pairing_check` is limited by the size of the points in the groups being operated upon.
+A and B are concatenated points, encoded and checked as described in `ec_add`. A contains points of the group G, B contains points of the associated group (G2 if G is G1, and vice versa). Fails if A and B have a different number of points, or if any point is not in its described group or outside the main prime-order subgroup - a stronger condition than other opcodes. AVM values are limited to 4096 bytes, so `ec_pairing_check` is limited by the size of the points in the groups being operated upon.
 
-## ec_multi_exp
+## ec_multi_scalar_mul
 
-- Syntax: `ec_multi_exp G` ∋ G: [EC](#field-group-ec)
+- Syntax: `ec_multi_scalar_mul G` ∋ G: [EC](#field-group-ec)
 - Bytecode: 0xe3 {uint8}
 - Stack: ..., A: []byte, B: []byte &rarr; ..., []byte
 - for curve points A and scalars B, return curve point B0A0 + B1A1 + B2A2 + ... + BnAn
-- **Cost**:  BN254g1=80 + 3 per 32 bytes of B; BN254g2=180 + 9 per 32 bytes of B; BLS12_381g1=140 + 4 per 32 bytes of B; BLS12_381g2=350 + 18 per 32 bytes of B
+- **Cost**:  BN254g1=8000 + 300 per 32 bytes of B; BN254g2=18000 + 900 per 32 bytes of B; BLS12_381g1=14000 + 400 per 32 bytes of B; BLS12_381g2=35000 + 1800 per 32 bytes of B
 - Availability: v10
 
 A is a list of concatenated points, encoded and checked as described in `ec_add`. B is a list of concatenated scalars which, unlike ec_scalar_mul, must all be exactly 32 bytes long.
-The name `ec_multi_exp` was chosen to reflect common usage, but a more consistent name would be `ec_multi_scalar_mul`. AVM values are limited to 4096 bytes, so `ec_multi_exp` is limited by the size of the points in the group being operated upon.
+The name `ec_multi_scalar_mul` was chosen to reflect common usage, but a more consistent name would be `ec_multi_scalar_mul`. AVM values are limited to 4096 bytes, so `ec_multi_scalar_mul` is limited by the size of the points in the group being operated upon.
 
 ## ec_subgroup_check
 
