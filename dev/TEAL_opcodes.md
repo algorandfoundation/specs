@@ -1725,7 +1725,7 @@ The name `ec_multi_scalar_mul` was chosen to reflect common usage, but a more co
 - Bytecode: 0xe4 {uint8}
 - Stack: ..., A: []byte &rarr; ..., uint64
 - 1 if A is in the main prime-order subgroup of G (including the point at infinity) else 0. Program fails if A is not in G at all.
-- **Cost**:  BN254g1=50; BN254g2=11500; BLS12_381g1=5600; BLS12_381g2=7100
+- **Cost**:  BN254g1=20; BN254g2=3100; BLS12_381g1=1850; BLS12_381g2=2340
 - Availability: v10
 
 ## ec_map_to
@@ -1734,7 +1734,7 @@ The name `ec_multi_scalar_mul` was chosen to reflect common usage, but a more co
 - Bytecode: 0xe5 {uint8}
 - Stack: ..., A: []byte &rarr; ..., []byte
 - maps field element A to group G
-- **Cost**:  BN254g1=1700; BN254g2=11000; BLS12_381g1=5600; BLS12_381g2=43000
+- **Cost**:  BN254g1=630; BN254g2=3300; BLS12_381g1=1950; BLS12_381g2=8150
 - Availability: v10
 
 BN254 points are mapped by the SVDW map. BLS12-381 points are mapped by the SSWU map.
