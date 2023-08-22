@@ -473,6 +473,8 @@ Fields
 | 12 | OpcodeBudget | uint64 | v6  | The remaining cost that can be spent by opcodes in this program. |
 | 13 | CallerApplicationID | uint64 | v6  | The application ID of the application that called this application. 0 if this application is at the top-level. Application mode only. |
 | 14 | CallerApplicationAddress | address | v6  | The application address of the application that called this application. ZeroAddress if this application is at the top-level. Application mode only. |
+| 15 | AssetCreateMinBalance | uint64 | v10  | The additional minimum balance required to create (and opt-in to) an asset. |
+| 16 | AssetOptInMinBalance | uint64 | v10  | The additional minimum balance required to opt-in to an asset. |
 
 
 ## gtxn
@@ -1700,7 +1702,7 @@ A is a curve point encoded and checked as described in `ec_add`. Scalar B is int
 
 - Syntax: `ec_pairing_check G` ∋ G: [EC](#field-group-ec)
 - Bytecode: 0xe2 {uint8}
-- Stack: ..., A: []byte, B: []byte &rarr; ..., uint64
+- Stack: ..., A: []byte, B: []byte &rarr; ..., bool
 - 1 if the product of the pairing of each point in A with its respective point in B is equal to the identity element of the target group Gt, else 0
 - **Cost**:  BN254g1=8000 + 7400 per 64 bytes of B; BN254g2=8000 + 7400 per 128 bytes of B; BLS12_381g1=13000 + 10000 per 96 bytes of B; BLS12_381g2=13000 + 10000 per 192 bytes of B
 - Availability: v10
@@ -1723,7 +1725,7 @@ The name `ec_multi_scalar_mul` was chosen to reflect common usage, but a more co
 
 - Syntax: `ec_subgroup_check G` ∋ G: [EC](#field-group-ec)
 - Bytecode: 0xe4 {uint8}
-- Stack: ..., A: []byte &rarr; ..., uint64
+- Stack: ..., A: []byte &rarr; ..., bool
 - 1 if A is in the main prime-order subgroup of G (including the point at infinity) else 0. Program fails if A is not in G at all.
 - **Cost**:  BN254g1=20; BN254g2=3100; BLS12_381g1=1850; BLS12_381g2=2340
 - Availability: v10
