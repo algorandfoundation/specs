@@ -6,7 +6,7 @@ abstract: >
   Algorand allows transactions to be effectively signed by a small program. If the program evaluates to true then the transaction is allowed. This document defines the language opcodes and byte encoding.
 ---
 
-# Opcodes
+# v10 Opcodes
 
 Ops have a 'cost' of 1 unless otherwise specified.
 
@@ -22,32 +22,26 @@ Ops have a 'cost' of 1 unless otherwise specified.
 - Bytecode: 0x01
 - Stack: ..., A: []byte &rarr; ..., [32]byte
 - SHA256 hash of value A, yields [32]byte
-- **Cost**:
-    - 7 (v1)
-    - 35 (since v2)
+- **Cost**: 35
 
 ## keccak256
 
 - Bytecode: 0x02
 - Stack: ..., A: []byte &rarr; ..., [32]byte
 - Keccak256 hash of value A, yields [32]byte
-- **Cost**:
-    - 26 (v1)
-    - 130 (since v2)
+- **Cost**: 130
 
 ## sha512_256
 
 - Bytecode: 0x03
 - Stack: ..., A: []byte &rarr; ..., [32]byte
 - SHA512_256 hash of value A, yields [32]byte
-- **Cost**:
-    - 9 (v1)
-    - 45 (since v2)
+- **Cost**: 45
 
 ## ed25519verify
 
 - Bytecode: 0x04
-- Stack: ..., A: []byte, B: []byte, C: []byte &rarr; ..., bool
+- Stack: ..., A: []byte, B: [64]byte, C: [32]byte &rarr; ..., bool
 - for (data A, signature B, pubkey C) verify the signature of ("ProgData" || program_hash || data) against the pubkey => {0 or 1}
 - **Cost**: 1900
 
@@ -57,9 +51,9 @@ The 32 byte public key is the last element on the stack, preceded by the 64 byte
 
 - Syntax: `ecdsa_verify V` ∋ V: [ECDSA](#field-group-ecdsa)
 - Bytecode: 0x05 {uint8}
-- Stack: ..., A: []byte, B: []byte, C: []byte, D: []byte, E: []byte &rarr; ..., bool
+- Stack: ..., A: [32]byte, B: []byte, C: []byte, D: []byte, E: []byte &rarr; ..., bool
 - for (data A, signature B, C and pubkey D, E) verify the signature of the data against the pubkey => {0 or 1}
-- **Cost**:  Secp256k1=1700; Secp256r1=2500
+- **Cost**: Secp256k1=1700; Secp256r1=2500
 - Availability: v5
 
 ### ECDSA
@@ -80,7 +74,7 @@ The 32 byte Y-component of a public key is the last element on the stack, preced
 - Bytecode: 0x06 {uint8}
 - Stack: ..., A: []byte &rarr; ..., X: []byte, Y: []byte
 - decompress pubkey A into components X, Y
-- **Cost**:  Secp256k1=650; Secp256r1=2400
+- **Cost**: Secp256k1=650; Secp256r1=2400
 - Availability: v5
 
 The 33 byte public key in a compressed form to be decompressed into X and Y (top) components. All values are big-endian encoded.
@@ -89,7 +83,7 @@ The 33 byte public key in a compressed form to be decompressed into X and Y (top
 
 - Syntax: `ecdsa_pk_recover V` ∋ V: [ECDSA](#field-group-ecdsa)
 - Bytecode: 0x07 {uint8}
-- Stack: ..., A: []byte, B: uint64, C: []byte, D: []byte &rarr; ..., X: []byte, Y: []byte
+- Stack: ..., A: [32]byte, B: uint64, C: [32]byte, D: [32]byte &rarr; ..., X: []byte, Y: []byte
 - for (data A, recovery id B, signature C, D) recover a public key
 - **Cost**: 2000
 - Availability: v5
@@ -475,6 +469,7 @@ Fields
 | 14 | CallerApplicationAddress | address | v6  | The application address of the application that called this application. ZeroAddress if this application is at the top-level. Application mode only. |
 | 15 | AssetCreateMinBalance | uint64 | v10  | The additional minimum balance required to create (and opt-in to) an asset. |
 | 16 | AssetOptInMinBalance | uint64 | v10  | The additional minimum balance required to opt-in to an asset. |
+| 17 | GenesisHash | [32]byte | v10  | The Genesis Hash for the network. |
 
 
 ## gtxn
@@ -1150,7 +1145,7 @@ pushints args are not added to the intcblock during assembly processes
 ## ed25519verify_bare
 
 - Bytecode: 0x84
-- Stack: ..., A: []byte, B: []byte, C: []byte &rarr; ..., bool
+- Stack: ..., A: []byte, B: [64]byte, C: [32]byte &rarr; ..., bool
 - for (data A, signature B, pubkey C) verify the signature of the data against the pubkey => {0 or 1}
 - **Cost**: 1900
 - Availability: v7
@@ -1501,7 +1496,7 @@ The notation A,B indicates that A and B are interpreted as a uint128 value, with
 
 - Bytecode: 0xb9
 - Stack: ..., A: boxName, B: uint64 &rarr; ..., bool
-- create a box named A, of length B. Fail if A is empty or B exceeds 32,768. Returns 0 if A already existed, else 1
+- create a box named A, of length B. Fail if the name A is empty or B exceeds 32,768. Returns 0 if A already existed, else 1
 - Availability: v8
 - Mode: Application
 
@@ -1621,7 +1616,7 @@ For boxes that exceed 4,096 bytes, consider `box_create`, `box_extract`, and `bo
 
 - Syntax: `vrf_verify S` ∋ S: [vrf_verify](#field-group-vrf_verify)
 - Bytecode: 0xd0 {uint8}
-- Stack: ..., A: []byte, B: []byte, C: []byte &rarr; ..., X: []byte, Y: bool
+- Stack: ..., A: []byte, B: [80]byte, C: [32]byte &rarr; ..., X: []byte, Y: bool
 - Verify the proof B of message A against pubkey C. Returns vrf output and verification flag.
 - **Cost**: 5700
 - Availability: v7
@@ -1655,13 +1650,31 @@ Fields
 | 1 | BlkTimestamp | uint64 |  |
 
 
+## box_splice
+
+- Bytecode: 0xd2
+- Stack: ..., A: boxName, B: uint64, C: uint64, D: []byte &rarr; ...
+- set box A to contain its previous bytes up to index B, followed by D, followed by the original bytes of A that began at index B+C.
+- Availability: v10
+- Mode: Application
+
+Boxes are of constant length. If C < len(D), then len(D)-C bytes will be removed from the end. If C > len(D), zero bytes will be appended to the end to reach the box length.
+
+## box_resize
+
+- Bytecode: 0xd3
+- Stack: ..., A: boxName, B: uint64 &rarr; ...
+- change the size of box named A to be of length B, adding zero bytes to end or removing bytes from the end, as needed. Fail if the name A is empty, A is not an existing box, or B exceeds 32,768.
+- Availability: v10
+- Mode: Application
+
 ## ec_add
 
 - Syntax: `ec_add G` ∋ G: [EC](#field-group-ec)
 - Bytecode: 0xe0 {uint8}
 - Stack: ..., A: []byte, B: []byte &rarr; ..., []byte
 - for curve points A and B, return the curve point A + B
-- **Cost**:  BN254g1=125; BN254g2=170; BLS12_381g1=205; BLS12_381g2=290
+- **Cost**: BN254g1=125; BN254g2=170; BLS12_381g1=205; BLS12_381g2=290
 - Availability: v10
 
 ### EC
@@ -1693,7 +1706,7 @@ Does _not_ check if A and B are in the main prime-order subgroup.
 - Bytecode: 0xe1 {uint8}
 - Stack: ..., A: []byte, B: []byte &rarr; ..., []byte
 - for curve point A and scalar B, return the curve point BA, the point A multiplied by the scalar B.
-- **Cost**:  BN254g1=1810; BN254g2=3430; BLS12_381g1=2950; BLS12_381g2=6530
+- **Cost**: BN254g1=1810; BN254g2=3430; BLS12_381g1=2950; BLS12_381g2=6530
 - Availability: v10
 
 A is a curve point encoded and checked as described in `ec_add`. Scalar B is interpreted as a big-endian unsigned integer. Fails if B exceeds 32 bytes.
@@ -1704,7 +1717,7 @@ A is a curve point encoded and checked as described in `ec_add`. Scalar B is int
 - Bytecode: 0xe2 {uint8}
 - Stack: ..., A: []byte, B: []byte &rarr; ..., bool
 - 1 if the product of the pairing of each point in A with its respective point in B is equal to the identity element of the target group Gt, else 0
-- **Cost**:  BN254g1=8000 + 7400 per 64 bytes of B; BN254g2=8000 + 7400 per 128 bytes of B; BLS12_381g1=13000 + 10000 per 96 bytes of B; BLS12_381g2=13000 + 10000 per 192 bytes of B
+- **Cost**: BN254g1=8000 + 7400 per 64 bytes of B; BN254g2=8000 + 7400 per 128 bytes of B; BLS12_381g1=13000 + 10000 per 96 bytes of B; BLS12_381g2=13000 + 10000 per 192 bytes of B
 - Availability: v10
 
 A and B are concatenated points, encoded and checked as described in `ec_add`. A contains points of the group G, B contains points of the associated group (G2 if G is G1, and vice versa). Fails if A and B have a different number of points, or if any point is not in its described group or outside the main prime-order subgroup - a stronger condition than other opcodes. AVM values are limited to 4096 bytes, so `ec_pairing_check` is limited by the size of the points in the groups being operated upon.
@@ -1715,7 +1728,7 @@ A and B are concatenated points, encoded and checked as described in `ec_add`. A
 - Bytecode: 0xe3 {uint8}
 - Stack: ..., A: []byte, B: []byte &rarr; ..., []byte
 - for curve points A and scalars B, return curve point B0A0 + B1A1 + B2A2 + ... + BnAn
-- **Cost**:  BN254g1=3600 + 90 per 32 bytes of B; BN254g2=7200 + 270 per 32 bytes of B; BLS12_381g1=6500 + 95 per 32 bytes of B; BLS12_381g2=14850 + 485 per 32 bytes of B
+- **Cost**: BN254g1=3600 + 90 per 32 bytes of B; BN254g2=7200 + 270 per 32 bytes of B; BLS12_381g1=6500 + 95 per 32 bytes of B; BLS12_381g2=14850 + 485 per 32 bytes of B
 - Availability: v10
 
 A is a list of concatenated points, encoded and checked as described in `ec_add`. B is a list of concatenated scalars which, unlike ec_scalar_mul, must all be exactly 32 bytes long.
@@ -1727,7 +1740,7 @@ The name `ec_multi_scalar_mul` was chosen to reflect common usage, but a more co
 - Bytecode: 0xe4 {uint8}
 - Stack: ..., A: []byte &rarr; ..., bool
 - 1 if A is in the main prime-order subgroup of G (including the point at infinity) else 0. Program fails if A is not in G at all.
-- **Cost**:  BN254g1=20; BN254g2=3100; BLS12_381g1=1850; BLS12_381g2=2340
+- **Cost**: BN254g1=20; BN254g2=3100; BLS12_381g1=1850; BLS12_381g2=2340
 - Availability: v10
 
 ## ec_map_to
@@ -1736,7 +1749,7 @@ The name `ec_multi_scalar_mul` was chosen to reflect common usage, but a more co
 - Bytecode: 0xe5 {uint8}
 - Stack: ..., A: []byte &rarr; ..., []byte
 - maps field element A to group G
-- **Cost**:  BN254g1=630; BN254g2=3300; BLS12_381g1=1950; BLS12_381g2=8150
+- **Cost**: BN254g1=630; BN254g2=3300; BLS12_381g1=1950; BLS12_381g2=8150
 - Availability: v10
 
 BN254 points are mapped by the SVDW map. BLS12-381 points are mapped by the SSWU map.
