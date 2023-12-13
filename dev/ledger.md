@@ -553,7 +553,7 @@ Light block header contains the following components:
 
 - The block's _seed_, under msgpack key `0`.
 
-- The block's _hash_, under msgpack key `1`. This represents a cryptographic hash of the block header.
+- The block's _hash_, under msgpack key `1`.
 
 - The block's _genesis hash_, under msgpack key `gh`.
 
