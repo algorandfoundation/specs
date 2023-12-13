@@ -70,9 +70,13 @@ $\bot$ denotes a specific string of the same length as $H$'s output but is not i
 
 \item $\lambda$: intuitively corresponds to the time that it takes a small message (e.g. a vote) to propagate in good network conditions.
 
-\item $\lambda_0$: intuitively corresponds to the time that it takes a small message (e.g. a vote) to propagate under ideal network conditions for period $0$, failling back to $\lambda$ in future periods if $\lambda_0$ was not sufficient to make progress.
+\item $\lambda_{0min}$: corresponds to the minimum amount of time the dynamic algorithm must allow for a small message (e.g. a vote) to propagate under ideal network conditions for period $0$, failing back to $\lambda$ in future periods if calculated duration was not sufficient to make progress.
+
+\item $\lambda_{0max}$: corresponds to the maximum amount of time the dynamic algorithm will allow for a small message (e.g. a vote) to propagate under ideal network conditions for period $0$, failing back to $\lambda$ in future periods if the calculated duration was not sufficient to make progress.
 
 \item $\Lambda$: intuitively corresponds to the time it takes a big message (e.g. a block) to propagate in good network conditions.
+
+\item $\Lambda_0$: intuitively corresponds to the time it takes a big message (e.g. a block) to propagate in good network conditions for period $0$, failing back to $\Lambda$ in future periods if $\Lambda_0$ was not sufficient to propogate the block.
 
 \item $\lambda_f$: the frequency at which the fast partition recovery steps are repeated.
 

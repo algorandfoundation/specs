@@ -345,7 +345,7 @@ where:
 - _StateProofPK_ is a 512-bit string representing the participant's merkle signature scheme commitment.
 
 
-## Signature format 
+## Signature format
 
 Similarly to the participant commitment, the state proof scheme requires a commitment
 to a signature array. Leaf hashing is done in the following manner:

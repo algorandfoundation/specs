@@ -35,7 +35,7 @@ The Algorand Ledger is parameterized by the following values:
    Currently defined as 10,000.
  - $\delta_{x_{\min}}$ and $\delta_{x_{\max}}$, the minimum and maximum number
    of rounds needed to prepare for an upgrade.  Currently respectively defined
-   as 10,000 and 150,000.
+   as 10,000 and 250,000.
  - $\delta_x$, the default number of rounds needed to prepare for an upgrade.
    Currently defined as 140,000.
  - $\omega_r$, the rate at which the reward rate is refreshed.
@@ -551,7 +551,9 @@ offline as part of applying the block changes to the ledger.
 A light block header is a structure contains a subset of fields from Algorand's  _block header_.
 Light block header contains the following components:
 
-- The block's _seed_, under msgpack key `s`.
+- The block's _seed_, under msgpack key `0`.
+
+- The block's _hash_, under msgpack key `1`. This represents a cryptographic hash of the block header.
 
 - The block's _genesis hash_, under msgpack key `gh`.
 
