@@ -46,9 +46,11 @@ Parameters
 
 \newcommand \FilterTimeout {\mathrm{FilterTimeout}}
 
+\newcommand \DeadlineTimeout {\mathrm{DeadlineTimeout}}
+
 The protocol is parameterized by the following constants:
 
- - $\lambda, \lambda_0, \lambda_f, \Lambda$ are values representing durations of time.
+ - $\lambda, \lambda_{0min}, \lambda_{0max}, \lambda_f, \Lambda, \Lambda_0$ are values representing durations of time.
  - $\delta_s, \delta_r$ are positive integers (the "seed lookback" and
    "seed refresh interval").
 
@@ -58,12 +60,23 @@ $2\delta_s\delta_r$.
 We define $\FilterTimeout(p)$ on period $p$ as follows:
 
   - If $p = 0$:
-    - $\FilterTimeout(p) = 2\lambda_0$
+    The $\FilterTimeout(p)$ is calculated dynamically based on the lower 95th percentile of observed 
+    lowest credential per round arrival times. 
+
+    - 2$\lambda_{0min} <= \FilterTimeout(p) <= 2\lambda_{0max}$
   - If $p \ne 0$:
     - $\FilterTimeout(p) = 2\lambda$
 
-Algorand sets $\delta_s = 2$, $\delta_r = 80$, $\lambda = 2$ seconds,
-$\lambda_0 = 1.5$ seconds, $\lambda_f = 5$ minutes, and $\Lambda = 17$ seconds.
+We define $\DeadlineTimeout(p)$ on period $p$ as follows:
+
+  - If $p = 0$:
+    - $\DeadlineTimeout(p) = \Lambda_0$
+  - If $p \ne 0$:
+    - $\DeadlineTimeout(p) = \Lambda$
+
+
+Algorand sets $\delta_s = 2$, $\delta_r = 80$, $\lambda = 2$ seconds, $\lambda_{0min} = 0.25$ seconds, 
+$\lambda_{0max} = 1.5$ seconds, $\lambda_f = 5$ minutes, $\Lambda = 17$ seconds, and $\Lambda_0 = 4$ seconds.
 
 Identity, Authorization, and Authentication
 ===========================================
@@ -804,11 +817,11 @@ A player may also update its step after receiving a timeout event.
 On observing a timeout event of $\FilterTimeout(p)$ for period $p$, the player sets
 $s := \Cert$.
 
-On observing a timeout event of $\max\{4\lambda, \Lambda\}$, the
+On observing a timeout event of $\DeadlineTimeout(p)$ for period $p$, the
 player sets $s := \Next_0$.
 
 On observing a timeout event of
-$\max\{4\lambda, \Lambda\} + 2^{s_t}\lambda + r$ where
+$\DeadlineTimeout(p) + 2^{s_t}\lambda + r$ where
 $r \in [0, 2^{s_t}\lambda]$ sampled uniformly at random, the player sets
 $s := s_t$.
 
@@ -817,10 +830,10 @@ $$
 \begin{aligned}
   &N((r, p, s, \sbar, V, P, \vbar), L, t(\FilterTimeout(p), p))
  &&= ((r, p, \Cert, \sbar, V, P, \vbar), L', \ldots) \\
-  &N((r, p, s, \sbar, V, P, \vbar), L, t(\max\{4\lambda, \Lambda\}, p))
+  &N((r, p, s, \sbar, V, P, \vbar), L, t(\DeadlineTimeout(p), p))
  &&= ((r, p, \Next_0, \sbar, V, P, \vbar), L', \ldots) \\
   &N((r, p, s, \sbar, V, P, \vbar), L,
-     t(\max\{4\lambda, \Lambda\} + 2^{s_t}\lambda + r, p))
+     t(\DeadlineTimeout(p) + 2^{s_t}\lambda + r, p))
  &&= ((r, p, s_t, \sbar, V, P, \vbar), L', \ldots).
  \end{aligned}
 $$
@@ -1050,8 +1063,8 @@ Recovery
 
 On observing a timeout event of
 
- - $T = \max\{4\lambda, \Lambda\}$ or
- - $T = \max\{4\lambda, \Lambda\} + 2^{s_t}\lambda + r$ where
+ - $T = \DeadlineTimeout(p)$ or
+ - $T = \DeadlineTimeout(p) + 2^{s_t}\lambda + r$ where
    $r \in [0, 2^{s_t}\lambda]$ sampled uniformly at random,
 
 the player attempts to resynchronize and then broadcasts*
