@@ -406,8 +406,8 @@ parameters_, which can be encoded as a msgpack struct:
   msgpack field `gs`.
 
 Each application created increases the minimum balance
-requirements of the creator by 100,000 microalgos, plus the [`GlobalStateSchema`
-Minimum Balance contribution][App Minimum Balance Changes].
+requirements of the creator by 100,000*(1+`ExtraProgramPages`) microAlgos,
+plus the [`GlobalStateSchema`Minimum Balance contribution][App Minimum Balance Changes].
 
 Each application opted in to increases the minimum balance
 requirements of the opting-in account by 100,000 microalgos plus the
@@ -470,7 +470,7 @@ Unlike global/local state keys, an empty array is not a valid box
 name. However, empty box names may appear in transactions to increase
 the I/O budget (see below).
 
-When an application executes an opcode that creates or destroys a box,
+When an application executes an opcode that creates, resized or destroys a box,
 the minimum balance of the associated application account (whose
 address is the hash of the application ID) is modified. When a box
 with name $n$ and size $s$ is created, the minimum balance requirement
@@ -1089,13 +1089,13 @@ The transaction commitment for a block covers the transaction encodings
 with the changes described above.  Individual transaction signatures
 cover the original encoding of transactions as standalone.
 
-In addtion to _transaction commitment_, each block will also contains _SHA256 transaction commitment_.
-It can allow a verifier which does not support SHA512_256 function to verify proof of membership on transcation.
-In order to consturct this commitment we use Vector Commitment. The leaves in the Vector Commitment
+In addition to _transaction commitment_, each block will also contain _SHA256 transaction commitment_.
+It can allow a verifier which does not support SHA512_256 function to verify proof of membership on transaction.
+In order to construct this commitment we use Vector Commitment. The leaves in the Vector Commitment
 tree are hashed as $$SHA256("TL", txidSha256, stibSha256)$$.  Where:
 
 - txidSha256 = SHA256(`TX` || transcation)
-- txidSha256 = SHA256(`STIB` || signed transaction || ApplyData)
+- stibSha256 = SHA256(`STIB` || signed transaction || ApplyData)
 
 The vector commitment uses SHA256 for internal nodes as well.
 
@@ -1402,7 +1402,7 @@ identifier $\GenesisID_B$, the following conditions must all hold:
 
  - It must represent a transition between two valid account states.
  - Either $\GenesisID = \GenesisID_B$ or $\GenesisID$ is the empty string.
- - $\TxType$ is either "pay" or "keyreg".
+ - $\TxType$ is either "pay", "keyreg", "acfg", "axfer", "afrz" or "appl".
  - There are no extra fields that do not correspond to $\TxType$.
  - $0 \leq r_2 - r_1 \leq T_{\max}$.
  - $r_1 \leq r \leq r_2$.
