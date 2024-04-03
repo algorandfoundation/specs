@@ -470,7 +470,7 @@ Unlike global/local state keys, an empty array is not a valid box
 name. However, empty box names may appear in transactions to increase
 the I/O budget (see below).
 
-When an application executes an opcode that creates, resized or destroys a box,
+When an application executes an opcode that creates, resizes or destroys a box,
 the minimum balance of the associated application account (whose
 address is the hash of the application ID) is modified. When a box
 with name $n$ and size $s$ is created, the minimum balance requirement
