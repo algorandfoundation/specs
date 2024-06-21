@@ -1370,18 +1370,6 @@ wB = (-1)^E * widthB ; wD = (-1)^F * widthD
 - zero filled byte-array of length A
 - Availability: v4
 
-## bpow widthB widthD widthY
-
-- Opcode: 0x??
-- Stack: ..., A: uint, B: []byte, C: uint, D: []byte, E: uint64, F: uint64, G: uint64 &rarr; ..., X: uint, Y: []byte
-- Decimal to the power of a decimal. B and D are interpreted as big-endian unsigned integers.
-- **Cost**: base cost plus cost dependent on widthY
-- Availability: v9
-
-wB = (-1)^E * widthB ; wD = (-1)^F * widthD ; wY = (-1)^G * widthY
-[(-1)^A * B * 10^wB] ^ [(-1)^C * D * 10^wD] = (-1)^X * Y * 10^wY. widthB, widthD and widthY are uint64. widthY output precision is guaranteed.
-Calculation is based on the following identity: q^w = exp(ln(q)/w).
-
 ## bexp widthB widthY
 
 - Opcode: 0x??
@@ -1406,29 +1394,17 @@ wA = (-1)^E * widthA ; wY = (-1)^F * widthY
 ln[A * 10^wA] = (-1)^X * Y * 10^wY. widthA and widthY are uint64. widthY output precision is guaranteed.
 Calculation is based on the following identity: ln(q) = log2(q) / log2(e)
 
-## blog2 widthA widthY
+## bsin widthB widthY
 
 - Opcode: 0x??
-- Stack: ..., A: []byte, E: uint64, F: uint64 &rarr; ..., X: uint, Y: []byte
-- Logarithm base 2 of a decimal. A is interpreted as big-endian unsigned integers.
+- Stack: ..., A: uint, B: []byte, E: uint64, F: uint64 &rarr; ..., X: uint, Y: []byte
+- Decimal to the power of a decimal. B and Y are interpreted as big-endian unsigned integers.
 - **Cost**: base cost plus cost dependent on widthY
 - Availability: v9
 
-wA = (-1)^E * widthA ; wY = (-1)^F * widthY
-log2[A * 10^wA] = (-1)^X * Y * 10^wY. widthA and widthY are uint64. widthY output precision is guaranteed.
-Calculation is based on the on a binary appromixation that allows arbitrary precision.
-
-## blog10 widthA widthY
-
-- Opcode: 0x??
-- Stack: ..., A: []byte, E: uint64, F: uint64 &rarr; ..., X: uint, Y: []byte
-- Logarithm base 10 of a decimal. A is interpreted as big-endian unsigned integers.
-- **Cost**: base cost plus cost dependent on widthY
-- Availability: v9
-
-wA = (-1)^E * widthA ; wY = (-1)^F * widthY
-log10[A * 10^wA] = (-1)^X * Y * 10^wY. widthA and widthY are uint64. widthY output precision is guaranteed.
-Calculation is based on the following identity: log10(q) = log2(q) / log2(10)
+wB = (-1)^E * widthB ; wY = (-1)^F * widthY
+sin((-1)^A * B * 10^wB) = (-1)^X * Y * 10^wY. widthB and widthY are uint64. widthY output precision is guaranteed.
+Calculation is based on the Taylor expansion of sin(q).
 
 ## log
 
