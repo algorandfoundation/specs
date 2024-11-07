@@ -1165,7 +1165,11 @@ modification) in a transaction group exceeds the I/O Budget of the
 group at any time during evaluation (see [ApplicationCall Transaction
 Semantics]), then the block is invalid.
 
-Beyond the TxGroup, MinFee, and Box size checks, each transaction in a
+If the sum of the lenghts of all the logic signatures and their arguments
+in a transaction group exceeds the number of transactions in the group times
+1000 bytes (consensus variable `MaxLogicSigSize`), then the block in invalid.
+
+Beyond the TxGroup, MinFee, Box, and LogicSig size checks, each transaction in a
 group is evaluated separately and must be valid on its own, as
 described below in the [Validity and State Changes] section. For
 example, an account with balance 50 could not spend 100 in transaction
