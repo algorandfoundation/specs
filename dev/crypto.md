@@ -33,11 +33,13 @@ A canonical msgpack encoding in Algorand must follow these rules:
  3. Positive integer values must be encoded as "unsigned" in msgpack,
     regardless of whether the value space is semantically signed or
     unsigned;
- 4. Integer values must be represented in the shortest possible
-    encoding;
+ 4. All variable length encoding values must be represented in the shortest possible;
+    encoding (integers, binary arrays, strings);
  5. Binary arrays must be represented using the "bin" format family
     (that is, use the most recent version of msgpack rather than the
-    older msgpack version that had no "bin" family).
+    older msgpack version that had no "bin" family);
+ 7. Strings must be represented using the "str" format family (instead of "bin");
+ 9. Structs must be encoded as maps (with the keys in lexicographic order as per rule 1) instead of being encoded as arrays.
 
 
 ### Domain Separation
