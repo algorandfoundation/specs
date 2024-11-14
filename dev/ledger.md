@@ -490,7 +490,7 @@ which can be encoded as a msgpack struct:
  - The number of digits after the decimal place to be used when displaying the
    asset, encoded with msgpack field `dc`.  A value of 0 represents an asset
    that is not divisible, while a value of 1 represents an asset divisible into
-   into tenths, 2 into hundredths, and so on.  This value must be between 0 and
+   into tenths, 2 into hundredths, and so on.  This value must be between 0 
    and 19 (inclusive) ($2^{64}-1$ is 20 decimal digits).
 
  - Whether holdings of that asset are frozen by default, a boolean flag encoded
@@ -638,9 +638,9 @@ specific fashion:
   In more detail, let $r$ be the last round in which a transaction touched account $I$ (and therefore all pending rewards were added to it). Consider the following quantities, as defined in the [Account State](#account-state):
   
   - The raw balance $a_I$  of account $I$ at round $r$ is its total balance on that round.
-  - The rewards base $a'_I$ is meant to capture the total rewards that were allocated to all accounts upto round $r$, expressed as a fraction of the total stake (with limited precision as described below).
+  - The rewards base $a'_I$ is meant to capture the total rewards that were allocated to all accounts up to round $r$, expressed as a fraction of the total stake (with limited precision as described below).
 
-  Given these two quantities, the normalized balance of an online account $I$ is $a_I/(1+a'_I)$. For example, if the total amount of rewards distributed upto round $r$ is 20% of the total stake, then the normalized balance is $a_I/1.2$.
+  Given these two quantities, the normalized balance of an online account $I$ is $a_I/(1+a'_I)$. For example, if the total amount of rewards distributed up to round $r$ is 20% of the total stake, then the normalized balance is $a_I/1.2$.
 
   To limit the required precision in this calculation, the system uses a parameter $ru$ that specifies the rewards-earning unit, namely accounts only earn rewards for a whole number of $ru$ microAlgos. (Currently $ru=1,000,000$, so the rewards-earning unit is one Algo.)
 
@@ -1155,7 +1155,7 @@ If the sum of the fees paid by the transactions in a transaction group is less t
 
 If the sum of the lengths of the boxes denoted by the box references in a
 transaction group exceeds 1,024 times the total number of box
-referencess in the transaction group, then the block is invalid. Call
+references in the transaction group, then the block is invalid. Call
 this limit the _I/O Budget_ for the group. Box references with an
 empty name are counted toward the total number of references, but add
 nothing to the sum of lengths.
@@ -1165,11 +1165,11 @@ modification) in a transaction group exceeds the I/O Budget of the
 group at any time during evaluation (see [ApplicationCall Transaction
 Semantics]), then the block is invalid.
 
-If the sum of the lenghts of all the logic signatures and their arguments
+If the sum of the lengths of all the logic signatures and their arguments
 in a transaction group exceeds the number of transactions in the group times
 1000 bytes (consensus variable `MaxLogicSigSize`), then the block in invalid.
 
-Beyond the TxGroup, MinFee, Box, and LogicSig size checks, each transaction in a
+Beyond the TxGroup, MinFee, Box size, and LogicSig size checks, each transaction in a
 group is evaluated separately and must be valid on its own, as
 described below in the [Validity and State Changes] section. For
 example, an account with balance 50 could not spend 100 in transaction
