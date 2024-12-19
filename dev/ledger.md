@@ -607,7 +607,8 @@ _suspended_. An account is said to be suspended according to the rules
 specified above for _suspended particpation accounts_ list.  Once
 included in this list, an account will be marked offline, but its
 voting keys will be retained in the account state, as part of applying
-the block changes to the ledger.
+the block changes to the ledger.  The `IncentiveEligible` flag of the
+account will be set to false.
 
 
 # Light Block Header
