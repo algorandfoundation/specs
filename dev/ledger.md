@@ -1016,7 +1016,7 @@ struct under msgpack field `hb`.
    of the root voting key of the heartbeat address's account state.
 
  - The _heartbeat key dilution_ $kd$, which must be the current
-   $\KeyDilution$ of the heartbeat address's account state.
+   `KeyDilution` of the heartbeat address's account state.
 
  - The _heartbeat proof_ $prf$, which must contain a valid signing of
    $sd$ using $vid$ and $kd$ using the voting signature scheme
@@ -1241,7 +1241,7 @@ If the TxGroup hash of any transaction group in a block does not match the "Grou
 If the sum of the fees paid by the transactions in a transaction group
 is less than $f_{\min}$ times the number of transactions in the group,
 then the block is invalid. There are two exceptions. State proof
-transactions require no fee, and Heartbeat transaction require no fee
+transactions require no fee, and Heartbeat transactions require no fee
 if they have a zero "Group" field, and the _heartbeat address_ was
 challenged between 100 and 200 rounds ago, and has not proposed or
 heartbeat since that challenge. Further explanation of this rule is
@@ -1500,7 +1500,7 @@ point must be discarded and the entire transaction rejected.
  100-200 modulo 1000, and the blockseed of the most recent round that
  is 0 modulo 1000 matches $a$ in the first 5 bits.
 
- If succesful, the `LastHeartbeat` of the specified heartbeat address
+ If successful, the `LastHeartbeat` of the specified heartbeat address
  $a$ is updated to the current round.
 
 
