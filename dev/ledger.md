@@ -132,18 +132,63 @@ The block header contains the following components:
    protocol version that supported the transaction counter.  The counter is
    stored in msgpack field `tc`.
 
- - The block's _expired participation accounts_, which contains an optional slice of
-   public keys of accounts. These accounts are expected to have their participation
-   key expire by the end of the round (or was expired before the current round). The
-   msgpack representation of the components are described in detail below.
-   The slice is stored in msgpack key `partupdrmv`.
+ - The block's _proposer_, which is the address of the account that
+   proposed the block. The proposer is stored in msgpack field `prp`.
 
-The block's _expired participation accounts_ slice is valid as long as the participation
-keys of all the accounts in the slice are expired by the end of the round or were
-expired before, the accounts themselves would have been online at the end of the
-round if they were not included in the slice, and the number of elements in the slice is
-less or equal to 32. A block proposer may not include all such
-accounts in the slice and may even omit the slice completely.
+ - The block's _fees collected_ is the sum of all fees paid by transactions in
+   the block and is stored in msgpack field `fc`.
+
+ - The potential _bonus incentive_ is the amount, in MicroAlgos, that
+   may be paid to the proposer of this block beyond the amount
+   available from fees. It is stored in msgpack field `bi`.  It may be
+   set during a consensus upgrade, or else it must be equal to the
+   value from the previous block in most rounds, or be 99% of the
+   previous value (rounded down) if the round of this block is 0
+   modulo 1,000,000.
+
+ - The _proposer payout_ is the actual amount that is moved from the
+   $I_f$ to the proposer, and is stored in msgpack field `pp`. If the
+   proposer is not eligible, as described below, the _proposer payout_
+   must be 0. If the proposer is eligible, the proposer payout is
+   valid if it is less than or equal to the the current potential
+   payout, which is computed as the sum of the _bonus incentive_ and
+   half of the _fees collected_.
+
+ - The block's _expired participation accounts_, which contains an
+   optional list of account addresses. These accounts' participation
+   key expire by the end of the current round, with exact rules below.
+   The list is stored in msgpack key `partupdrmv`.
+
+ - The block's _suspended participation accounts_, which contains an
+   optional list of account addresses. These accounts are have not
+   recently demonstrated that they available and participating, with
+   exact rules below.  The list is stored in msgpack key `partupdabs`.
+
+A proposer is _eligible_ for bonus payouts if the account's
+`IncentiveEligible` flag is true _and_ its online balance is between
+30,000 Algos and 70 million Algos.
+
+The _expired participation accounts_ list is valid as long as the
+participation keys of all the accounts in the slice are expired by the
+end of the round, the accounts themselves would have been online at
+the end of the round if they were not included in the list, and the
+number of elements in the list is less than or equal to 32. A block
+proposer may not include all such accounts in the list and may even
+omit the list completely.
+
+The _suspended participation accounts_ list is valid if, for each
+included address, the account is _online_, incentive _eligible_, and
+is either _absent_ or _failing a challenge_ as of the current round.
+An account is _absent_ if its `LastHeartbeat` and `LastProposed`
+rounds are both more than $20n$ rounds before `current`, where $n$ is
+the reciprocal of the account's fraction of online stake.  An account
+is _failing a challenge_ if the first five bits of the account's
+address matches the first five bits of an active challenge round's
+block seed, and the active challenge round is between 200 and 400
+rounds before the current round. An active challenge round is a round
+that is 0 modulo 1000. The length of the list must not exceed 32. A
+block proposer may not include all such accounts in the list and may
+even omit the list completely.
 
 The block body is the block's transaction sequence, which describes the sequence
 of updates (transactions) to the account state and box state.
@@ -295,11 +340,15 @@ A valid block's reward state matches the expected reward state.
 
 \newcommand \Record {\mathrm{Record}}
 \newcommand \pk {\mathrm{pk}}
+\newcommand \ie {\mathrm{ie}}
 
-The _balances_ are a set of mappings from _addresses_, 256-bit integers, to
-_balance records_.  A _balance record_ contains the following fields: the
-account _raw balance_, the account _status_, the account _rewards base_ and
-_total awarded amount_, the account _spending key_, and the account [_participation keys_][partkey-spec].
+The _balances_ are a set of mappings from _addresses_, 256-bit
+integers, to _balance records_.  A _balance record_ contains the
+following fields: the account _raw balance_, the account _status_, the
+block incentive _eligibility_ flag, the account _last_proposed_ round, the
+account _last_heartbeat_ round, the account _rewards base_ and _total
+awarded amount_, the account _spending key_, and the account
+[_participation keys_][partkey-spec].
 
 The account raw balance $a_I$ is a 64-bit unsigned integer which determines how
 much money the address has.
@@ -339,6 +388,10 @@ Transactions from this account must have this value (or, if this value zero, the
 
 The account's participation keys $\pk$ are defined in Algorand's [specification
 of participation keys][partkey-spec].
+
+The account's eligibility $\ie$ is a flag that determines whether the
+account has elected to receive payouts for proposing blocks (assuming
+it meets balance requirements at the time of proposal).
 
 An account's participation keys and voting stake from a recent round is returned
 by the $\Record$ procedure in the [Byzantine Agreement Protocol][abft-spec].
@@ -540,11 +593,23 @@ any asset cannot be closed.
 
 # Participation Updates
 
-Participation updates contains a single list of addresses of accounts which 
-have been deemed to be _expired_. An account is said to be expired when the last
-valid vote round in its participation key is strictly less than the current round
-that is being processed.  Once included in this list, an account will be marked 
-offline as part of applying the block changes to the ledger.
+Participation updates contains a two list of addressess of accounts
+for which changes are made to their particpation status.
+
+The first contains accounts that have been deemed to be _expired_. An
+account is said to be expired when the last valid vote round in its
+participation key is strictly less than the current round that is
+being processed.  Once included in this list, an account will be
+marked offline as part of applying the block changes to the ledger.
+
+The second contains accounts that have been deemed to be
+_suspended_. An account is said to be suspended according to the rules
+specified above for _suspended particpation accounts_ list.  Once
+included in this list, an account will be marked offline, but its
+voting keys will be retained in the account state, as part of applying
+the block changes to the ledger.  The `IncentiveEligible` flag of the
+account will be set to false.
+
 
 # Light Block Header
 
@@ -585,7 +650,7 @@ contains the following components:
 # State Proof Tracking
 
 Each block header keeps track of the state needed to construct, validate,
-and record state proofs.  
+and record state proofs.
 This tracking data is stored in a map under the msgpack key `spt` in the block header.
 The map is indexed by the type of the state proof; at the moment, only
 type 0 is supported.  In the future, other types of state proofs
@@ -692,6 +757,8 @@ transaction contains the following fields:
 
    - Transaction type `appl` corresponds to an _application call_ transaction.
 
+   - Transaction type `hb` corresponds to a _heartbeat_ transaction.
+
  - The _sender_ $I$, which is an address which identifies the account that
    authorized the transaction.
 
@@ -720,6 +787,10 @@ transaction contains the following fields:
 
  - The _note_ $N$, a sequence of bytes with length at most $N_{\max}$ which
    contains arbitrary data.
+
+The cryptographic hash of all fields of the transaction, including the
+transaction specific fields below, is called the _transaction
+identifier_.  This is written as $\Hash(\Tx)$.
 
 ### Payment Transaction
 A payment transaction additionally has the following fields:
@@ -888,9 +959,6 @@ An asset freeze transaction additionally has the following fields:
    encoded as a boolean msgpack field `afrz` (true for frozen, false for
    unfrozen).
 
-The cryptographic hash of the fields above is called the _transaction
-identifier_.  This is written as $\Hash(\Tx)$.
-
 ## State proof transaction
 
 A special transaction is used to disseminate and store state 
@@ -934,6 +1002,26 @@ When a state proof transaction is applied to the state, the next expected state 
 
 A node should be able to verify state proof transaction at any point in time (even if `fv` is greater than next expected state proof round in the block header).
 
+### Heartbeat Transaction
+
+A heartbeat transaction includes five additional fields encoded as a
+struct under msgpack field `hb`.
+
+ - The _heartbeat address_ $a$, an account address that this heartbeat
+   transaction proves liveness for.
+
+ - The _heartbeat seed_ $sd$, which must be the block seed found in
+   the first valid block of the transaction.
+
+ - The _heartbeat vote id_ $vid$, which must be the current public key
+   of the root voting key of the heartbeat address's account state.
+
+ - The _heartbeat key dilution_ $kd$, which must be the current
+   `KeyDilution` of the heartbeat address's account state.
+
+ - The _heartbeat proof_ $prf$, which must contain a valid signing of
+   $sd$ using $vid$ and $kd$ using the voting signature scheme
+   outlined in the discussion of [_participation keys_][partkey-spec].
 
 Authorization and Signatures
 ----------------------------
@@ -1151,7 +1239,14 @@ the transactions have nonzero "Group", compute the _TxGroup hash_ as follows:
 
 If the TxGroup hash of any transaction group in a block does not match the "Group" field of the transactions in that group (and that "Group" field is nonzero), then the block is invalid. Additionally, if a block contains a transaction group of more than $G_{max}$ transactions, the block is invalid.
 
-If the sum of the fees paid by the transactions in a transaction group is less than $f_{\min}$ times the number of transactions in the group, then the block is invalid.
+If the sum of the fees paid by the transactions in a transaction group
+is less than $f_{\min}$ times the number of transactions in the group,
+then the block is invalid. There are two exceptions. State proof
+transactions require no fee, and Heartbeat transactions require no fee
+if they have a zero "Group" field, and the _heartbeat address_ was
+challenged between 100 and 200 rounds ago, and has not proposed or
+heartbeat since that challenge. Further explanation of this rule is
+found in [Heartbeat Transaction Semantics] section, below.
 
 If the sum of the lengths of the boxes denoted by the box references in a
 transaction group exceeds 1,024 times the total number of box
@@ -1390,6 +1485,26 @@ point must be discarded and the entire transaction rejected.
   will cause the program exection to fail.
 - Boxes may not be accessed by an app's `ClearStateProgram`.
 
+## Heartbeat Transaction Semantics
+
+ If a heartbeat transaction's $grp$ is empty, and $f < f_{min}$, the
+ transaction fails to execute unless:
+
+   - The _note_ $N$ is empty
+   - The _lease_ $x$ is empty
+   - The _rekey to address_ $\RekeyTo$ is empty
+   - The _heartbeat_address_, $a$, is $online$
+   - The _heartbeat_address_, $a$, $\ie$ flag is true
+   - The _heartbeat_address_, $a$, is _at risk_ of suspension
+
+ An account is _at risk_ of suspension if the current round is between
+ 100-200 modulo 1000, and the blockseed of the most recent round that
+ is 0 modulo 1000 matches $a$ in the first 5 bits.
+
+ If successful, the `LastHeartbeat` of the specified heartbeat address
+ $a$ is updated to the current round.
+
+
 ## Validity and State Changes
 
 The new account state which results from applying a block is the account state
@@ -1400,18 +1515,20 @@ the block's round $r$ and for the block's genesis identifier $\GenesisID_B$.
 For a transaction
 $$\Tx = (\GenesisID, \TxType, r_1, r_2, I, I', I_0, f, a, x, N, \pk, \sppk, \nonpart,
   \ldots)$$
-(where $\ldots$ represents fields specific to asset transaction types)
+(where $\ldots$ represents fields specific to transaction types
+besides "pay" and "keyreg")
 to be valid at the intermediate state $\rho$ in round $r$ for the genesis
 identifier $\GenesisID_B$, the following conditions must all hold:
 
  - It must represent a transition between two valid account states.
  - Either $\GenesisID = \GenesisID_B$ or $\GenesisID$ is the empty string.
- - $\TxType$ is either "pay", "keyreg", "acfg", "axfer", "afrz" or "appl".
+ - $\TxType$ is either "pay", "keyreg", "acfg", "axfer", "afrz",
+   "appl", or "hb".
  - There are no extra fields that do not correspond to $\TxType$.
  - $0 \leq r_2 - r_1 \leq T_{\max}$.
  - $r_1 \leq r \leq r_2$.
  - $|N| \leq N_{\max}$.
- - $I \neq I_{pool}$ and $I \neq 0$.
+ - $I \neq I_{pool}$, $I \neq I_f$, and $I \neq 0$.
  - $\Stake(r+1, I) \geq f \geq f_{\min}$.
  - The transaction is properly authorized as described in the [Authorization and Signatures][Authorization and Signatures] section.
  - $\Hash(\Tx) \notin \TxTail_r$.
@@ -1445,6 +1562,7 @@ state for intermediate state $\rho+1$:
             - $p_{\rho+1, I} = 0$ if $\pk = 0$ and $\nonpart = \text{false}$
             - $p_{\rho+1, I} = 2$ if $\pk = 0$ and $\nonpart = \text{true}$
             - $p_{\rho+1, I} = 1$ if $\pk \ne 0$.
+            - If $f > 2000000$, then $\ie{\rho+1, I} = true$
 
  - For $I'$ if $I \neq I'$ and either $I' \neq 0$ or $a \neq 0$:
     - $a_{\rho+1, I'} = \Stake(\rho+1, I') + a$.
@@ -1458,8 +1576,8 @@ state for intermediate state $\rho+1$:
                          (T_{r+1} - a'_{\rho, I_0}) \floor{\frac{a_{\rho, I_0}}{A}}$.
  - For all other $I^* \neq I$, the account state is identical to that in view $\rho$.
 
-For asset transaction types (asset configuration, asset transfer, and asset freeze),
-account state is updated based on the reference logic described in [Asset Transaction Semantics].
+For transaction types other than "pay" and "keyreg", account state is
+updated based on the reference logic described below.
 
 Additionally, for all types of transactions, if the RekeyTo address of the transaction is nonzero and does not match the transaction sender address, then the transaction sender account's spending key is set to the RekeyTo address. If the RekeyTo address of the transaction does match the transaction sender address, then the transaction sender account's spending key is set to zero.
 
