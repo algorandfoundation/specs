@@ -149,10 +149,11 @@ The block header contains the following components:
  - The _proposer payout_ is the actual amount that is moved from the
    $I_f$ to the proposer, and is stored in msgpack field `pp`. If the
    proposer is not eligible, as described below, the _proposer payout_
-   must be 0. If the proposer is eligible, the proposer payout is
-   valid if it is less than or equal to the the current potential
-   payout, which is computed as the sum of the _bonus incentive_ and
-   half of the _fees collected_.
+   must be 0. The proposer payout must not exceed
+
+      - The sum of the _bonus incentive_ and half of the _fees
+        collected_.
+      - The fee sink balance minus 100,000 microAlgos.
 
  - The block's _expired participation accounts_, which contains an
    optional list of account addresses. These accounts' participation
@@ -463,7 +464,7 @@ requirements of the creator by 100,000*(1+`ExtraProgramPages`) microAlgos,
 plus the [`GlobalStateSchema`Minimum Balance contribution][App Minimum Balance Changes].
 
 Each application opted in to increases the minimum balance
-requirements of the opting-in account by 100,000 microalgos plus the
+requirements of the opting-in account by 100,000 microAlgos plus the
 [`LocalStateSchema` Minimum Balance contribution][App Minimum Balance
 Changes].
 
@@ -499,18 +500,18 @@ minimum balance requirement is decreased equivalently when an account
 closes out or deletes an app.
 
 When opting in to an application, there is a base minimum balance increase
-of 100,000 microalgos. There is an additional minimum balance increase based on
+of 100,000 microAlgos. There is an additional minimum balance increase based on
 the `LocalStateSchema` for that application, described by following formula:
 
-`28500 * schema.NumUint + 50000 * schema.NumByteSlice` microalgos.
+`28500 * schema.NumUint + 50000 * schema.NumByteSlice` microAlgos.
 
 When creating an application, there is a base minimum balance increase
-of 100,000 microalgos. There is an additional minimum balance increase
-of `100000 * ExtraProgramPages` microalgos.  Finally, there is an
+of 100,000 microAlgos. There is an additional minimum balance increase
+of `100000 * ExtraProgramPages` microAlgos.  Finally, there is an
 additional minimum balance increase based on the `GlobalStateSchema`
 for that application, described by the following formula:
 
-`28500 * schema.NumUint + 50000 * schema.NumByteSlice` microalgos.
+`28500 * schema.NumUint + 50000 * schema.NumByteSlice` microAlgos.
 
 ### Boxes
 
@@ -1069,7 +1070,7 @@ Each transaction is associated with some information about how it is
 applied to the account state.  This information is called ApplyData,
 and contains the following fields:
 
-- The closing amount, $\ClosingAmount$, which specifies how many microalgos
+- The closing amount, $\ClosingAmount$, which specifies how many microAlgos
   were transferred to the closing address, and is encoded as "ca" in
   msgpack.
 
@@ -1081,7 +1082,7 @@ and contains the following fields:
   transaction.  There are three fields ("rs", "rr", and "rc" keys in msgpack
   encoding), representing the amount of rewards distributed to the sender,
   receiver, and closing addresses respectively.  The fields have integer
-  values representing microalgos.  If any of the accounts are the same
+  values representing microAlgos.  If any of the accounts are the same
   (e.g., the sender and recipient are the same), then that account received
   the sum of the respective reward distributions (i.e., "rs" plus "rr");
   in the reference implementation, one of these two fields will be zero
@@ -1357,9 +1358,9 @@ An asset freeze transaction has the following semantics:
 
 When an asset transaction allocates space in an account for an asset,
 whether by creation or opt-in, the sender's minimum balance
-requirement is incremented by 100,000 microalgos.  When the space is
+requirement is incremented by 100,000 microAlgos.  When the space is
 deallocated, whether by asset destruction or asset-close-to, the balance
-requirement of the sender is decremented by 100,000 microalgos.
+requirement of the sender is decremented by 100,000 microAlgos.
 
 ## ApplicationCall Transaction Semantics
 
@@ -1523,7 +1524,7 @@ identifier $\GenesisID_B$, the following conditions must all hold:
  - It must represent a transition between two valid account states.
  - Either $\GenesisID = \GenesisID_B$ or $\GenesisID$ is the empty string.
  - $\TxType$ is either "pay", "keyreg", "acfg", "axfer", "afrz",
-   "appl", or "hb".
+   "appl", "stpf", or "hb".
  - There are no extra fields that do not correspond to $\TxType$.
  - $0 \leq r_2 - r_1 \leq T_{\max}$.
  - $r_1 \leq r \leq r_2$.
