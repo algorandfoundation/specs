@@ -744,7 +744,7 @@ _transaction_ $\Tx$ represents a transition between two account states. A
 transaction contains the following fields:
 
  - The _transaction type_ $\TxType$, which is a short string that indicates the
-   type of a transaction.  The following transaction types are supported:
+   type of transaction. The following transaction types are supported:
 
    - Transaction type `pay` corresponds to a _payment_ transaction.
 
@@ -757,6 +757,8 @@ transaction contains the following fields:
    - Transaction type `afrz` corresponds to an _asset freeze_ transaction.
 
    - Transaction type `appl` corresponds to an _application call_ transaction.
+ 
+   - Transaction type `stpf` corresponds to a _state proof_ transaction.
 
    - Transaction type `hb` corresponds to a _heartbeat_ transaction.
 
