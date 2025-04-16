@@ -137,13 +137,13 @@ Algorand changes the ed25519 verification algorithm in the following way  (using
 
 
 - Reject non-canonical S (this check is actually required by [ed25519][ed25519] but not all libraries implement it)<br>
-```
+```text
  0 <= s < L 
  (where 
   L = 2^252+27742317777372353535851937790883648493)
 ```
 - Use the cofactor equation (this is the default verification equation in [ed25519][ed25519]):<br>
-```
+```text
   [8][S]B = [8]R + [8][K]A'
 ```
 

@@ -875,7 +875,8 @@ Subsequent lines may contain other pragma declarations (i.e., `#pragma <some-spe
 A few pseudo-ops simplify writing code. `int` and `byte` and `addr` and `method` followed by a constant record the constant to a `intcblock` or `bytecblock` at the beginning of code and insert an `intc` or `bytec` reference where the instruction appears to load that value. `addr` parses an Algorand account address base32 and converts it to a regular bytes constant. `method` is passed a method signature and takes the first four bytes of the hash to convert it to the standard method selector defined in [ARC4](https://github.com/algorandfoundation/ARCs/blob/main/ARCs/arc-0004.md)
 
 `byte` constants are:
-```
+
+```text
 byte base64 AAAA...
 byte b64 AAAA...
 byte base64(AAAA...)
@@ -901,7 +902,8 @@ octal, `0b` for binary, or decimal numbers.
 A label is defined by any string not some other opcode or keyword and ending in ':'. A label can be an argument (without the trailing ':') to a branching instruction.
 
 Example:
-```
+
+```text
 int 1
 bnz safe
 err
