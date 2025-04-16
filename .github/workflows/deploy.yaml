@@ -1,0 +1,52 @@
+name: CI
+
+on:
+  push:
+
+permissions:
+  contents: read
+  deployments: write
+
+jobs:
+  integration:
+    runs-on: ubuntu-22.04
+    name: Run acceptance
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup mdBook
+        uses: peaceiris/actions-mdbook@v2
+        with:
+          mdbook-version: 'latest'
+
+      - name: Run mdBook test
+        run: mdbook test
+
+      - name: Run mdBook build
+        run: mdbook build
+
+      - name: Upload the Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: mdbook-build
+          path: book
+
+  deployment:
+    needs:
+      - integration
+    runs-on: ubuntu-22.04
+    name: Run Cloudflare Deployment
+    steps:
+      - name: Download the Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: mdbook-build
+      - name: Publish to Cloudflare Pages
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CF_ACCOUNT_ID }}
+          gitHubToken: ${{ secrets.GITHUB_TOKEN }}
+          command: |
+            pages deploy dist --project-name ${{ secrets.CF_PROJECT_NAME }}
