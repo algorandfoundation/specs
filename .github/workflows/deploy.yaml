@@ -4,10 +4,10 @@ on:
   pull_request:
     branches:
       - develop
-      - main
   push:
     paths:
       - 'dev/**.md'
+      - 'src/**'
 
 permissions:
   contents: read
