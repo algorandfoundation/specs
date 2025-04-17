@@ -15,6 +15,13 @@ of the normative sections and provide readers with a comprehensive view the Algo
 reference implementation (`go-algorand`). Therefore, the language used in those
 sections is informal, descriptive, and discoursive.
 
+The current version of the Algorand Specifications reflects the latest version of the
+Algorand consensus protocol in its _normative_ sections and is generally aligned with
+the most recent stable release of `go-algorand` in its _non-normative_ sections.
+Specifications for previous consensus versions can be found via the link provided in
+the `current-protocol.upgrade-state` field of the block corresponding to the desired
+consensus version.
+
 ## Formatting
 
 The source code of this documentation is built in [CommonMark](https://commonmark.org/)
