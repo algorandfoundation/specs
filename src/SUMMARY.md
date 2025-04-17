@@ -12,6 +12,7 @@
 
 - [Overview]()
 - [Normative](./abft.md)
+  - [Players](./abft-participants.md)
 - [Non Normative]()
 
 # Algorand Ledger
