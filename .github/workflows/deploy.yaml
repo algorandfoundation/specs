@@ -55,4 +55,4 @@ jobs:
           accountId: ${{ secrets.CF_ACCOUNT_ID }}
           gitHubToken: ${{ secrets.GITHUB_TOKEN }}
           command: |
-            pages deploy dist --project-name ${{ secrets.CF_PROJECT_NAME }}
+            pages deploy . --project-name algorand-specs
