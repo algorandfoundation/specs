@@ -45,13 +45,13 @@ Q =
 
 The seed is valid if the following verification procedure succeeds:
 
-1. Let \\((\pk, B, r_{fv}, r_{lv}) = Record(L, r-\delta_b, I)\\); let \\(q_0 = Seed(L, r-\delta_s)\\).
+1. Let \\((pk, B, r_{fv}, r_{lv}) = Record(L, r-\delta_b, I)\\); let \\(q_0 = Seed(L, r-\delta_s)\\).
 
 2. If \\(p = 0\\), check \\(VRF.Verify(y, q_0, pk)\\), immediately returning
    failure if verification fails. Let
    \\(q_1 = Hash(I||VRF.ProofToHash(y))\\) and continue to step 4.
 
-3. If \\(p \ne 0\\), let \\(q_1 = \Hash(q_0)\\). Continue.
+3. If \\(p \ne 0\\), let \\(q_1 = Hash(q_0)\\). Continue.
 
 4. If \\(r \equiv (r \bmod \delta_s) \mod \delta_r\delta_s\\), then check
    \\(Q = Hash(q_1||DigestLookup(L, r-\delta_s\delta_r))\\). Otherwise,
