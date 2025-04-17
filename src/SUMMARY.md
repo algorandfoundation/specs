@@ -16,6 +16,7 @@
     - [Votes](./abft-messages-votes.md)
     - [Bundles](./abft-messages-bundles.md)
     - [Proposals](./abft-messages-proposals.md)
+    - [Seed](./abft-messages-seed.md)
 - [Non Normative]()
 
 # Algorand Ledger
