@@ -13,7 +13,7 @@ implementation. The components of the non-normative sections are not enforced th
 the Algorand consensus protocol. The scope of these sections is to ease understanding
 of the normative sections and provide readers with a comprehensive view the Algorand
 reference implementation (`go-algorand`). Therefore, the language used in those
-sections is less formal, descriptive, and discoursive.
+sections is informal, descriptive, and discoursive.
 
 ## Formatting
 
