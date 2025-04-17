@@ -4,9 +4,9 @@ The Algorand Specifications consist of _normative_ and _non-normative_ sections.
 
 The _normative_ sections formally define Algorand. All the components of the normative
 sections are gated by the Algorand consensus protocol. The scope of these sections
-is to provide a complete and correct formal specification of the Algorand protocol,
-regardless of the implementation. Therefore, the language used in those sections
-is formal, prescriptive, and succinct.
+is to provide a complete and correct specification of the Algorand protocol, regardless
+of the implementation. Therefore, the language used in those sections is formal,
+prescriptive, and succinct.
 
 The _non-normative_ sections provide context and auxiliary information for the Algorand
 implementation. The components of the non-normative sections are not enforced through
