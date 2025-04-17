@@ -34,4 +34,6 @@ The `code-blocks` may contain pseudo-code or real code snippets.
 
 Mathematical formulas are defined with [MathJax](https://www.mathjax.org/).
 
-Diagrams are defined with [Mermaid](https://mermaid.js.org/).
+Diagrams' source code is defined with [Mermaid](https://mermaid.js.org/).
+
+Figures' source code is defined with [Excalidraw](https://excalidraw.com/).
