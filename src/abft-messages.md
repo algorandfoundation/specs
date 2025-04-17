@@ -28,7 +28,7 @@ Steps are named for clarity and are defined as follows:
 
 The following functions are defined on \\(s\\):
 
-- _Committee Size_: \\(CommitteeSize(s)\\) is a 64-bit integer defined as follows:
+- \\(CommitteeSize(s)\\) is a 64-bit integer defined as follows:
 
   \\[
   CommitteeSize(s) =
@@ -43,8 +43,7 @@ The following functions are defined on \\(s\\):
   \end{cases}
   \\]
 
-- _Committee Threshold_: \\(CommitteeThreshold(s)\\) is a 64-bit integer defined
-as follows:
+- \\(CommitteeThreshold(s)\\) is a 64-bit integer defined as follows:
 
   \\[
   CommitteeThreshold(s) =
