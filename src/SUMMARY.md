@@ -12,6 +12,7 @@
 
 - [Overview]()
 - [Normative](./abft.md)
+  - [Notation](./abft-notation.md)
 - [Non Normative]()
 
 # Algorand Ledger
