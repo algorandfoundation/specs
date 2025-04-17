@@ -12,6 +12,7 @@
 
 - [Overview]()
 - [Normative](./abft.md)
+  - [Ledger](./abft-ledger.md)
 - [Non Normative]()
 
 # Algorand Ledger
