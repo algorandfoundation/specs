@@ -6,13 +6,14 @@
 
 # Introduction
 
-- [Reading Guidelines]()
+- [Reading Guidelines](./reading-guidelines.md)
 
 # Algorand BFT Protocol
 
 - [Overview]()
 - [Normative](./abft.md)
   - [Notation](./abft-notation.md)
+  - [Parameters](./abft-parameters.md)
 - [Non Normative]()
 
 # Algorand Ledger

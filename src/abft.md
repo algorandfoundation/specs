@@ -8,43 +8,6 @@ abstract: >
 
 
 
-Parameters
-==========
-
-\newcommand \FilterTimeout {\mathrm{FilterTimeout}}
-
-\newcommand \DeadlineTimeout {\mathrm{DeadlineTimeout}}
-
-The protocol is parameterized by the following constants:
-
- - $\lambda, \lambda_{0min}, \lambda_{0max}, \lambda_f, \Lambda, \Lambda_0$ are values representing durations of time.
- - $\delta_s, \delta_r$ are positive integers (the "seed lookback" and
-   "seed refresh interval").
-
-For convenience, we define $\delta_b$ (the "balance lookback") to be
-$2\delta_s\delta_r$.
-
-We define $\FilterTimeout(p)$ on period $p$ as follows:
-
-  - If $p = 0$:
-    The $\FilterTimeout(p)$ is calculated dynamically based on the lower 95th percentile of observed 
-    lowest credential per round arrival times. 
-
-    - 2$\lambda_{0min} <= \FilterTimeout(p) <= 2\lambda_{0max}$
-  - If $p \ne 0$:
-    - $\FilterTimeout(p) = 2\lambda$
-
-We define $\DeadlineTimeout(p)$ on period $p$ as follows:
-
-  - If $p = 0$:
-    - $\DeadlineTimeout(p) = \Lambda_0$
-  - If $p \ne 0$:
-    - $\DeadlineTimeout(p) = \Lambda$
-
-
-Algorand sets $\delta_s = 2$, $\delta_r = 80$, $\lambda = 2$ seconds, $\lambda_{0min} = 0.25$ seconds, 
-$\lambda_{0max} = 1.5$ seconds, $\lambda_f = 5$ minutes, $\Lambda = 17$ seconds, and $\Lambda_0 = 4$ seconds.
-
 Identity, Authorization, and Authentication
 ===========================================
 
