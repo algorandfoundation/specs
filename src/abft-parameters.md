@@ -38,7 +38,7 @@ lower 95th percentile of the observed lowest credentials per round arrival time:
 
   - \\(10\lambda_{0min} <= FilterTimeout(p) <= 2\lambda_{0max}\\)
 
-> Refer to the [non-normative](abft-overview.md#dynamic-filter-timeout) section 
+> Refer to the [non-normative](abft-overview.md#dynamic-filter-timeout) section
 > for details about the implementation of the dynamic filtering mechanism.
 
 - If \\(p \ne 0\\):
