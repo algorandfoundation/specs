@@ -9,7 +9,8 @@ The following functions are defined on \\(e\\):
 
 - _Encoding_: \\(Encoding(e) = x\\) where \\(x\\) is a variable-length bitstring.
 
-- _Summarizing_: \\(Digest(e) = h\\) where \\(h\\) is a 256-bit integer[^1].
+- _Summarizing_: \\(Digest(e) = h\\) where \\(h\\) is a 256-bit integer. \\(h\\)
+should be a cryptographic commitment to the contents of \\(e\\).
 
 A _ledger_ is a sequence of entries \\(L = (e_1, e_2, \ldots, e_n)\\).
 
@@ -46,7 +47,3 @@ which produces an object \\(o\\) for which \\(ValidEntry(L, o) = 1\\).
 
 > For implementation details on this procedure, see the _block assembly_ section
 > in the [Algorand Ledger Overview](./ledger-overview.md).
-
----
-
-[^1]: \\(h\\) should be a cryptographic commitment to the contents of \\(e\\).
