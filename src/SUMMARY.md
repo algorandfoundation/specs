@@ -6,7 +6,7 @@
 
 # Introduction
 
-- [Reading Guidelines]()
+- [Reading Guidelines](./reading-guidelines.md)
 
 # Algorand BFT Protocol
 
