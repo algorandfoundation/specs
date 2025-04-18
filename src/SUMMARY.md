@@ -14,6 +14,11 @@
 - [Normative](./abft.md)
   - [Notation](./abft-notation.md)
   - [Parameters](./abft-parameters.md)
+  - [State Transitions](./abft-state-transitions.md)
+    - [New Round](./abft-state-transitions-new-round.md)
+    - [New Period](./abft-state-transitions-new-period.md)
+    - [Garbage Collection](./abft-state-transitions-garbage-collection.md)
+    - [New Step](./abft-state-transitions-new-step.md)
 - [Non Normative]()
 
 # Algorand Ledger
