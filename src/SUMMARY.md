@@ -12,6 +12,7 @@
 
 - [Overview]()
 - [Normative](./abft.md)
+  - [Parameters](./abft-parameters.md)
   - [State Machine](./abft-state-machine.md)
   - [Player State](./abft-player-state.md)
 - [Non Normative]()
