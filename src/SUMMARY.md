@@ -12,6 +12,7 @@
 
 - [Overview]()
 - [Normative](./abft.md)
+  - [Notation](./abft-notation.md)
   - [Parameters](./abft-parameters.md)
 - [Non Normative]()
 
