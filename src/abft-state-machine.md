@@ -28,6 +28,7 @@ The state machine _receives_ two types of events as inputs.
 1. _message events_: A message event is received when a vote, a
    proposal, or a bundle is received. A message event is simply
    written as the message that is received.
+
 2. _timeout events_: A timeout event is received when a specific
    amount of time passes after the beginning of a period. A timeout
    event \\(\lambda\\) seconds after a period \\(p\\) begins is denoted
