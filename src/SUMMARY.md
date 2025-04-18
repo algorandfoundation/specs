@@ -6,12 +6,13 @@
 
 # Introduction
 
-- [Reading Guidelines]()
+- [Reading Guidelines](./reading-guidelines.md)
 
 # Algorand BFT Protocol
 
 - [Overview]()
 - [Normative](./abft.md)
+  - [Parameters](./abft-parameters.md)
   - [Players](./abft-participants.md)
 - [Non Normative]()
 

@@ -41,42 +41,70 @@ documents, which this document will cite when available.
 All integers described in this document are unsigned.
 
 
-Parameters
-==========
+Identity, Authorization, and Authentication
+===========================================
 
-\newcommand \FilterTimeout {\mathrm{FilterTimeout}}
+\newcommand \pk {\mathrm{pk}}
+\newcommand \sk {\mathrm{sk}}
+\newcommand \fv {\text{first}}
+\newcommand \lv {\text{last}}
+\newcommand \Sign {\mathrm{Sign}}
+\newcommand \Verify {\mathrm{Verify}}
+\newcommand \Rand {\mathrm{Rand}}
 
-\newcommand \DeadlineTimeout {\mathrm{DeadlineTimeout}}
+\newcommand \Bbar {\bar{B}}
+\newcommand \taubar {\bar{\tau}}
 
-The protocol is parameterized by the following constants:
+A player is uniquely identified by a 256-bit string $I$ called an
+_address_.
 
- - $\lambda, \lambda_{0min}, \lambda_{0max}, \lambda_f, \Lambda, \Lambda_0$ are values representing durations of time.
- - $\delta_s, \delta_r$ are positive integers (the "seed lookback" and
-   "seed refresh interval").
+Each player owns exactly one _participation keypair_. A participation
+keypair consists of a _public key_ $\pk$ and a _secret key_ $\sk$.
+A keypair is an opaque object which is defined in the [specification
+of participation keys in Algorand][partkey-spec]. Each participation
+keypair is valid for a range of rounds $(r_\fv, r_\lv)$.
 
-For convenience, we define $\delta_b$ (the "balance lookback") to be
-$2\delta_s\delta_r$.
+Let $m, m'$ be arbitrary sequences of bits, $B_k, \Bbar$ be 64-bit integers
+representing balances in microalgos with rewards applied,
+$\tau, \taubar$ be 32-bit integers, and $Q$ be a 256-bit string.  Let
+$(\pk_k, \sk_k)$ be some valid keypair.
 
-We define $\FilterTimeout(p)$ on period $p$ as follows:
+A secret key supports a _signing_ procedure
+$$
+y := \Sign(m, m', \sk_k, B_k, \Bbar, Q, \tau, \taubar)
+$$
+where $y$ is opaque and are cryptographically resistant to tampering,
+where defined.  Signing is not defined on many inputs: for any given
+input, signing may fail to produce an output.
 
-  - If $p = 0$:
-    The $\FilterTimeout(p)$ is calculated dynamically based on the lower 95th percentile of observed 
-    lowest credential per round arrival times. 
+The following functions are defined on $y$:
 
-    - 2$\lambda_{0min} <= \FilterTimeout(p) <= 2\lambda_{0max}$
-  - If $p \ne 0$:
-    - $\FilterTimeout(p) = 2\lambda$
+ - _Verifying_:
+   $\Verify(y, m, m', \pk_k, B_k, \Bbar, Q, \tau, \taubar) = w$, where
+   $w$ is a 64-bit integer called the _weight_ of $y$. $w \neq 0$ if
+   and only if $y$ was produced by signing by $\sk_k$ (up to
+   cryptographic security).  $w$ is uniquely determined given fixed
+   values of $m', \pk_k, B_k, \Bbar, Q, \tau, \taubar$.
 
-We define $\DeadlineTimeout(p)$ on period $p$ as follows:
+ - _Comparing_: Fixing the inputs $m', \Bbar, Q, \tau, \taubar$ to a
+   signing operation, there exists a total ordering on the outputs
+   $y$. In other words, if
+   $f(\sk, B) = \Sign(m, m', \sk, B, \Bbar, Q, \tau, \taubar) = y$,
+   and $S = \{(\sk_0, B_0), (\sk_1, B_1), \ldots, (\sk_n, B_n)\}$, then
+   $\{f(x) | x \in S\}$ is a totally ordered set.  We write that
+   $y_1 < y_2$ if $y_1$ comes before $y_2$ in this ordering.
 
-  - If $p = 0$:
-    - $\DeadlineTimeout(p) = \Lambda_0$
-  - If $p \ne 0$:
-    - $\DeadlineTimeout(p) = \Lambda$
+ - _Generating Randomness_: Let $y$ be a valid output of a signing
+   operation with $\sk_k$. Then $r = \Rand(y, \pk_k)$ is defined to be
+   a pseudorandom 256-bit integer (up to cryptographic security).  $r$
+   is uniquely determined given fixed values of
+   $m', \pk_k, B_k, \Bbar, Q, \tau, \taubar$.
 
+The signing procedure is allowed to produce a nondeterministic output,
+but the functions above must be well-defined with respect to a given
+input to the signing procedure (e.g., a procedure that implements
+$\Verify(\Sign(\ldots))$ always returns the same value).
 
-Algorand sets $\delta_s = 2$, $\delta_r = 80$, $\lambda = 2$ seconds, $\lambda_{0min} = 0.25$ seconds, 
-$\lambda_{0max} = 1.5$ seconds, $\lambda_f = 5$ minutes, $\Lambda = 17$ seconds, and $\Lambda_0 = 4$ seconds.
 
 The Ledger of Entries
 =====================
