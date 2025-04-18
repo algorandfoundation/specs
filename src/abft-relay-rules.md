@@ -16,4 +16,4 @@ from the peer).
 > [Algorand Network Overview](./network-overview.md).
 
 We say that a player _ignores_ a message if it produces no outputs on
-Receiving that message.
+receiving that message.
