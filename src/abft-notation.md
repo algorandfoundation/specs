@@ -27,4 +27,4 @@ implementation of some opaque object.
 Opaque data definitions and semantics may be specified in other
 documents, which this document will cite when available.
 
-All integers described in this document are unsigned.
+All integers described in this document are unsigned, with a maximum value of 2^64-1, unless otherwise noted.
