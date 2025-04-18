@@ -33,7 +33,7 @@ For convenience, we define:
 We define \\(FilterTimeout(p)\\) on a _period_ \\(p\\) as follows:
 
 - If \\(p = 0\\) and a sufficient history of lowest credential arrival times is
-available[^1], the \\(FilterTimeout(p)\\) is calculated dynamically based on the
+available, the \\(FilterTimeout(p)\\) is calculated dynamically based on the
 lower 95th percentile of the observed lowest credentials per round arrival time:
 
   - \\(10\lambda_{0min} <= FilterTimeout(p) <= 2\lambda_{0max}\\)
@@ -70,9 +70,3 @@ We define \\(DeadlineTimeout(p)\\) on _period_ \\(p\\) as follows:
 | \\(\lambda_f\\)      | 300   | seconds |
 | \\(\Lambda\\)        | 15    | seconds |
 | \\(\Lambda_0\\)      | 4     | seconds |
-
----
-
-[^1]: The protocol needs to have been operational for a certain time to be able
-to compute a statistically significant 95th percentile of credentials deemed prioritary
-by the ["lowest credential" criteria](#special-values).
