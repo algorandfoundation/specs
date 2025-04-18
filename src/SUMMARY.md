@@ -14,6 +14,7 @@
 - [Normative](./abft.md)
   - [Notation](./abft-notation.md)
   - [Parameters](./abft-parameters.md)
+  - [Ledger](./abft-ledger.md)
   - [Messages](./abft-messages.md)
     - [Data Types](./abft-messages-data-types.md)
     - [Votes](./abft-messages-votes.md)
