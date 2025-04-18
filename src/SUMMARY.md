@@ -15,6 +15,12 @@
   - [Notation](./abft-notation.md)
   - [Parameters](./abft-parameters.md)
   - [Ledger](./abft-ledger.md)
+  - [Messages](./abft-messages.md)
+    - [Data Types](./abft-messages-data-types.md)
+    - [Votes](./abft-messages-votes.md)
+    - [Bundles](./abft-messages-bundles.md)
+    - [Proposals](./abft-messages-proposals.md)
+    - [Seed](./abft-messages-seed.md)
 - [Non Normative]()
 
 # Algorand Ledger
