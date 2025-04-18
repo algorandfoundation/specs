@@ -13,6 +13,7 @@
 - [Overview]()
 - [Normative](./abft.md)
   - [State Machine](./abft-state-machine.md)
+  - [Player State](./abft-player-state.md)
 - [Non Normative]()
 
 # Algorand Ledger
