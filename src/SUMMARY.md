@@ -16,6 +16,7 @@
   - [Relay Rules](./abft-relay-rules.md)
     - [Votes](./abft-relay-rules-votes.md)
     - [Bundles](./abft-relay-rules-bundles.md)
+    - [Proposals](./abft-relay-rules-proposals.md)
 - [Non Normative]()
 
 # Algorand Ledger
