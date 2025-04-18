@@ -94,7 +94,7 @@ Observe that valid votes contain outputs of the \\(Sign\\) procedure; i.e.,
 > the "original proposer" must be the voter.
 >
 > - The \\(Propose\\), \\(Soft\\), \\(Cert\\), \\(Late\\), and \\(Redo\\) steps
-> must vote for an actual proposal. The \\(Down\\) step must only vote for $\bot$.
+> must vote for an actual proposal. The \\(Down\\) step must only vote for \\(\bot\\).
 >
 > - The last condition checks that the vote was properly signed by a voter who was
 > selected to serve on the committee for this _round_, _period_, and _step_. The
