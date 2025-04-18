@@ -51,7 +51,9 @@ The following functions are defined on \\(s\\):
 A _proposal-value_ is a tuple \\(v = (I, p, Digest(e), Hash(Encoding(e)))\\) where:
 
 - \\(I\\) is an address (the "original proposer"),
+
 - \\(p\\) is a period (the "original period"),
+
 - \\(Hash\\) is some cryptographic hash function.
 
 The special proposal-value where all fields are the zero-string is called the _bottom

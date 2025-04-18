@@ -20,7 +20,9 @@ More formally, suppose \\(I\\) is a correct proposer in round \\(r\\) and period
 Let
 
 - \\((pk, B, r_{fv}, r_{lv}) = Record(L, r - \delta_b, I)\\),
+
 - \\(sk\\) be the secret key corresponding to \\(pk\\),
+
 - \\(\alpha\\) be a 256-bit integer.
 
 Then \\(I\\) computes the seed proof \\(y\\) for a new entry as follows:

@@ -3,9 +3,13 @@
 Let
 
 - \\(I\\) be an _address_,
+
 - \\(r\\) be a _round_,
+
 - \\(p\\) be a _period_,
+
 - \\(s\\) be a _step_,
+
 - \\(v\\) be a _proposal-value_.
 
 Let \\(x\\) be a canonical encoding of the 5-tuple \\((I, r, p, s, v)\\), and let
@@ -55,7 +59,6 @@ We say that this vote is _valid with respect to_ \\(L\\) (or simply _valid_ if
 - \\(r \leq |L| + 2\\)
 
 - Let \\(v = (I_{orig}, p_{orig}, d, h)\\).
-
   - If \\(s = 0\\), then \\(p_{orig} \le p\\).
   - Furthermore, if \\(s = 0\\) and \\(p = p_{orig}\\), then \\(I = I_{orig}\\)$.
 
@@ -66,7 +69,6 @@ side. It would be easy to add this as an additional check. -->
 if \\(s = Down\\), \\(v = \bot\\).
 
 - Let
-
   - \\((pk, B, r_{fv}, r_{lv}) = Record(L, r - \delta_b, I)\\),
   - \\(\bar{B} = Stake(L, r - \delta_b, r)\\),
   - \\(Q = Seed(L, r - \delta_s)\\),
@@ -74,7 +76,6 @@ if \\(s = Down\\), \\(v = \bot\\).
   - \\(\bar{\tau} = CommitteeSize(s)\\).
 
   Then
-
   - \\(Verify(y, x, x', pk, B, \bar{B}, Q, \tau, \bar{\tau}) \neq 0\\),
   - \\(r_{fv} \leq r \leq r_{lv}\\).
 
