@@ -13,6 +13,7 @@
 - [Overview]()
 - [Normative](./abft.md)
   - [Parameters](./abft-parameters.md)
+  - [Relay Rules](./abft-relay-rules.md)
 - [Non Normative]()
 
 # Algorand Ledger
