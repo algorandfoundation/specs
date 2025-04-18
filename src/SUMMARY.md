@@ -14,6 +14,7 @@
 - [Normative](./abft.md)
   - [Notation](./abft-notation.md)
   - [Parameters](./abft-parameters.md)
+  - [Ledger](./abft-ledger.md)
 - [Non Normative]()
 
 # Algorand Ledger

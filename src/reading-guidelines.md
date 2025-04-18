@@ -39,8 +39,13 @@ with [mdBook](https://rust-lang.github.io/mdBook/index.html).
 
 The `code-blocks` may contain pseudo-code or real code snippets.
 
-Mathematical formulas are defined with [MathJax](https://www.mathjax.org/).
+Mathematical formulas are defined with [MathJax](https://www.mathjax.org/)[^1].
 
 Diagrams' source code is defined with [Mermaid](https://mermaid.js.org/).
 
 Figures' source code is defined with [Excalidraw](https://excalidraw.com/).
+
+---
+
+[^1]: For a correct rendering of MathJax is recommended to right-click on any formula
+and select `Math Settings -> Math Renderer -> Common HTML` from the drop-down menu.
