@@ -1,24 +1,24 @@
 # New Round
 
-When a player observes that a new round \\((r, 0)\\) has begun, the player
+When a player observes that a new round \\( (r, 0) \\) has begun, the player
 sets
 
-- \\(\bar{s} := s\\),
+- \\( \bar{s} := s \\),
 
-- \\(\bar{v} := \bot\\),
+- \\( \bar{v} := \bot \\),
 
-- \\(p := 0\\),
+- \\( p := 0 \\),
 
-- \\(s := 0\\).
+- \\( s := 0 \\).
 
 Specifically, if a new round has begun, then
 
-\\[
+$$
 N((r-i, p, s, \bar{s}, V, P, \bar{v}), L, \ldots)
 = ((r, 0, 0, s, V', P', \bot), L', \ldots)
-\\]
+$$
 
-for some \\(i > 0\\).
+for some \\( i > 0 \\).
 
 > ⚙️ **IMPLEMENTATION**
 >
