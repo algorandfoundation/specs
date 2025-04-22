@@ -18,7 +18,7 @@ A player's freshest bundle is a complete bundle defined as follows:
 - \\( \Bundle(r, p, \Soft, v) \subset V \\) for some \\( v \\), if it exists, or
 else
 
-- \\( \Bundle(r, p-1, s, \bot) \subset V \\) for some \\( s > Cert \\), if it exists,
+- \\( \Bundle(r, p-1, s, \bot) \subset V \\) for some \\( s > \Cert \\), if it exists,
 or else
 
 - \\( \Bundle(r, p-1, s, v) \subset V \\) for some \\( s > \Cert, v \neq \bot \\),
