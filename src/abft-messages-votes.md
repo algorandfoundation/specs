@@ -34,7 +34,7 @@ Vote(I, r, p, s, v)
 >
 > Vote [reference implementation](https://github.com/algorand/go-algorand/blob/b6e5bcadf0ad3861d4805c51cbf3f695c38a93b7/agreement/vote.go#L152).
 
-Moreover, let \\(L\\) be a ledger where \\(|L| \geq \max\{\delta_b, \delta_s\}\\).
+Moreover, let \\(L\\) be a ledger where \\(|L| \geq \delta_b\\).
 
 Let
 
