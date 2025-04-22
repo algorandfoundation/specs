@@ -14,10 +14,10 @@ where
 
 \\[
 \begin{aligned}
-V^*_{r, p}
+V^\ast_{r, p}
 &=    \\{ Vote(I, r', p', \bar{s}, v) | Vote \in V, r' < r \\} \\\\\\
 &\cup \\{ Vote(I, r', p', \bar{s}, v) | Vote \in V, r' = r, p' + 1 < p \\}
 \end{aligned}
 \\]
 
-and \\(P^*_{r, p}\\) is defined similarly.
+and \\(P^\ast_{r, p}\\) is defined similarly.
