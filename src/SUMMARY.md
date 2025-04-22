@@ -11,7 +11,7 @@
 # Algorand BFT Protocol
 
 - [Overview]()
-- [Normative](./abft.md)
+- [Normative]()
   - [Notation](./abft-notation.md)
   - [Parameters](./abft-parameters.md)
   - [Ledger](./abft-ledger.md)
@@ -28,25 +28,25 @@
 # Algorand Ledger
 
 - [Overview]()
-- [Normative](./ledger.md)
+- [Normative]()
 - [Non Normative]()
 
 # Algorand Virtual Machine
 
 - [Overview]()
-- [Normative](./avm.md)
+- [Normative]()
 - [Non Normative]()
 
 # Algorand Keys
 
 - [Overview]()
-- [Normative](./partkey.md)
+- [Normative]()
 - [Non Normative]()
 
 # Algorand Cryptographic Primitives
 
 - [Overview]()
-- [Normative](./crypto.md)
+- [Normative]()
 - [Non Normative]()
 
 # Algorand Network
