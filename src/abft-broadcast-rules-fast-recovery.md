@@ -25,3 +25,10 @@ exists an \\( s_1 > \Cert \\) such that \\( \Bundle(r, p-1, s_1, \bar{v}) \\) wa
 Finally, the player broadcasts all \\( \Vote(I, r, p, \Late, v) \in V\\), all
 \\( \Vote(I, r, p, \Redo, v) \in V\\), and all \\( \Vote(I, r, p, \Down, \bot) \in V \\)
 that it has observed.
+
+> ⚙️ **IMPLEMENTATION**
+>
+> Fast recovery [reference implementation](https://github.com/algorand/go-algorand/blob/b6e5bcadf0ad3861d4805c51cbf3f695c38a93b7/agreement/player.go#L150).
+
+> For a detailed pseudocode overview of the fast recovery routine, along with protocol
+> recovery run examples, refer to the Algorand ABFT [non-normative section](./abft-overview.md).
