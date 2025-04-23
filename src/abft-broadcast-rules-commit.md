@@ -13,6 +13,9 @@ player appends \\( e \\) to the sequence of entries on its ledger \\( L \\).
 (Evidently, this occurs either after a vote is received or after a
 bundle is received.)
 
+> For further details on how entry commitment may be implemented, refer to the
+> Algorand Ledger [non-normative section](./ledger-overview.md).
+
 In other words, if observing a cert-vote causes the player to commit
 \\( e \\),
 
