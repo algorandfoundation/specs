@@ -35,9 +35,12 @@ then:
 is implicitly assumed that \\( s_o \neq \Cert \\)), or else
 
 - \\( s_o, s_e \neq \Cert \\) and \\( \Bundle_e(r, p+i, s_e, v_e) f_> \Bundle_o(r, p, s_o, v_o) \\),
-with \\( i > 0 \\), otherwise
+with \\( i > 0 \\), or else
 
-- \\( \Bundle_e(r, p, Next_s, v_e) f_> \Bundle_o(r, p, \Soft, v_o )\\).
+- \\( \Bundle_e(r, p, Next_s, v_e) f_> \Bundle_o(r, p, \Soft, v_o )\\), otherwise
+
+- \\( Bundle_e(r, p, \Next_s, \bot) \ f_> \Bundle_o(r, p, \Next_{s'}, v_o) \\)
+(for any \\( v_o \neq \bot \\)).
 
 For all other cases, the relation is undefined.
 
