@@ -22,6 +22,9 @@ was observed, then the player broadcasts* \\( \Vote(I, r, p, \Soft, \bar{v}) \\)
 
 - otherwise, the player does nothing.
 
+> For a detailed overview of how the filtering step may be implemented, refer to
+> the Algorand ABFT [non-normative section](./abft-overview.md).
+
 In other words, in the first case above,
 
 $$
