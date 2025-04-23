@@ -6,8 +6,8 @@ progress is driven mainly by two types of events:
 - **Time Events**: triggered by the node’s local clock. The Agreement Protocol
 defines the duration of the timeouts for each protocol stage.
 
-- **Threshold Events**: triggered by the votes expressed by random committees and
-counted by the node. The Agreement Protocol defines the number of votes for each
+- **Threshold Events**: triggered by the votes expressed by randomly elected committees
+and counted by the node. The Agreement Protocol defines the number of votes for each
 protocol stage.
 
 Analogous to execution coordinates, three integers taken together provide enough
