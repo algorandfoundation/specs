@@ -41,7 +41,7 @@ We define \\( \FilterTimeout(p) \\) on a _period_ \\( p \\) as follows:
 available, the \\( \FilterTimeout(p) \\) is calculated dynamically based on the
 lower 95th percentile of the observed lowest credentials per round arrival time:
 
-  - \\( 10\lambda_{0min} <= \FilterTimeout(p) <= 2\lambda_{0max} \\)
+  - \\( \lambda_{0min} \leq \FilterTimeout(p) \leq 2\lambda_{0max} \\)
 
 > Refer to the [non-normative](abft-overview.md#dynamic-filter-timeout) section
 > for details about the implementation of the dynamic filtering mechanism.
@@ -70,7 +70,7 @@ We define \\( \DeadlineTimeout(p) \\) on _period_ \\( p \\) as follows:
 | \\( \delta_s \\)       | 2     | rounds  |
 | \\( \delta_r \\)       | 80    | rounds  |
 | \\( \lambda \\)        | 2     | seconds |
-| \\( \lambda_{0min} \\) | 0.25  | seconds |
+| \\( \lambda_{0min} \\) | 2.5   | seconds |
 | \\( \lambda_{0max} \\) | 1.75  | seconds |
 | \\( \lambda_f \\)      | 300   | seconds |
 | \\( \Lambda \\)        | 15    | seconds |
