@@ -27,7 +27,29 @@ the seed computation, to ease its understanding.
 > more information on their definition and internal work, refer to the
 > [Algorand Cryptographic Primitive Specification](crypto.md#verifiable-random-function).
 
-For the computation algorithm, consider the following pseudocode:
+## Notation
+
+For the seed calculation algorithm, consider the following notation:
+
+| SYMBOL                    | DESCRIPTION                                      |
+|---------------------------|--------------------------------------------------|
+| \\( I \\)                 | Player address                                   |
+| \\( L \\)                 | Ledger (blocks and present sate)                 |
+| \\( r \\)                 | Current protocol round                           |
+| \\( p \\)                 | Current protocol period                          |
+| \\( \delta_s \\)          | Seed lookback (rounds)                           |
+| \\( \delta_r \\)          | Seed refresh interval (rounds)                   |
+| \\( L[r - n] \\)          | Block \\( r - n \\) of the ledger                |
+| \\( L[r - n]_Q \\)        | Seed of the block \\( r - n \\) of the ledger    |
+| \\( H(x) \\)              | Hash of \\( x \\)                                |
+| \\( \VRF \\)              | Verifiable Random Function                       |
+| \\( \VRF.\Prove \\)       | Computes the proof \\( y \\) of the \\( \VRF \\) |
+| \\( \VRF.\ProofToHash \\) | Computes the hash of \\( y \\)                   |
+| \\( Q \\)                 | Randomness seed                                  |
+
+## Algorithm
+
+For the seed calculation algorithm, consider the following pseudocode:
 
 ---
 
@@ -80,7 +102,7 @@ The function also computes the proof \\( \pi_{seed} \\), bundled up with the blo
 inside a proposal structure (for broadcasting), and used by nodes receiving the
 proposal as part of the proposal validation process.
 
-## Seed Re-randomization
+## Example
 
 The following is an example of seed computation in three adjacent blocks, chosen
 to show both branches of the **Algorithm 1** execution, according to
@@ -88,8 +110,8 @@ to show both branches of the **Algorithm 1** execution, according to
 
 Noting that:
 
-- The "seed lookback": \\( \delta_s = 2 \\),
-- The "seed refresh interval": \\( \delta_r = 80 \\).
+- \\( \delta_s = 2 \\),
+- \\( \delta_r = 80 \\).
 
 We define \\( \Rerand(r) = r \bmod \delta_s\delta_r \\).
 
