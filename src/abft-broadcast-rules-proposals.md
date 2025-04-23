@@ -43,6 +43,9 @@ otherwise.
 
 This consequently defines the matching proposal-value \\( v = (I, p, \Digest(e), \Hash(\Encoding(e))) \\).
 
+> For an in-depth overview of how proposal generation may be implemented, refer
+> to the Algorand Ledger [non-normative section](./ledger-overview.md).
+
 In other words, if the player generates a new proposal,
 
 $$
