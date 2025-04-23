@@ -18,7 +18,7 @@ $$
 The cryptographic seed is a source of randomness for many internal operations inside
 the protocol.
 
-A formal definition of the _seed_ (\\( Q \\)) can be found in the [normative specification](./abft-messages-seed.md).
+A formal definition of the _seed_ can be found in the [normative specification](./abft-messages-seed.md).
 
 This section provides an engineering and implementation-oriented way of conceptualizing
 the seed computation, to ease its understanding.
@@ -82,7 +82,7 @@ $$
 > Seed computation [reference implementation](https://github.com/algorand/go-algorand/blob/b6e5bcadf0ad3861d4805c51cbf3f695c38a93b7/agreement/proposal.go#L155).
 
 The function takes as input the _address_ \\( I \\) of an _online player_ who will
-be computing the seed.
+be computing the seed \\( Q \\).
 
 Note that the player needs to have registered participation keys on the node computing
 the seed, so as for the \\( \Secrets(I) \\) call (**Algorithm 1**, line 3) to retrieve
@@ -95,8 +95,8 @@ The function computes the cryptographic seed appended to the _block candidate_
 for round \\( r \\), which will be used (if said block candidate is committed) as
 a source of randomness for the \\( \VRF \\) in a future round.
 
-The seed \\( Q \\) is computed according to whether the function is called in the
-first period of the round, \\( p = 0 \\), or not.
+The seed is computed according to whether the function is called in the first period
+of the round, \\( p = 0 \\), or not.
 
 The function also computes the proof \\( \pi_{seed} \\), bundled up with the block
 inside a proposal structure (for broadcasting), and used by nodes receiving the
