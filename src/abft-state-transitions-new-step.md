@@ -17,7 +17,7 @@ player sets \\( s := \Next_0 \\).
 
 On observing a timeout event of \\( \DeadlineTimeout(p) + 2^{s_t}\lambda + u \\) where
 \\( u \in [0, 2^{s_t}\lambda) \\) sampled uniformly at random, the player sets
-\\( s := s_t = \Next_{s_t-3} \\).
+\\( s := s_t \\).
 
 In other words,
 
@@ -29,7 +29,7 @@ $$
 &&= ((r, p, \Next_0, \bar{s}, V, P, \bar{v}), L', \ldots) \\\\\
 &N((r, p, s, \bar{s}, V, P, \bar{v}), L,
 t(\DeadlineTimeout(p) + 2^{s_t}\lambda + u, p))
-&&= ((r, p, \Next_{s_t-3}, \bar{s}, V, P, \bar{v}), L', \ldots).
+&&= ((r, p, s_t, \bar{s}, V, P, \bar{v}), L', \ldots).
 \end{aligned}
 $$
 
