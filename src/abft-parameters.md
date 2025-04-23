@@ -48,7 +48,7 @@ lower 95th percentile of the observed lowest credentials per round arrival time:
 
 - If \\( p \ne 0 \\):
 
-  - \\( \FilterTimeout(p) = 4 \\) seconds (which coincides with \\( 2\lambda \\))
+  - \\( \FilterTimeout(p) = 4 \\) seconds (which coincides with \\( 2\lambda \\)).
 
 > This value is currently hardcoded in the reference implementation. However, it
 > should be equal to \\(2\lambda\\).

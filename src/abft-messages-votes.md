@@ -57,6 +57,8 @@ $$
 > Vote [reference implementation](https://github.com/algorand/go-algorand/blob/b6e5bcadf0ad3861d4805c51cbf3f695c38a93b7/agreement/vote.go#L152).
 
 Moreover, let \\( L \\) be a ledger where \\( |L| \geq \delta_b \\).
+Moreover, let \\( L \\) be a ledger where \\( |L| \geq \delta_b \geq \max\\{\delta_r, \delta_s\\} \\)
+(conceptually, the ledger is larger than the largest lookback parameter).
 
 Let
 
