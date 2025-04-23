@@ -23,7 +23,7 @@
     - [Seed](./abft-messages-seed.md)
 - [Non Normative](./abft-nn.md)
   - [General Concepts](./abft-nn-general-concepts.md)
-  - [Context Tuple](./abft-nn-context-tuple.md)
+  - [Context Tuple]()
   - [Seed Calculation]()
   - [Agreement Stages]()
     - [Dynamic Filter Timeout]()
