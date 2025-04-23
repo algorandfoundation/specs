@@ -12,11 +12,11 @@ On observing a timeout event of
 
 - \\( T = \DeadlineTimeout(p) \\) or
 
-- \\( T = \DeadlineTimeout(p) + 2^{s_t}\lambda + r \\) where \\( r \in [0, 2^{s_t}\lambda] \\)
-sampled uniformly at random, 
+- \\( T = \DeadlineTimeout(p) + 2^{s_t}\lambda + u \\) where \\( 0 < s_t \leq 249 \\)
+and \\( u \in [0, 2^{s_t}\lambda] \\) sampled uniformly at random, 
 
 the player attempts to resynchronize and then broadcasts*
-\\( \Vote(I, r, p, \Next_s, v) \\) where
+\\( \Vote(I, r, p, \Next_h, v) \\) where
 
 - \\( v = \sigma(S, r, p) \\) if \\( v \\) is committable in \\( (r, p) \\),
 
@@ -26,21 +26,35 @@ such that \\( \Bundle(r, p-1, s_1, \bar{v} )\\) was observed,
 
 - and \\( v = \bot \\) otherwise.
 
+Note that the broadcast vote:
+
+- Is for step \\( \Next_0 \\) if \\( T = \DeadlineTimeout(p) \),
+
+- Is for step \\( \Next_{s_t} \\) in any other case (this is, \\( h = 0 \\) or
+\\( h = s_t \\) according to the observed timeout event).
+
+> ⚙️ **IMPLEMENTATION**
+>
+> Next vote [reference implementation](https://github.com/algorand/go-algorand/blob/b6e5bcadf0ad3861d4805c51cbf3f695c38a93b7/agreement/player.go#L214).
+
+> For a detailed overview of how the recovery routine may be implemented, refer
+> to the Algorand ABFT [non-normative section](./abft-overview.md).
+
 In other words, if a proposal-value \\( v \\) is committable in the current
 period,
 
 $$
-N(S, L, t(T, p)) = (S', L, (\ldots, \Vote(I, r, p, \Next_s, v)));
+N(S, L, t(T, p)) = (S', L, (\ldots, \Vote(I, r, p, \Next_h, v)));
 $$
 
 while in the second case,
 
 $$
-N(S, L, t(T, p)) = (S', L, (\ldots, \Vote(I, r, p, \Next_s, \bar{v})));
+N(S, L, t(T, p)) = (S', L, (\ldots, \Vote(I, r, p, \Next_h, \bar{v})));
 $$
 
 and otherwise,
 
 $$
-N(S, L, t(T, p)) = (S', L, (\ldots, \Vote(I, r, p, \Next_s, \bot))).
+N(S, L, t(T, p)) = (S', L, (\ldots, \Vote(I, r, p, \Next_h, \bot))).
 $$
