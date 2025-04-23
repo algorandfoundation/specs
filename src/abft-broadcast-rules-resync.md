@@ -48,7 +48,7 @@ For all other cases, the relation is undefined.
 
 > ⚙️ **IMPLEMENTATION**
 >
-> Freshness relation [reference implementation.](https://github.com/algorand/go-algorand/blob/b6e5bcadf0ad3861d4805c51cbf3f695c38a93b7/agreement/events.go#L745)
+> Freshness relation [reference implementation](https://github.com/algorand/go-algorand/blob/b6e5bcadf0ad3861d4805c51cbf3f695c38a93b7/agreement/events.go#L745).
 
 Second, if the player broadcasted a bundle \\( \Bundle(r, p, s, v) \\), and \\( v \neq \bot \\),
 then the player broadcasts \\( \Proposal(v) \\) if the player has it.
