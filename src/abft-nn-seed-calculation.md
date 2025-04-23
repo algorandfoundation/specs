@@ -98,9 +98,9 @@ a source of randomness for the \\( \VRF \\) in a future round.
 The seed is computed according to whether the function is called in the first period
 of the round, \\( p = 0 \\), or not.
 
-The function also computes the proof \\( \pi_{seed} \\), bundled up with the block
-inside a proposal structure (for broadcasting), and used by nodes receiving the
-proposal as part of the proposal validation process.
+The function also computes the proof \\( y \\), bundled up with the block inside
+a proposal structure (for broadcasting), and used by nodes receiving the proposal
+as part of the proposal validation process.
 
 ## Example
 
