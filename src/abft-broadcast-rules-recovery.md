@@ -28,14 +28,22 @@ such that \\( \Bundle(r, p-1, s_1, \bar{v} )\\) was observed,
 
 Note that the broadcast vote:
 
-- Is for step \\( \Next_0 \\) if \\( T = \DeadlineTimeout(p) \),
+- Is for step \\( \Next_0 \\) if \\( T = \DeadlineTimeout(p) \\),
 
 - Is for step \\( \Next_{s_t} \\) in any other case (this is, \\( h = 0 \\) or
 \\( h = s_t \\) according to the observed timeout event).
 
 > ⚙️ **IMPLEMENTATION**
 >
-> Next vote [reference implementation](https://github.com/algorand/go-algorand/blob/b6e5bcadf0ad3861d4805c51cbf3f695c38a93b7/agreement/player.go#L214).
+> Next vote issuance [reference implementation](https://github.com/algorand/go-algorand/blob/b6e5bcadf0ad3861d4805c51cbf3f695c38a93b7/agreement/player.go#L214).
+>
+> Next vote timeout ranges computation [reference implementation](https://github.com/algorand/go-algorand/blob/5c49e9a54dfea12c6cee561b8611d2027c401163/agreement/types.go#L103).
+>
+> Call to \\( \Next_0 \\) [reference implementation](https://github.com/algorand/go-algorand/blob/b6e5bcadf0ad3861d4805c51cbf3f695c38a93b7/agreement/player.go#L125).
+> 
+> Subsequent calls to \\( \Next_{st} \\) [reference implementation](https://github.com/algorand/go-algorand/blob/b6e5bcadf0ad3861d4805c51cbf3f695c38a93b7/agreement/player.go#L128).
+>
+> Step increase in recovery step timeouts [reference implementation](https://github.com/algorand/go-algorand/blob/b6e5bcadf0ad3861d4805c51cbf3f695c38a93b7/agreement/player.go#L131).
 
 > For a detailed overview of how the recovery routine may be implemented, refer
 > to the Algorand ABFT [non-normative section](./abft-overview.md).
