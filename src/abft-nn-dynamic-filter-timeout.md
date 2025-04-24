@@ -3,7 +3,8 @@ $$
 \newcommand \CredentialHistory {\mathbf{C}}
 \newcommand \CredentialHistorySize {|\CredentialHistory|}
 \newcommand \CredentialIdx {i^\ast}
-\newcommand \TimeoutGracePeriod {\lambda_g}
+\newcommand \Timeout {T_\SoftVote}
+\newcommand \TimeoutGracePeriod {T_\epsilon}
 \newcommand \lambdaMin {\lambda_\text{0min}}
 \newcommand \lambdaMax {\lambda_\text{0max}}
 \newcommand \deltaL {\delta_\text{lag}}
@@ -14,11 +15,13 @@ $$
 An adaptive algorithm computes the _dynamic filter timeout_ (i.e., the timeout to
 trigger a call to \\( \SoftVote \\)).
 
-In regular conditions, the _filtering timeout_ \\( \lambda \\) tends to the minimum
+In regular conditions, the _filtering timeout_ \\( \Timeout \\) tends to the minimum
 \\( \lambdaMin \\).
 
-Whenever network conditions force the round advancement to stall, \\( \lambda \\)
+Whenever network conditions force the round advancement to stall, \\( \Timeout \\)
 will diverge towards the maximum of \\( \lambdaMax \\).
+
+> See the formal definition of the filtering timeout parameters in the [ABFT normative section](./abft-parameters.md).
 
 > ⚙️ **IMPLEMENTATION**
 >
@@ -37,7 +40,7 @@ was observed for that round.
 We now define the _credential round lag_, as:
 
 $$
-\deltaL = \min \left\\{ \left\lfloor \frac{2\lambda}{\lambdaMin} \right\rfloor, 8 \right\\}
+\deltaL = \min \left\\{ \left\lfloor \frac{2\Timeout}{\lambdaMin} \right\rfloor, 8 \right\\}
 $$
 
 to be the rounds’ lookback for \\( \CredentialHistory \\).
@@ -69,10 +72,10 @@ Finally, a \\( \TimeoutGracePeriod \\) extra time is added to the selected entry
 for the final filter timeout to be returned as
 
 $$
-\lambda = \CredentialHistory(\CredentialIdx) + \TimeoutGracePeriod
+\Timeout = \CredentialHistory[\CredentialIdx] + \TimeoutGracePeriod
 $$
 
-Note that the filter timeout \\( \lambdaMin \leq \lambda \leq \lambdaMax \\) is
+Note that the filter timeout \\( \lambdaMin \leq \Timeout \leq \lambdaMax \\) is
 clamped on the minimum and maximum bounds defined in the [ABFT normative section](./abft-parameters.md).
 
 > ⚙️ **IMPLEMENTATION**
@@ -86,8 +89,6 @@ clamped on the minimum and maximum bounds defined in the [ABFT normative section
 | \\( \CredentialHistorySize \\) | 40              | Size of the credential arrival time history circular array \\( \CredentialHistory \\).                                                      |
 | \\( \CredentialIdx \\)         | 37              | Entry of the (sorted) array \\( \CredentialHistory \\). Set to represent the 95th percentile (according to \\( \CredentialHistorySize \\)). |
 | \\( \TimeoutGracePeriod \\)    | 50 milliseconds | Filter extra time, atop the one calculated from \\( \CredentialHistory \\).                                                                 |
-
-> See the formal definition of the filtering timeout parameters in the [ABFT normative section](./abft-parameters.md).
 
 ---
 
