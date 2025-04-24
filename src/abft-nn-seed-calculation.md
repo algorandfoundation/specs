@@ -57,7 +57,7 @@ For the seed calculation algorithm, consider the following pseudocode:
 
 $$
 \begin{aligned}
-&\text{1: } \qquad \function \mathrm{ComputeSeedAndProof}(I) \\\\
+&\text{1: } \function \mathrm{ComputeSeedAndProof}(I) \\\\
 &\text{2: } \qquad \if p = 0 \then \\\\
 &\text{3: } \qquad \quad y \gets \VRF.\Prove(\Secrets(I)_{\text{VRFkey}}, L[r - \delta_s]_Q) \\\\
 &\text{4: } \qquad \quad \alpha \gets H(I || \VRF.\ProofToHash(y)) \\\\
@@ -71,7 +71,7 @@ $$
 &\text{12:} \qquad \quad Q \gets H(\alpha) \\\\
 &\text{13:} \qquad \endif \\\\
 &\text{14:} \qquad \return (Q, y) \\\\
-&\text{15:} \qquad \endfunction
+&\text{15: } \endfunction
 \end{aligned}
 $$
 
