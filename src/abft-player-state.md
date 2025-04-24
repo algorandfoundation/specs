@@ -65,34 +65,37 @@ for details.
 
 ## Special Values
 
-We define two functions \(( \mu(S, r, p), \sigma(S, r, p) \)), which are
+We define two functions \\( \mu(S, r, p), \sigma(S, r, p) \\), which are
 defined as follows:
 
 The _frozen value_ \\( \mu(S, r, p) \\) is defined as the _proposal-value_ \\( v \\)
 in the proposal vote in round \\(r\\) and period \\(p\\) that minimizes a credential
 priority function \\( \Priority(v) \\).
 
-Consider \\( w_j \\) is the weight of said proposal vote for \\( v \\), and \\( y \\)
-is the result of the signing procedure for \\( v \\), then the priority function is
-defined as
+Let
+
+- \\( w_j \\) be the weight of the proposal vote for \\( v \\) by player \\( I_j \\),
+- \\( y \\) be the result of the signing procedure for \\( v \\) by player \\( I_j \\).
+
+Then the priority function is defined as
 
 $$
-\Priority(v) = \min_{i \in [0, w_j)} \\{\mathsf{\Hash}(\VRF.\ProofToHash(y) \ || \ i)\\}
+\Priority(v) = \min_{i \in [0, w_j)} \\{\Hash(\VRF.\ProofToHash(y) \ || \ i)\\}
 $$
 
-where \\( w_j \\) is the weight of the proposal vote for player \\( I \\).
-
-More formally then, let
+More formally, then, let
 
 $$
-V_{r, p} = \\{\Vote(I, r, p, 0, v) | Vote \in V\\}
+V_{r, p, 0} = \\{\Vote(I, r, p, 0, v) | \Vote \in V\\}
 $$
 
-where \\( V \\) is the set of votes in \\( S \\). Then if \\( \Vote_l(r, p, 0, v_{min}) \\)
-is the vote such that
+where \\( V \\) is the set of votes in \\( S \\).
+
+Now if \\( \Vote(r, p, 0, v_{min}) \in V_{r, p, 0} \\) is the vote for the proposal
+value \\( v_\text{min} \\) such that
 
 $$
-\forall \ \Vote(I,r,p,0,v) \in V_{r, p}, v_{min} \neq v \implies \Priority(v_{min}) < \Priority(v)
+v_\text{min} = \min_{\Vote(I, \ldots , v) \in V_{r, p, 0}}\\{\Priority(v)\\}
 $$
 
 then \\( \mu(S, r, p) = v_{min} \\).
