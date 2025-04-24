@@ -96,4 +96,4 @@ and the proposal is already available, or if the proposal for an already present
 _certification bundle_ is received.
 
 [^2]: With the current parametrization, this corresponds to the 95th percentile of
-the accumulated arrival times history. 
+the accumulated arrival times history.
