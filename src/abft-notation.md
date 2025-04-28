@@ -36,12 +36,12 @@ The Algorand protocol's progress is described using a _context tuple_ \\((r, p, 
 which identifies the current state within the Agreement protocol's state machine.
 
 - \\(r\\) (_round_): Indicates the current round of the protocol. It increases monotonically
-and corresponds to the block being committed. It is driven by _protocol message
+and corresponds to the block being committed. It is driven by _protocol threshold
 events_.
 
 - \\(p\\) (_period_): Indicates the attempt number for reaching agreement in the
 current round[^1]. It is typically zero. A non-zero value reflects recovery from a failed
-commitment attempt. It is driven by _protocol messages events_.
+commitment attempt. It is driven by _protocol threshold events_.
 
 - \\(s\\) (_step_): Enumerates the stages of the Agreement protocol within a given
 period. It is driven by _protocol time events_.
