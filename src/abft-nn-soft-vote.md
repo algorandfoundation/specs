@@ -7,6 +7,7 @@ $$
 \newcommand \Sortition {\mathrm{Sortition}}
 \newcommand \Broadcast {\mathrm{Broadcast}}
 \newcommand \RetrieveProposal {\mathrm{RetrieveProposal}}
+\newcommand \DynamicFilterTimeout {\mathrm{DynamicFilterTimeout}}
 \newcommand \Soft {\mathit{soft}}
 \newcommand \Vote {\mathrm{Vote}}
 \newcommand \function {\textbf{function }}
@@ -91,7 +92,7 @@ $$
 > Soft vote filtering [reference implementation](https://github.com/algoradam/go-algorand/blob/master/data/committee/credential.go#L160C1-L187C2).
 > Soft vote issuance [reference implementation](https://github.com/algorand/go-algorand/blob/df0613a04432494d0f437433dd1efd02481db838/agreement/player.go#L170-L206).
 
-The soft vote stage is run after a timeout of \\( \DynamicFilterTimeout(p) \\)$
+The soft vote stage is run after a timeout of \\( \DynamicFilterTimeout(p) \\)
 (where \\( p \\) is the executing period of the node) is observed by the node (see
 the [dynamic filter timeout section](./abft-nn-dynamic-filter-timeout.md) for more
 details).
@@ -103,28 +104,26 @@ this stage performs a filtering action, keeping the lowest hashed value observed
 The priority function (**Algorithm 4** - Lines 4 to 9) should be interpreted as
 follows.
 
-Consider every proposal vote \\( \vt \\) in \\( V^\ast \\). Given the sortition
+Consider every proposal \\( \vt \\) in \\( V^\ast \\). Given the sortition
 hash \\( \ProofToHash(.) \\) output by the \\( \VRF \\) for the proposer account
 (see the cryptography [normative section](./crypto.md#verifiable-random-function)
-for details on \\( VRF \\)). For each \\( i \\) in the interval from \\( 0 \)) (inclusive)
+for details on \\( VRF \\)). For each \\( i \\) in the interval from \\( 0 \\) (inclusive)
 to the proposer credentials’ weight \\( w_j \\) (exclusive; the \\( j \\) output of \\( \Sortition(.) \\)
 inside the \\( \c \\) structure), the node hashes the concatenation of \\( \ProofToHash(.) \\)
-and \\( i \\), \\( \Hash(\VRF.\ProofToHash(y) || i) \\) (where \\( \Hash(.) \\) is
-the node’s general cryptographic hashing function (see the cryptography [normative section](crypto.md#hash-functions) for details).
+and \\( i \\), as \\( \Hash(\VRF.\ProofToHash(y) || i) \\) (where \\( \Hash(.) \\) is
+the node’s general cryptographic hashing function, see the cryptography [normative section](crypto.md#hash-functions) for details).
 
-Then (**Algorithm 4** - Lines 6 to 8), it keeps track of the proposal-value that
-minimizes the concatenation hashing.
+Then (**Algorithm 4** - Lines 6 to 8), the node keeps track of the proposal-value
+that minimizes the concatenation hashing.
 
 After running the filtering algorithm for all proposal votes observed, and assuming
 there was at least one vote in \\( V^\ast \\), the broadcasting section of the filtering
-algorithm is executed (**Algorithm 4** - Lines 11 to 15).
-
-For every _online_ managed account selected to be part of the \\( \Soft \\) voting
-committee, a \\( \Soft \\) vote is broadcast for the previously found filtered value
-\\( v \\).
+algorithm is executed (**Algorithm 4** - Lines 11 to 15). For every _online_ registered
+account, selected to be part of the \\( \Soft \\) voting committee, a \\( \Soft \\)
+vote is broadcast for the previously found filtered value \\( v \\).
 
 If the full proposal has already been observed and is available in \\( P \\), it
-is also broadcast.
+is also broadcast (**Algorithm 4** - Lines 16 to 17).
 
 If the previous assumption of non-empty \\( V^\ast \\) does not hold, no broadcasting
 is performed, and the node produces no output in its filtering step.
