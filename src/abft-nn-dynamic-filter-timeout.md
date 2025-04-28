@@ -10,7 +10,7 @@ $$
 \newcommand \deltaL {\delta_\text{lag}}
 $$
 
-# Dynamic filter timeout
+# Dynamic Filter Timeout
 
 An adaptive algorithm computes the _dynamic filter timeout_ (i.e., the timeout to
 trigger a call to \\( \SoftVote \\)).
