@@ -12,7 +12,7 @@ $$
 \newcommand \else {\textbf{else}}
 \newcommand \endif {\textbf{end if}}
 \newcommand \for {\textbf{for }}
-\newcommand \do {\textbf{do}}
+\newcommand \do {\textbf{ do}}
 \newcommand \endfor {\textbf{end for}}
 \newcommand \c {\mathit{credentials}}
 \newcommand \Proposal {\mathrm{Proposal}}
