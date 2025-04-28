@@ -69,7 +69,7 @@ We define two functions \\( \mu(S, r, p), \sigma(S, r, p) \\), which are
 defined as follows:
 
 The _frozen value_ \\( \mu(S, r, p) \\) is defined as the _proposal-value_ \\( v \\)
-in the proposal vote in round \\(r\\) and period \\(p\\) that minimizes a credential
+in the proposal vote in round \\( r \\) and period \\( p \\) that minimizes a credential
 priority function \\( \Priority(v) \\).
 
 Let
@@ -80,7 +80,7 @@ Let
 Then the priority function is defined as
 
 $$
-\Priority(v) = \min_{i \in [0, w_j)} \\{\Hash(\VRF.\ProofToHash(y) \ || \ i)\\}
+\Priority(v) = \min_{i \in [0, w_j)} \left\\{ \Hash \left( \VRF.\ProofToHash(y) || i \right) \right\\}
 $$
 
 More formally, then, let
