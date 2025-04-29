@@ -63,8 +63,7 @@ We define \\( \DeadlineTimeout(p) \\) on _period_ \\( p \\) as follows:
 
   - \\( \DeadlineTimeout(p) = \Lambda + \lambda \\)
 
-> ⚙️ **IMPLEMENTATION**
->
+{{#include ./.include/styless.md:impl}}
 > \\( \DeadlineTimeout \\) [reference implementation](https://github.com/algorand/go-algorand/blob/b6e5bcadf0ad3861d4805c51cbf3f695c38a93b7/agreement/types.go#L67).
 
 ## Values

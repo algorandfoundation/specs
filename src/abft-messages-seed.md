@@ -61,8 +61,7 @@ Q = \left\\{
 \right.
 $$
 
-> ⚙️ **IMPLEMENTATION**
->
+{{#include ./.include/styless.md:impl}}
 > Seed computation [reference implementation](https://github.com/algorand/go-algorand/blob/b6e5bcadf0ad3861d4805c51cbf3f695c38a93b7/agreement/proposal.go#L155).
 
 The seed is valid if the following verification procedure succeeds:
@@ -81,10 +80,10 @@ and continue to step 4.
 check \\( Q = q_1 \\).
 
 > Round \\( r \\) leader selection and committee selection both use the seed from
-\\( r-\delta_s \\) and the balances / public keys from \\( r-\delta_b \\).
+> \\( r-\delta_s \\) and the balances / public keys from \\( r-\delta_b \\).
 
 > For re-proposals, the period \\( p \\) used in this section is the _original_
-period, not the reproposal period.
+> period, not the reproposal period.
 
 > For a detailed overview of the seed computation algorithm and some explanatory
 > examples, refer to the non-normative [Algorand ABFT Overview](./abft-overview.md).
