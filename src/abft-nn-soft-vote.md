@@ -91,8 +91,7 @@ $$
 
 ---
 
-> ⚙️ **IMPLEMENTATION**
->
+{{#include ./.include/styless.md:impl}}
 > Soft vote filtering [reference implementation](https://github.com/algoradam/go-algorand/blob/master/data/committee/credential.go#L160C1-L187C2).
 >
 > Soft vote issuance [reference implementation](https://github.com/algorand/go-algorand/blob/df0613a04432494d0f437433dd1efd02481db838/agreement/player.go#L170-L206).
