@@ -37,7 +37,7 @@ _soft-vote_ for this round, as defined in the [normative section](./abft-player-
 
 <!-- TODO: Replace with anchored include once the normative section is merged -->
 $$
-\Priority(v) = \min_{i \in [0, w_j)} \left\\{ \Hash \left( \VRF.\ProofToHash(y) || i \right) \right\\}
+\Priority(v) = \min_{i \in [0, w_j)} \left\\{ \Hash \left( \VRF.\ProofToHash(y) || I_j || i \right) \right\\}
 $$
 
 Where:
