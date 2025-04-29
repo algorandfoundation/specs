@@ -77,8 +77,7 @@ $$
 
 ---
 
-> ⚙️ **IMPLEMENTATION**
->
+{{#include ./.include/styles.md:impl}}
 > Seed computation [reference implementation](https://github.com/algorand/go-algorand/blob/b6e5bcadf0ad3861d4805c51cbf3f695c38a93b7/agreement/proposal.go#L155).
 
 The function takes as input the _address_ \\( I \\) of an _online player_ who will
@@ -118,8 +117,7 @@ We define \\( \Rerand(r) = r \bmod \delta_s\delta_r \\).
 When \\( \Rerand(r) < \delta_s \\) we say we are _re-randomizing_ the seed \\( Q \\)
 for the round \\( r \\).
 
-> 📎 **EXAMPLE**
->
+{{#include ./.include/styles.md:example}}
 > Take the process for a player with _address_ \\( I \\) at the first consensus
 > attempt of the round (\\( p = 0 \\)).
 >
