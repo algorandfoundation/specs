@@ -46,8 +46,7 @@ For all other cases, the relation is undefined.
 
 -->
 
-> ⚙️ **IMPLEMENTATION**
->
+{{#include ./.include/styless.md:impl}}
 > Freshness relation [reference implementation](https://github.com/algorand/go-algorand/blob/b6e5bcadf0ad3861d4805c51cbf3f695c38a93b7/agreement/events.go#L745).
 
 Second, if the player broadcasted a bundle \\( \Bundle(r, p, s, v) \\), and \\( v \neq \bot \\),
@@ -56,8 +55,7 @@ then the player broadcasts \\( \Proposal(v) \\) if the player has it.
 Third, if no \\( \Proposal(v) \\) associated with the freshest bundle exists, the protocol
 still falls back to relaying the pinned value \\( \bar{v} \\) for liveness.
 
-> ⚙️ **IMPLEMENTATION**
->
+{{#include ./.include/styless.md:impl}}
 > In the [reference implementation](https://github.com/algorand/go-algorand/blob/b6e5bcadf0ad3861d4805c51cbf3f695c38a93b7/agreement/player.go#L518),
 > resynchronization attempts are performed by the `partitionPolicy(.)` function.
 
