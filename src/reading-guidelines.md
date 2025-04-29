@@ -29,10 +29,10 @@ with [mdBook](https://rust-lang.github.io/mdBook/index.html).
 
 > Notes like this are non-normative comments in the normative sections.
 
-{{#include ./.include/styless.md:example}}
+{{#include ./.include/styles.md:example}}
 > Sections like this are examples aiming to clarify the formal specifications.
 
-{{#include ./.include/styless.md:impl}}
+{{#include ./.include/styles.md:impl}}
 > Sections like this contain links to the `go-algorand` reference implementation.
 
 The `code-blocks` may contain pseudo-code or real code snippets.
