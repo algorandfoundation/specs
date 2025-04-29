@@ -60,7 +60,7 @@ $$
 
 ---
 
-{{#include ./.include/blocks.md:impl}}
+{{#include ./.include/styless.md:impl}}
 > Block proposal [reference implementation](https://github.com/algorand/go-algorand/blob/df0613a04432494d0f437433dd1efd02481db838/agreement/pseudonode.go#L286-L322).
 
 This algorithm is the first procedure executed when entering a new _round_, and upon starting any _period_ where a
@@ -70,7 +70,7 @@ Starting on **Algorithm 3** - Line 2, the node attempts a resynchronization (des
 in the [corresponding section](#resynchronization-attempt)), which has only effect
 on periods \\( p > 0 \\).
 
-{{#include ./.include/blocks.md:impl}}
+{{#include ./.include/styless.md:impl}}
 > The reference implementation executes a resynchronization attempt when entering
 > into a [new period](https://github.com/algorand/go-algorand/blob/55011f93fddb181c643f8e3f3d3391b62832e7cd/agreement/player.go#L411).
 > Functionally, the behavior is the same, as resynchronization is performed before
@@ -104,7 +104,7 @@ in period \\( p - 1 \\), and on **Algorithm 3** - Line 15 the node:
    - Broadcasts this vote,
    - Broadcast the proposal for the pinned vote if it has already been observed.
 
-{{#include ./.include/blocks.md:impl}}
+{{#include ./.include/styless.md:impl}}
 > The reference implementation assembles a set of transactions and a block header
 > independently of the proposer, in parallel with the proposer loop. This improves
 > timing and guarantees the tight deadline constraints for the block proposal step.
