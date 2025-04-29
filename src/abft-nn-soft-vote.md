@@ -109,8 +109,7 @@ hash \\( \ProofToHash(.) \\) output by the \\( \VRF \\) for the proposer account
 (see the cryptography [normative section](./crypto.md#verifiable-random-function)
 for details on \\( VRF \\)). For each \\( i \\) in the interval from \\( 0 \\) (inclusive)
 to the proposer credentials’ weight \\( w_j \\) (exclusive; the \\( j \\) output of \\( \Sortition(.) \\)
-inside the \\( \c \\) structure), the node hashes the concatenation of \\( \ProofToHash(.) \\)
-and \\( i \\), as \\( \Hash(\VRF.\ProofToHash(y) || i) \\) (where \\( \Hash(.) \\) is
+inside the \\( \c \\) structure), the node hashes the concatenation of \\( \ProofToHash(y) \\), the player address \\( I_j \\) and \\( i \\), as \\( \Hash(\VRF.\ProofToHash(y) || I_j || i) \\) (where \\( \Hash(.) \\) is
 the node’s general cryptographic hashing function, see the cryptography [normative section](crypto.md#hash-functions) for details).
 
 Then (**Algorithm 4** - Lines 6 to 8), the node keeps track of the proposal-value
