@@ -98,7 +98,7 @@ The soft vote stage is run after a timeout of \\( \DynamicFilterTimeout(p) \\)
 the [dynamic filter timeout section](./abft-nn-dynamic-filter-timeout.md) for more
 details).
 
-Let \\( V^\ast \\) be all proposal votes received, e.g., \\( V^\ast = \\{vt^\prime \in V : vt^\prime_s = \prop\\} \\).
+Let \\( V \\) be the set of all observed votes in the currently executing round. For convenience, we define a subset, \\( V^\ast \\) to be all proposal votes received; that is \\( V^\ast = \\{vt \in V : vt_s = \prop\\} \\).
 With the aid of a priority hash function (see the [normative section](./abft.md#special-values)),
 this stage performs a filtering action, keeping the lowest hashed value observed.
 
