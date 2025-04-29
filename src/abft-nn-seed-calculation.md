@@ -57,7 +57,7 @@ For the seed calculation algorithm, consider the following pseudocode:
 
 $$
 \begin{aligned}
-&\text{1: } \qquad \function \mathrm{ComputeSeedAndProof}(I) \\\\
+&\text{1: } \function \mathrm{ComputeSeedAndProof}(I) \\\\
 &\text{2: } \qquad \if p = 0 \then \\\\
 &\text{3: } \qquad \quad y \gets \VRF.\Prove(\Secrets(I)_{\text{VRFkey}}, L[r - \delta_s]_Q) \\\\
 &\text{4: } \qquad \quad \alpha \gets H(I || \VRF.\ProofToHash(y)) \\\\
@@ -71,14 +71,13 @@ $$
 &\text{12:} \qquad \quad Q \gets H(\alpha) \\\\
 &\text{13:} \qquad \endif \\\\
 &\text{14:} \qquad \return (Q, y) \\\\
-&\text{15:} \qquad \endfunction
+&\text{15: } \endfunction
 \end{aligned}
 $$
 
 ---
 
-> ⚙️ **IMPLEMENTATION**
->
+{{#include ./.include/styless.md:impl}}
 > Seed computation [reference implementation](https://github.com/algorand/go-algorand/blob/b6e5bcadf0ad3861d4805c51cbf3f695c38a93b7/agreement/proposal.go#L155).
 
 The function takes as input the _address_ \\( I \\) of an _online player_ who will
@@ -118,8 +117,7 @@ We define \\( \Rerand(r) = r \bmod \delta_s\delta_r \\).
 When \\( \Rerand(r) < \delta_s \\) we say we are _re-randomizing_ the seed \\( Q \\)
 for the round \\( r \\).
 
-> 📎 **EXAMPLE**
->
+{{#include ./.include/styless.md:example}}
 > Take the process for a player with _address_ \\( I \\) at the first consensus
 > attempt of the round (\\( p = 0 \\)).
 >
