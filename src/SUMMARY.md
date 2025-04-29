@@ -28,7 +28,7 @@
   - [Agreement Stages](./abft-nn-agreement-stages.md)
     - [Dynamic Filter Timeout](./abft-nn-dynamic-filter-timeout.md)
     - [Block Proposal](./abft-nn-block-proposal.md)
-    - [Soft Vote]()
+    - [Soft Vote](./abft-nn-soft-vote.md)
     - [Vote Handler]()
     - [Proposal Handler]()
     - [Bundle Handler]()
