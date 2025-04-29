@@ -38,7 +38,7 @@ The state machine _receives_ two types of events as inputs.
    event \\( \lambda \\) seconds after a period \\( p \\) begins is denoted
    \\( t(\lambda, p) \\).
 
-> For more detail on the way these events may be constructed from an implementation
+> For more details on the way these events may be constructed from an implementation
 > point of view, refer to the non-normative [Algorand ABFT Overview](./abft-overview.md).
 
 ## Outputs
