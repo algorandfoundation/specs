@@ -29,21 +29,19 @@ with [mdBook](https://rust-lang.github.io/mdBook/index.html).
 
 > Notes like this are non-normative comments in the normative sections.
 
-> 📎 **EXAMPLE**
->
+{{#include ./.include/styles.md:example}}
 > Sections like this are examples aiming to clarify the formal specifications.
 
-> ⚙️ **IMPLEMENTATION**
->
+{{#include ./.include/styles.md:impl}}
 > Sections like this contain links to the `go-algorand` reference implementation.
 
 The `code-blocks` may contain pseudo-code or real code snippets.
 
 Mathematical formulas are defined with [MathJax](https://www.mathjax.org/)[^1].
 
-Diagrams' source code is defined with [Mermaid](https://mermaid.js.org/).
+Diagrams’ source code is defined with [Mermaid](https://mermaid.js.org/).
 
-Figures' source code is defined with [Excalidraw](https://excalidraw.com/).
+Figures’ source code is defined with [Excalidraw](https://excalidraw.com/).
 
 ---
 
