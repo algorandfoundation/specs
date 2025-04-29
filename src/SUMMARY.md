@@ -27,7 +27,7 @@
   - [Seed Calculation](./abft-nn-seed-calculation.md)
   - [Agreement Stages](./abft-nn-agreement-stages.md)
     - [Dynamic Filter Timeout](./abft-nn-dynamic-filter-timeout.md)
-    - [Block Proposal]()
+    - [Block Proposal](./abft-nn-block-proposal.md)
     - [Soft Vote]()
     - [Vote Handler]()
     - [Proposal Handler]()
