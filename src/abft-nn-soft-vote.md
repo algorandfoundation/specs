@@ -43,7 +43,7 @@ $$
 Where:
 
 - \\( w_j \\) be the weight of the credentials for \\( v \\) by player \\( I_j \\),
-- \\( y \\) be the result of the signing procedure for \\( v \\) by player \\( I_j \\).
+- \\( y \\) be the VRF proof as computed by player \\( I_j \\) using their VRF secret key.
 
 The function selects the minimum among a set of \\( w_j \\) hash values calculated
 as \\(\Hash \left(\VRF.\ProofToHash(y) || i \right)\\), with \\(i \in [0, w_j)\\).
