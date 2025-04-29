@@ -42,6 +42,7 @@ $$
 
 Where:
 
+-\\( I_j \\) be the address of a distinct player identified by the subscript \\( j \\).
 - \\( w_j \\) be the weight of the credentials for \\( v \\) by player \\( I_j \\),
 - \\( y \\) be the VRF proof as computed by player \\( I_j \\) using their VRF secret key.
 
