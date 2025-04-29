@@ -40,15 +40,15 @@ was observed for that round.
 We now define the _credential round lag_, as:
 
 $$
-\deltaL = \min \left\\{ \left\lfloor \frac{2\Timeout}{\lambdaMin} \right\rfloor, 8 \right\\}
+\deltaL = \min \left\\{ \left\lfloor \frac{2\lambda}{\lambdaMin} \right\rfloor, 8 \right\\}
 $$
 
-to be the rounds’ lookback for \\( \CredentialHistory \\).
+to be the rounds’ lookback[^1] for \\( \CredentialHistory \\).
 
 The node tracks in \\( \CredentialHistory \\) the minimum credential arrival time
 for a certain number of rounds before \\( r - \deltaL \\).
 
-Every time a round \\( r \\) is “successfully” completed[^1], the node looks up
+Every time a round \\( r \\) is “successfully” completed[^2], the node looks up
 the arrival time of the relevant credential for the round \\( r - \deltaL \\), and
 pushes it into \\( \CredentialHistory \\). If the circular array is full, the oldest
 entry is deleted).
@@ -66,7 +66,7 @@ When computing the dynamic filter timeout, if a sufficient history of credential
 is available (i.e., the node stored \\( \CredentialHistorySize \\) past credential
 arrival times), the array holding this history is _sorted_ in ascending order.
 
-Then \\( \CredentialIdx \\)-th element is selected as the _filtering timeout_ value[^2].
+Then \\( \CredentialIdx \\)-th element is selected as the _filtering timeout_ value[^3].
 
 Finally, a \\( \TimeoutGracePeriod \\) extra time is added to the selected entry,
 for the final filter timeout to be returned as
@@ -92,9 +92,12 @@ clamped on the minimum and maximum bounds defined in the [ABFT normative section
 
 ---
 
-[^1]: A round is “successfully” completed if a _certification bundle_ is observed
+[^1]: With current values for \\( \lambda  \\) and \\( \lambdaMin \\),
+\\( \deltaL = 2 \\).
+
+[^2]: A round is “successfully” completed if a _certification bundle_ is observed
 and the proposal is already available, or if the proposal for an already present
 _certification bundle_ is received.
 
-[^2]: With the current parametrization, this corresponds to the 95th percentile of
+[^3]: With the current parametrization, this corresponds to the 95th percentile of
 the accumulated arrival times history.
