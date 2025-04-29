@@ -47,7 +47,7 @@ Where:
 - \\( y \\) be the VRF proof as computed by player \\( I_j \\) using their VRF secret key.
 
 The function selects the minimum among a set of \\( w_j \\) hash values calculated
-as \\(\Hash \left(\VRF.\ProofToHash(y) || i \right)\\), with \\(i \in [0, w_j)\\).
+as \\(\Hash \left(\VRF.\ProofToHash(y) || I_j || i \right)\\), with \\(i \in [0, w_j)\\).
 
 The higher the credentials’ weight \\( w_j \\), the larger the set, the higher the
 chances for the player \\( I_j \\) to get the lowest value among all the players
