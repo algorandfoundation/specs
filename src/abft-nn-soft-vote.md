@@ -105,7 +105,7 @@ this stage performs a filtering action, keeping the lowest hashed value observed
 The priority function (**Algorithm 4** - Lines 4 to 9) should be interpreted as
 follows.
 
-Consider every proposal \\( \vt \\) in \\( V^\ast \\). Given the sortition
+Consider every proposal value \\( \vt_\v \\) in votes belonging to \\( V^\ast \\). Given the sortition
 hash \\( \ProofToHash(.) \\) output by the \\( \VRF \\) for the proposer account
 (see the cryptography [normative section](./crypto.md#verifiable-random-function)
 for details on \\( VRF \\)). For each \\( i \\) in the interval from \\( 0 \\) (inclusive)
