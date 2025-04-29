@@ -65,7 +65,7 @@ $$
 &\text{2: } \quad \loh \gets \infty \\\\
 &\text{3: } \quad v \gets \bot \\\\
 &\text{4: } \quad \for \vt^\prime \in V \text{ with } \vt^\prime_s = \prop \do \\\\
-&\text{5: } \quad \quad \ph \gets \Priority(\vt^\prime)  \\\\
+&\text{5: } \quad \quad \ph \gets \Priority(\vt_v)  \\\\
 &\text{6: } \quad \quad \if \ph < \loh \then \\\\
 &\text{7: } \quad \quad \quad \loh \gets \ph \\\\
 &\text{8: } \quad \quad \quad v \gets \vt_v \\\\
