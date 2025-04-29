@@ -64,7 +64,7 @@ $$
 >
 > Block proposal [reference implementation](https://github.com/algorand/go-algorand/blob/df0613a04432494d0f437433dd1efd02481db838/agreement/pseudonode.go#L286-L322).
 
-This algorithm is the first routine called on every _round_ and _period_ where a
+This algorithm is the first procedure executed when entering a new _round_, and upon starting any _period_ where a
 _reproposal_ is not possible.
 
 Starting on **Algorithm 3** - Line 2, the node attempts a resynchronization (described
