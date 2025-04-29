@@ -74,13 +74,14 @@ priority function \\( \Priority(v) \\).
 
 Let
 
+- \\( I_j \\) be the address of a distinct player identified by the subscript \\( j \\),
 - \\( w_j \\) be the weight of the proposal vote for \\( v \\) by player \\( I_j \\),
 - \\( y \\) be the result of the signing procedure for \\( v \\) by player \\( I_j \\).
 
 Then the priority function is defined as
 
 $$
-\Priority(v) = \min_{i \in [0, w_j)} \left\\{ \Hash \left( \VRF.\ProofToHash(y) || i \right) \right\\}
+\Priority(v) = \min_{i \in [0, w_j)} \left\\{ \Hash \left( \VRF.\ProofToHash(y) || I_j || i \right) \right\\}
 $$
 
 More formally, then, let
