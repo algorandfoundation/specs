@@ -19,8 +19,7 @@ On observing a timeout event of \\( \DeadlineTimeout(p) + 2^{s_t}\lambda + u \\)
 \\( 0 < s_t \leq 249 \\) and \\( u \in [0, 2^{s_t}\lambda) \\) sampled uniformly
 at random, the player sets \\( s := s_t + 3 = \Next_{s_t} \\).
 
-> ⚙️ **IMPLEMENTATION**
->
+{{#include ./.include/styles.md:impl}}
 > New step [reference implementation](https://github.com/algorand/go-algorand/blob/b6e5bcadf0ad3861d4805c51cbf3f695c38a93b7/agreement/player.go#L94).
 
 In other words,
