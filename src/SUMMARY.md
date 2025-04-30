@@ -31,7 +31,7 @@
     - [Soft Vote](./abft-nn-soft-vote.md)
     - [Vote Handler]()
     - [Proposal Handler]()
-    - [Bundle Handler]()
+    - [Bundle Handler](./abft-nn-bundle-handler.md)
     - [Commitment]()
   - [Recovery Stages]()
     - [Resynchronization Attempt]()
