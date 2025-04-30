@@ -30,7 +30,7 @@
     - [Block Proposal](./abft-nn-block-proposal.md)
     - [Soft Vote](./abft-nn-soft-vote.md)
     - [Vote Handler]()
-    - [Proposal Handler]()
+    - [Proposal Handler](./abft-nn-proposal-handler.md)
     - [Bundle Handler]()
     - [Commitment]()
   - [Recovery Stages]()
