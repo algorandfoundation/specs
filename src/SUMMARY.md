@@ -32,7 +32,7 @@
     - [Vote Handler]()
     - [Proposal Handler]()
     - [Bundle Handler]()
-    - [Commitment]()
+    - [Commitment](./abft-nn-commitment.md)
   - [Recovery Stages]()
     - [Resynchronization Attempt]()
     - [Next Vote]()
