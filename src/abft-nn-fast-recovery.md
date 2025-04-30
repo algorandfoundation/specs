@@ -25,7 +25,7 @@ $$
 \newcommand \c {\mathit{credentials}}
 $$
 
-# Late, Redo and Down Votes
+# Fast Recovery
 
 The fast recovery algorithm is executed periodically every integer multiple of \\( \lambda_f \\)
 seconds (plus random variance).
