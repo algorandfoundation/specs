@@ -22,7 +22,7 @@ Priority-wise, bundles' freshness is defined as follows:
 - Bundles for \\( \Next \\) step are fresher than bundles for a \\( \Soft \\) step of the same period.
 
 - Bundles for \\( \Next \\) step for the \\( \bot \\) _proposal-value_ are fresher
-than bundles for a \\( \Next \\) for some other value.
+than bundles for a \\( \Next \\) step for some other value.
 
 > For a formal definition of this property, refer to the ABFT [normative section](./abft.md#special-values).
 
