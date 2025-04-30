@@ -24,7 +24,7 @@ $$
 \newcommand \prop {\mathit{proposal}}
 $$
 
-# Next Vote
+# Recovery
 
 The recovery algorithm is executed periodically, whenever a \\( \Bundle_\Cert \\)
 has not been observed before \\( \DeadlineTimeout(p) \\) for a given period \\( p \\).
