@@ -36,7 +36,7 @@
   - [Recovery Stages]()
     - [Resynchronization Attempt]()
     - [Next Vote]()
-    - [Late, Redo, and Down Votes]()
+    - [Late, Redo, and Down Votes](./abft-nn-late-redo-down-votes.md)
   - [Examples of Protocol Runs]()
     - [Vanilla Run]()
     - [Jalapeño Run]()
