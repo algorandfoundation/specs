@@ -11,3 +11,4 @@ services:
       - '0.0.0.0'
     volumes:
       - ./src:/book/src
+      - ./book:/book/book
