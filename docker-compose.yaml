@@ -10,4 +10,4 @@ services:
       - --hostname
       - '0.0.0.0'
     volumes:
-      - .:/book
+      - ./src:/book/src
