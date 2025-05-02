@@ -15,22 +15,23 @@ permissions:
 
 jobs:
   integration:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     name: Run acceptance
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup mdBook
-        uses: peaceiris/actions-mdbook@v2
-        with:
-          mdbook-version: 'latest'
+      - name: Setup Build Folder
+        run: mkdir book
+
+      - name: Build Docker image
+        run: docker compose build
 
       - name: Run mdBook test
-        run: mdbook test
+        run: docker compose run mdbook test
 
       - name: Run mdBook build
-        run: mdbook build
+        run: docker compose run -u $UID mdbook build
 
       - name: Upload the Artifact
         uses: actions/upload-artifact@v4
@@ -41,13 +42,14 @@ jobs:
   deployment:
     needs:
       - integration
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     name: Run Cloudflare Deployment
     steps:
       - name: Download the Artifact
         uses: actions/download-artifact@v4
         with:
           name: mdbook-build
+
       - name: Publish to Cloudflare Pages
         uses: cloudflare/wrangler-action@v3
         with:
