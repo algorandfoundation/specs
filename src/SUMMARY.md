@@ -39,7 +39,7 @@
     - [Late, Redo, and Down Votes]()
   - [Examples of Protocol Runs](./abft-nn-protocol-run-examples.md)
     - [Vanilla Run]()
-    - [Jalapeño Run]()
+    - [Jalapeño Run](./abft-nn-jalapeno-run.md)
     - [Habanero Run]()
 
 # Algorand Ledger
