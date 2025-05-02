@@ -22,6 +22,7 @@ $$
 \newcommand \endfor {\textbf{end for}}
 \newcommand \c {\mathit{credentials}}
 \newcommand \prop {\mathit{proposal}}
+\newcommand \s {\mathit{step}}
 $$
 
 # Recovery
@@ -53,7 +54,7 @@ $$
 &\text{12:} \quad \quad \quad \endif \\\\
 &\text{13:} \quad \quad \endif \\\\
 &\text{14:} \quad \endfor \\\\
-&\text{15:} \quad s:=s+1 \\\\
+&\text{15:} \quad \s \gets \s + 1 \\\\
 &\text{16: } \endfunction
 \end{aligned}
 $$
@@ -65,7 +66,11 @@ $$
 
 The node starts by making a resynchronization attempt (Line 2).
 
-Afterward, the node plays independantly for each _online_ account (registered on the node). This means that for every account available in $A$, the sortition algorithm is run, and accounts selected to participate from a recovery committee for the _current step_ \\( \Next_k \\) (that is, accounts whose credential $c$ is such that $c_j > 0$) will produce one of the following three distinct outputs:
+Afterward, the node plays independently for each _online_ account (registered on the node).
+This means that for _every account_ available in \\( A \\), the \\( \Sortition \\)
+algorithm is run, and accounts selected in the recovery committee (i.e., the players)
+for the _current step_ \\( \Next_k \\) (that is, those whose \\( \c_j > 0 \\)) will
+produce one of the following three distinct outputs:
 
 - If a _proposal-value_ \\( v \\) can be committed in the current context, then the
 player broadcasts a \\( \Next_k \\) vote for \\( v \\).
