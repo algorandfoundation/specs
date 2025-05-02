@@ -5,5 +5,9 @@ multilingual = false
 src = "src"
 title = "Algorand Specifications"
 
+[preprocessor.mermaid]
+command = "mdbook-mermaid"
+
 [output.html]
 mathjax-support = true
+additional-js = ["mermaid.min.js", "mermaid-init.js"]
