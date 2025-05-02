@@ -65,9 +65,7 @@ $$
 
 The node starts by making a resynchronization attempt (Line 2).
 
-Afterward, the node plays for each _online_ account (registered on the node). For
-each account selected to be a part of the voting committee for the _current step_
-\\( \Next_k \\), one of the following three different outputs is produced.
+Afterward, the node plays independantly for each _online_ account (registered on the node). This means that for every account available in $A$, the sortition algorithm is run, and accounts selected to participate from a recovery committee for the _current step_ \\( \Next_k \\) (that is, accounts whose credential $c$ is such that $c_j > 0$) will produce one of the following three distinct outputs:
 
 - If a _proposal-value_ \\( v \\) can be committed in the current context, then the
 player broadcasts a \\( \Next_k \\) vote for \\( v \\).
