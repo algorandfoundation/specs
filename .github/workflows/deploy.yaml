@@ -24,13 +24,11 @@ jobs:
       - name: Build Docker image
         run: docker compose build
 
-      - name: Setup upterm session
-        uses: lhotari/action-upterm@v1
-        with:
-          limit-access-to-actor: true
-          limit-access-to-users: PhearZero
+      - name: Install mdBook Mermaid
+        run: docker compose run -u 1001 --entrypoint "mdbook-mermaid" mdbook install
+
       - name: Run mdBook build
-        run: docker compose run mdbook build
+        run: docker compose run -u 1001 mdbook build
 
       - name: Upload the Artifact
         uses: actions/upload-artifact@v4
