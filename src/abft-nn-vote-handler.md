@@ -3,6 +3,7 @@ $$
 \newcommand \VerifyVote {\mathrm{VerifyVote}}
 \newcommand \SenderPeer {\mathrm{SenderPeer}}
 \newcommand \DisconnectFromPeer {\mathrm{DisconnectFromPeer}}
+\newcommand \Equivocation {\mathrm{Equivocation}}
 \newcommand \IsEquivocation {\mathrm{IsEquivocation}}
 \newcommand \IsSecondEquivocation {\mathrm{IsSecondEquivocation}}
 \newcommand \HandleVote {\mathrm{HandleVote}}
@@ -41,11 +42,16 @@ $$
 # Vote Handler
 
 The algorithms presented in this section abstract away a series of behaviors as
-a single handler for ease of understanding and to provide an implementation-agnostic
+a single vote handler for ease of understanding and to provide an implementation-agnostic
 engineering overview.
 
 In the reference implementation, the vote verification and vote observation, although
 dependent on each other, are performed by separate processes.
+
+Note that an _equivocation vote_ is a pair of votes that differ only in their _proposal
+values_ \\( v \\). In other words, given a player \\( I \\) and a node’s context
+tuple \\((r, p, s)\\), \\( \Equivocation(I, r, p, s) = (\Vote(I, r, p, s, v_1), \Vote(I, r, p, s, v_2)) \\)
+for some \\( v_1  \neq v_2 \\).
 
 ## Algorithm
 
