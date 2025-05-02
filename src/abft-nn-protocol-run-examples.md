@@ -22,4 +22,4 @@ procedure.
 
 Note that besides being the simplest, the _Vanilla Run_ is the most common case as
 infrastructure failure is extremely rare. However, the partition scenarios in the
-_Jalapeño Run_ and _Habanero Run_ bring a light into the recovery mechanisms.
+_Jalapeño Run_ and _Habanero Run_ shed light on the recovery mechanisms.
