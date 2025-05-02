@@ -53,7 +53,8 @@ $$
 &\text{12:} \quad \quad \quad \endif \\\\
 &\text{13:} \quad \quad \endif \\\\
 &\text{14:} \quad \endfor \\\\
-&\text{15: } \endfunction
+&\text{15:} \quad s:=s+1 \\\\
+&\text{16: } \endfunction
 \end{aligned}
 $$
 
