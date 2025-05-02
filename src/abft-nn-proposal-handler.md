@@ -97,7 +97,7 @@ it will request this proposal back from the network.
 The node checks (Line 7) if the proposal is invalid or has already been observed.
 Any one of those conditions is enough to discard and ignore the incoming proposal.
 
-Finally, the node checks (Line 9) if the associated proposal value is either a
+Finally, the node checks (Line 10) if the associated proposal value is either a
 _special proposal-value_ for the current round and period (\\( \sigma \\), \\( \mu \\))
 or the _pinned proposal-value_ (\\( \bar{v} \\)). Any _full proposal_ whose _proposal-value_
 does not match one of these is ignored.
