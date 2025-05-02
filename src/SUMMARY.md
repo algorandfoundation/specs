@@ -34,7 +34,7 @@
     - [Bundle Handler]()
     - [Commitment](./abft-nn-commitment.md)
   - [Recovery Stages](./abft-nn-recovery-stages.md)
-    - [Resynchronization Attempt]()
+    - [Resynchronization Attempt](./abft-nn-resync-attempt.md)
     - [Next Vote]()
     - [Late, Redo, and Down Votes]()
   - [Examples of Protocol Runs](./abft-nn-protocol-run-examples.md)
