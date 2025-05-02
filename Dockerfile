@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1
 
-FROM ghcr.io/peaceiris/mdbook:latest
+FROM peaceiris/mdbook:latest
 
 # Create a non-root user
 RUN adduser --disabled-password --gecos "" mdbookuser
