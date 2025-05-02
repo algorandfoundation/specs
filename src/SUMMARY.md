@@ -35,7 +35,7 @@
     - [Commitment](./abft-nn-commitment.md)
   - [Recovery Stages](./abft-nn-recovery-stages.md)
     - [Resynchronization Attempt](./abft-nn-resync-attempt.md)
-    - [Next Vote]()
+    - [Recovery](./abft-nn-recovery.md)
     - [Late, Redo, and Down Votes]()
   - [Examples of Protocol Runs](./abft-nn-protocol-run-examples.md)
     - [Vanilla Run]()
