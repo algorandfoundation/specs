@@ -29,7 +29,7 @@ than bundles for a \\( \Next \\) step for some other value.
 {{#include ./.include/styles.md:impl}}
 > Bundle freshness [reference implementation](https://github.com/algorand/go-algorand/blob/55011f93fddb181c643f8e3f3d3391b62832e7cd/agreement/player.go#L518).
 
-> The reference implementation, the freshness relation is handled by the `partitionPolicy`
+> In the reference implementation, a resynchronization attempt is handled by the `partitionPolicy`
 > function, as the network is assumed to be in a “partitioned state” due to the
 > temporary inability to reach consensus. In this case, the function is only invoked
 > when the current step \\( s \geq 3 \\) or when the current period \\( p \geq 3 \\)
