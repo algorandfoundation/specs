@@ -27,7 +27,7 @@ jobs:
           mdbook-version: 'latest'
 
       - name: Install mdBook Mermaid
-        run: mdbook-mermaid install .
+        run: cargo install mdbook-mermaid && mdbook-mermaid install .
 
       - name: Run mdBook test
         run: mdbook test
