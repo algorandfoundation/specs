@@ -64,6 +64,9 @@ If the received bundle (Line 6):
 
 Then the bundle is processed, calling the vote handler for each vote in the bundle
 (Lines 7 and 8).
-
+Note that when handling each vote separately from a bundle $b$ for a proposal-value $v$, if a bundle \( \b\prime = \Bundle(\b_r, \b_p, \b_s, v\prime)$ is formed and observed
+(where $v\prime$ is not necessarily equal to $v$ -consider what would happen if equivocation votes contained in $b$ cause a bundle for $v\prime$ to reach the required threshold before the player may finish observing every single vote in $b$-), then it will be relayed
+as if each vote was relayed individually, and any output or state changes on observing \b\prime will be produced. All leftover votes
+in $b$ will be processed according to the new state the node may encounter itself in, e.g. being discarded if the executing step was certification and a new round has started, so $b_r < r$.
 If \\( \b \\) does not pass the previous check (Line 6), then no output is produced,
 and the bundle is ignored and discarded.
