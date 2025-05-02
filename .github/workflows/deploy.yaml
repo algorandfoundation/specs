@@ -27,6 +27,9 @@ jobs:
       - name: Build Docker image
         run: docker compose build
 
+      - name: Run mdBook test
+        run: docker compose run mdbook test
+
       - name: Run mdBook build
         run: docker compose run -u $UID mdbook build
 

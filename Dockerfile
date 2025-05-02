@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1
 
-FROM peaceiris/mdbook:latest
+FROM peaceiris/mdbook:latest-rust
 
 # Create a non-root user
 RUN adduser --disabled-password --gecos "" mdbookuser
