@@ -1,0 +1,14 @@
+services:
+  mdbook:
+    container_name: mdbook
+    build: .
+    ports:
+      - 3000:3000
+      - 3001:3001
+    command:
+      - serve
+      - --hostname
+      - '0.0.0.0'
+    volumes:
+      - ./src:/book/src
+      - ./book:/book/book
