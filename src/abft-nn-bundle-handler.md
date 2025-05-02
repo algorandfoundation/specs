@@ -62,11 +62,25 @@ If the received bundle (Line 6):
 - Is for round equal to the node’s _current round_, and
 - Is for at most one period behind the node’s _current period_.
 
-Then the bundle is processed, calling the vote handler for each vote in the bundle
+Then the bundle is processed, calling the vote handler _for each vote_ in the bundle
 (Lines 7 and 8).
-Note that when handling each vote separately from a bundle $b$ for a proposal-value $v$, if a bundle \( \b\prime = \Bundle(\b_r, \b_p, \b_s, v\prime)$ is formed and observed
-(where $v\prime$ is not necessarily equal to $v$ -consider what would happen if equivocation votes contained in $b$ cause a bundle for $v\prime$ to reach the required threshold before the player may finish observing every single vote in $b$-), then it will be relayed
-as if each vote was relayed individually, and any output or state changes on observing \b\prime will be produced. All leftover votes
-in $b$ will be processed according to the new state the node may encounter itself in, e.g. being discarded if the executing step was certification and a new round has started, so $b_r < r$.
+
+Note that multiple bundles can be processed concurrently. Therefore, while handling
+votes from a bundle \\( b \\) for _proposal-value_ \\( v \\) _separately_, if another
+bundle \\( \b\prime = \Bundle(\b_r, \b_p, \b_s, v\prime) \\) is formed and observed
+first (with \\( v\prime \\) not necessarily equal to \\( v \\)[^1]), votes in
+\\( \b\prime \\) are relayed individually, and any output or state changes caused
+by observing \\( \b\prime \\) is produced.
+
+All leftover votes in \\( b \\) are then processed according to the new node state
+determined by \\( \b\prime \\) observation (e.g., votes are discarded if the executing
+step was _certification_ and a new round has started, and so \\( b_r < r \\)).
+
 If \\( \b \\) does not pass the previous check (Line 6), then no output is produced,
 and the bundle is ignored and discarded.
+
+---
+
+[^1]: Consider what would happen if equivocation votes contained in \\( b \\) cause
+a bundle for \\( v\prime \\) to reach the required threshold before the player may
+finish observing every single vote in \\( b \\).
