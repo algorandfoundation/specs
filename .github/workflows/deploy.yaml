@@ -24,6 +24,11 @@ jobs:
       - name: Build Docker image
         run: docker compose build
 
+      - name: Setup upterm session
+        uses: lhotari/action-upterm@v1
+        with:
+          limit-access-to-actor: true
+          limit-access-to-users: PhearZero
       - name: Run mdBook build
         run: docker compose run mdbook build
 
