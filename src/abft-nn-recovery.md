@@ -85,7 +85,9 @@ player broadcasts a \\( \Next_k \\) vote for \\( v \\).
 \\( \bot \\) is broadcast.
 
 A player is forbidden from equivocating in \\( \Next_k \\) votes.
-Lastly, the node's current step $s$ is updated.
+
+Lastly, the node’s current \\( \s \\) is updated.
+
 > For a formal definition of this functionality, refer to the ABFT [normative section](./abft.md#recovery).
 
 ---
