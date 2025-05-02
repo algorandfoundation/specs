@@ -25,7 +25,7 @@ jobs:
         run: docker compose build
 
       - name: Run mdBook build
-        run: docker compose exec mdbook mdbook build
+        run: docker compose run mdbook build
 
       - name: Upload the Artifact
         uses: actions/upload-artifact@v4
