@@ -55,14 +55,14 @@ $$
 &\text{4: } \quad \quad \Relay(\pr) \\\\
 &\text{5: } \quad \quad \return \comment{# Future round, do not observe (node is behind)} \\\\
 &\text{6: } \quad \endif \\\\
-&\text{7: } \quad \if \not \VerifyProposal(\pr) \lor e \in P \then \\\\
+&\text{7: } \quad \if \not \VerifyProposal(\pr) \lor \pr \in P \then \\\\
 &\text{8: } \quad \quad \return \comment{# Ignore proposal} \\\\
 &\text{9: } \quad \endif \\\\
 &\text{10:} \quad \if v \notin \\{\sigma, \bar{v}, \mu\\} \then \\\\
 &\text{11:} \quad \quad \return \comment{# Ignore proposal} \\\\
 &\text{12:} \quad \endif \\\\
 &\text{13:} \quad \Relay(\pr) \\\\
-&\text{14:} \quad P \gets P \cup e \\\\
+&\text{14:} \quad P \gets P \cup \pr \\\\
 &\text{15:} \quad \if \IsCommittable(v) \land s \le \Cert \then \\\\
 &\text{16:} \quad \quad \for a \in A \do \\\\
 &\text{17:} \quad \quad \quad \c \gets \Sortition(a_I, r, p, \Cert) \\\\
