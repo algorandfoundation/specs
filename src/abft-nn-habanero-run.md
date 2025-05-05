@@ -7,16 +7,17 @@ $$
 \newcommand \Late {\mathit{late}}
 \newcommand \Redo {\mathit{redo}}
 \newcommand \Down {\mathit{down}}
+\newcommand \Next {\mathit{next}}
 $$
 
 # Habanero Run (Fast Recovery)
 
 Let us now assume a scenario identical to the [Japlapeño run](./abft-nn-jalapeno-run.md),
-up until the attempt at period \\( p = 1 \\) to form a \\( \Cert \\)-bundle for
+up until the attempt at period \\( p = 1 \\) to form a \\( \Cert \\)-Bundle for
 the _pinned value_.
 
 In this scenario, a consensus-stalling network partition happens again, which lasts
-more than 5 minutes.
+more than 5 minutes (i.e., \\( \lambda_f \\)).
 
 ```mermaid
 timeline
@@ -28,6 +29,8 @@ timeline
         Certification (s = 2) time = DeadlineTO(p=0)    : Certification vote fails, no Committe Threshold is reached
         Recovery (s > 3) time > DeadlineTO(p=0)         : Next and Fast Recovery votes triggered : No Next bundle is observed
     section (r = i, p = 0, s >= 3) Network partition K ends
+        Recovery (s > 3) time > DeadlineTO(p=0)         : Next Bundle observed, new period begins
+    section (r = i, p = 1, s = [253, 254, 255])
         Fast Recovery (s = 253) time = lambda_f         : Late step fails
         Fast Recovery (s = 254)                         : Redo step fails
         Fast Recovery (s = 255)                         : Down Bundle observed, new period begins
@@ -47,10 +50,10 @@ Let us assume the network conditions are those described in the [initial context
 In addition to the initial context:
 
 - The network successfully performed \\( \Prop \\) and \\( \Soft \\) steps for round
-\\( r \\)
+\\( r \\),
 
 - During the \\( \Cert \\) step, before the block commitment, the network experiences
-a _partitioning_ \\( K \\) (as described in the [Jalapeno run](./abft-nn-jalapeno-run.md)).
+a _partitioning_ \\( K \\) (as described in the [Jalapeno run](./abft-nn-jalapeno-run.md)),
 
 - Players reach \\( \DeadlineTimeout(p = 0) \\) without a committable block proposal
 (that is, no \\( \Cert \\)-Bundle supporting any proposal-value has been observed).
@@ -60,14 +63,16 @@ a _partitioning_ \\( K \\) (as described in the [Jalapeno run](./abft-nn-jalapen
 Under these conditions, a \\( \Cert \\)-Bundle is not formed and the protocol enters
 in partition recovery mode.
 
-Now, after connections are reestablished, a _fast recovery_ is about to take place
-(when node’s clock is equal to \\( \lambda_f \\)).
+Now, after connections are reestablished, a \\( \Next \\)-Bundle for a new period \\( p = 1 \\)
+is observed, and a _fast recovery_ is about to take place (when the node’s clock
+is equal to \\( \lambda_f \\)).
 
-In this scenario, furthermore, most players have lost the previously observed
-_pinned value_, or have since seen \\( \Soft \\)-Bundle for different values. Therefore,
-no consensus on a bundle going into the period \\( p = 2 \\) is possible.
+In this scenario, however, differently from the [Jalapeño run](./abft-nn-jalapeno-rund.md),
+most players have lost the previously observed _pinned value_, or have since seen
+\\( \Soft \\)-Bundle for different values. Therefore, no consensus on a bundle going
+into the period \\( p = 2 \\) certification is possible.
 
-In this case, after failing to form \\( \Late \\) and \\( Redo \\) bundles, a
+In this case, after failing to form \\( \Late \\) and \\( \Redo \\) bundles, a
 \\( \Down \\)-Bundle is observed by a majority of players (an “agree to disagree”
 with value \\( \bot \\)).
 
