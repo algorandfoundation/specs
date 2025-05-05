@@ -36,6 +36,8 @@ timeline
 
 ## Run
 
+Let us assume the network conditions are those described in the [initial context](./abft-nn-protocol-run-examples.md#initial-context).
+
 ### Regular Propose and Soft steps
 
 The network starts round \\( r \\) performing regular \\( \Prop \\) and \\( \Soft \\)
