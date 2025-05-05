@@ -10,10 +10,10 @@ $$
 
 # Jalapeño Run (Recovery)
 
-Let us now assume a scenario similar to the Vanilla run, with the following difference:
-on round \\( r = i \\), when \\( s = 2 \\), before block commitment, the network
-experiences a _network partitioning_. The voting stake is fragmented, and no network
-partition has enough voting power to certify a block.
+Let us now assume a scenario similar to the [Vanilla run](./abft-nn-vanilla-run.md),
+with the following difference: on round \\( r = i \\), when \\( s = 2 \\), before
+block commitment, the network experiences a _network partitioning_. The voting stake
+is fragmented, and no network partition has enough voting power to certify a block.
 
 
 ```mermaid
