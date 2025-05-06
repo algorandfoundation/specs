@@ -10,6 +10,7 @@ $$
 \newcommand \Bundle {\mathrm{Bundle}}
 \newcommand \Soft {\mathit{soft}}
 \newcommand \Cert {\mathit{cert}}
+\newcommand \Next {\mathit{next}}
 \newcommand \function {\textbf{function }}
 \newcommand \return {\textbf{return }}
 \newcommand \endfunction {\textbf{end function}}
@@ -37,13 +38,16 @@ In the following pseudocode the _frozen value_ \\( \mu \\) is either:
 (i.e., the lowest hashed according to the [priority function](./abft.md#special-values)), or
 - \\( \bot \\) if the node has observed no valid proposal vote.
 
-While the _staged value_ \\( \sigma \\) is either:
+The _staged value_ \\( \sigma \\) is either:
 
 - The sole proposal-value for which a \\( \Bundle_\Soft \\) has been observed in
 the current \\((r, p)\\) context (see [normative section](abft.md#special-values)), or
 - \\( \bot \\) if the node has observed no valid \\( \Bundle_\Soft \\).
 
-On a similar vein, the pinned value \\( \bar{v} \\) is a proposal-value that was a _staged value_ in a previous period. When available, this value is used to fast forward the first steps of the protocol when a next vote has been succesful.
+The _pinned value_ \\( \bar{v} \\) is a proposal-value that was a _staged value_
+in a previous period. When available, this value is used to fast-forward the first
+steps of the protocol when a \\( \Next \\) vote has been successful.
+
 ---
 
 \\( \textbf{Algorithm 6} \text{: Handle Proposal} \\)
@@ -108,10 +112,12 @@ does not match one of these is ignored.
 Once the checks have been passed, the node relays and observes the proposal (Lines
 13 and 14), by adding it to the observed proposals set \\( P \\).
 
-Next, only if the _proposal-value_ is committable (meaning the _staged value_ is set for a proposal, and said proposal has already been observed and is available) and the current step is lower than or equal
-to a \\( \Cert \\) step (i.e., is not yet in a recovery step), the node plays
-for each _online_ account (registered on the node), performing a \\( \Sortition \\)
-to select the certification committee members.
+Next, only if the _proposal-value_ is committable (meaning the _staged value_ is
+set for a proposal, and said proposal has already been observed and is available)
+and the current step is lower than or equal to a \\( \Cert \\) step (i.e., is not
+yet in a recovery step), the node plays for each _online_ account (registered on
+the node), performing a \\( \Sortition \\)to select the certification committee
+members.
 
 For each selected account, a \\( \Vote_\Cert \\) for the current _proposal-value_
 is broadcast.
