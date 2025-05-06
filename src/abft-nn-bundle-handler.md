@@ -1,4 +1,5 @@
 $$
+\newcommand \Bundle {\mathrm{Bundle}}
 \newcommand \HandleBundle {\mathrm{HandleBundle}}
 \newcommand \VerifyBundle {\mathrm{VerifyBundle}}
 \newcommand \HandleVote {\mathrm{HandleVote}}
