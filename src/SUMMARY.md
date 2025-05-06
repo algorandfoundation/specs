@@ -24,6 +24,7 @@
 - [Non Normative](./abft-nn.md)
   - [General Concepts](./abft-nn-general-concepts.md)
   - [Context Tuple](./abft-nn-context-tuple.md)
+  - [Security Model](./abft-nn-security-model.md)
   - [Seed Calculation](./abft-nn-seed-calculation.md)
   - [Agreement Stages](./abft-nn-agreement-stages.md)
     - [Dynamic Filter Timeout](./abft-nn-dynamic-filter-timeout.md)
