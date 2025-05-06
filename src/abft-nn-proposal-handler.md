@@ -8,6 +8,9 @@ $$
 \newcommand \Sortition {\mathrm{Sortition}}
 \newcommand \Proposal {\mathrm{Proposal}}
 \newcommand \Bundle {\mathrm{Bundle}}
+\newcommand \Hash {\mathrm{Hash}}
+\newcommand \Encode {\mathrm{Encode}}
+\newcommand \bh {\mathrm{bh}}
 \newcommand \Soft {\mathit{soft}}
 \newcommand \Cert {\mathit{cert}}
 \newcommand \Next {\mathit{next}}
@@ -28,7 +31,50 @@ $$
 
 # Proposal Handler
 
-The proposal handler is triggered when a node receives a _full proposal_[^1] message.
+The proposal handler is triggered when a node receives a _full proposal_ message.
+
+A _proposal-value_ and a _full proposal_ are related but separate constructions.
+This is motivated by a slower gossiping time of a _full proposal_, compared to a
+much more succinct and therefore quickly gossiped _proposal-value_.
+
+A proposal-value contains four fields:
+
+1. The original _period_ in which this block was proposed.
+ 
+1. The original proposer’s address.
+ 
+1. The block digest, equal to the block header’s hash (including a domain separator).
+This field expands to \\( \Hash(\texttt{"BH"} || \Encode(\bh)) \\), where \\( \texttt{"BH"} \\)
+is the domain separator for a “block header”, and the encoding function is the msgpack
+of the block header (\\( \bh \\)).
+ 
+1. A hash of the proposal, \\( \Hash(\Proposal) \\). This field expands to
+\\( \Hash(\texttt{"PL"} || \Encode(\Proposal)) \\), where \\( \Proposal \\)
+represents the unauthenticated proposal, \\( \texttt{"PL"} \\) is the domain separator
+for a “payload”, and the encoding function is the msgpack of the \\( \Proposal \\).
+
+{{#include ./.include/styles.md:impl}}
+> Proposal-value [structure](https://github.com/algorand/go-algorand/blob/8341e41c3a4b9c7819cb3f89f319626f5d7b68d5/agreement/proposal.go#L37).
+>
+> Domain separators for [block header](https://github.com/algorand/go-algorand/blob/8341e41c3a4b9c7819cb3f89f319626f5d7b68d5/protocol/hash.go#L43)
+> and [payload](https://github.com/algorand/go-algorand/blob/8341e41c3a4b9c7819cb3f89f319626f5d7b68d5/protocol/hash.go#L60).
+
+On the other hand, an _unauthenticated proposal_ contains a full block and all extra
+data for the block validation:
+
+1. The original period in which this block was proposed.
+ 
+1. The original proposer’s address.
+ 
+1. A full block (header and payset).
+ 
+1. A seed proof \\( \pi_{seed} \\).
+
+Note that the _original period_ and proposer’s address are the same as the associated
+_proposal-value_. The seed proof \\( \pi_{seed} \\) is used to verify the seed computation.
+
+{{#include ./.include/styles.md:impl}}
+> Unauthenticated proposal [structure]((https://github.com/algorand/go-algorand/blob/8341e41c3a4b9c7819cb3f89f319626f5d7b68d5/agreement/proposal.go#L55)).
 
 ## Algorithm
 
@@ -121,9 +167,3 @@ members.
 
 For each selected account, a \\( \Vote_\Cert \\) for the current _proposal-value_
 is broadcast.
-
----
-
-[^1]: A _full proposal_ differs from a _proposal-value_ in that the former contains
-the whole block body, including transactions (the _payset_), while the latter is
-just a block header with credentials.
