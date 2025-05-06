@@ -107,7 +107,7 @@ does not match one of these is ignored.
 Once the checks have been passed, the node relays and observes the proposal (Lines
 13 and 14), by adding it to the observed proposals set \\( P \\).
 
-Next, only if the _proposal-value_ is committable and the current step is lower than or equal
+Next, only if the _proposal-value_ is committable (meaning the _staged value_ is set for a proposal, and said proposal has already been observed and is available) and the current step is lower than or equal
 to a \\( \Cert \\) step (i.e., is not yet in a recovery step), the node plays
 for each _online_ account (registered on the node), performing a \\( \Sortition \\)
 to select the certification committee members.
