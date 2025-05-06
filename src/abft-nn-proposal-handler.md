@@ -76,6 +76,21 @@ _proposal-value_. The seed proof \\( \pi_{seed} \\) is used to verify the seed c
 {{#include ./.include/styles.md:impl}}
 > Unauthenticated proposal [structure]((https://github.com/algorand/go-algorand/blob/8341e41c3a4b9c7819cb3f89f319626f5d7b68d5/agreement/proposal.go#L55)).
 
+{{#include ./.include/styles.md:impl}}
+> In the reference implementation, the _unauthenticated proposal_ is sent to
+> the network linked to a previously emitted proposal vote. These are sent together
+> in a struct defined as a [compound message](https://github.com/algorand/go-algorand/blob/8341e41c3a4b9c7819cb3f89f319626f5d7b68d5/agreement/message.go#L56),
+> which avoids the edge case of receiving _proposal_ and _proposal-value_ messages
+> in an unfavorable order. Consider the following edge case: a node observes a
+> _proposal_ before receiving its supporting _proposal-value_. It discards the
+> _proposal_ (to avoid DDoS attacks). Right after the node receives the related
+> _proposal-value_, it goes through all the steps, and certifies this block, but
+> needs to request the previously discarded proposal to be able to commit it and
+> advance a round. If this happens to enough nodes (voting stake), the network
+> might move to a second period. In the new period, the proposal is broadcast and
+> committed fast, since the proposal step is skipped (having carried over the _staged_
+> and _frozen_ values).
+
 ## Algorithm
 
 In the following pseudocode the _frozen value_ \\( \mu \\) is either:
