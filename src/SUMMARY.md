@@ -29,7 +29,7 @@
     - [Dynamic Filter Timeout](./abft-nn-dynamic-filter-timeout.md)
     - [Block Proposal](./abft-nn-block-proposal.md)
     - [Soft Vote](./abft-nn-soft-vote.md)
-    - [Vote Handler]()
+    - [Vote Handler](./abft-nn-vote-handler.md)
     - [Proposal Handler]()
     - [Bundle Handler](./abft-nn-bundle-handler.md)
     - [Commitment](./abft-nn-commitment.md)
