@@ -43,6 +43,7 @@ While the _staged value_ \\( \sigma \\) is either:
 the current \\((r, p)\\) context (see [normative section](abft.md#special-values)), or
 - \\( \bot \\) if the node has observed no valid \\( \Bundle_\Soft \\).
 
+On a similar vein, the pinned value \\( \bar{v} \\) is a proposal-value that was a _staged value_ in a previous period. When available, this value is used to fast forward the first steps of the protocol when a next vote has been succesful.
 ---
 
 \\( \textbf{Algorithm 6} \text{: Handle Proposal} \\)
