@@ -71,7 +71,7 @@
 
 - [Overview](./network-overview.md)
 - [Non-Normative](./network-nn.md)
-  - [Notation]()
+  - [Notation](./network-nn-notation.md)
   - [Parameters]()
   - [Message Handlers]()
   - [Addressing]()
