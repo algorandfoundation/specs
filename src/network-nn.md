@@ -20,7 +20,8 @@ There are currently two independent _network layers_ on Algorand:
 
 - **Relay Network** (\\( \WS \\)), based on a websockets mesh,
 
-- **Peer-to-Peer Network** (\\( \PtoP \\)), based on the `libp2p` [networking library](https://libp2p.io/).
+- **Peer-to-Peer Network** (\\( \PtoP \\)), based on the [`libp2p`](https://libp2p.io/)
+networking library.
 
 A third option, called **Hybrid Network** (\\( \HYB \\)), instantiates the constructs
 to keep both networking layers running in parallel on the node.
