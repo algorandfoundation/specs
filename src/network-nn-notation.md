@@ -45,8 +45,8 @@ the overarching protocol.
 
 Possible values for the \\( tag \\) type are:
 
-| TAG    | DESCRIPTION                                                                                                                                                                                                              |
-|--------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+|  TAG   | DESCRIPTION                                                                                                                                                                                                              |
+|:------:|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | `"AV"` | Agreement Vote (a protocol vote, see [normative section](./abft.md#votes)).                                                                                                                                              |
 | `"MI"` | Message of Interest.                                                                                                                                                                                                     |
 | `"MS"` | Message Digest Skip. A request by a \\( \Peer \\) to avoid sending messages with a specific hash.                                                                                                                        |

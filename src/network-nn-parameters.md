@@ -5,7 +5,7 @@ timing and sizing.
 
 ## Performance Monitoring
 
-| Name (Link)                                                                                                                                           | Value (seconds) | Description            |
+| NAME                                                                                                                                                  | VALUE (seconds) | DESCRIPTION            |
 |-------------------------------------------------------------------------------------------------------------------------------------------------------|:---------------:|------------------------|
 | [`pmPresyncTime`](https://github.com/algorand/go-algorand/blob/b7b3e5e3c9a83cbd6bd038f4f1856039d941b958/network/connPerfMon.go#L40)                   |   \\( 10 \\)    | Performance monitoring |
 | [`pmSyncIdleTime`](https://github.com/algorand/go-algorand/blob/b7b3e5e3c9a83cbd6bd038f4f1856039d941b958/network/connPerfMon.go#L41)                  |    \\( 2 \\)    | Performance monitoring |
@@ -20,7 +20,7 @@ timing and sizing.
 
 ## Message Sizes
 
-| Name (Link)                                                                                                                                   |           Value (Bytes)           | Description                                      |
+| NAME                                                                                                                                          |           VALUE (Bytes)           | DESCRIPTION                                      |
 |-----------------------------------------------------------------------------------------------------------------------------------------------|:---------------------------------:|--------------------------------------------------|
 | [`AgreementVoteTagMaxSize`](https://github.com/algorand/go-algorand/blob/df0613a04432494d0f437433dd1efd02481db838/protocol/tags.go#L54)       |           \\( 1228 \\)            | Maximum size of an `AgreementVoteTag` message    |
 | [`MsgOfInterestTagMaxSize`](https://github.com/algorand/go-algorand/blob/df0613a04432494d0f437433dd1efd02481db838/protocol/tags.go#L57)       |            \\( 45 \\)             | Maximum size of a `MsgOfInterestTag` message     |
