@@ -22,14 +22,14 @@ A _step_ \\( s \\) is an 8-bit integer.
 
 Steps are named for clarity and are defined as follows:
 
-| STEP             | ENUMERATIVE   |
-|------------------|---------------|
-| \\( \Propose \\) | \\( 0 \\)     |
-| \\( \Soft \\)    | \\( 1 \\)     |
-| \\( \Cert \\)    | \\( 2 \\)     |
-| \\( \Late \\)    | \\( 253 \\)   |
-| \\( \Redo \\)    | \\( 254 \\)   |
-| \\( \Down \\)    | \\( 255 \\)   |
+|       STEP       |  ENUMERATIVE  |
+|:----------------:|:-------------:|
+| \\( \Propose \\) |   \\( 0 \\)   |
+|  \\( \Soft \\)   |   \\( 1 \\)   |
+|  \\( \Cert \\)   |   \\( 2 \\)   |
+|  \\( \Late \\)   |  \\( 253 \\)  |
+|  \\( \Redo \\)   |  \\( 254 \\)  |
+|  \\( \Down \\)   |  \\( 255 \\)  |
 | \\( \Next_s \\)  | \\( s + 3 \\) |
 
 The following functions are defined on \\( s \\):
