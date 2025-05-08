@@ -8,6 +8,7 @@ $$
 \newcommand \OutMsg {\texttt{M}\ast}
 \newcommand \MessageHandler {\mathrm{MH}}
 \newcommand \MessageValidatorHandler {\mathrm{MV}_h}
+\newcommand \ForwardingPolicy {\mathrm{ForwardingPolicy}}
 $$
 
 # Notation and Data Structures
@@ -134,11 +135,11 @@ service). The possible topic keys are:
     - `"blockAndCert"`, requesting block and certificate data,
     - `"latest"`, serving the latest round.
 
-- `disconnectReason`, only when the `Action` calls for a `Disconnect` as a `ForwardingPolicy`.
-An enumeration of the reasons to disconnect from a given \\( \Peer \\) (message sender)
-may be found right below.
+- `disconnectReason`, only when the `Action` calls for a `Disconnect` as a \\( \ForwardingPolicy \\)
+(see below). An enumeration of the reasons to disconnect from a given \\( \Peer \\)
+(message sender) may be found right below.
 
-A `ForwardingPolicy` is an enumeration, indicating what action should be taken for
+A \\( \ForwardingPolicy \\) is an enumeration, indicating what action should be taken for
 a given outgoing message \\( \OutMsg \\). It may take any of the following values:
 
 - `Ignore`, to discard the message (don’t forward),
