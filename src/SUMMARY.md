@@ -74,7 +74,7 @@
   - [Notation](./network-nn-notation.md)
   - [Parameters](./network-nn-parameters.md)
   - [Message Handlers](./network-nn-message-handlers.md)
-  - [Addressing]()
+  - [Addressing](./network-nn-addressing.md)
   - [Network Identity](./network-nn-identity.md)
   - [Peer Management]()
   - [Network Definitions]()
