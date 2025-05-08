@@ -13,8 +13,8 @@ regardless of the underlying architecture.
 
 ## Websocket Addressing Scheme
 
-The Relay Network \\( \WS \\) relies on an `ip:port` scheme to present let a \\( \Peer \\)
-itself to and address other peers.
+The Relay Network \\( \WS \\) relies on an `ip:port` scheme to let a \\( \Peer \\)
+present itself to and address other peers.
 
 This schema is defined in the `NetAddress` parameter of the _node configuration_.
 
