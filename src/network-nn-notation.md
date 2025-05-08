@@ -95,7 +95,7 @@ the message type and route it to the correct message handler to produce an outgo
 message,
 
 - `payload`, an array of bytes representing the content of the message. See the
-[constants section](#constants) for details on size constraints,
+[parameters section](./network-nn-parameters.md) for details on size constraints,
 
 - `network`, the type of network from which the message originated
 ([Relay Network](#websocket-network-definition) or [P2P Network](#p2p-network-definition)),
@@ -116,7 +116,7 @@ it marks how the receiving \\( \Peer \\) should interpret and handle the produce
 message,
 
 - `payload`, an array of bytes representing the content of the message. See the
-[constants section](#constants) for details on size constraints,
+[parameters section](./network-nn-parameters.md) for details on size constraints,
 
 - `topics`, a list of key-value pairs (of the form `string -> bytes[]`) for topics
 this message serves, used in certain specific scenarios (mainly for the catch-up
