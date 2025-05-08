@@ -72,7 +72,7 @@
 - [Overview](./network-overview.md)
 - [Non-Normative](./network-nn.md)
   - [Notation](./network-nn-notation.md)
-  - [Parameters]()
+  - [Parameters](./network-nn-parameters.md)
   - [Message Handlers]()
   - [Addressing]()
   - [Network Identity]()
