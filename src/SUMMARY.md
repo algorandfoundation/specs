@@ -73,7 +73,7 @@
 - [Non-Normative](./network-nn.md)
   - [Notation](./network-nn-notation.md)
   - [Parameters](./network-nn-parameters.md)
-  - [Message Handlers]()
+  - [Message Handlers](./network-nn-message-handlers.md)
   - [Addressing]()
   - [Network Identity]()
   - [Peer Management]()
