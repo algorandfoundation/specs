@@ -39,7 +39,7 @@
     - [Recovery](./abft-nn-recovery.md)
     - [Late, Redo, and Down Votes]()
   - [Examples of Protocol Runs](./abft-nn-protocol-run-examples.md)
-    - [Vanilla Run]()
+    - [Vanilla Run](./abft-nn-vanilla-run.md)
     - [Jalapeño Run]()
     - [Habanero Run]()
 

@@ -1,4 +1,5 @@
 $$
+\newcommand \EventHandler {\mathrm{EventHandler}}
 \newcommand \BlockProposal {\mathrm{BlockProposal}}
 \newcommand \BlockAssembly {\mathrm{BlockAssembly}}
 \newcommand \SoftVote {\mathrm{SoftVote}}
@@ -69,7 +70,7 @@ We may model the state machine’s main algorithm in the following way:
 
 $$
 \begin{aligned}
-&\text{1: } \function \mathrm{EventHandler}(ev) \\\\
+&\text{1: } \function \EventHandler(ev) \\\\
 &\text{2: } \qquad \if \ev \text{ is a } \TimeoutEvent \then \\\\
 &\text{3: } \qquad \quad \t \gets \ev_\t \\\\
 &\text{4: } \qquad \quad \if \t = 0 \then \comment{# Last round should have left us with s := propose} \\\\
