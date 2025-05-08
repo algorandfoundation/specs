@@ -41,7 +41,7 @@
   - [Examples of Protocol Runs](./abft-nn-protocol-run-examples.md)
     - [Vanilla Run](./abft-nn-vanilla-run.md)
     - [Jalapeño Run](./abft-nn-jalapeno-run.md)
-    - [Habanero Run]()
+    - [Habanero Run](./abft-nn-habanero-run.md)
 
 # Algorand Ledger
 
