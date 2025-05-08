@@ -76,7 +76,7 @@
   - [Message Handlers]()
   - [Addressing]()
   - [Network Identity]()
-  - [Peer Management]()
+  - [Peer Management](./network-nn-peer-management.md)
   - [Network Types]()
     - [Relay Network]()
     - [P2P Network]()
