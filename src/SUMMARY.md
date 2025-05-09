@@ -77,10 +77,10 @@
   - [Addressing]()
   - [Network Identity]()
   - [Peer Management]()
-  - [Network Types]()
-    - [Relay Network]()
-    - [P2P Network]()
-    - [Hybrid Network]()
+  - [Network Definitions](./network-nn-definitions.md)
+    - [Relay Network](./network-nn-definitions-ws.md)
+    - [P2P Network](./network-nn-definitions-p2p.md)
+    - [Hybrid Network](./network-nn-definitions-hybrid.md)
   - [Appendix A - External Packages]()
 
 ---
