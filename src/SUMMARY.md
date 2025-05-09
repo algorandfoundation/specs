@@ -39,9 +39,9 @@
     - [Recovery](./abft-nn-recovery.md)
     - [Late, Redo, and Down Votes]()
   - [Examples of Protocol Runs](./abft-nn-protocol-run-examples.md)
-    - [Vanilla Run]()
-    - [Jalapeño Run]()
-    - [Habanero Run]()
+    - [Vanilla Run](./abft-nn-vanilla-run.md)
+    - [Jalapeño Run](./abft-nn-jalapeno-run.md)
+    - [Habanero Run](./abft-nn-habanero-run.md)
 
 # Algorand Ledger
 
@@ -72,10 +72,10 @@
 - [Overview](./network-overview.md)
 - [Non-Normative](./network-nn.md)
   - [Notation](./network-nn-notation.md)
-  - [Parameters]()
-  - [Message Handlers]()
-  - [Addressing]()
-  - [Network Identity]()
+  - [Parameters](./network-nn-parameters.md)
+  - [Message Handlers](./network-nn-message-handlers.md)
+  - [Addressing](./network-nn-addressing.md)
+  - [Network Identity](./network-nn-identity.md)
   - [Peer Management]()
   - [Network Definitions](./network-nn-definitions.md)
     - [Relay Network](./network-nn-definitions-ws.md)
