@@ -6,9 +6,9 @@ Foundation [repository](https://github.com/algorandfoundation/specs).
 If you would like to contribute, please consider submitting an issue or opening a
 pull request.
 
-By clicking on the GitHub icon in the top-right corner while reading this book,
-you will be redirected to the relevant source code file to be referenced in an issue
-or edited in a pull request.
+By clicking on the _"Suggest an edit"_ icon in the top-right corner while reading
+this book, you will be redirected to the relevant source code file to be referenced
+in an issue or edited in a pull request.
 
 ## Source Code
 
