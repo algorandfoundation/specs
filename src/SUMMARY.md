@@ -85,5 +85,5 @@
 
 ---
 
-[Contribution Guidelines]()
+[Contribution Guidelines](./contribution-guidelines.md)
 [License]()
