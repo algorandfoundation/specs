@@ -58,7 +58,7 @@ where:
 - \\( \PeerNode_p \\) represents a _peer node_ connected to \\( \PeerNode \\),
 - A \\( \PeerNode_p \\) is connected on average to \\( 4 \PeerNode \\).
 
-![P2P Network Topology](.images/network-p2p-topology.svg "P2P Network Topology")
+![P2P Network Topology](images/network-p2p-topology.svg "P2P Network Topology")
 
 ## `pubsub` for Transaction Dissemination
 

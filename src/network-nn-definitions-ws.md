@@ -77,7 +77,7 @@ where:
 - A \\( \PeerNode_r \\) is not connected to other \\( \PeerNode \\),
 - A \\( \RelayNode \\) is connected to multiple \\( \RelayNode \\).
 
-![Relay Network Topology](.images/network-ws-topology.svg "Relay Network Topology")
+![Relay Network Topology](images/network-ws-topology.svg "Relay Network Topology")
 
 ## Relay Network Peer Definition
 
