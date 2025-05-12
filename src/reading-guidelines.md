@@ -60,8 +60,7 @@ $$
 \mathcal{C}
 $$
 
-Once MathJax rendering is correctly set, you should be able to see a calligraphic
-“C”.
+Once MathJax rendering is correctly set, you should see a calligraphic “C”.
 
 ## PDF Book
 
