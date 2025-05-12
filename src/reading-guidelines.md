@@ -25,8 +25,8 @@ consensus version.
 
 ## Content Hierarchy
 
-Contents are organized in four hierarchical levels in the scroll-down menu on the
-left:
+Contents are organized in four hierarchical levels (see the scroll-down menu on the
+left):
 
 ```text
 Part
