@@ -182,7 +182,7 @@ included in the book.
 
 {{#include ./.include/styles.md:example}}
 > This example block has been included with the following syntax:
-> ```
+> ```text
 > \{{#include ./.include/styles.md:example}}
 > > This example block has been included with the following syntax:
 > ```
