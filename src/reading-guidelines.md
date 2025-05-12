@@ -50,9 +50,11 @@ unfolded clicking on the expansion symbol (**>**) next to the level name.
 
 The `code-blocks` may contain pseudocode or real code snippets.
 
-For a correct rendering of mathematical formulas, it is recommended to right-click
-on the symbol below, and select `Math Settings -> Math Renderer -> Common HTML` from
-the drop-down menu.
+## Math Symbols
+
+For a correct rendering of mathematical symbols and formulas, it is recommended to
+right-click on the symbol below, and select `Math Settings -> Math Renderer -> Common HTML`
+from the drop-down menu.
 
 $$
 \mathcal{C}
