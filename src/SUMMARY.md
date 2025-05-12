@@ -81,7 +81,8 @@
     - [Relay Network](./network-nn-definitions-ws.md)
     - [P2P Network](./network-nn-definitions-p2p.md)
     - [Hybrid Network](./network-nn-definitions-hybrid.md)
-  - [Appendix A - External Packages]()
+  - [Appendix A - External Libraries](./network-nn-appendix-a.md)
+  - [Appendix B - Packets Examples](./network-nn-appendix-b.md)
 
 ---
 
