@@ -81,7 +81,8 @@
     - [Relay Network]()
     - [P2P Network]()
     - [Hybrid Network]()
-  - [Appendix A - External Packages]()
+  - [Appendix A - External Libraries](./network-nn-appendix-a.md)
+  - [Appendix B - Packets Examples](./network-nn-appendix-b.md)
 
 ---
 
