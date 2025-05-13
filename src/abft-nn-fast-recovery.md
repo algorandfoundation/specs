@@ -49,7 +49,7 @@ $$
 &\text{1: } \function \FastRecovery() \\\\
 &\text{2: } \quad \Resync() \\\\
 &\text{3: } \quad \for a \in A \do \\\\
-&\text{4: } \quad \quad \if \IsCommittable(v) \then \\\\
+&\text{4: } \quad \quad \if \IsCommittable(\bar{v}) \then \\\\
 &\text{5: } \quad \quad \quad \c \gets \Sortition(a_I, r, p, \Late) \\\\
 &\text{6: } \quad \quad \quad \if \c_j > 0 \then \\\\
 &\text{7: } \quad \quad \quad \quad \Broadcast(\Vote(r, p, \Late, v, \c)) \\\\
