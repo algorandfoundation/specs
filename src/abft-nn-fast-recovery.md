@@ -71,7 +71,7 @@ $$
 {{#include ./.include/styles.md:impl}}
 > Fast recovery vote issuance [reference implementation](https://github.com/algorand/go-algorand/blob/d52e3dd8b31a17dfebac3d9158a76e8e62617462/agreement/player.go#L244).
 
-The \\( \FastRecovery \\) is functionally very close to the regular \\( \Recovery \\)
+\\( \FastRecovery \\) is functionally very close to the regular \\( \Recovery \\)
 algorithm (outlined in the previous section), performing the same checks and similar outputs.
 
 The main difference is that it emits votes for any of the three different steps
