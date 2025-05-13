@@ -7,10 +7,11 @@ $$
 \newcommand \IsCommittable {\mathrm{IsCommittable}}
 \newcommand \Vote {\mathrm{Vote}}
 \newcommand \Bundle {\mathrm{Bundle}}
+\newcommand \Cert {\mathit{cert}}
 \newcommand \Late {\mathit{late}}
 \newcommand \Redo {\mathit{redo}}
 \newcommand \Down {\mathit{down}}
-\newcommand \Cert {\mathit{cert}}
+\newcommand \Next {\mathit{next}}
 \newcommand \function {\textbf{function }}
 \newcommand \endfunction {\textbf{end function}}
 \newcommand \if {\textbf{if }}
@@ -35,7 +36,7 @@ This results in an approximately linear execution rate, while the network partit
 continues.
 
 The algorithm uses the last three steps (named \\( \Late, \Redo, \Down \\) respectively)
-for \\( \s in [253, 254, 255] \\).
+for \\( \s \in [253, 254, 255] \\).
 
 These steps are, by nature, mutually exclusive:
 
