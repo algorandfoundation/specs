@@ -52,7 +52,7 @@ $$
 &\text{4: } \quad \quad \if \IsCommittable(\bar{v}) \then \\\\
 &\text{5: } \quad \quad \quad \c \gets \Sortition(a_I, r, p, \Late) \\\\
 &\text{6: } \quad \quad \quad \if \c_j > 0 \then \\\\
-&\text{7: } \quad \quad \quad \quad \Broadcast(\Vote(r, p, \Late, v, \c)) \\\\
+&\text{7: } \quad \quad \quad \quad \Broadcast(\Vote(r, p, \Late, \bar{v}, \c)) \\\\
 &\text{8: } \quad \quad \quad \endif \\\\
 &\text{9: } \quad \quad \elseif \nexists s_0 > \Cert \mid \Bundle(r, p - 1, s_0, \bot) \subseteq V \land \\\\
 &\text{   } \quad \quad \quad \quad \quad \quad \exists s_1 > \Cert \mid \Bundle(r, p - 1, s_1, \bar{v}) \subseteq V \then \\\\
