@@ -28,7 +28,15 @@ $$
 # Fast Recovery
 
 The fast recovery algorithm is executed periodically every integer multiple of \\( \lambda_f \\)
-seconds (plus random variance).
+seconds (plus random variance). This gives it an approximately linear rate of execution while the partition state affecting the network continues.
+
+The algorithm makes use of the last three steps, named late, redo and down respectively for steps 253, 254 and 255.
+These steps are by nature mutually exclusive:
+- A late vote will be attempted if a staged value \\( \sigma \\) is available (for the current round and period).
+- Otherwise, a redo vote will be attempted if the current period is greater than zero, and the last period was completed with a next threshold for a non-bottom proposal-value.
+- Finally, as a fallback of sorts, a down vote is attempted if none of the above conditions were met.
+
+Note that a down vote is always a vote for the bottom proposal-value, while late and redo must vote for a proposal-value _distinct_ from //( \bot )//.
 
 ## Algorithm
 
