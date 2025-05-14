@@ -9,6 +9,7 @@ $$
 \newcommand \RetrieveProposal {\mathrm{RetrieveProposal}}
 \newcommand \DynamicFilterTimeout {\mathrm{DynamicFilterTimeout}}
 \newcommand \Soft {\mathit{soft}}
+\newcommand \Prop {\mathit{propose}}
 \newcommand \Vote {\mathrm{Vote}}
 \newcommand \function {\textbf{function }}
 \newcommand \endfunction {\textbf{end function}}
@@ -23,7 +24,6 @@ $$
 \newcommand \vt {\mathit{vote}}
 \newcommand \ph {\mathit{priorityHash}}
 \newcommand \c {\mathit{credentials}}
-\newcommand \prop {\mathit{proposal}}
 $$
 
 # Soft Vote
@@ -103,7 +103,7 @@ details).
 
 Let \\( V \\) be the set of all _observed votes_ in the currently executing round.
 For convenience, we define a subset, \\( V^\ast \\) to be all proposals received;
-that is \\( V^\ast = \\{\vt \in V : \vt_s = \prop\\} \\).
+that is \\( V^\ast = \\{\vt \in V : \vt_s = \Prop\\} \\).
 
 With the aid of a priority function, this stage performs a filtering action, selecting
 the highest priority observed proposal to vote for, defined as the one with the
