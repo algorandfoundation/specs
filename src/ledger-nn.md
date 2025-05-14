@@ -17,8 +17,8 @@ and the `go-algorand` [reference implementation](https://github.com/algorand/go-
 Whenever possible, we illustrate how specific subcomponents may be implemented,
 providing design patterns from the reference implementation.
 
-Besides of the actual [Ledger](./ledger.md) as an ordered sequence of [blocks](./ledger.md#blocks),
-several subcomponents are defined to look up, commit, validate, and assembly said
+Besides the actual [Ledger](./ledger.md) as an ordered sequence of [blocks](./ledger.md#blocks),
+several subcomponents are defined to look up, commit, validate, and assemble said
 blocks and their corresponding certificates.
 
 Some constructs are built to optimize specific fields look up in these blocks for
@@ -29,4 +29,4 @@ and their usage and implementation details are addressed in the [corresponding s
 This chapter also includes the [_Transaction Pool_](#./ledger-nn-transaction-pool.md),
 a queue of transactions that plays a key role in the assembly of a new block, the
 [_Transaction Tail_](./ledger-nn-transaction-tail.md) used for efficient deduplication,
-and a dive on the protocol [_Rewards_](./ledger-nn-rewards.md) system.
+and a dive into the protocol [_Rewards_](./ledger-nn-rewards.md) system.
