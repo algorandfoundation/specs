@@ -49,7 +49,7 @@
 - [Normative]()
 - [Non-Normative](./ledger-nn.md)
   - [Blocks](./ledger-nn-blocks.md)
-    - [Block Header]()
+    - [Block Header](./ledger-nn-block-header.md)
     - [Genesis Block]()
     - [Block Verification]()
   - [Transactions]()
