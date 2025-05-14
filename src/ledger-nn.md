@@ -2,6 +2,14 @@
 
 The following is a _non-normative_ specification of the _Algorand Ledger_.
 
+The Algorand Ledger consists of
+
+- The _Account Table_, which records the current state of the Ledger as an aggregation
+of individual accounts' states,
+
+- The Blockchain, which records the history of the accounts' states updates since
+the _genesis block_ up to the current state.
+
 This chapter aids implementors and readers in understanding the Ledger component,
 as well as bridging the gap between the [normative specification](./ledger.md)
 and the `go-algorand` [reference implementation](https://github.com/algorand/go-algorand).
@@ -10,7 +18,7 @@ Whenever possible, we illustrate how specific subcomponents may be implemented,
 providing design patterns from the reference implementation.
 
 Besides of the actual [Ledger](./ledger.md) as an ordered sequence of [blocks](./ledger.md#blocks),
-several subcomponents are defined to look up, commit, validate and assembly said
+several subcomponents are defined to look up, commit, validate, and assembly said
 blocks and their corresponding certificates.
 
 Some constructs are built to optimize specific fields look up in these blocks for

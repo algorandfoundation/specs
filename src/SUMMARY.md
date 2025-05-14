@@ -48,7 +48,7 @@
 - [Overview]()
 - [Normative]()
 - [Non-Normative](./ledger-nn.md)
-  - [Blocks]()
+  - [Blocks](./ledger-nn-blocks.md)
     - [Block Header]()
     - [Genesis Block]()
     - [Block Verification]()
