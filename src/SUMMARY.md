@@ -50,7 +50,7 @@
 - [Non-Normative](./ledger-nn.md)
   - [Blocks](./ledger-nn-blocks.md)
     - [Block Header](./ledger-nn-block-header.md)
-    - [Genesis Block]()
+    - [Genesis Block](./ledger-nn-genesis-block.md)
     - [Block Verification]()
   - [Transactions]()
     - [Transaction Type Examples]()
