@@ -37,7 +37,7 @@
   - [Recovery Stages](./abft-nn-recovery-stages.md)
     - [Resynchronization Attempt](./abft-nn-resync-attempt.md)
     - [Recovery](./abft-nn-recovery.md)
-    - [Late, Redo, and Down Votes]()
+    - [Fast Recovery](./abft-nn-fast-recovery.md)
   - [Examples of Protocol Runs](./abft-nn-protocol-run-examples.md)
     - [Vanilla Run](./abft-nn-vanilla-run.md)
     - [Jalapeño Run](./abft-nn-jalapeno-run.md)
