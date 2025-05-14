@@ -184,11 +184,11 @@ This field represents the vote of the _block proposer_ on the new protocol versi
 
 It contains two fields:
 
-- `upgradeApprove`\
+- `UpgradeApprove`\
 A boolean flag that indicates an affirmative vote for the new protocol version.
 Usually set to `false` unless a protocol upgrade vote is ongoing.
 
-- `upgradeDelay`\
+- `UpgradeDelay`\
 The delay in rounds between the approval of a new protocol version and its execution.
 Usually set to \\( 0 \\) unless an upgrade vote is ongoing.
 
