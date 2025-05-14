@@ -196,3 +196,17 @@ due to expired participation keys (from the end of this round). Limited to \\( 3
 - Absent Participation Accounts\
 An optional list of online account addresses to be removed from consensus participation,
 due to long-lasting absenteeism in the expected block proposals. Limited to \\( 32 \\) accounts.
+
+# Block Header Examples
+
+## With Protocol Upgrade Proposal, Without Payout
+
+```json
+{{#include ./.include/bh-with-upgrade-without-payout.json}}
+```
+
+## Without Protocol Upgrade Proposal, With Payout
+
+```json
+{{#include ./.include/bh-without-upgrade-with-payout.json}}
+```
