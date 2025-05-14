@@ -47,7 +47,27 @@
 
 - [Overview]()
 - [Normative]()
-- [Non-Normative]()
+- [Non-Normative](./ledger-nn.md)
+  - [Blocks](./ledger-nn-blocks.md)
+    - [Block Header]()
+    - [Genesis Block]()
+    - [Block Verification]()
+  - [Transactions]()
+    - [Transaction Type Examples]()
+  - [Trackers]()
+    - [Trackers API]()
+  - [Protocol Rewards]()
+    - [Staking Rewards]()
+  - [Transaction Tail]()
+  - [Transaction Pool]()
+    - [Parameters]()
+    - [Fee Prioritization]()
+    - [Update]()
+    - [Ingestion]()
+    - [Block Assembly]()
+  - [Block Commitment]()
+    - [State Deltas]()
+  - [Appendix A]()
 
 # Algorand Virtual Machine
 
