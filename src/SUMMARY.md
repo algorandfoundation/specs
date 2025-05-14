@@ -51,7 +51,7 @@
   - [Blocks](./ledger-nn-blocks.md)
     - [Block Header](./ledger-nn-block-header.md)
     - [Genesis Block](./ledger-nn-genesis-block.md)
-    - [Block Verification]()
+    - [Block Verification](./ledger-nn-block-verification.md)
   - [Transactions]()
     - [Transaction Type Examples]()
   - [Trackers]()
