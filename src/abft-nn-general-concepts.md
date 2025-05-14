@@ -58,7 +58,7 @@ which includes:
 - Secret key (\\( \sk_r \\)): A private key associated with the account, used for
 cryptographic operations such as signing messages[^1].
 
-- \\( \VRF \\) proof (\\( \pi \\)): A cryptographic proof generated using the
+- \\( \VRF \\) proof (\\( y \\)): A cryptographic proof generated using the
 [Verifiable Random Function](./crypto.md#verifiable-random-function) (\\( \VRF \\))[^2].
 
 The sets of observed votes \\( V \\) and proposals \\( P \\), observed in a given
@@ -77,5 +77,5 @@ opaque structure that produces the key needed for the round and abstracts away b
 a signature and verification procedure.
 
 [^2]: Since the sortition hash \\( \VRF_{out} \\) can be derived from a proof
-\\( \pi \\), we assume that \\( \VRF_{out} \\) is implicitly available whenever
-\\( \pi \\) is present.
+\\( y \\), we assume that \\( \VRF_{out} \\) is implicitly available whenever
+\\( y \\) is present.

@@ -1,0 +1,15 @@
+{
+  "sig": "92a66ab561eae804151b4ef2da3c79cf16857d31dc637ae9343911866b6a7eb780c2ef7db23d30c5d9e3ab5e78434e172627ec40cee6b0931ee16ff95e2d3103",
+  "txn": {
+    "arcv": "DSOPUQC7P5WO3C32HKZONPW4MMBEQ6FGAN456PNG4A4HTRE322ZMMIK6S4",
+    "fee": 1000,
+    "fv": 49767204,
+    "gen": "mainnet-v1.0",
+    "gh": "c061c4d8fc1dbdded2d7604be4568e3f6d041987ac37bde4b620b5ab39248adf",
+    "lv": 49768204,
+    "note": "Connectivity Check",
+    "snd": "T3HDEL5I6RC4MMK4DLYVDIM37WBXGLTUQPDI5CS2SGDGSZEJW3VFJK6RHE",
+    "type": "axfer",
+    "xaid": 924268058
+  }
+}
