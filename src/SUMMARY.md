@@ -58,7 +58,6 @@
     - [Trackers API](./ledger-nn-trackers-api.md)
   - [Protocol Rewards]()
     - [Staking Rewards]()
-    - [Distribution Rewards (Legacy)]()
   - [Transaction Tail]()
   - [Transaction Pool]()
     - [Parameters]()
