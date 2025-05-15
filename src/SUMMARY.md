@@ -52,7 +52,7 @@
     - [Block Header](./ledger-nn-block-header.md)
     - [Genesis Block](./ledger-nn-genesis-block.md)
     - [Block Verification]()
-  - [Transactions]()
+  - [Transactions](./ledger-nn-transactions.md)
     - [Transaction Type Examples]()
   - [Trackers]()
     - [Trackers API]()
