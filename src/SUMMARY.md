@@ -58,7 +58,7 @@
     - [Trackers API]()
   - [Protocol Rewards]()
     - [Staking Rewards]()
-  - [Transaction Tail]()
+  - [Transaction Tail](./ledger-nn-transaction-tail.md)
   - [Transaction Pool]()
     - [Parameters]()
     - [Fee Prioritization]()
