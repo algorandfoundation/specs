@@ -13,7 +13,8 @@ This section presents an implementor-oriented definition of \\( \TP \\) and is b
 on the [reference implementation](https://github.com/algorand/go-algorand/blob/b6e5bcadf0ad3861d4805c51cbf3f695c38a93b7/data/pools/transactionPool.go#L52)
 to clarify how it is constructed and operated by a node.
 
-> For a succinct formal definition of the Transaction Pool, refer to the Ledger [normative specification](./ledger.md#transaction-pool).
+> For a succinct formal definition of the _Transaction Pool_, refer to the Ledger
+> [normative specification](./ledger.md#transaction-pool).
 
 The \\( \TP \\) implementation makes use of two distinct queues to aid the processes
 of pruning already observed transactions and block commitment:
@@ -23,9 +24,11 @@ of pruning already observed transactions and block commitment:
 - The _pending_ queues \\( \TP_{pq} \\).
 
 Given a properly signed and well-formed transaction group \\( gtx \in TP_{pq} \\),
-we say that \\( gtx \\) is _remembered_ when it is pushed into \\( \TP_{rq} \\) if
-its aggregated `Fee` is sufficiently high, and its state changes are consistent
-with the prior transactions in \\( TP_{rq} \\).
+we say that \\( gtx \\) is _remembered_ when it is pushed into \\( \TP_{rq} \\) if:
+
+- Its _aggregated fee_ is sufficiently high,
+
+- Its state changes are consistent with the prior transactions in \\( TP_{rq} \\).
 
 > A single transaction can be viewed as a group \\( gtx \\) containing only one
 > transaction.
