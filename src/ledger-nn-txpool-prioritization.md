@@ -16,7 +16,7 @@ $$
 \newcommand \ComputeFeePerByte {\mathrm{ComputeFeePerByte}}
 $$
 
-# Fee Prioritization
+# Prioritization
 
 When the \\( \TP \\) becomes congested, a _fee prioritization_ algorithm determines
 which transactions are enqueued into the pool and which are rejected.

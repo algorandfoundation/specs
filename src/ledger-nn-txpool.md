@@ -22,10 +22,13 @@ of pruning already observed transactions and block commitment:
 
 - The _pending_ queues \\( \TP_{pq} \\).
 
-Given a properly signed and well-formed transaction group \\( t \in TP_{pq} \\),
-we say that \\( t \\) is _remembered_ when it is pushed into \\( \TP_{rq} \\) if
-its `Fee` is sufficiently high, and its state changes are consistent with the prior
-transactions in \\( TP_{rq} \\).
+Given a properly signed and well-formed transaction group \\( gtx \in TP_{pq} \\),
+we say that \\( gtx \\) is _remembered_ when it is pushed into \\( \TP_{rq} \\) if
+its aggregated `Fee` is sufficiently high, and its state changes are consistent
+with the prior transactions in \\( TP_{rq} \\).
+
+> A single transaction can be viewed as a group \\( gtx \\) containing only one
+> transaction.
 
 {{#include ./.include/styles.md:impl}}
 > In the reference implementation, \\( TP_{rq} \\) is structured as a two-dimensional
@@ -51,38 +54,39 @@ should provide.
 ## Prioritization
 
 An algorithm that decides which transactions should be retained and which ones should
-be dropped, especially important when the \( \TP \) becomes congested (i.e., when
+be dropped, especially important when the \\( \TP \\) becomes congested (i.e., when
 transactions are arriving faster than they can be processed, de-enqueued in a block,
 or observed in a committed block and pruned). A simple approach could be a _“first-come,
-first-served”_ policy. However, the `go-algorand` uses a more selective method: a
-threshold-based `Fee` prioritization algorithm, which prioritizes transactions paying
-higher fees.
-
-## Ingestion
-
-This component handles the ingestion of new transaction groups that are to be remembered
-(enqueued to \\( TP_{rq} \\)). Before enqueuing, it verifies that each transaction
-group is internally valid and consistent in the context of transactions already
-present in \\( TP_{rq} \\). Once transactions pass these checks, they are forwarded
-to any active _Block Evaluator_, so they can be considered for inclusion in blocks
-currently being assembled.
+first-served”_ policy. However, the `go-algorand` reference implementation uses a
+more selective method: a threshold-based _fee prioritization_ algorithm, which prioritizes
+transactions paying higher fees.
 
 ## Update
 
 This process is triggered when a new block is observed as committed. At this point,
 transactions are pruned if they meet either of the following conditions:
 
-- They have already been included in a committed block (as determined by the `OnNewBlock` function), or
+- They have already been included in a committed block (as determined by the `OnNewBlock`
+function), or
 - Their `LastValid` [field]((./ledger.md#transactions)) has expired. Specifically,
 if the current round \\( r > \Tx_{\LastValid}\\).
 
 In addition to pruning outdated or committed transactions, this step also updates 
-the internal variables used for fee prioritization.
+the internal variables used for the _prioritization_.
+
+## Ingestion
+
+This component handles the ingestion of new transaction groups (\\( gtx \\)) that
+are to be remembered (enqueued to \\( TP_{rq} \\)). Before enqueuing, it verifies
+that each transaction group is internally valid and consistent in the context of
+transactions already present in \\( TP_{rq} \\). Once transactions pass these checks,
+they are forwarded to any active _Block Evaluator_, so they can be considered for
+inclusion in blocks currently being assembled.
 
 ## BlockAssembly
 
-This process builds a new block’s [`payset`](./ledger.md#blocks) by selecting valid
-transaction groups dequeued from the \\( TP \\), all within a deadline. A (pending)
-_Block Evaluator_ is responsible for processing the transactions, while the `BlockAssembly`
-function coordinates with it. The assembly process halts as soon as the time constraints
-are reached.
+This process builds a new block’s [`payset`](./ledger.md#blocks) (the body with block’s
+transactions) by selecting valid transaction groups \\( gtx \\) dequeued from the
+\\( TP \\), all within a deadline. A (pending) _Block Evaluator_ is responsible
+for processing the transactions, while the `BlockAssembly` function coordinates
+with it. The assembly process halts as soon as the time constraints are reached.

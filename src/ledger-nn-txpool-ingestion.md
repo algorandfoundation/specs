@@ -73,12 +73,12 @@ ready to process transaction groups.
 
 It uses a \\( \texttt{recompute} \\) flag to verify whether the `Update` function
 has handled the latest block. If not, the algorithm enters a wait phase, controlled
-by the \( \delta_{NB} \) parameter (as described in the [parameters section](./ledger-nn-transaction-pool-parameters.md)).
+by the \\( \delta_{NB} \\) parameter (as described in the [parameters section](ledger-nn-txpool-parameters.md)).
 
 This waiting period can end early if the pending \\( \BlockEval \\) catches up to
 the current round. Once synchronized, the algorithm performs a preliminary check
 to ensure that the candidate transaction group \\( gtx \\) is adequately funded,
-per the [fee prioritization rules](./ledger-nn-fee-prioritization.md).
+per the [fee prioritization rules](ledger-nn-txpool-prioritization.md).
 
 Finally, an attempt is made to add \\( gtx \\) to the pending \\( \BlockEval \\).
 After evaluating \\( gtx \\) and performing all necessary checks, this step effectively

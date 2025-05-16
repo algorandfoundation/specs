@@ -39,8 +39,8 @@ conditions, when the \\( TP \\) is not congested, its value is \\( 0 \\). Howeve
 if the queues become congested, this parameter increases. As it grows, it raises
 the _minimum fee_ threshold required for transactions to be accepted into \\( TP \\).
 
-> For more details, see the [update](./ledger-nn-transaction-pool-update.md) and
-> [fee prioritization](./ledger-nn-fee-prioritization.md) sections.
+> For more details, see the [update](ledger-nn-txpool-update.md) and
+> [fee prioritization](ledger-nn-txpool-prioritization.md) sections.
 
 ## \\( \FeeExp \\)
 
