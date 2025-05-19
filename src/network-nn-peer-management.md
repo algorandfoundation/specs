@@ -37,8 +37,7 @@ the peer container.
 The `Phonebook` tracks rate-limiting info and the `addressData` for each address. 
 
 The `PeerStore` works as a union between both `Peerstore` (tracks peers' information)
-and a `CertifiedAddrBook` (manages signed peer records and “self-certified” addresses
-contained within them) from `libp2p`.
+and a `CertifiedAddrBook` (adds specific functionalities to the `addrBook` in order to allow for storage, retrieval, update and deletion of self-certified peer records; records signed by the peer containing their address and an associated lifetime `ttl` after which they expire) from `libp2p`.
 
 {{#include ./.include/styles.md:impl}}
 > - `Phonebook` [reference implementation](https://github.com/algorand/go-algorand/blob/df0613a04432494d0f437433dd1efd02481db838/network/phonebook/phonebook.go#L107-L115),
