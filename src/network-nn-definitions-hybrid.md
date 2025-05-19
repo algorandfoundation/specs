@@ -34,9 +34,7 @@ and the [Peer-to-Peer Network definition](./network-nn-definitions-p2p.md).
 > See also the \\( \HYB \\) [identity challenge](./network-nn-identity.md#hybrid-network-identity-vhallenge)
 > for details on how peer deduplication works in both subnetworks.
 
-## Topology
-
-## Relay Network Topology
+## Hybrid Network Topology
 
 The following sketch represents a typical topology of a Hybrid Network \\( \HybNet \\),
 where:
