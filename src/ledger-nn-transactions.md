@@ -58,7 +58,7 @@ That [signs](https://github.com/algorand/go-algorand/blob/b6e5bcadf0ad3861d4805c
 
 - `Fee`\
 The amount paid by the sender to execute the transaction. Fees can be delegated (set
-to \\( 0 \\)) with transaction `Group` (see group transaction [non-normative section](./ledger-nn-gorup-transaction.md)).
+to \\( 0 \\)) within a transaction `Group` (see group transaction [non-normative section](./ledger-nn-gorup-transaction.md)).
 
 - `FirstValidRound` \\( \r_F \\) and `LastValidRound` \\( \r_L \\)\ 
 The difference \\( (r_L - r_F) \\) cannot be greater than \\( 1000 \\) [rounds](https://github.com/algorand/go-algorand/blob/b6e5bcadf0ad3861d4805c51cbf3f695c38a93b7/config/consensus.go#L938).
