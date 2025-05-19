@@ -65,6 +65,7 @@
     - [Update]()
     - [Ingestion]()
     - [Block Assembly]()
+    - [Graphic Run Example](./ledger-nn-txpool-graphic-example.md)
   - [Block Commitment]()
     - [State Deltas]()
   - [Appendix A]()
