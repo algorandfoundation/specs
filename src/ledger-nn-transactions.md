@@ -32,7 +32,7 @@ The transaction type is identified with a short string of at most [7 characters]
 |  `acfg`  | Algorand Standard Asset transfer                               |
 | `axfer`  | Algorand Strandard Asset creation and reconfiguraiton          |
 |  `afrz`  | Algorand Standard Asset freeze (withelisting and blacklisting) |
-|  `appl`  | Application (Smart Contrct) call                               |
+|  `appl`  | Application (Smart Contract) call
 |  `stpf`  | Algorand State Proof                                           |
 |   `hb`   | Consensus heartbeat challange                                  |
 
