@@ -36,7 +36,7 @@ with the option to replace the existing managed peer connections.
 was able to make notable progress. The network health monitoring is not enough to
 guarantee protocol advancements. The node could be part of a densely connected network
 partition, where all incoming messages arrive quickly, but protocol messages outside
-the partition may never be observed.
+the partition may never be observed. Thus, this function is called whenever a certification bundle for a new block (or at least a proposal-value) has been observed by the agreement protocol, where we can strongly assume that the network is not in a damaging partition state.
 
 - `GetGenesisID() -> string`: Returns the network-specific `genesisID`, a string
 indicating the kind of network this node is connected to (see the Ledger [normative section](ledger.md#genesis-identifier)
