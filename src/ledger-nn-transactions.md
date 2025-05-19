@@ -81,7 +81,7 @@ transaction [non-normative section](./ledger-nn-gorup-transaction.md)).
 32-byte array that enforces [mutual exclusion of transactions](https://github.com/algorand/go-algorand/blob/fcad0bbcc035a8d253cac08e4f90c9c813c40668/ledger/store/trackerdb/data.go#L844-L868).
 If this field is set, it acquires a `Lease`(`Sender`, `Lease`), valid until the
 `LastValidRound` \\( r_L \\) expires. While the transaction maintains the `Lease`,
-no other transaction with the `Lease` can be committed.
+no other transaction with the same `Lease` can be committed.
 
 > A typical use case of the `Lease` is a batch of signed transactions, with the
 > same `Lease`, sent to the network to ensure only one is executed.
