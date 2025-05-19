@@ -96,7 +96,7 @@
   - [Message Handlers](./network-nn-message-handlers.md)
   - [Addressing](./network-nn-addressing.md)
   - [Network Identity](./network-nn-identity.md)
-  - [Peer Management]()
+  - [Peer Management](./network-nn-peer-management.md)
   - [Network Definitions](./network-nn-definitions.md)
     - [Relay Network](./network-nn-definitions-ws.md)
     - [P2P Network](./network-nn-definitions-p2p.md)
