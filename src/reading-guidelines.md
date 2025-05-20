@@ -35,8 +35,8 @@ Part
         └── 1.1.1. Sub Section
 ```
 
-The navigation sidebar can be folded at each level by clicking the folding icon
-(**>**), next to the level name.
+The navigation sidebar can be folded up to the _chapter_ level by clicking the folding
+icon (**>**), next to the level name.
 
 ## Formatting
 
