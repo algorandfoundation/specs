@@ -25,8 +25,8 @@ consensus version.
 
 ## Contents Hierarchy
 
-Contents are organized in four hierarchical levels (see the scroll-down menu on the
-left):
+Contents are organized in four hierarchical levels (see the navigation sidebar on
+the left):
 
 ```text
 Part
@@ -35,8 +35,8 @@ Part
         └── 1.1.1. Sub Section
 ```
 
-Content hierarchy is folded at the _part_ level (`1.`) and can be progressively
-unfolded clicking on the expansion symbol (**>**) next to the level name.
+The navigation sidebar can be folded at each level by clicking the folding icon
+(**>**), next to the level name.
 
 ## Formatting
 
