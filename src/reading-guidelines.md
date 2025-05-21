@@ -2,8 +2,8 @@
 
 The Algorand Specifications consist of _normative_ and _non-normative_ sections.
 
-The _normative_ sections formally define Algorand. All the components of the normative
-sections are gated by the Algorand consensus protocol. The scope of these sections
+The _normative_ sections formally define Algorand. The Algorand consensus protocol
+gates all the components of the normative sections. The scope of these sections
 is to provide a complete and correct specification of the Algorand protocol, regardless
 of the implementation. Therefore, the language used in those sections is formal,
 prescriptive, and succinct.
@@ -25,6 +25,11 @@ consensus version.
 
 ## Contents Hierarchy
 
+![Node](images/node.svg "Node Functional Diagram")
+
+The _node functional diagram_ above provides an overview of the _functional blocks_
+that define the structure of the Algorand Specification.
+
 Contents are organized in four hierarchical levels (see the navigation sidebar on
 the left):
 
@@ -35,7 +40,10 @@ Part
         └── 1.1.1. Sub Section
 ```
 
-The navigation sidebar can be folded up to the _chapter_ level by clicking the folding
+Each _Part_ begins with an _Overview_, highlighting the covered _functional blocks_,
+usually divided into two _Chapters_: _normative_ and _non-normative_ (always present).
+
+The navigation sidebar can be folded up to the _Chapter_ level by clicking the folding
 icon (**>**), next to the level name.
 
 ## Formatting
