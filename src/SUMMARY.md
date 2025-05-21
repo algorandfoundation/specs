@@ -59,7 +59,7 @@
   - [Protocol Rewards](./ledger-nn-protocol-rewards.md)
     - [Staking Rewards](./ledger-nn-staking-rewards.md)
     - [Distribution Rewards (Legacy)]()
-  - [Transaction Tail]()
+  - [Transaction Tail](./ledger-nn-transaction-tail.md)
   - [Transaction Pool]()
     - [Parameters]()
     - [Fee Prioritization]()
