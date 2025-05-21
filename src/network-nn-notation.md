@@ -77,7 +77,7 @@ Messages tagged with `AV` or `PP` get pushed into a separate high-priority queue
 Every \\( tag \\) has a corresponding set of handlers, described in detail in the
 [Message Handlers section](#message-handlers).
 
-## Messages (incoming and outgoing)
+## Messages (In and Out)
 
 Algorand nodes communicate inside a _network layer_ exchanging _messages_.
 
@@ -157,6 +157,8 @@ When an incoming message \\( \InMsg \\) is received, a handler function is calle
 according to its type. The message handler processes the message according to the
 `protocolTag`, and produces an outbound message \\( \OutMsg \\) with information
 on how to proceed further.
+
+## Message Handlers
 
 We define a _message handler_ \\( \MessageHandler_t(\InMsg) \\) as a function that
 takes an incoming message as input and transforms it into an outgoing message.

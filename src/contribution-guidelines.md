@@ -6,7 +6,7 @@ Foundation [repository](https://github.com/algorandfoundation/specs).
 If you would like to contribute, please consider submitting an issue or opening a
 pull request.
 
-By clicking on the _"Suggest an edit"_ icon in the top-right corner while reading
+By clicking on the _“Suggest an edit”_ icon in the top-right corner, while reading
 this book, you will be redirected to the relevant source code file to be referenced
 in an issue or edited in a pull request.
 
@@ -19,7 +19,7 @@ The source code is structured as follows:
 ```text
 .github/            -> GitHub actions and CI/CD workflows
 .archive/           -> Legacy specification archive
-src/                -> Markdown source code
+src/                -> mdBook source code
 └── .include/       -> Code snippets, templates, TeX-macros, and examples
 └── .excalidraw/    -> Excalidraw diagrams source code
 └── images/         -> SVG files
@@ -33,7 +33,7 @@ src/                -> Markdown source code
 
 The book is written in [CommonMark](https://commonmark.org/).
 
-The CI pipeline enforces markdown linting, formatting, and style checking through
+The CI pipeline enforces Markdown linting, formatting, and style checking with
 [`markdownlint`](https://github.com/DavidAnson/markdownlint).
 
 ### Numbered Lists
@@ -219,4 +219,4 @@ To run the `specs` book as a container:
 docker compose up
 ```
 
-This will serve `specs` book on [localhost:3000](http://localhost:3000).
+This will serve the `specs` book on [localhost:3000](http://localhost:3000).
