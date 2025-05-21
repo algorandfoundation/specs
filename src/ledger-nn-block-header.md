@@ -77,6 +77,8 @@ seconds
 > block assembly. See the [`MakeBlock`](https://github.com/algorand/go-algorand/blob/b6e5bcadf0ad3861d4805c51cbf3f695c38a93b7/data/bookkeeping/block.go#L543)
 > function.
 
+> Consensus protocol does not guarantee the accuracy of the timestamp!
+
 ## Transaction Commitment
 
 Cryptographic commitments (hash) to the block’s transaction sequence. Internally,
