@@ -68,7 +68,7 @@
     - [Block Assembly]()
   - [Block Commitment](./ledger-nn-block-commitment.md)
     - [State Delta](./ledger-nn-state-delta.md)
-  - [Appendix A]()
+  - [Appendix A](./ledger-nn-appendix-a.md)
 
 # Algorand Virtual Machine
 
