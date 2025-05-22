@@ -21,7 +21,7 @@ of pruning already observed transactions and block commitment:
 
 - The _remembered_ queue \\( \TP_{rq} \\),
 
-- The _pending_ queues \\( \TP_{pq} \\).
+- The _pending_ queue \\( \TP_{pq} \\).
 
 Given a properly signed and well-formed transaction group \\( gtx \in TP_{pq} \\),
 we say that \\( gtx \\) is _remembered_ when it is pushed into \\( \TP_{rq} \\) if:
