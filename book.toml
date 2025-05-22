@@ -22,4 +22,4 @@ site-url = "https://algorand-specs.pages.dev/"
 
 [output.html.fold]
 enable = true
-level = 0
+level = 3  # Navigation sidebar unfolded up to the 4th 0-based level. Tune it according to the max SUMMARY.md level depth.
