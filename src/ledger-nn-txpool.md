@@ -2,6 +2,7 @@ $$
 \newcommand \TP {\mathrm{TxPool}}
 \newcommand \Tx {\mathrm{Tx}}
 \newcommand \LastValid {\mathrm{LastValid}}
+\newcommand \BlockEval {\mathrm{BlockEvaluator}}
 $$
 
 # Transaction Pool
@@ -22,9 +23,47 @@ of pruning already observed transactions and block commitment:
 - The _remembered_ queue \\( \TP_{rq} \\),
 
 - The _pending_ queue \\( \TP_{pq} \\).
-> The \\( \TP_{pq} \\) is the queue used to feed an active `pendingBlockEvaluator`. Whenever a new block is confirmed and added into the Ledger, the `OnNewBlock(.)` notification function may rebuild the `pendingBlockEvaluator` (with the exception of a `pendingBlockEvaluator` for a round in the future being present, see [here](https://github.com/algorand/go-algorand/blob/34deef26be34aebbdd7221dd2c55181e6f584bd2/data/pools/transactionPool.go#L557))  and as a side effect of this, the \\( \TP_{pq} \\) gets overwritten with the \\( \TP_{rq} \\), making them in-sync at that point.
-> Calls to the Remember(.) function, on the other hand, (see for example the txnHandler on the [reference implementation](https://github.com/algorand/go-algorand/blob/34deef26be34aebbdd7221dd2c55181e6f584bd2/data/txHandler.go#L542)) enqueue the passed verified transaction group to the \\( \TP_{rq} \\) but _also_ append it into the \\( \TP_{pq} \\), so in this instance they might become temporarily out of sync until another call to OnNewBlock(.).
-> See also the rememberCommit(bool flush) function in the [reference implementation](https://github.com/algorand/go-algorand/blob/34deef26be34aebbdd7221dd2c55181e6f584bd2/data/pools/transactionPool.go#L259), which manages the \\( \TP_{pq} \\) according to the contents of the  \\( \TP_{rq} \\) and the _flush_ boolean flag.
+
+The _pending queue_ \\( \TP_{pq} \\) is the structure used to supply transactions
+to the active _pending_ \\( \BlockEval \\), which evaluates transactions for the
+next block.
+
+Whenever a new block is confirmed and committed to the Ledger, the node triggers
+`OnNewBlock`.
+
+This function may rebuild the pending \\( \BlockEval \\) (except for a future round’s
+pending \\( \BlockEval \\)). As part of this process, the _pending queue_ \\( \TP_{pq} \\)
+is synchronized with the _remembered queue_ \\( \TP_{rq} \\) by replacing its contents
+entirely.
+
+{{#include ./.include/styles.md:impl}}
+> Pending Block Evaluator [reference implementation](https://github.com/algorand/go-algorand/blob/34deef26be34aebbdd7221dd2c55181e6f584bd2/data/pools/transactionPool.go#L557).
+
+In contrast, when the `Remember` function is called, the verified transaction group
+is first appended to the _remembered queue_ \\( \TP_{rq} \\). Then the entire \\( \TP_{rq} \\)
+is appended to \\( \TP_{pq} \\) rather than replacing it. This causes the two queues
+to diverge temporarily until the next `OnNewBlock` call resyncs them.
+
+{{#include ./.include/styles.md:impl}}
+> Example of `Remember` function used by the `txnHandler` to enqueue a verified
+> transaction group in the [reference implementation](https://github.com/algorand/go-algorand/blob/34deef26be34aebbdd7221dd2c55181e6f584bd2/data/txHandler.go#L542).
+
+{{#include ./.include/styles.md:impl}}
+> For more detail, see the `rememberCommit(bool flush)` function, which controls
+> how \\( \TP_{pq} \\) is updated from \\( \TP_{rq} \\).
+>
+> If `flush=true`, \\( \TP_{pq} \\) is completely overwritten; if `flush=false`,
+> \\( \TP_{rq} \\) is appended.
+>
+> In summary:
+>
+> - `OnNewBlock` → calls `rememberCommit(true)` → replaces \\( \TP_{pq} \\) with \\( \TP_{rq} \\).
+>
+> - `Remember` → appends to \\( \TP_{rq} \\), then calls `rememberCommit(false)` →
+> appends \\( \TP_{rq} \\) to \\( \TP_{pq} \\).
+>
+> Temporary queue divergence is expected and resolved at the next block confirmation.
+
 Given a properly signed and well-formed transaction group \\( gtx \in TP_{pq} \\),
 we say that \\( gtx \\) is _remembered_ when it is pushed into \\( \TP_{rq} \\) if:
 
