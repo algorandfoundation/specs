@@ -11,7 +11,7 @@ prescriptive, and succinct.
 The _non-normative_ sections provide context and auxiliary information for the Algorand
 implementation. The components of the non-normative sections are not enforced through
 the Algorand consensus protocol. The scope of these sections is to ease the understanding
-of the normative sections and provide readers with a comprehensive view the Algorand
+of the normative sections and provide readers with a comprehensive view of the Algorand
 reference implementation (`go-algorand`). Therefore, the language used in those
 sections is informal, descriptive, and discursive.
 
@@ -23,10 +23,10 @@ Specifications for previous consensus versions can be found via the link provide
 in the block's `current-protocol.upgrade-state` field corresponding to the desired
 consensus version.
 
-## Content Hierarchy
+## Contents Hierarchy
 
-Contents are organized in four hierarchical levels (see the scroll-down menu on the
-left):
+Contents are organized in four hierarchical levels (see the navigation sidebar on
+the left):
 
 ```text
 Part
@@ -35,8 +35,8 @@ Part
         └── 1.1.1. Sub Section
 ```
 
-Content hierarchy is folded at the _part_ level (`1.`) and can be progressively
-unfolded clicking on the expansion symbol (**>**) next to the level name.
+The navigation sidebar can be folded up to the _chapter_ level by clicking the folding
+icon (**>**), next to the level name.
 
 ## Formatting
 
