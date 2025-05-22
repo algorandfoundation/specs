@@ -73,7 +73,11 @@
 
 - [Overview]()
 - [Normative]()
-- [Non-Normative]()
+- [Non-Normative](./avm-nn.md)
+  - [Evaluation Context](./avm-nn-eval-context.md)
+    - [Transition Function](./avm-nn-transition-function.md)
+  - [Program Compilation](./avm-nn-program-compilation.md)
+  - [New OpCodes](./avm-nn-new-opcodes.md)
 
 # Algorand Keys
 
