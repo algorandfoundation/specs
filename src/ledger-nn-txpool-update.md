@@ -87,7 +87,7 @@ The \\( \FeeMul \\) remains unchanged.
   - If it already has a value, it is multiplied by the \\( \FeeExp \\), causing it
   to grow in response to continued congestion.
 
-After updating the fee prioritization mechanism, the \\( TP \\) is pruned by removing:
+After updating the fee prioritization mechanism, the \\( \TP \\) is pruned by removing:
 
 - Transactions that were included in the newly committed block \\( b \\), and
 

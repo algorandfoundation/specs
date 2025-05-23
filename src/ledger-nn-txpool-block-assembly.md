@@ -19,7 +19,7 @@ $$
 
 # Block Assembly
 
-The \\( TP \\) is responsible for populating the `payset` of a block, a process
+The \\( \TP \\) is responsible for populating the `payset` of a block, a process
 referred to as `BlockAssembly`.
 
 The `BlockAssembly` is a time-bound algorithm that manages the flow of transactions
@@ -77,13 +77,13 @@ $$
 This algorithm begins by taking a target round \\( r \\), for which a new block
 is to be assembled.
 
-It first checks the round currently perceived by the \\( TP \\), which matches the
+It first checks the round currently perceived by the \\( \TP \\), which matches the
 round being handled by the pending \\( \BlockEval \\).
 
-- If the \\( TP.\r \\) is significantly behind \\( r \\): an _empty block_ is immediately
+- If the \\( \TP.\r \\) is significantly behind \\( r \\): an _empty block_ is immediately
 assembled and returned, as there’s no time to catch up.
 
-- If the \\( TP \\) is already ahead of \\( r \\): no action is needed, as \\( TP \\)
+- If the \\( \TP \\) is already ahead of \\( r \\): no action is needed, as \\( \TP \\)
 is simply ahead of the network’s current state.
 
 Next, the algorithm waits for the assembly deadline \\( \delta_{\AD} \\). During
@@ -93,15 +93,15 @@ up to the round \\( r \\).
 
 If this doesn’t happen by the deadline, the algorithm performs another round of checks:
 
-- If the \\( TP.\r \\) is now ahead of \\( r \\): the process is aborted, waiting
+- If the \\( \TP.\r \\) is now ahead of \\( r \\): the process is aborted, waiting
 for the network to catch up. This should rarely happen.
 
-- Othwewise, if the \\( TP \\) is still behind: an additional wait period \\( \epsilon_{\AW} \\)
+- Othwewise, if the \\( \TP \\) is still behind: an additional wait period \\( \epsilon_{\AW} \\)
 is introduced.
 
 After this extra wait, similar checks are repeated:
 
-- If the \\( TP \\) is still too far behind: there is no more time to wait, and
+- If the \\( \TP \\) is still too far behind: there is no more time to wait, and
 the algorithm exits.
 
 - Otherwise: the algorithm proceeds.

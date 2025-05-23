@@ -35,9 +35,9 @@ and are instead dropped.
 ## \\( \FeeMul \\)
 
 This dynamic parameter is updated each time a new block is observed. Under normal
-conditions, when the \\( TP \\) is not congested, its value is \\( 0 \\). However,
+conditions, when the \\( \TP \\) is not congested, its value is \\( 0 \\). However,
 if the queues become congested, this parameter increases. As it grows, it raises
-the _minimum fee_ threshold required for transactions to be accepted into \\( TP \\).
+the _minimum fee_ threshold required for transactions to be accepted into \\( \TP \\).
 
 > For more details, see the [update](ledger-nn-txpool-update.md) and
 > [fee prioritization](ledger-nn-txpool-prioritization.md) sections.
@@ -46,7 +46,7 @@ the _minimum fee_ threshold required for transactions to be accepted into \\( TP
 
 A [consensus parameter](./infrastructure.md#node-configuration-values), denoted as
 `TxPoolExponentialIncreaseFactor`, which determines how sharply the required transaction
-fee increases based on the number of full blocks pending (an indicator of \\( TP \\)
+fee increases based on the number of full blocks pending (an indicator of \\( \TP \\)
 congestion). This factor amplifies the fee threshold in congested conditions. The
 default value in `go-algorand` consensus parameters is currently set to \\( 2 \\).
 
@@ -54,7 +54,7 @@ default value in `go-algorand` consensus parameters is currently set to \\( 2 \\
 
 A dynamically computed parameter that defines the current minimum number of μALGO
 per byte that a transaction must pay to be accepted into the \\( \TP \\). When the
-\\( TP \\) is not heavily congested, this parameter remains well below the `minTxnFee`,
+\\( \TP \\) is not heavily congested, this parameter remains well below the `minTxnFee`,
 meaning the base fee requirement still controls the admission threshold. Under normal
 conditions (no congestion), this value is set to \\( 0 \\).
 

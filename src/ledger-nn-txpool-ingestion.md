@@ -82,4 +82,4 @@ per the [fee prioritization rules](ledger-nn-txpool-prioritization.md).
 
 Finally, an attempt is made to add \\( gtx \\) to the pending \\( \BlockEval \\).
 After evaluating \\( gtx \\) and performing all necessary checks, this step effectively
-enqueues the transaction group into the \\( TP \\).
+enqueues the transaction group into the \\( \TP \\).

@@ -64,7 +64,7 @@ to diverge temporarily until the next `OnNewBlock` call resyncs them.
 >
 > Temporary queue divergence is expected and resolved at the next block confirmation.
 
-Given a properly signed and well-formed transaction group \\( gtx \in TP_{pq} \\),
+Given a properly signed and well-formed transaction group \\( gtx \in \TP_{pq} \\),
 we say that \\( gtx \\) is _remembered_ when it is pushed into \\( \TP_{rq} \\) if:
 
 - Its _aggregated fee_ is sufficiently high,
@@ -75,7 +75,7 @@ we say that \\( gtx \\) is _remembered_ when it is pushed into \\( \TP_{rq} \\) 
 > transaction.
 
 {{#include ./.include/styles.md:impl}}
-> In the reference implementation, \\( TP_{rq} \\) is structured as a two-dimensional
+> In the reference implementation, \\( \TP_{rq} \\) is structured as a two-dimensional
 > array. Each element in this array holds a list of well-formed, signed transactions.
 > To improve efficiency, the node also uses a key-value mapping where the keys are
 > [transaction IDs](./ledger.md#transaction) and the values are the corresponding
@@ -131,6 +131,6 @@ inclusion in blocks currently being assembled.
 
 This process builds a new block’s [`payset`](./ledger.md#blocks) (the body with block’s
 transactions) by selecting valid transaction groups \\( gtx \\) dequeued from the
-\\( TP \\), all within a deadline. A (pending) _Block Evaluator_ is responsible
+\\( \TP \\), all within a deadline. A (pending) _Block Evaluator_ is responsible
 for processing the transactions, while the `BlockAssembly` function coordinates
 with it. The assembly process halts as soon as the time constraints are reached.
