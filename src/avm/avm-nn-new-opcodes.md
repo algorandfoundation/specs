@@ -3,9 +3,23 @@
 Here we describe the process of adding a new AVM OpCode to `go-algorand` reference
 implementation, providing the example of a dummy `double` OpCode.
 
+The AVM OpCodes are versioned (`langspec_v`) and can be categorized as:
+
+- Arithmetic and Logic Operations
+- Byte Array Manipulation
+- Cryptographic Operations
+- Pushing Values on Stack/Heap (Constants, Txn / ASA / App / Account / Global Fields)
+- Control Flow
+- State Access
+- Inner Transactions
+
 ## OpCode Definition
 
-Define the _operator_ function in `data/transactions/logic/eval.go` ([link](https://github.com/algorand/go-algorand/blob/34deef26be34aebbdd7221dd2c55181e6f584bd2/data/transactions/logic/eval.go)):
+Most OpCodes logic lives in `data/transactions/logic/eval.go` ([link](https://github.com/algorand/go-algorand/blob/34deef26be34aebbdd7221dd2c55181e6f584bd2/data/transactions/logic/eval.go)).
+Some exceptions are larger families of OpCodes with their own files (e.g., `box.go`).
+
+For the dummy `double` OpCode example, let's define the _operator_ function in
+`data/transactions/logic/eval.go` :
 
 ```go
 func opDobule(cx *EvalContext) error {
@@ -21,7 +35,9 @@ func opDobule(cx *EvalContext) error {
 
 ## OpCode Spec
 
-Add the new `OpSpec` value in the `OpSpecs` [array](https://github.com/algorand/go-algorand/blob/b7b3e5e3c9a83cbd6bd038f4f1856039d941b958/data/transactions/logic/opcodes.go#L492).
+OpCodes are included by adding them to `opcodes.go` with a unique byte value.
+
+Let's add the new `OpSpec` value in the `OpSpecs` [array](https://github.com/algorand/go-algorand/blob/b7b3e5e3c9a83cbd6bd038f4f1856039d941b958/data/transactions/logic/opcodes.go#L492).
 
 The format is `{0x01, "sha256", opSHA256, proto("b:b{32}"), 2, costly(35)}`.
 
@@ -66,8 +82,10 @@ Run `make` from the root of the `go-algorand` directory to build new `algod` bin
 
 ## Testing
 
-Test the new OpCode locally by generating a [netgoal template](https://github.com/algorand/go-algorand/tree/13e66ff9ba5073637f69f9dd4e5572f19b77e38c/cmd/netgoal)
-and running a new local network.
+Tests are organized in the accompanying `data/transactions/logic/eval_test.go` file.
+
+Let's test the new OpCode locally by generating a [netgoal template](https://github.com/algorand/go-algorand/tree/13e66ff9ba5073637f69f9dd4e5572f19b77e38c/cmd/netgoal)
+and running a new Local Network.
 
 > Be sure to set the network’s Consensus Version to `future` if you’re adding an
 > OpCode to a future AVM version.

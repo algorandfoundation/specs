@@ -52,8 +52,16 @@
     - [Block Header](./ledger/ledger-nn-block-header.md)
     - [Genesis Block](./ledger/ledger-nn-genesis-block.md)
     - [Block Verification](./ledger/ledger-nn-block-verification.md)
+  - [Accounts]()
+    - [Authorization Types]()
+      - [Rekey]()
+    - [Keys Types]()
+    - [Minimum Balance]()
+    - [Consensus Participation]()
+  - [Algorand Standard Assets]()
   - [Transactions](./ledger/ledger-nn-transactions.md)
     - [Transaction Type Examples]()
+    - [Group Transactions]()
   - [Trackers](./ledger/ledger-nn-trackers.md)
     - [Trackers API](./ledger/ledger-nn-trackers-api.md)
   - [Protocol Rewards](./ledger/ledger-nn-protocol-rewards.md)
@@ -73,14 +81,17 @@
 
 # Algorand Virtual Machine
 
-- [Overview](./avm-overview.md)
+- [Overview](./avm/avm-overview.md)
 - [Normative]()
-- [Non-Normative](./avm-nn.md)
-  - [Stack Execution](./amv-nn-stack-execution.md)
-  - [Evaluation Context](./avm-nn-eval-context.md)
-    - [Transition Function](./avm-nn-transition-function.md)
-  - [Program Compilation](./avm-nn-program-compilation.md)
-  - [New OpCodes](./avm-nn-new-opcodes.md)
+- [Non-Normative](./avm/avm-nn.md)
+  - [Stack Execution](./avm/avm-nn-stack-execution.md)
+  - [Run Times](./avm/avm-nn-run-times.md)
+    - [Stateless](./avm/avm-nn-stateless-run-time.md)
+    - [Stateful](./avm/avm-nn-sateful-run-time.md)
+  - [Evaluation Context](./avm/avm-nn-eval-context.md)
+    - [Transition Function](./avm/avm-nn-transition-function.md)
+  - [Program Compilation](./avm/avm-nn-program-compilation.md)
+  - [New OpCodes](./avm/avm-nn-new-opcodes.md)
 
 # Algorand Keys
 

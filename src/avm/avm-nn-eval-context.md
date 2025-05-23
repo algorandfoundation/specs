@@ -4,7 +4,7 @@ $$
 
 # Evaluation Context
 
-As defined in the AVM [normative specification]((./avm.md#evaluation-context)),
+As defined in the AVM [normative specification](./avm.md#evaluation-context),
 an _Evaluation Context_ \\( \EC \\) is a core runtime structure used during AVM
 program execution. It maintains all the state and metadata required to evaluate
 a program within a transaction (group) scope.

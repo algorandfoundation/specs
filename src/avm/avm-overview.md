@@ -8,4 +8,4 @@ converted to AVM bytecode.
 
 The AVM approves or rejects transactions’ effects on the [Ledger](./ledger.md) state.
 
-![AVM Overview](images/avm-overview.svg "AVM Overview")
+![AVM Overview](../images/avm-overview.svg "AVM Overview")

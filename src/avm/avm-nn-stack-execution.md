@@ -43,7 +43,7 @@ targeting a specific AVM version,
 1. The `// Program` section lists the opcode instructions of the TEAL program:
 
    - TEAL supports the _Reverse Polish notation_ ([RPN](https://en.wikipedia.org/wiki/Reverse_Polish_notation)),
-   - TEAL lines may end either with a newline `\n` or with `;`.
+   - TEAL lines may end with a newline `\n` or `;`.
 
 > For a complete description of the AVM instruction set, refer to the TEAL [normative specification](./TEAL_opcodes.md).
 
@@ -63,4 +63,4 @@ $$
 
 The following illustrations show the program execution step-by-step.
 
-![Stack](images/stack-execution.svg "Stack execution example")
+![Stack](../images/avm-stack-execution.svg "Stack execution example")

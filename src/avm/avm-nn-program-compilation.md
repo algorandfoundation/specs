@@ -9,7 +9,7 @@ node (`go-algorand` reference implementation).
 The node begins by decoding the TEAL source code and converting it into AVM bytecode
 using the internal `assemble` function.
 
-{{#include ./.include/styles.md:impl}}
+{{#include ../.include/styles.md:impl}}
 > Assembler [reference implementation](https://github.com/algorand/go-algorand/blob/df0613a04432494d0f437433dd1efd02481db838/data/transactions/logic/assembler.go#L2039-L2158).
 
 The following diagram outlines the steps involved in TEAL assembly:
