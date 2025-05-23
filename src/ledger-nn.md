@@ -7,7 +7,7 @@ The Algorand Ledger consists of
 - The _Account Table_, which records the current state of the Ledger as an aggregation
 of individual accounts' states,
 
-- The _Blockchain_, which records the history of the accounts' states updates since
+- The _Blockchain_, which records the history of the accounts’ states updates since
 the _genesis block_ up to the current state.
 
 This chapter aids implementors and readers in understanding the Ledger component,
