@@ -1,0 +1,37 @@
+{
+    "genesis-hash":"wGHE2Pwdvd7S12BL5FaOP20EGYesN73ktiC1qzkkit8=",
+    "genesis-id":"mainnet-v1.0",
+    "previous-block-hash":"owhv6q/adgf0AvSNw9cC6Va7blSQUeCRaNaVKb0bqY0=",
+    "round":46000000,
+    "seed":"6Sv0nt/y7Wltt+nbwMpPZwLADmNURXmFHkrihTpqKYE=",
+    "timestamp":1736228624,
+    "transactions-root":"4V2mkvL+vDuQcN2Vq8x4HJzZCtNd/+pChJfFW9YVxNU=",
+    "transactions-root-sha256":"/nZs/lsL98Lw9NaqdT+3rdlKsFJyLqM8u4AKm42yIzg=",
+    "rewards":{
+        "fee-sink":"Y76M3MSY6DKBRHBL7C3NNDXGS5IIMQVQVUAB6MP4XEMMGVF2QWNPL226CA",
+        "rewards-calculation-round":46500000,
+        "rewards-level":218288,
+        "rewards-pool":"737777777777777777777777777777777777777777777777777UFEJ2CI",
+        "rewards-rate":0,
+        "rewards-residue":6886250026
+    },
+    "state-proof-tracking":[
+        {
+            "next-round":45999872,
+            "online-total-weight":0,
+            "type":0
+        }
+    ],
+    "txn-counter":2667677491,
+    "upgrade-state":{
+        "current-protocol":"https://github.com/algorandfoundation/specs/tree/925a46433742afb0b51bb939354bd907fa88bf95",
+        "next-protocol":"https://github.com/algorandfoundation/specs/tree/236dcc18c9c507d794813ab768e467ea42d1b4d9",
+        "next-protocol-approvals":2,
+        "next-protocol-switch-on":46210138,
+        "next-protocol-vote-before":46002138
+    },
+    "upgrade-vote":{
+        "upgrade-approve":false,
+        "upgrade-delay":0
+    }
+}

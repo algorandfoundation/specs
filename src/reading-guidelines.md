@@ -2,8 +2,8 @@
 
 The Algorand Specifications consist of _normative_ and _non-normative_ sections.
 
-The _normative_ sections formally define Algorand. All the components of the normative
-sections are gated by the Algorand consensus protocol. The scope of these sections
+The _normative_ sections formally define Algorand. The Algorand consensus protocol
+gates all the components of the normative sections. The scope of these sections
 is to provide a complete and correct specification of the Algorand protocol, regardless
 of the implementation. Therefore, the language used in those sections is formal,
 prescriptive, and succinct.
@@ -11,7 +11,7 @@ prescriptive, and succinct.
 The _non-normative_ sections provide context and auxiliary information for the Algorand
 implementation. The components of the non-normative sections are not enforced through
 the Algorand consensus protocol. The scope of these sections is to ease the understanding
-of the normative sections and provide readers with a comprehensive view the Algorand
+of the normative sections and provide readers with a comprehensive view of the Algorand
 reference implementation (`go-algorand`). Therefore, the language used in those
 sections is informal, descriptive, and discursive.
 
@@ -23,10 +23,15 @@ Specifications for previous consensus versions can be found via the link provide
 in the block's `current-protocol.upgrade-state` field corresponding to the desired
 consensus version.
 
-## Content Hierarchy
+## Contents Hierarchy
 
-Contents are organized in four hierarchical levels (see the scroll-down menu on the
-left):
+![Node](images/node.svg "Node Functional Diagram")
+
+The _node functional diagram_ above provides an overview of the _functional blocks_
+that define the structure of the Algorand Specification.
+
+Contents are organized in four hierarchical levels (see the navigation sidebar on
+the left):
 
 ```text
 Part
@@ -35,8 +40,11 @@ Part
         └── 1.1.1. Sub Section
 ```
 
-Content hierarchy is folded at the _part_ level (`1.`) and can be progressively
-unfolded clicking on the expansion symbol (**>**) next to the level name.
+Each _Part_ begins with an _Overview_, highlighting the covered _functional blocks_,
+usually divided into two _Chapters_: _normative_ and _non-normative_ (always present).
+
+The navigation sidebar can be folded up to the _Chapter_ level by clicking the folding
+icon (**>**), next to the level name.
 
 ## Formatting
 
