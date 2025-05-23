@@ -68,7 +68,7 @@ to clarify how it is constructed and operated by a node.
 >
 > - Its _aggregated fee_ is sufficiently high,
 >
-> - Its state changes are consistent with the prior transactions in \\( TP_{rq} \\).
+> - Its state changes are consistent with the prior transactions in \\( \TP_{rq} \\).
 >
 > Note that a single transaction can be viewed as a group \\( gtx \\) containing
 > only one transaction.
@@ -82,10 +82,10 @@ to clarify how it is constructed and operated by a node.
 > when updating the queue (for insertions and deletions), but it enables fast, constant-time
 > \\( \mathcal{O}(1) \\) lookup of any enqueued transaction by its ID.
 > 
-> Additionally, \\( TP_{pq} \\) serves as another layer of optimization. It stores
+> Additionally, \\( \TP_{pq} \\) serves as another layer of optimization. It stores
 > transaction groups that are prepared in advance for the next _block assembly_
 > process. In a multithreaded system with strict timing constraints, this setup
-> allows \\( TP_{rq} \\) to be pruned as soon as a new block is committed, even
+> allows \\( \TP_{rq} \\) to be pruned as soon as a new block is committed, even
 > while the next block is being assembled concurrently.
 
 ## Transaction Pool Functions

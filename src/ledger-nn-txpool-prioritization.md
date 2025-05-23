@@ -56,7 +56,7 @@ $$
 The `computeFeePerByte` function begins by setting \\( \FeePB \\) equal to the \\( \FeeMul \\).
 When there is no congestion in \\( \TP \\), this value is \\( 0 \\).
 
-However, if there are any full blocks currently pending in \\( TP_{pq} \\), \\( \FeePB \\)
+However, if there are any full blocks currently pending in \\( \TP_{pq} \\), \\( \FeePB \\)
 is initially set to \\( 1 \\). This setup ensures that the subsequent multiplication
 step accumulates due to a non-zero base.
 
