@@ -90,7 +90,7 @@ there are two options:
 \\( \Bundle(r, p-1, s', \bot) \\) (meaning there is no valid _pinned value_), then
 the node:
 
-   - Assembles a block (see the [Ledger non-normative section](ledger-overview.md#block-assembly)
+   - Assembles a block (see the [Ledger non-normative section](ledger/ledger-overview.md#block-assembly)
    for details on this process),
    - Computes the proposal value for this block,
    - Broadcast a proposal vote by the account \\( a \\),
