@@ -53,7 +53,7 @@ of the block header (\\( \bh \\)).
 represents the unauthenticated proposal, \\( \texttt{"PL"} \\) is the domain separator
 for a “payload”, and the encoding function is the msgpack of the \\( \Proposal \\).
 
-{{#include ./.include/styles.md:impl}}
+{{#include ../.include/styles.md:impl}}
 > Proposal-value [structure](https://github.com/algorand/go-algorand/blob/8341e41c3a4b9c7819cb3f89f319626f5d7b68d5/agreement/proposal.go#L37).
 >
 > Domain separators for [block header](https://github.com/algorand/go-algorand/blob/8341e41c3a4b9c7819cb3f89f319626f5d7b68d5/protocol/hash.go#L43)
@@ -73,10 +73,10 @@ data for the block validation:
 Note that the _original period_ and proposer’s address are the same as the associated
 _proposal-value_. The seed proof \\( \pi_{seed} \\) is used to verify the seed computation.
 
-{{#include ./.include/styles.md:impl}}
+{{#include ../.include/styles.md:impl}}
 > Unauthenticated proposal [structure]((https://github.com/algorand/go-algorand/blob/8341e41c3a4b9c7819cb3f89f319626f5d7b68d5/agreement/proposal.go#L55)).
 
-{{#include ./.include/styles.md:impl}}
+{{#include ../.include/styles.md:impl}}
 > In the reference implementation, the _unauthenticated proposal_ is sent to
 > the network linked to a previously emitted proposal vote. These are sent together
 > in a struct defined as a [compound message](https://github.com/algorand/go-algorand/blob/8341e41c3a4b9c7819cb3f89f319626f5d7b68d5/agreement/message.go#L56),
@@ -143,7 +143,7 @@ $$
 
 ---
 
-{{#include ./.include/styles.md:impl}}
+{{#include ../.include/styles.md:impl}}
 > Proposal handler [reference implementation](https://github.com/algorand/go-algorand/blob/c60db8dbc4b0dd164f0bb764e1464d4ebef38bb4/agreement/proposalManager.go#L57).
 
 The node starts by performing a series of checks, after which it will either:

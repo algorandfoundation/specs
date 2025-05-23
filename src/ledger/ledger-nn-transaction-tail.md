@@ -30,7 +30,7 @@ and recent history lookups. It can be considered a rolling window of _recent_ tr
 and block headers observed in a reduced history of rounds, optimized for lookup
 and retrieval.
 
-{{#include ./.include/styles.md:impl}}
+{{#include ../.include/styles.md:impl}}
 > Transaction tail [reference implementation](https://github.com/algorand/go-algorand/blob/55011f93fddb181c643f8e3f3d3391b62832e7cd/ledger/txtail.go#L46).
 
 It provides the following fields:

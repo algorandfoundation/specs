@@ -26,7 +26,7 @@ than bundles for a \\( \Next \\) step for some other value.
 
 > For a formal definition of this property, refer to the ABFT [normative section](./abft.md#special-values).
 
-{{#include ./.include/styles.md:impl}}
+{{#include ../.include/styles.md:impl}}
 > Bundle freshness [reference implementation](https://github.com/algorand/go-algorand/blob/55011f93fddb181c643f8e3f3d3391b62832e7cd/agreement/player.go#L518).
 
 > In the reference implementation, a resynchronization attempt is handled by the `partitionPolicy`

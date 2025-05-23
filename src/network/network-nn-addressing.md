@@ -23,13 +23,13 @@ This schema is defined in the `NetAddress` parameter of the _node configuration_
 The `PublicAddress` also can be set in the _node configuration_ to let a \\( \Peer \\)
 differentiate itself from other peers, and to be used in the [identity challenges](#network-identity).
 
-{{#include ./.include/styles.md:impl}}
+{{#include ../.include/styles.md:impl}}
 > The reference implementation checks the scheme of network addresses against this
 > _regex_:
 >
 > `^[-a-zA-Z0-9.]+:\\d+$`
 
-{{#include ./.include/styles.md:impl}}
+{{#include ../.include/styles.md:impl}}
 > Websocket network address [reference implementation](https://github.com/algorand/go-algorand/blob/df0613a04432494d0f437433dd1efd02481db838/network/wsNetwork.go#L332).
 
 ## P2P Addressing Scheme
@@ -58,11 +58,11 @@ to route messages.
 \\( \Peer \\) private keys are used to sign all messages and are kept as secrets
 by the node.
 
-{{#include ./.include/styles.md:impl}}
+{{#include ../.include/styles.md:impl}}
 > `PeerID` are cast-able to `str` type and are used as plain strings in packages
 > where importing `libp2p` packages may not be needed.
 
-{{#include ./.include/styles.md:impl}}
+{{#include ../.include/styles.md:impl}}
 > A `GetPrivKey` [function](https://github.com/algorand/go-algorand/blob/eff5fb40deb279ba8b2d7f25fbfa5bfe8002d422/network/p2p/peerID.go#L56)
 > manages loading and creation of private keys in the \\( \PtoP \\) network. It
 > prioritizes, in this order:
@@ -71,7 +71,7 @@ by the node.
 > 1. The default path to `privKey`,
 > 1. Generating a new `privKey`.
 
-{{#include ./.include/styles.md:impl}}
+{{#include ../.include/styles.md:impl}}
 > If a new private key is generated, and should be persisted, its default path is
 > `"peerIDPrivKey.key"` (inside the root directory). The behavior of this lookup
 > is governed by _node configuration_ values `P2PPersistPeerID` and `P2PPrivateKeyLocation`
@@ -95,7 +95,7 @@ open port), the conversion scheme is `/ip4/[a]/tcp/[b]`.
 > Refer to the `libp2p` [specifications](https://github.com/libp2p/specs/blob/master/addressing/README.md#the-p2p-multiaddr)
 > for further detail on this structure.
 
-{{#include ./.include/styles.md:example}}
+{{#include ../.include/styles.md:example}}
 > Here are some examples of syntactically valid _multiaddresses_:
 >
 > - `/ip4/127.0.0.1/tcp/8080`, for a multiaddress composed only of a network address

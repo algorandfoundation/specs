@@ -77,7 +77,7 @@ etc.).
 > Refer to the normative section of each node component to see how these messages
 > are processed and their impact on the node’s overarching state.
 
-{{#include ./.include/styles.md:impl}}
+{{#include ../.include/styles.md:impl}}
 > In the reference implementation, a single entry point callback `Notify()` is used
 > to monitor an outgoing connection whenever a message is received. This function
 > then sends the message metadata to the appropriate processing stage of the `PerformanceMonitor`.

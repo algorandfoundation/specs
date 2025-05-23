@@ -61,7 +61,7 @@ $$
 
 ---
 
-{{#include ./.include/styles.md:impl}}
+{{#include ../.include/styles.md:impl}}
 > Next vote issuance [reference implementation](https://github.com/algorand/go-algorand/blob/d52e3dd8b31a17dfebac3d9158a76e8e62617462/agreement/player.go#L214).
 
 The node starts by making a resynchronization attempt (Line 2).

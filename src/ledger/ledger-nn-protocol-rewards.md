@@ -23,7 +23,7 @@ on each account state change (e.g., sending or receiving a transaction).
 > This system is disabled on MainNet and is kept for legacy and retro-compatibility
 > reasons.
 
-{{#include ./.include/styles.md:impl}}
+{{#include ../.include/styles.md:impl}}
 > Distribution rewards [reference implementation](https://github.com/algorand/go-algorand/blob/a81d54fb36c16c2f2f44cc5d153f358105a63317/data/bookkeeping/block.go#L337).
 
 ## Staking Rewards

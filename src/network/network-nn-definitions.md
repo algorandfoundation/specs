@@ -35,7 +35,7 @@ In special cases, when a node simulates the reception of its own message for int
 processing, self-exclusion is bypassed, and the node includes itself in the relaying
 logic. This helps ensure protocol components receive their own outputs when needed.
 
-{{#include ./.include/styles.md:impl}}
+{{#include ../.include/styles.md:impl}}
 > Relay [reference implementation](https://github.com/algorand/go-algorand/blob/ad67b95fcffe250af94de5d1365dd3b81b845f39/agreement/gossip/network.go#L155)
 
 - `Disconnect(badnode Peer)`\
@@ -54,7 +54,7 @@ this function is triggered whenever the Agreement protocol observes a _certifica
 or at least a _proposal-value_ for a new block, allowing the node to confidently
 infer that the network is not partitioned.
 
-{{#include ./.include/styles.md:impl}}
+{{#include ../.include/styles.md:impl}}
 > Usage of `OnNetworkAdvace` in [reference implementation](https://github.com/algorand/go-algorand/blob/ad67b95fcffe250af94de5d1365dd3b81b845f39/node/impls.go#L87)
 
 - `GetGenesisID() -> string`\

@@ -13,7 +13,7 @@ it also simplifies block assembly and validation.
 
 > For a formal definition of this structure, refer to the Algorand Ledger [normative specification](ledger.md#state-deltas).
 
-{{#include ./.include/styles.md:impl}}
+{{#include ../.include/styles.md:impl}}
 > State Delta [reference implementation](https://github.com/algorand/go-algorand/blob/a81d54fb36c16c2f2f44cc5d153f358105a63317/ledger/ledgercore/statedelta.go#L92).
 
 In the `go-algorand` reference implementation, a _State Delta_ includes the following

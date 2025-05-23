@@ -131,7 +131,7 @@ $$
 
 ---
 
-{{#include ./.include/styles.md:impl}}
+{{#include ../.include/styles.md:impl}}
 > Relevant parts of the reference implementation related to vote handling:
 >
 > - [Vote verification](https://github.com/algorand/go-algorand/blob/b6e5bcadf0ad3861d4805c51cbf3f695c38a93b7/agreement/vote.go#L97).

@@ -13,10 +13,10 @@ and the initial consensus participation state (and keys),
 
 - The schema of the Ledger.
 
-{{#include ./.include/styles.md:impl}}
+{{#include ../.include/styles.md:impl}}
 > `Genesis` type definition in the [reference implementation](https://github.com/algorand/go-algorand/blame/18990e06116efa0ad29008d5879c8e4dcfa51653/data/bookkeeping/genesis.go#L45).
 
-{{#include ./.include/styles.md:impl}}
+{{#include ../.include/styles.md:impl}}
 > `GenesisBalances` type definition in the [reference implementation](https://github.com/algorand/go-algorand/blame/18990e06116efa0ad29008d5879c8e4dcfa51653/data/bookkeeping/genesis.go#L155).
 > It contains the information needed to generate a new Ledger:
 >
@@ -30,5 +30,5 @@ and the initial consensus participation state (and keys),
 The following is the Algorand MainNet _genesis block_:
 
 ```json
-{{#include ./.include/genesis-block.json}}
+{{#include ../.include/genesis-block.json}}
 ```

@@ -21,7 +21,7 @@ A string and a 32-byte array, respectively.
 They ensure the block belongs to the correct blockchain. These match the genesis
 information about the chain’s state.
 
-{{#include ./.include/styles.md:example}}
+{{#include ../.include/styles.md:example}}
 > For the MainNet:
 > - Genesis ID: `mainnet-v1.0`
 > - Genesis Hash: `wGHE2Pwdvd7S12BL5FaOP20EGYesN73ktiC1qzkkit8=` (`base64` encoding of the 32-byte array).
@@ -56,7 +56,7 @@ defines implicitly a sequence of seeds, whose values alternate according to:
 refresh interval \\( \delta_r \\), the period \\( p \\) during which the block was
 assembled, and on the \\( \VRF \\) value obtained by the block proposer.
 
-{{#include ./.include/styles.md:example}}
+{{#include ../.include/styles.md:example}}
 > Example a valid [seed chain computation](../abft-nn-seed-calculation.md).
 
 ## Timestamp
@@ -72,7 +72,7 @@ seconds
 
 > See the formal definition in the Ledger [normative specification](ledger.md#parameters).
 
-{{#include ./.include/styles.md:example}}
+{{#include ../.include/styles.md:example}}
 > In the reference implementation, checks on the timestamp are performed during
 > block assembly. See the [`MakeBlock`](https://github.com/algorand/go-algorand/blob/b6e5bcadf0ad3861d4805c51cbf3f695c38a93b7/data/bookkeeping/block.go#L543)
 > function.
@@ -89,7 +89,7 @@ Two different hashes are provided:
 - [SHA512/256](../crypto.md#sha512256),
 - [SHA256](../crypto.md#sha256).
 
-{{#include ./.include/styles.md:impl}}
+{{#include ../.include/styles.md:impl}}
 > Transactions (`payset`) commit [reference implementation](https://github.com/algorand/go-algorand/blob/b6e5bcadf0ad3861d4805c51cbf3f695c38a93b7/data/bookkeeping/block.go#L591).
 
 ## Proposer Payout
@@ -119,7 +119,7 @@ A structure representing the reward state. It contains the following fields:
 A 32-byte array holding a constant address. This address collects transaction fees
 and pays block rewards.
 
-{{#include ./.include/styles.md:example}}
+{{#include ../.include/styles.md:example}}
 > MainNet `FeeSink` address: `Y76M3MSY6DKBRHBL7C3NNDXGS5IIMQVQVUAB6MP4XEMMGVF2QWNPL226CA`.
 
 > This legacy rewards distribution mechanism is currently inactive. See the [non-normative section](./ledger-nn-rewards.md)
@@ -129,7 +129,7 @@ and pays block rewards.
 A 32-byte array holding a constant address. This address pays distribution rewards
 (legacy system, currently inactive).
 
-{{#include ./.include/styles.md:example}}
+{{#include ../.include/styles.md:example}}
 > MainNet `RewardsPool` address: `737777777777777777777777777777777777777777777777777UFEJ2CI`.
 
 - `RewardsLevel` (**legacy**)\
@@ -213,11 +213,11 @@ accounts.
 ## With Protocol Upgrade Proposal, Without Payout
 
 ```json
-{{#include ./.include/bh-with-upgrade-without-payout.json}}
+{{#include ../.include/bh-with-upgrade-without-payout.json}}
 ```
 
 ## Without Protocol Upgrade Proposal, With Payout
 
 ```json
-{{#include ./.include/bh-without-upgrade-with-payout.json}}
+{{#include ../.include/bh-without-upgrade-with-payout.json}}
 ```
