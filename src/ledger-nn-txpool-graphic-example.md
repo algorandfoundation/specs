@@ -7,7 +7,7 @@ $$
 This section is a high-level step-by-step graphic example of a \\( \TP \\) “vanilla
 run”, which provides an intuition about the typical operations:
 
-1. Receiving transactions from the Network and prioritize them,
+1. Receiving transactions from the Network and prioritizing them,
 1. Parallel transactions verification,
 1. Enqueuing transactions in the \\( \TP \\),
 1. Serial transaction (FIFO) queue verification and gossip,
