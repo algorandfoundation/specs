@@ -31,21 +31,21 @@ the seed computation, to ease its understanding.
 
 For the seed calculation algorithm, consider the following notation:
 
-| SYMBOL                    | DESCRIPTION                                      |
-|---------------------------|--------------------------------------------------|
-| \\( I \\)                 | Player address                                   |
-| \\( L \\)                 | Ledger (blocks and present sate)                 |
-| \\( r \\)                 | Current protocol round                           |
-| \\( p \\)                 | Current protocol period                          |
-| \\( \delta_s \\)          | Seed lookback (rounds)                           |
-| \\( \delta_r \\)          | Seed refresh interval (rounds)                   |
-| \\( L[r - n] \\)          | Block \\( r - n \\) of the ledger                |
-| \\( L[r - n]_Q \\)        | Seed of the block \\( r - n \\) of the ledger    |
-| \\( H(x) \\)              | Hash of \\( x \\)                                |
-| \\( \VRF \\)              | Verifiable Random Function                       |
-| \\( \VRF.\Prove \\)       | Computes the proof \\( y \\) of the \\( \VRF \\) |
+|          SYMBOL           | DESCRIPTION                                      |
+|:-------------------------:|--------------------------------------------------|
+|         \\( I \\)         | Player address                                   |
+|         \\( L \\)         | Ledger (blocks and present sate)                 |
+|         \\( r \\)         | Current protocol round                           |
+|         \\( p \\)         | Current protocol period                          |
+|     \\( \delta_s \\)      | Seed lookback (rounds)                           |
+|     \\( \delta_r \\)      | Seed refresh interval (rounds)                   |
+|     \\( L[r - n] \\)      | Block \\( r - n \\) of the ledger                |
+|    \\( L[r - n]_Q \\)     | Seed of the block \\( r - n \\) of the ledger    |
+|       \\( H(x) \\)        | Hash of \\( x \\)                                |
+|       \\( \VRF \\)        | Verifiable Random Function                       |
+|    \\( \VRF.\Prove \\)    | Computes the proof \\( y \\) of the \\( \VRF \\) |
 | \\( \VRF.\ProofToHash \\) | Computes the hash of \\( y \\)                   |
-| \\( Q \\)                 | Randomness seed                                  |
+|         \\( Q \\)         | Randomness seed                                  |
 
 ## Algorithm
 
