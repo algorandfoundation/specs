@@ -15,7 +15,7 @@ on the [reference implementation](https://github.com/algorand/go-algorand/blob/b
 to clarify how it is constructed and operated by a node.
 
 > For a succinct formal definition of the _Transaction Pool_, refer to the Ledger
-> [normative specification](./ledger.md#transaction-pool).
+> [normative specification](ledger.md#transaction-pool).
 
 The \\( \TP \\) implementation makes use of two distinct queues to aid the processes
 of pruning already observed transactions and block commitment:
@@ -83,7 +83,7 @@ next block.
 > array holds a list of _well-formed_, _signed_ transactions.
 >
 > To improve efficiency, the node also uses a key-value mapping where the keys are
-> [transaction IDs](./ledger.md#transaction) and the values are the corresponding
+> [transaction IDs](ledger.mdransaction) and the values are the corresponding
 > signed transactions. This map duplicates the data in the queue, which adds a small
 > computational cost when updating the queue (for insertions and deletions), but
 > it enables fast, constant-time \\( \mathcal{O}(1) \\) lookup of any enqueued transaction
@@ -134,7 +134,7 @@ inclusion in blocks currently being assembled.
 
 ## BlockAssembly
 
-This process builds a new block’s [`payset`](./ledger.md#blocks) (the body with block’s
+This process builds a new block’s [`payset`](ledger.mdlocks) (the body with block’s
 transactions) by selecting valid transaction groups \\( gtx \\) dequeued from the
 \\( \TP \\), all within a deadline. A (pending) _Block Evaluator_ is responsible
 for processing the transactions, while the `BlockAssembly` function coordinates

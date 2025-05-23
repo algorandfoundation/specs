@@ -36,7 +36,7 @@ The transaction type is identified with a short string of at most [7 characters]
 |  `stpf`  | Algorand State Proof                                           |
 |   `hb`   | Consensus heartbeat challange                                  |
 
-> For a formal definition of all transaction fields, refer to the [normative section](./ledger.md#transactions).
+> For a formal definition of all transaction fields, refer to the [normative section](ledger.md#transactions).
 
 {{#include ./.include/styles.md:impl}}
 > The reference implementation also defines the `unknown` transaction type.
@@ -88,7 +88,7 @@ no other transaction with the same `Lease` can be committed.
 
 - `RekeyTo`\
 An Algorand _address_ (32-byte). If non-zero, the transaction will set the `Sender`
-account’s [spending key](partkey.md#root-keys) to this address as last transaction effect. Therefore,
+account’s [spending key](../partkey.md#root-keys) to this address as last transaction effect. Therefore,
 future transactions sent by the `Sender` account must now be signed with the secret
 key of the _address_.
 

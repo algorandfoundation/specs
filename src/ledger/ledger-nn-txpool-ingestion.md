@@ -22,7 +22,7 @@ $$
 # Ingestion
 
 This function determines which transaction groups should be passed to the pending
-[Block Evaluator](./ledger-nn-block-commitment.md) for possible inclusion in the
+[Block Evaluator](ledger-nn-block-commitment.md) for possible inclusion in the
 next block, and which ones should be deferred for evaluation in a future round.
 
 When deferring transactions, the node checks that their remaining validity period

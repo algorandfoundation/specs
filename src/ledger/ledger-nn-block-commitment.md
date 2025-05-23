@@ -82,7 +82,7 @@ logic as the evaluation process to ensure consistency.
 
 - **Block Evaluation**:\
 This function processes the block to generate a _State Delta_, which captures all
-the changes the block makes to the Ledger and its associated [Trackers](./ledger-nn-trackers.md).
+the changes the block makes to the Ledger and its associated [Trackers](ledger-nn-trackers.md).
 
 {{#include ./.include/styles.md:impl}}
 > Validate block [reference implementation](https://github.com/algorand/go-algorand/blob/b6e5bcadf0ad3861d4805c51cbf3f695c38a93b7/ledger/ledger.go#L978).

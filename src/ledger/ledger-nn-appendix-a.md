@@ -20,10 +20,10 @@ or components to safely share a single instance of the object for as long as it
 remains unchanged. A separate copy is created only when a write operation occurs,
 ensuring both memory efficiency and data consistency.
 
-The COW structure is part of the [Block Evaluator](./ledger-nn-block-commitment.md).
+The COW structure is part of the [Block Evaluator](ledger-nn-block-commitment.md).
 
 In the `go-algorand` reference implementation, the `roundCowState` structure applies
-the _Copy-On-Write_ (COW) strategy to manage the [State Delta](./ledger-nn-state-delta.md).
+the _Copy-On-Write_ (COW) strategy to manage the [State Delta](ledger-nn-state-delta.md).
 It ensures that state copies are only created when modifications are necessary,
 enabling efficient memory usage and optimized performance during state transitions
 across blockchain rounds.

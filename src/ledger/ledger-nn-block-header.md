@@ -12,7 +12,7 @@ the contents of the _block body_ (the `payset`).
 
 The following diagram illustrates the minimal Ledger definition:
 
-![Minimal Ledger](./images/minimal-ledger.svg "Minimal Ledger definition")
+![Minimal Ledger](../images/minimal-ledger.svg "Minimal Ledger definition")
 
 ## Genesis Identifier and Genesis Hash
 
@@ -47,7 +47,7 @@ increasing).
 A 32-byte array holding a random value used as a seed for cryptographic processes
 (e.g., block proposer selection).
 
-The seed calculation algorithm (see ABFT [normative specification](./abft-messages-seed.md))
+The seed calculation algorithm (see ABFT [normative specification](../abft-messages-seed.md))
 defines implicitly a sequence of seeds, whose values alternate according to:
 
 - The seed lookup constant \\( \delta_s \\),
@@ -57,7 +57,7 @@ refresh interval \\( \delta_r \\), the period \\( p \\) during which the block w
 assembled, and on the \\( \VRF \\) value obtained by the block proposer.
 
 {{#include ./.include/styles.md:example}}
-> Example a valid [seed chain computation](./abft-nn-seed-calculation.md).
+> Example a valid [seed chain computation](../abft-nn-seed-calculation.md).
 
 ## Timestamp
 
@@ -70,7 +70,7 @@ Thursday, 1 January 1970, at UTC).
 The difference between consecutive timestamps cannot be greater than \\( t_{\delta} = 25 \\)
 seconds
 
-> See the formal definition in the Ledger [normative specification](./ledger.md#parameters).
+> See the formal definition in the Ledger [normative specification](ledger.md#parameters).
 
 {{#include ./.include/styles.md:example}}
 > In the reference implementation, checks on the timestamp are performed during
@@ -82,12 +82,12 @@ seconds
 ## Transaction Commitment
 
 Cryptographic commitments (hash) to the block’s transaction sequence. Internally,
-it uses a [Merkle Tree](./crypto.md#merkle-tree) and commits to the tree’s root.
+it uses a [Merkle Tree](../crypto.md#merkle-tree) and commits to the tree’s root.
 
 Two different hashes are provided:
 
-- [SHA512/256](./crypto.md#sha512256),
-- [SHA256](./crypto.md#sha256).
+- [SHA512/256](../crypto.md#sha512256),
+- [SHA256](../crypto.md#sha256).
 
 {{#include ./.include/styles.md:impl}}
 > Transactions (`payset`) commit [reference implementation](https://github.com/algorand/go-algorand/blob/b6e5bcadf0ad3861d4805c51cbf3f695c38a93b7/data/bookkeeping/block.go#L591).

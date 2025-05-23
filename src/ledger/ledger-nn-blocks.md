@@ -14,7 +14,7 @@ _round_, various hashes, rewards, etc.,
 
 - The _body_ holds transaction data and account updates.
 
-> For further details on the _block header_, refer to the Ledger [normative specification](./ledger.md#blocks).
+> For further details on the _block header_, refer to the Ledger [normative specification](ledger.md#blocks).
 
 {{#include ./.include/styles.md:impl}}
 > Block header [reference implementation](https://github.com/algorand/go-algorand/blob/13e66ff9ba5073637f69f9dd4e5572f19b77e38c/data/bookkeeping/block.go#L38).
@@ -33,4 +33,4 @@ the `WithSeed`.
 The following sections provide a brief explanation and examples for each field in
 the block structure.
 
-> For a formal specification of these fields, refer to the Ledger [normative specification](./ledger.md).
+> For a formal specification of these fields, refer to the Ledger [normative specification](ledger.md).

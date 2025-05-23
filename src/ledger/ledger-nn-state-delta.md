@@ -11,7 +11,7 @@ It is a compact data structure designed to efficiently update all state _Tracker
 after a block is committed. By recording only the parts of the state that were modified,
 it also simplifies block assembly and validation.
 
-> For a formal definition of this structure, refer to the Algorand Ledger [normative specification](./ledger.md#state-deltas).
+> For a formal definition of this structure, refer to the Algorand Ledger [normative specification](ledger.md#state-deltas).
 
 {{#include ./.include/styles.md:impl}}
 > State Delta [reference implementation](https://github.com/algorand/go-algorand/blob/a81d54fb36c16c2f2f44cc5d153f358105a63317/ledger/ledgercore/statedelta.go#L92).
@@ -24,7 +24,7 @@ A set of [`Account State Deltas`](ledger.md#account-state), collecting changes t
 accounts affected by the block, detailing how their states were modified.
 
 - `KVMods`:\
-A key-value map of modified entries in the [Key Value Store](./ledger.md#keyvalue-stores),
+A key-value map of modified entries in the [Key Value Store](ledger.md#keyvalue-stores),
 represented as `(string → KvValueDelta)`.
 
 - `TxIDs`:\

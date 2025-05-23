@@ -8,4 +8,4 @@ It also covers the processes of ingesting, verifying, prioritizing, and enqueuin
 transactions in the transaction pool, and finally assembly and appending blocks to
 commit their state transition.
 
-![Ledger Overview](images/ledger-overview.svg "Ledger Overview")
+![Ledger Overview](../images/ledger-overview.svg "Ledger Overview")
