@@ -17,17 +17,23 @@ to clarify how it is constructed and operated by a node.
 > For a succinct formal definition of the _Transaction Pool_, refer to the Ledger
 > [normative specification](./ledger.md#transaction-pool).
 
+The \\( \TP \\) implementation makes use of two distinct queues to aid the processes
+of pruning already observed transactions and block commitment:
+
+- The _remembered_ queue \\( \TP_{rq} \\),
+
+- The _pending_ queue \\( \TP_{pq} \\).
+
+The _pending queue_ \\( \TP_{pq} \\) is the main structure used to supply transactions
+to the active _pending_ \\( \BlockEval \\), which evaluates transactions for the
+next block.
+
 {{#include ./.include/styles.md:impl}}
-> The \\( \TP \\) implementation makes use of two distinct queues to aid the processes
-> of pruning already observed transactions and block commitment:
->
-> - The _remembered_ queue \\( \TP_{rq} \\),
->
-> - The _pending_ queue \\( \TP_{pq} \\).
->
-> The _pending queue_ \\( \TP_{pq} \\) is the structure used to supply transactions
-> to the active _pending_ \\( \BlockEval \\), which evaluates transactions for the
-> next block (see [reference implementation](https://github.com/algorand/go-algorand/blob/34deef26be34aebbdd7221dd2c55181e6f584bd2/data/pools/transactionPool.go#L557)).
+> Pending block evaluator [reference implementation](https://github.com/algorand/go-algorand/blob/34deef26be34aebbdd7221dd2c55181e6f584bd2/data/pools/transactionPool.go#L557).
+
+{{#include ./.include/styles.md:impl}}
+> Here we provide some implementation details about the _remembered_ queue \\( \TP_{rq} \\)
+> and the _pending_ queue \\( \TP_{pq} \\) structures used in the \\( \TP \\).
 >
 > Whenever a new block is confirmed and committed to the Ledger, the node triggers
 > `OnNewBlock`.
@@ -77,10 +83,11 @@ to clarify how it is constructed and operated by a node.
 > array holds a list of _well-formed_, _signed_ transactions.
 >
 > To improve efficiency, the node also uses a key-value mapping where the keys are
-> [transaction IDs](./ledger.md#transaction) and the values are the corresponding signed transactions.
-> This map duplicates the data in the queue, which adds a small computational cost
-> when updating the queue (for insertions and deletions), but it enables fast, constant-time
-> \\( \mathcal{O}(1) \\) lookup of any enqueued transaction by its ID.
+> [transaction IDs](./ledger.md#transaction) and the values are the corresponding
+> signed transactions. This map duplicates the data in the queue, which adds a small
+> computational cost when updating the queue (for insertions and deletions), but
+> it enables fast, constant-time \\( \mathcal{O}(1) \\) lookup of any enqueued transaction
+> by its ID.
 > 
 > Additionally, \\( \TP_{pq} \\) serves as another layer of optimization. It stores
 > transaction groups that are prepared in advance for the next _block assembly_
@@ -119,11 +126,11 @@ the internal variables used for the _prioritization_.
 ## Ingestion
 
 This component handles the ingestion of new transaction groups (\\( gtx \\)) that
-are to be remembered (enqueued to \\( \TP \\)). Before enqueuing, it verifies that
-each transaction group is internally valid and consistent in the context of transactions
-already present in \\( \TP \\). Once transactions pass these checks, they are
-forwarded to any active _Block Evaluator_, so they can be considered for inclusion
-in blocks currently being assembled.
+are to be remembered (enqueued to \\( \TP_{rq} \\)). Before enqueuing, it verifies
+that each transaction group is internally valid and consistent in the context of
+transactions already present in \\( \TP_{rq} \\). Once transactions pass these checks,
+they are forwarded to any active _Block Evaluator_, so they can be considered for
+inclusion in blocks currently being assembled.
 
 ## BlockAssembly
 
