@@ -18,7 +18,7 @@ Shuts down the network, closing all connections and performing garbage collectio
 
 - `Address() -> string`\
 Computes the address of the caller node, inside the specified network structure,
-according to the network layer addressing (see the [addressing section](./network-nn-addressing.md)).
+according to the network layer addressing (see the [addressing section](network-nn-addressing.md)).
 
 - `Broadcast(tag protocolTag, data []byte, wait bool, except Peer)`\
 Builds a message and sends a packet of data and protocol \\( \tag \\) to all connected

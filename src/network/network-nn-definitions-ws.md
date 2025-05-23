@@ -77,7 +77,7 @@ where:
 - A \\( \PeerNode_r \\) is not connected to other \\( \PeerNode \\),
 - A \\( \RelayNode \\) is connected to multiple \\( \RelayNode \\).
 
-![Relay Network Topology](images/network-ws-topology.svg "Relay Network Topology")
+![Relay Network Topology](../images/network-ws-topology.svg "Relay Network Topology")
 
 ## Relay Network Peer Definition
 
@@ -96,7 +96,7 @@ communication was established with the \\( \Peer \\) (either inbound or outbound
 \\( \Peer \\) inside the `peersheap` structure.
 
 - Unsigned 64-bit integers to count messages of each type sent by this \\( \Peer \\)
-(that is, for each [`protocolTag`](./network-nn-notation.md#protocol-tags)).
+(that is, for each [`protocolTag`](network-nn-notation.md#protocol-tags)).
 
 - A `readBuffer`, used to read incoming messages.
 
@@ -111,7 +111,7 @@ communication was established with the \\( \Peer \\) (either inbound or outbound
   - A flag indicating if it is inbound or outbound,
   - Timestamp at which the connection was established,
   - A map of messages allowed to be sent,
-  - An average delay time (calculated by the [performance monitor](./network-nn-parameters.md#performance-monitoring)).
+  - An average delay time (calculated by the [performance monitor](network-nn-parameters.md#performance-monitoring)).
 
 ## Connection Management
 
@@ -190,7 +190,7 @@ A _multiplexer_ is employed to route messages to their respective handlers accor
 to protocol \\( \tag \\).
 
 A multiplexer contains both message handlers \\( \MessageHandler \\) and message
-validator handlers \\( \MessageValidatorHandler \\) (see [network notation](./network-nn-notation.md#message-handlers)).
+validator handlers \\( \MessageValidatorHandler \\) (see [network notation](network-nn-notation.mdessage-handlers)).
 
 {{#include ./.include/styles.md:impl}}
 > Message handlers and message validator handlers are implemented using _atomic

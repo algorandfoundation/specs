@@ -28,10 +28,10 @@ Conceptually, all functions and implementations of \\( \HYB \\) act as a switch
 statement to select the appropriate network layer according to the parameters of
 the sender \\( \Peer \\) of the incoming message.
 
-A Hybrid Network maintains both the [Relay Network definition](./network-nn-definitions-ws.md)
-and the [Peer-to-Peer Network definition](./network-nn-definitions-p2p.md).
+A Hybrid Network maintains both the [Relay Network definition](network-nn-definitions-ws.md)
+and the [Peer-to-Peer Network definition](network-nn-definitions-p2p.md).
 
-> See also the \\( \HYB \\) [identity challenge](./network-nn-identity.md#hybrid-network-identity-vhallenge)
+> See also the \\( \HYB \\) [identity challenge](network-nn-identity.md#hybrid-network-identity-vhallenge)
 > for details on how peer deduplication works in both subnetworks.
 
 ## Hybrid Network Topology
@@ -52,4 +52,4 @@ where:
 - A \\( \HybridNode \\) is connected on average to \\( 4 \PeerNode \\),
 - A \\( \RelayNode \\) is connected to multiple \\( \RelayNode \\).
 
-![Hybrid Network Topology](images/network-hyb-topology.svg "Hybrid Network Topology")
+![Hybrid Network Topology](../images/network-hyb-topology.svg "Hybrid Network Topology")

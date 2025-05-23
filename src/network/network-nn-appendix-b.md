@@ -1,7 +1,7 @@
 # Appendix B - Packet Examples
 
 The following is a collection of network packet examples with different protocol
-tags (see [definition](./network-nn-notation.md#protocol-tags)).
+tags (see [definition](network-nn-notation.md#protocol-tags)).
 
 Packets are decoded from `msgpakc` to `JSON`, with:
 
@@ -13,7 +13,7 @@ Packets are decoded from `msgpakc` to `JSON`, with:
 
 > Original `msgpack` network packets can be [here](https://github.com/algorandfoundation/specs/tree/mastre/src/.include/msgs).
 > For further details about Algorand canonical encoding, refer to the `msgpack`
-> [normative section](./crypto.md#canonical-msgpack).
+> [normative section](../crypto.md#canonical-msgpack).
 
 ## Agreement Vote (`AV`)
 

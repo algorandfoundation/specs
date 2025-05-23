@@ -17,7 +17,7 @@ A minimal \\( \PtoPNet \\) should have:
 
 - A `GenesisID` identifying which network it is a part of (see [here](ledger.md#genesis-identifier)),
 
-- A `PeerStore` container to keep peer data and expose relevant connection metadata (see [here](./network-nn-peer-management.md)),
+- A `PeerStore` container to keep peer data and expose relevant connection metadata (see [here](network-nn-peer-management.md)),
 
 - A `Broadcaster` to send messages to the network,
 
@@ -44,7 +44,7 @@ A \\( \PtoP \\) network implements the `GossipNode` interface to manage peer-to-
 
 > Currently, transactions are distributed using the `GossipSub` protocol (`/meshsub/1.1.0`).
 > All other messages are forwarded over a stream `/algorand-ws/1.0.0` that uses the
-> same message serialization as the existing [Relay Network](./network-nn-definitions-ws.md)
+> same message serialization as the existing [Relay Network](network-nn-definitions-ws.md)
 > implementation. These two streams are multiplexed over a single connection.
 
 > For more information on `GossipSub`, refer to the `libp2p` [specifications](https://docs.libp2p.io/concepts/pubsub/overview/).
@@ -58,7 +58,7 @@ where:
 - \\( \PeerNode_p \\) represents a _peer node_ connected to \\( \PeerNode \\),
 - A \\( \PeerNode_p \\) is connected on average to \\( 4 \PeerNode \\).
 
-![P2P Network Topology](images/network-p2p-topology.svg "P2P Network Topology")
+![P2P Network Topology](../images/network-p2p-topology.svg "P2P Network Topology")
 
 ## `pubsub` for Transaction Dissemination
 

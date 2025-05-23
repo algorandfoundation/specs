@@ -39,4 +39,4 @@ timing and sizing.
 ---
 
 [^1]: This value is dominated by `MaxTxnBytesPerBlock`, see ledger parameters
-[normative section](./ledger.md#parameters).
+[normative section](../ledger/ledger.md#parameters).

@@ -12,7 +12,7 @@ Each incoming message \\( \InMsg \\) is deferred to the correct _message handler
 \\( \MessageHandler_t(\InMsg) \\) given its protocol \\( tag \\) (\\( t \\)). 
 
 The message handler then processes the message and decides on a \\( \ForwardingPolicy \\)
-(see the [definition](./network-nn-notation.md#messages-incoming-and-outgoing) of
+(see the [definition](network-nn-notation.md#messages-incoming-and-outgoing) of
 this data type for further details).
 
 A message handler \\( \MessageHandler_t(\InMsg) \\) contains the logic for handling
