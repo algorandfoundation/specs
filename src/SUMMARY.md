@@ -67,7 +67,7 @@
     - [Ingestion](./ledger/ledger-nn-txpool-ingestion.md)
     - [Block Assembly](./ledger/ledger-nn-txpool-block-assembly.md)
     - [Graphic Run Example](./ledger/ledger-nn-txpool-graphic-example.md)
-  - [Block Commitment](./ledger/edger-nn-block-commitment.md)
+  - [Block Commitment](./ledger/ledger-nn-block-commitment.md)
     - [State Delta](./ledger/ledger-nn-state-delta.md)
   - [Appendix A](./ledger/ledger-nn-appendix-a.md)
 
