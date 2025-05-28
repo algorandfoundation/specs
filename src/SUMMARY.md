@@ -106,6 +106,37 @@
   - [Appendix A - External Libraries](./network/network-nn-appendix-a.md)
   - [Appendix B - Packets Examples](./network/network-nn-appendix-b.md)
 
+# Algod Node
+
+- [Overview](./node/node-overview.md)
+- [Non-Normative](./node/node-nn.md)
+- [Initialization](./node/node-nn-init.md)
+  - [Full Node](./node/node-nn-init-full.md)
+  - [Follower Node](./node/node-nn-init-follower.md)
+- [Shutdown](./node/node-nn-shutdown.md)
+  - [Full Node](./node/node-nn-shutdown-full.md)
+  - [Follower Node](./node/node-nn-shutdown-follower.md)
+- [Synchronization](./node/node-nn-sync.md)
+- [Pseudo Node](./node/node-nn-pseudonode.md)
+- [Node API](./node/node-nn-api.md)
+  - [Algorand Daemon](node/node-nn-algod.md)
+- [Appendix A - MsgPack Reference](./node/node-nn-appendix-a.md)
+- [Appendix B - Node Configuration](./node/node-nn-appendix-b.md)
+  - [General & Versioning](./node/node-nn-appendix-b-general-versioning.md)
+  - [Storage & Archival](./node/node-nn-appendix-b-storage-archival.md)
+  - [Networking](./node/node-nn-appendix-b-networking.md)
+  - [Peer & Connection Management](./node/node-nn-appendix-b-peer-connection.md)
+  - [Logging](./node/node-nn-appendix-b-logging.md)
+  - [Metrics & Telemetry](./node/node-nn-appendix-b-telemetry.md)
+  - [API & Endpoints](./node/node-nn-appendix-b-api-endpoints.md)
+  - [Consensus](./node/node-nn-appendix-b-consensus.md)
+  - [Transaction Pool & Sync](./node/node-nn-appendix-b-txpool-sync.md)
+  - [Fast Catchup](./node/node-nn-appendix-b-fast-catchup.md)
+  - [Security & Filtering](./node/node-nn-appendix-b-security-filtering.md)
+  - [Developer & Debugging](./node/node-nn-appendix-b-dev-debugging.md)
+  - [Performance & Resource Management](./node/node-nn-appendix-b-performance.md)
+  - [Deprecated](./node/node-nn-appendix-b-deprecated.md)
+
 ---
 
 [Contribution Guidelines](./contribution-guidelines.md)
