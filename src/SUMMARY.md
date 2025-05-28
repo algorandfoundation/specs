@@ -83,6 +83,8 @@
 - [Normative]()
   - [Root Keys]()
   - [Voting and Participation Keys]()
+    - [Two-Level Ephemeral Signature]()
+    - [One-Time Signature]()
   - [VRF Selection Keys]()
   - [State Proof Keys]()
 - [Non-Normative]()
