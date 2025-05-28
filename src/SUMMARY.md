@@ -81,6 +81,10 @@
 
 - [Overview]()
 - [Normative]()
+  - [Root Keys]()
+  - [Voting and Participation Keys]()
+  - [VRF Selection Keys]()
+  - [State Proof Keys]()
 - [Non-Normative]()
 
 # Algorand Cryptographic Primitives
