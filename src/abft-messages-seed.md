@@ -12,7 +12,7 @@ proof is the corresponding VRF proof, or 0 if the VRF was not used.
 > implementation's Algorand Sodium Fork. They respectively output a \\(VRF\\) proof
 > and a \\(VRF\\) hash for a given input, and perform verification of a \\(VRF\\)
 > run. For details on the input structure and inner workings, please refer to the
-> Appendix A in the [Algorand Crypto Specification](./crypto.md).
+> Appendix A in the [Algorand Crypto Specification](../crypto/crypto.md).
 
 More formally, suppose \\(I\\) is a correct proposer in round \\(r\\) and period
 \\(p\\).
