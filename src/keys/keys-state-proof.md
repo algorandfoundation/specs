@@ -48,7 +48,7 @@ The scheme generates multiple keys for the entire participation period. Given
 \\( r \\) that holds:
 
 $$
-\Rfv \leq r \leq \Rlv \land \\ r \mod \KLT = 0
+\Rfv \leq r \leq \Rlv \land r \mod \KLT = 0
 $$
 
 Currently, \\( \KLT = 256 \\) rounds.
