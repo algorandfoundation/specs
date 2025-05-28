@@ -35,7 +35,7 @@ The Algorand Ledger is parameterized by the following values:
    Currently defined as 10,000.
  - $\delta_{x_{\min}}$ and $\delta_{x_{\max}}$, the minimum and maximum number
    of rounds needed to prepare for an upgrade.  Currently respectively defined
-   as 10,000 and 150,000.
+   as 10,000 and 250,000.
  - $\delta_x$, the default number of rounds needed to prepare for an upgrade.
    Currently defined as 140,000.
  - $\omega_r$, the rate at which the reward rate is refreshed.
@@ -44,12 +44,11 @@ The Algorand Ledger is parameterized by the following values:
    Currently defined as 1,000,000 microAlgos.
  - Several parameters for state proofs; namely: (current values provided in the "State Proof Tracking" section)
    - $\delta_{SP}$, the number of rounds between state proofs.
-   - $\delta_{SPR}$, the number of $\delta_{SP}$ that the network will try to catch-up with.
    - $\delta_{SPB}$, the delay (lookback) in rounds for online participant
      information committed to in the block header for state proofs.
    - $N_{SP}$, the maximum number of online accounts that are included
      in the Vector commitment of state proofs participants.
-   - $KQ_{SP}$, the security parameter for state proof. We use either k+q (for pre-quantum security) or k+2q (for post-quantum security).
+   - $KQ_{SP}$, the security parameter for state proof.
    - $f_{SP}$, the fraction of participants that are proven to have signed by a state proof.
 
 ## States
@@ -81,6 +80,9 @@ the ledger. Each state consists of the following components:
    stakeholding addresses.
    - One component of this state is the _transaction tail_, which caches the
 	 _transaction sets_ (see below) in the last $T_{\max}$ blocks.
+
+ - The current _box state_, which holds mappings from (app id, name)
+   tuples to box contents of arbitrary bytes.
 
 ## Blocks
 
@@ -130,21 +132,67 @@ The block header contains the following components:
    protocol version that supported the transaction counter.  The counter is
    stored in msgpack field `tc`.
 
- - The block's _expired participation accounts_, which contains an optional slice of
-   public keys of accounts. These accounts are expected to have their participation
-   key expire by the end of the round (or was expired before the current round). The
-   msgpack representation of the components are described in detail below.
-   The slice is stored in msgpack key `partupdrmv`.
+ - The block's _proposer_, which is the address of the account that
+   proposed the block. The proposer is stored in msgpack field `prp`.
 
-The block's _expired participation accounts_ slice is valid as long as the participation
-keys of all the accounts in the slice are expired by the end of the round or were
-expired before, the accounts themselves would have been online at the end of the
-round if they were not included in the slice, and the number of elements in the slice is
-less or equal to 32. A block proposer may not include all such
-accounts in the slice and may even omit the slice completely.
+ - The block's _fees collected_ is the sum of all fees paid by transactions in
+   the block and is stored in msgpack field `fc`.
+
+ - The potential _bonus incentive_ is the amount, in MicroAlgos, that
+   may be paid to the proposer of this block beyond the amount
+   available from fees. It is stored in msgpack field `bi`.  It may be
+   set during a consensus upgrade, or else it must be equal to the
+   value from the previous block in most rounds, or be 99% of the
+   previous value (rounded down) if the round of this block is 0
+   modulo 1,000,000.
+
+ - The _proposer payout_ is the actual amount that is moved from the
+   $I_f$ to the proposer, and is stored in msgpack field `pp`. If the
+   proposer is not eligible, as described below, the _proposer payout_
+   must be 0. The proposer payout must not exceed
+
+      - The sum of the _bonus incentive_ and half of the _fees
+        collected_.
+      - The fee sink balance minus 100,000 microAlgos.
+
+ - The block's _expired participation accounts_, which contains an
+   optional list of account addresses. These accounts' participation
+   key expire by the end of the current round, with exact rules below.
+   The list is stored in msgpack key `partupdrmv`.
+
+ - The block's _suspended participation accounts_, which contains an
+   optional list of account addresses. These accounts are have not
+   recently demonstrated that they available and participating, with
+   exact rules below.  The list is stored in msgpack key `partupdabs`.
+
+A proposer is _eligible_ for bonus payouts if the account's
+`IncentiveEligible` flag is true _and_ its online balance is between
+30,000 Algos and 70 million Algos.
+
+The _expired participation accounts_ list is valid as long as the
+participation keys of all the accounts in the slice are expired by the
+end of the round, the accounts themselves would have been online at
+the end of the round if they were not included in the list, and the
+number of elements in the list is less than or equal to 32. A block
+proposer may not include all such accounts in the list and may even
+omit the list completely.
+
+The _suspended participation accounts_ list is valid if, for each
+included address, the account is _online_, incentive _eligible_, and
+is either _absent_ or _failing a challenge_ as of the current round.
+An account is _absent_ if its `LastHeartbeat` and `LastProposed`
+rounds are both more than $20n$ rounds before `current`, where $n$ is
+the reciprocal of the account's fraction of online stake.  An account
+is _failing a challenge_ if the first five bits of the account's
+address matches the first five bits of an active challenge round's
+block seed, and the active challenge round is between 200 and 400
+rounds before the current round. An active challenge round is a round
+that is 0 modulo 1000. The length of the list must not exceed 32. A
+block proposer may not include all such accounts in the list and may
+even omit the list completely.
 
 The block body is the block's transaction sequence, which describes the sequence
-of updates (transactions) to the account state.
+of updates (transactions) to the account state and box state.
 
 A block is _valid_ if each component is also _valid_.  (The genesis block is
 always valid).  _Applying_ a valid block to a state produces a new state by
@@ -293,11 +341,15 @@ A valid block's reward state matches the expected reward state.
 
 \newcommand \Record {\mathrm{Record}}
 \newcommand \pk {\mathrm{pk}}
+\newcommand \ie {\mathrm{ie}}
 
-The _balances_ are a set of mappings from _addresses_, 256-bit integers, to
-_balance records_.  A _balance record_ contains the following fields: the
-account _raw balance_, the account _status_, the account _rewards base_ and
-_total awarded amount_, the account _spending key_, and the account [_participation keys_][partkey-spec].
+The _balances_ are a set of mappings from _addresses_, 256-bit
+integers, to _balance records_.  A _balance record_ contains the
+following fields: the account _raw balance_, the account _status_, the
+block incentive _eligibility_ flag, the account _last_proposed_ round, the
+account _last_heartbeat_ round, the account _rewards base_ and _total
+awarded amount_, the account _spending key_, and the account
+[_participation keys_][partkey-spec].
 
 The account raw balance $a_I$ is a 64-bit unsigned integer which determines how
 much money the address has.
@@ -338,6 +390,10 @@ Transactions from this account must have this value (or, if this value zero, the
 The account's participation keys $\pk$ are defined in Algorand's [specification
 of participation keys][partkey-spec].
 
+The account's eligibility $\ie$ is a flag that determines whether the
+account has elected to receive payouts for proposing blocks (assuming
+it meets balance requirements at the time of proposal).
+
 An account's participation keys and voting stake from a recent round is returned
 by the $\Record$ procedure in the [Byzantine Agreement Protocol][abft-spec].
 
@@ -351,7 +407,7 @@ Each account can create applications, each named by a globally-unique integer
 (the _application ID_). Applications are associated with a set of _application
 parameters_, which can be encoded as a msgpack struct:
 
-- A mutable Stateful TEAL "Approval" program (`ApprovalProgram`), whose result
+- A mutable Stateful "Approval" program (`ApprovalProgram`), whose result
   determines whether or not an `ApplicationCall` transaction referring to this
   application ID is to be allowed. This program executes for all
   `ApplicationCall` transactions referring to this application ID except for
@@ -360,11 +416,11 @@ parameters_, which can be encoded as a msgpack struct:
   global state associated with this application. This field is encoded with
   msgpack field `approv`.
 
-  For Version 3 or lower TEAL programs, the cost of the program as determined by the Stateful TEAL `Check` function must not exceed 700.
+  For Version 3 or lower programs, the cost of the program as determined by the Stateful `Check` function must not exceed 700.
 
-  For Version 4 or higher TEAL programs, the cost of the program during execution must not exceed 700.
+  For Version 4 or higher programs, the cost of the program during execution must not exceed 700.
 
-- A mutable Stateful TEAL "Clear State" program (`ClearStateProgram`), executed
+- A mutable Stateful "Clear State" program (`ClearStateProgram`), executed
   when an opted-in user forcibly removes the local application state associated
   with this application from their account data. This happens when an
   `ApplicationCall` transaction referring to this application ID is executed
@@ -373,19 +429,19 @@ parameters_, which can be encoded as a msgpack struct:
   global state associated with this application. This field is encoded with
   msgpack field `clearp`.
 
-  For Version 3 or lower TEAL programs, the cost of the program as determined by the Stateful TEAL `Check` function must not exceed 700.
+  For Version 3 or lower programs, the cost of the program as determined by the Stateful `Check` function must not exceed 700.
 
-  For Version 4 or higher TEAL programs, the cost of the program during execution must not exceed 700.
+  For Version 4 or higher programs, the cost of the program during execution must not exceed 700.
 
 - An immutable "global state schema" (`GlobalStateSchema`), which sets a limit
-  on the size of the global [TEAL Key/Value Store][TEAL Key/Value Stores] that
+  on the size of the global [Key/Value Store][Key/Value Stores] that
   may be associated with this application (see ["State Schemas"][State
   Schemas]). This field is encoded with msgpack field `gsch`.
 
   The maximum number of values that this schema may permit is 64.
 
 - An immutable "local state schema" (`LocalStateSchema`), which sets a limit on
-  the size of a [TEAL Key/Value Store][TEAL Key/Value Stores] that this
+  the size of a [Key/Value Store][Key/Value Stores] that this
   application will allocate in the account data of an account that has opted in
   (see ["State Schemas"][State Schemas]). This field is encoded with msgpack
   field `lsch`.
@@ -400,72 +456,81 @@ parameters_, which can be encoded as a msgpack struct:
   This `ExtraProgramPages` field is taken into account on application update as well.
 
 - The "global state" (`GlobalState`) associated with this application, stored as
-  a [TEAL Key/Value Store][TEAL Key/Value Stores]. This field is encoded with
+  a [Key/Value Store][Key/Value Stores]. This field is encoded with
   msgpack field `gs`.
 
-Parameters for applications created by an account are stored alongside the
-account state, denoted by a pair (address, application ID).
 Each application created increases the minimum balance
-requirements of the creator by 100000 microalgos, plus the [`GlobalStateSchema`
-Minimum Balance contribution][App Minimum Balance Increases].
+requirements of the creator by 100,000*(1+`ExtraProgramPages`) microAlgos,
+plus the [`GlobalStateSchema`Minimum Balance contribution][App Minimum Balance Changes].
 
-`LocalState` for applications that an account has opted in to are also stored alongside
-the account state, denoted by a pair (address, application ID).
-Each application opted in to increases the minimum
-balance requirements of the opting-in account by 100000 microalgos plus the
-[`LocalStateSchema` Minimum Balance contribution][App Minimum Balance Increases].
+Each application opted in to increases the minimum balance
+requirements of the opting-in account by 100,000 microAlgos plus the
+[`LocalStateSchema` Minimum Balance contribution][App Minimum Balance
+Changes].
 
-### TEAL Key/Value Stores
+### Key/Value Stores
 
-A TEAL Key/Value Store, or TKV, is an associative array mapping keys of type
+A Key/Value Store, or KV, is an associative array mapping keys of type
 byte-array to values of type byte-array or 64-bit unsigned integer.
 
-The values in a TKV are represented by the `TealValue` struct, which is composed
-of three fields:
+The values in a KV are either
+- `Bytes`, representing a byte-array
+- `Uint`, representing an unsigned 64-bit integer value.
 
-- `Type`, encoded as msgpack field `tt`. This field may take on one of two
-  values:
-  - `TealBytesType` (value = `1`), indicating that the value can be found in the
-    `Bytes` field of this struct.
-  - `TealUintType` (value = `2`), indicating that the value can be found in the
-    `Uint` field of this struct.
-- `Bytes`, encoded as msgpack field `tb`, representing a byte slice value.
-- `Uint`, encoded as msgpack field `ui`, representing an unsigned 64-bit integer
-  value.
-
-The keys in a TKV are encoded directly as bytes. The maximum length of a key in
-a TKV is 64 bytes. The maximimum length of a `Bytes` value in a TKV is 64 bytes.
+The maximum length of a key in a KV is 64 bytes.
 
 ### State Schemas
 
 A state schema represents limits on the number of each value type that may
-appear in a [TEAL Key/Value Store (TKV)][TEAL Key/Value Stores].
+appear in a [Key/Value Store (KV)][Key/Value Stores]. State schemas
+are used to control the maximum size of global and local state KVs.
 
 A state schema is composed of two fields:
 
-- `NumUint`, encoded as msgpack field `nui`. This field represents the maximum
-  number of integer values that may appear in some TKV.
-- `NumByteSlice`, encoded as msgpack field `nbs`. This field represents the
-  maximum number of byte slice values that may appear in some TKV.
+- `NumUint` represents the maximum number of integer values that may
+  appear in some KV.
+- `NumByteSlice` represents the maximum number of byte-array values
+  that may appear in some KV.
 
-#### App Minimum Balance Increases
+#### App Minimum Balance Changes
 
-When an account opts in to an application or creates an application, the
-minimum balance requirements for that account increase.
+When an account opts in to an application or creates an application,
+the minimum balance requirements for that account increases. The
+minimum balance requirement is decreased equivalently when an account
+closes out or deletes an app.
 
 When opting in to an application, there is a base minimum balance increase
-of 100000 microalgos. There is an additional minimum balance increase based on
+of 100,000 microAlgos. There is an additional minimum balance increase based on
 the `LocalStateSchema` for that application, described by following formula:
 
-`28500 * schema.NumUint + 50000 * schema.NumByteSlice` microalgos.
+`28500 * schema.NumUint + 50000 * schema.NumByteSlice` microAlgos.
 
 When creating an application, there is a base minimum balance increase
-of 100000 microalgos. There is an additional minimum balance increase
-of `100000 * ExtraProgramPages` microalgos.  Finally, there is an
+of 100,000 microAlgos. There is an additional minimum balance increase
+of `100000 * ExtraProgramPages` microAlgos.  Finally, there is an
 additional minimum balance increase based on the `GlobalStateSchema`
 for that application, described by the following formula:
 
-`28500 * schema.NumUint + 50000 * schema.NumByteSlice` microalgos.
+`28500 * schema.NumUint + 50000 * schema.NumByteSlice` microAlgos.
+
+### Boxes
+
+The box store is an associative array mapping keys of type (uint64 x
+byte-array) to values of type byte-array. The key is a pair in which
+the first value corresponds to an existing (or previously existing)
+application ID, and the second is a _box name_, 1 to 64 bytes in
+length.  The value is a byte-array of length not greater than 32,768.
+Unlike global/local state keys, an empty array is not a valid box
+name. However, empty box names may appear in transactions to increase
+the I/O budget (see below).
+
+When an application executes an opcode that creates, resizes or destroys a box,
+the minimum balance of the associated application account (whose
+address is the hash of the application ID) is modified. When a box
+with name $n$ and size $s$ is created, the minimum balance requirement
+is raised by `2500 + 400 * (len(n)+s)`.  When the box is destroyed,
+the minimum balance is decremented by the same amount.
+
 
 ## Assets
 
@@ -479,7 +544,7 @@ which can be encoded as a msgpack struct:
  - The number of digits after the decimal place to be used when displaying the
    asset, encoded with msgpack field `dc`.  A value of 0 represents an asset
    that is not divisible, while a value of 1 represents an asset divisible into
-   into tenths, 2 into hundredths, and so on.  This value must be between 0 and
+   into tenths, 2 into hundredths, and so on.  This value must be between 0 
    and 19 (inclusive) ($2^{64}-1$ is 20 decimal digits).
 
  - Whether holdings of that asset are frozen by default, a boolean flag encoded
@@ -529,18 +594,32 @@ any asset cannot be closed.
 
 # Participation Updates
 
-Participation updates contains a single list of addresses of accounts which 
-have been deemed to be _expired_. An account is said to be expired when the last
-valid vote round in its participation key is strictly less than the current round
-that is being processed.  Once included in this list, an account will be marked 
-offline as part of applying the block changes to the ledger.
+Participation updates contains a two list of addressess of accounts
+for which changes are made to their particpation status.
+
+The first contains accounts that have been deemed to be _expired_. An
+account is said to be expired when the last valid vote round in its
+participation key is strictly less than the current round that is
+being processed.  Once included in this list, an account will be
+marked offline as part of applying the block changes to the ledger.
+
+The second contains accounts that have been deemed to be
+_suspended_. An account is said to be suspended according to the rules
+specified above for _suspended particpation accounts_ list.  Once
+included in this list, an account will be marked offline, but its
+voting keys will be retained in the account state, as part of applying
+the block changes to the ledger.  The `IncentiveEligible` flag of the
+account will be set to false.
+
 
 # Light Block Header
 
 A light block header is a structure contains a subset of fields from Algorand's  _block header_.
 Light block header contains the following components:
 
-- The block's _seed_, under msgpack key `s`.
+- The block's _seed_, under msgpack key `0`.
+
+- The block's _hash_, under msgpack key `1`.
 
 - The block's _genesis hash_, under msgpack key `gh`.
 
@@ -572,7 +651,7 @@ contains the following components:
 # State Proof Tracking
 
 Each block header keeps track of the state needed to construct, validate,
-and record state proofs.  
+and record state proofs.
 This tracking data is stored in a map under the msgpack key `spt` in the block header.
 The map is indexed by the type of the state proof; at the moment, only
 type 0 is supported.  In the future, other types of state proofs
@@ -580,7 +659,7 @@ might be added.
 
 For type 0, $KQ_{SP}=256$, $f_{SP}$ is $2^{32}*30/100$
 (as the numerator of a fraction out of $2^{32}$), $N_{SP}=1024$,
-$\delta_{SP}=256$, $\delta_{SPR}=10$  and $\delta_{SPB}=16$ .
+$\delta_{SP}=256$ and $\delta_{SPB}=16$ .
 
 The value of the tracking data is a msgpack map with three
 elements:
@@ -605,8 +684,8 @@ specific fashion:
 
 - First off, because it takes some time to collect all of the online
   participants (more than the target assembly time for a block), the
-  set of participants appearing in a commitment in block at round $r$
-  are actually based on the account state from round $r-\delta_{SPB}$.
+  set of participants and total online non-expired stake appearing in a commitment
+  in block at round $r$ are actually based on the account state from round $r-\delta_{SPB}$.
 
 - The participants are sorted by the number of microAlgos they currently
   hold (including any pending rewards).  This enables more compact
@@ -625,14 +704,20 @@ specific fashion:
   In more detail, let $r$ be the last round in which a transaction touched account $I$ (and therefore all pending rewards were added to it). Consider the following quantities, as defined in the [Account State](#account-state):
   
   - The raw balance $a_I$  of account $I$ at round $r$ is its total balance on that round.
-  - The rewards base $a'_I$ is meant to capture the total rewards that were allocated to all accounts upto round $r$, expressed as a fraction of the total stake (with limited precision as described below).
+  - The rewards base $a'_I$ is meant to capture the total rewards that were allocated to all accounts up to round $r$, expressed as a fraction of the total stake (with limited precision as described below).
 
-  Given these two quantities, the normalized balance of an online account $I$ is $a_I/(1+a'_I)$. For example, if the total amount of rewards distributed upto round $r$ is 20% of the total stake, then the normalized balance is $a_I/1.2$.
+  Given these two quantities, the normalized balance of an online account $I$ is $a_I/(1+a'_I)$. For example, if the total amount of rewards distributed up to round $r$ is 20% of the total stake, then the normalized balance is $a_I/1.2$.
 
   To limit the required precision in this calculation, the system uses a parameter $ru$ that specifies the rewards-earning unit, namely accounts only earn rewards for a whole number of $ru$ microAlgos. (Currently $ru=1,000,000$, so the rewards-earning unit is one Algo.)
 
   The parameter $a'_I$ above is an integer such that $a'_I/ru$ is the desired fraction, rounded down to precision of $1/ru$. The normalized balance is computed as $n_I = \lfloor a_I \cdot ru  / (a'_I + ru) \rfloor$.
 
+# State Proof Parameters
+
+- To limit the resources allocated for creating state proofs, state proof parameters are set to $N_{SP}=1024$, $\delta_{SP}=256$, and $\delta_{SPB}=16$.
+- Setting $KQ_{SP}={target_{PQ}}$ to achieve post-quantum security for state proofs. see [state proof crypto spec][sp-crypto-spec] for details.
+- On Algorand we assume that at least 70% of the participating stake is honest. Under this assumption there can't be a malicious state proof that would be accepted by the verifier and has a signed weight of more than 30% of the total online stake. Hence, we set the ProvenWeight to be $f_{SP}$=$2^{32}*30/100$
+(as the numerator of a fraction out of $2^{32}$)
 
 # Transactions
 
@@ -659,7 +744,7 @@ _transaction_ $\Tx$ represents a transition between two account states. A
 transaction contains the following fields:
 
  - The _transaction type_ $\TxType$, which is a short string that indicates the
-   type of a transaction.  The following transaction types are supported:
+   type of transaction. The following transaction types are supported:
 
    - Transaction type `pay` corresponds to a _payment_ transaction.
 
@@ -672,6 +757,10 @@ transaction contains the following fields:
    - Transaction type `afrz` corresponds to an _asset freeze_ transaction.
 
    - Transaction type `appl` corresponds to an _application call_ transaction.
+ 
+   - Transaction type `stpf` corresponds to a _state proof_ transaction.
+
+   - Transaction type `hb` corresponds to a _heartbeat_ transaction.
 
  - The _sender_ $I$, which is an address which identifies the account that
    authorized the transaction.
@@ -701,6 +790,10 @@ transaction contains the following fields:
 
  - The _note_ $N$, a sequence of bytes with length at most $N_{\max}$ which
    contains arbitrary data.
+
+The cryptographic hash of all fields of the transaction, including the
+transaction specific fields below, is called the _transaction
+identifier_.  This is written as $\Hash(\Tx)$.
 
 ### Payment Transaction
 A payment transaction additionally has the following fields:
@@ -796,6 +889,15 @@ An application call transaction additionally has the following fields:
 - Asset IDs that the executing program may read asset parameters from. This
   field is encoded as msgpack field `apas`. The maximum number of entries in
   this field is 8.
+- Box references that the executing program or any other program in
+  the same group may access for reading or modification when the
+  reference matches the running programs app ID. This field is encoded
+  as msgpack field `apbx`, each element of which is encoded as a
+  msgpack object containing an index (`i`) and name (`n`). The maximum
+  number of entries in this field is 8. The index (`i`) is a 1-based
+  index in the ForeignApps (`apfa`) array. A 0 index is interpreted as
+  the application ID of this transaction (`apid`, or the ID that is
+  allocated for the created app when `apid` is 0).
 - Local state schema, encoded as msgpack field `apls`. This field is only used
   during application creation, and sets bounds on the size of the local state
   for users who opt in to this application.
@@ -814,8 +916,9 @@ An application call transaction additionally has the following fields:
   - The Approval program and the Clear state program must have the
     same version number if either is 6 or higher.
 
-Furthermore, the sum of the number of Accounts in `apat`, Application IDs in
-`apfa`, and Asset IDs in `apas` is limited to 8.
+Furthermore, the sum of the number of Accounts in `apat`, Application
+IDs in `apfa`, Asset IDs in `apas`, and Box References in `apbx` is
+limited to 8.
 
 
 ### Asset Configuration Transaction
@@ -859,20 +962,11 @@ An asset freeze transaction additionally has the following fields:
    encoded as a boolean msgpack field `afrz` (true for frozen, false for
    unfrozen).
 
-The cryptographic hash of the fields above is called the _transaction
-identifier_.  This is written as $\Hash(\Tx)$.
-
 ## State proof transaction
 
 A special transaction is used to disseminate and store state 
-proofs.  The type of a state proof transaction is `stpf`.
-This type of transaction must always be issued from a special sender
-address, which is the hash of the domain-separation prefix `SpecialAddr`
-with the string `StateProofSender`.  The transaction must not have any
-signature, must not have any fee, must have an empty note, must not have
-the rekeying field set, must not have any lease, and must not be part
-of a transaction group. 
-State proof transaction verification does not apply any special constrains on the first and last valid parameter.
+proofs.
+
 The state proof transaction includes four additional fields:
 
  - Under msgpack key `sptype`, the type of the state proof; currently always zero.
@@ -881,12 +975,15 @@ The state proof transaction includes four additional fields:
  - Under msgpack key `spmsg`, a structure that compose the state proof message, whose hash is being attested
    by the state proof. This structure defined [above](#state-proof-message)
 
-In order for a state proof transaction to be valid, the round of
-the state proof (`sprnd`) must be exactly equal to the next
-expected state proof round in the block header, as described
-[above](#state-proof-tracking).  When a state proof
-transaction is applied to the state, the next expected state proof round
-for that type of state proof is incremented by $\delta_{SP}$.
+
+In order for a state proof transaction to be valid the following conditions should be meet:
+ - The type of a state proof transaction is `stpf`.
+ - Sender address should be equal to a special sender address, which is the hash of the domain-separation prefix `SpecialAddr` with the string `StateProofSender`.
+ - The transaction must not have any signature, must not have any fee, must have an empty note, must not have the rekeying field set, must not have any lease, and must not be part of a transaction group. 
+ - The round of the state proof (`sprnd`) must be exactly equal to the next expected state proof round in the block header, as described [above](#state-proof-tracking).
+ - The state proof verification code should return `True` (see [state proof validity](https://github.com/algorandfoundation/specs/blob/master/dev/crypto.md#state-proof-validity)), given the state proof message, the state proof fields extracted from the transaction. In addition, the verifier should also be given a trusted commitment to the participant array and Proven Weight value. The trusted data should be taken from the on-chain data at the relevant round. 
+ 
+
 To encourage the formation of shorter state proof, the rule for
 validity of state proof transactions is dependent on the first valid `fv` round
 number in the transaction.
@@ -904,6 +1001,30 @@ In particular, the signed weight of a state proof must be:
 
 Where `ProvenWeight` = (`TotalWeight` * $f_{SP}$)  / 2^32
 
+When a state proof transaction is applied to the state, the next expected state proof round for that type of state proof is incremented by $\delta_{SP}$.
+
+A node should be able to verify state proof transaction at any point in time (even if `fv` is greater than next expected state proof round in the block header).
+
+### Heartbeat Transaction
+
+A heartbeat transaction includes five additional fields encoded as a
+struct under msgpack field `hb`.
+
+ - The _heartbeat address_ $a$, an account address that this heartbeat
+   transaction proves liveness for.
+
+ - The _heartbeat seed_ $sd$, which must be the block seed found in
+   the first valid block of the transaction.
+
+ - The _heartbeat vote id_ $vid$, which must be the current public key
+   of the root voting key of the heartbeat address's account state.
+
+ - The _heartbeat key dilution_ $kd$, which must be the current
+   `KeyDilution` of the heartbeat address's account state.
+
+ - The _heartbeat proof_ $prf$, which must contain a valid signing of
+   $sd$ using $vid$ and $kd$ using the voting signature scheme
+   outlined in the discussion of [_participation keys_][partkey-spec].
 
 Authorization and Signatures
 ----------------------------
@@ -932,7 +1053,7 @@ The _authorizer address_, a 32 byte string, determines against what to verify th
 - A valid logic-signed transaction's signature is the _lsig_ object containing
   the following fields:
 
-  - The logic _l_ which is versioned bytecode. (See TEAL docs for details)
+  - The logic _l_ which is versioned bytecode. (See [TEAL documentation](TEAL.md))
 
   - An optional single signature _sig_ of 64 bytes valid for the authorizer address of the transaction which has signed the bytes in _l_.
 
@@ -951,7 +1072,7 @@ Each transaction is associated with some information about how it is
 applied to the account state.  This information is called ApplyData,
 and contains the following fields:
 
-- The closing amount, $\ClosingAmount$, which specifies how many microalgos
+- The closing amount, $\ClosingAmount$, which specifies how many microAlgos
   were transferred to the closing address, and is encoded as "ca" in
   msgpack.
 
@@ -963,7 +1084,7 @@ and contains the following fields:
   transaction.  There are three fields ("rs", "rr", and "rc" keys in msgpack
   encoding), representing the amount of rewards distributed to the sender,
   receiver, and closing addresses respectively.  The fields have integer
-  values representing microalgos.  If any of the accounts are the same
+  values representing microAlgos.  If any of the accounts are the same
   (e.g., the sender and recipient are the same), then that account received
   the sum of the respective reward distributions (i.e., "rs" plus "rr");
   in the reference implementation, one of these two fields will be zero
@@ -999,17 +1120,17 @@ and contains the following fields:
     the count of all inner transactions across the transaction group
     must not exceed 256.
     - InnerTxns are limited to `pay`, `axfer`, `acfg`, and `afrz`
-      transactions in TEAL programs before version 6. Version 6 also
+      transactions in programs before version 6. Version 6 also
       allows `keyreg` and `appl`.
     - A `ClearStateProgram` execution may not have any InnerTxns.
 
 ### State Deltas
 
-A state delta represents an update to a [TEAL Key/Value Store (TKV)][TEAL
-Key/Value Stores]. It is represented as an associative array mapping a
-byte-array key to a single value delta. It represents a series of actions that
-when applied to the previous state of the key/value store will yield the new
-state.
+A state delta represents an update to a [Key/Value Store
+(KV)][Key/Value Stores]. It is represented as an associative array
+mapping a byte-array key to a single value delta. It represents a
+series of actions that when applied to the previous state of the
+key/value store will yield the new state.
 
 A value delta is composed of three fields:
 
@@ -1059,13 +1180,13 @@ The transaction commitment for a block covers the transaction encodings
 with the changes described above.  Individual transaction signatures
 cover the original encoding of transactions as standalone.
 
-In addtion to _transaction commitment_, each block will also contains _SHA256 transaction commitment_.
-It can allow a verifier which does not support SHA512_256 function to verify proof of membership on transcation.
-In order to consturct this commitment we use Vector Commitment. The leaves in the Vector Commitment
+In addition to _transaction commitment_, each block will also contain _SHA256 transaction commitment_.
+It can allow a verifier which does not support SHA512_256 function to verify proof of membership on transaction.
+In order to construct this commitment we use Vector Commitment. The leaves in the Vector Commitment
 tree are hashed as $$SHA256("TL", txidSha256, stibSha256)$$.  Where:
 
 - txidSha256 = SHA256(`TX` || transcation)
-- txidSha256 = SHA256(`STIB` || signed transaction || ApplyData)
+- stibSha256 = SHA256(`STIB` || signed transaction || ApplyData)
 
 The vector commitment uses SHA256 for internal nodes as well.
 
@@ -1121,9 +1242,38 @@ the transactions have nonzero "Group", compute the _TxGroup hash_ as follows:
 
 If the TxGroup hash of any transaction group in a block does not match the "Group" field of the transactions in that group (and that "Group" field is nonzero), then the block is invalid. Additionally, if a block contains a transaction group of more than $G_{max}$ transactions, the block is invalid.
 
-If the sum of the fees paid by the transactions in a transaction group is less than $f_{\min}$ times the number of transactions in the group, then the block is invalid.
+If the sum of the fees paid by the transactions in a transaction group
+is less than $f_{\min}$ times the number of transactions in the group,
+then the block is invalid. There are two exceptions. State proof
+transactions require no fee, and Heartbeat transactions require no fee
+if they have a zero "Group" field, and the _heartbeat address_ was
+challenged between 100 and 200 rounds ago, and has not proposed or
+heartbeat since that challenge. Further explanation of this rule is
+found in [Heartbeat Transaction Semantics] section, below.
 
-Beyond the TxGroup and MinFee checks, each transaction in a group is evaluated separately and must be valid on its own, as described below in the [Validity and State Changes][Validity and State Changes] section. For example, an account with balance 50 could not spend 100 in transaction A and afterward receive 500 in transaction B, even if transactions A and B are in the same group, because transaction A would leave the account with a negative balance.
+If the sum of the lengths of the boxes denoted by the box references in a
+transaction group exceeds 1,024 times the total number of box
+references in the transaction group, then the block is invalid. Call
+this limit the _I/O Budget_ for the group. Box references with an
+empty name are counted toward the total number of references, but add
+nothing to the sum of lengths.
+
+If the sum of the lengths of the boxes modified (by creation or
+modification) in a transaction group exceeds the I/O Budget of the
+group at any time during evaluation (see [ApplicationCall Transaction
+Semantics]), then the block is invalid.
+
+If the sum of the lengths of all the logic signatures and their arguments
+in a transaction group exceeds the number of transactions in the group times
+1000 bytes (consensus variable `MaxLogicSigSize`), then the block in invalid.
+
+Beyond the TxGroup, MinFee, Box size, and LogicSig size checks, each transaction in a
+group is evaluated separately and must be valid on its own, as
+described below in the [Validity and State Changes] section. For
+example, an account with balance 50 could not spend 100 in transaction
+A and afterward receive 500 in transaction B, even if transactions A
+and B are in the same group, because transaction A would leave the
+account with a negative balance.
 
 ## Asset Transaction Semantics
 
@@ -1210,11 +1360,11 @@ An asset freeze transaction has the following semantics:
 
 When an asset transaction allocates space in an account for an asset,
 whether by creation or opt-in, the sender's minimum balance
-requirement is incremented by 100000 microalgos.  When the space is
+requirement is incremented by 100,000 microAlgos.  When the space is
 deallocated, whether by asset destruction or asset-close-to, the balance
-requirement of the sender is decremented by 100000 microalgos.
+requirement of the sender is decremented by 100,000 microAlgos.
 
-## `ApplicationCall` Transaction Semantics
+## ApplicationCall Transaction Semantics
 
 When an `ApplicationCall` transaction is evaluated by the network, it is
 processed according to the following procedure. None of the effects of the
@@ -1252,23 +1402,23 @@ point must be discarded and the entire transaction rejected.
 3.
     - Execute the `ClearStateProgram`.
         - If the program execution returns `PASS == true`, apply the
-          local/global TEAL key/value store deltas generated by the program’s
+          local/global/box key/value store deltas generated by the program’s
           execution.
         - If the program execution returns `PASS == false`, do not apply any
-          local/global TEAL key/value store deltas generated by the program’s
+          local/global/box key/value store deltas generated by the program’s
           execution.
     - Delete the sender’s local state for this application (marking them as no
       longer opted in). **SUCCEED.**
 4.
     - If `OnCompletion == OptIn`, then at this point during execution we will
-      allocate a local TEAL key/value store for the sender for this application
+      allocate a local key/value store for the sender for this application
       ID, marking the sender as opted in.
 
         Continue to step 5.
 5.
     - Execute the `ApprovalProgram`.
         - If the program execution returns `PASS == true`, apply any
-          local/global TEAL key/value store deltas generated by the program’s
+          local/global key/value store deltas generated by the program’s
           execution. Continue to step 6.
         - If the program execution returns `PASS == false`, **FAIL.**
 6.
@@ -1295,39 +1445,68 @@ point must be discarded and the entire transaction rejected.
           `ApplicationCall` transaction. The new programs are not executed in
           this transaction.  **SUCCEED.**
 
-### Application Stateful TEAL Execution Semantics
+### Application Stateful Execution Semantics
 
+- Before the execution of the first ApplicationCall transaction in a
+  group, the combined size of all boxes referred to in the box references
+  of all transactions in the group must be less than the I/O budget, i.e., 1,024 times the
+  total number of box references in the group, or else the group
+  fails.
 - During the execution of an `ApprovalProgram` or `ClearStateProgram`,
   the application’s `LocalStateSchema` and `GlobalStateSchema` may
   never be violated. The program's execution will fail on the first
   instruction that would cause the relevant schema to be
-  violated. Writing a `Bytes` value to a local or global [TEAL
-  Key/Value Store][TEAL Key/Value Stores] such that the sum of the
-  lengths of the key and value in bytes exceeds 128, or writing any
-  value to a key longer than 64 bytes, will likewise cause the program
-  to fail on the offending instruction.
-- Global state may only be read for the application ID whose program is
-  executing, or for any application ID mentioned in the `ForeignApps`
-  transaction field. An attempt to read global state for another application
-  that is not listed in `ForeignApps` will cause the program execution to fail.
-- Asset parameters may only be read for assets whose ID is specified in the
-  `ForeignAssets` transaction field. An attempt to read asset parameters for
-  an asset that is not listed in `ForeignAssets` will cause the program
-  execution to fail.
-- Local state may be read for any opted-in application present in the
-  sender’s account data, or in the account data for any address listed
-  in the transaction’s `Accounts` field. An attempt to read local
-  state from any other account will cause program execution to
-  fail. Further, in TEAL programs version 4 or later, Local state
-  reads are restricted by application ID in the same way as Global
-  state reads.
+  violated. Writing a `Bytes` value to a local or global [Key/Value
+  Store][Key/Value Stores] such that the sum of the lengths of the key
+  and value in bytes exceeds 128, or writing any value to a key longer
+  than 64 bytes, will likewise cause the program to fail on the
+  offending instruction.
+- During the execution of an `ApprovalProgram`, the total size of all
+  boxes that are created or modified in the group must not exceed the
+  I/O budget or else the group fails.  The program's execution will
+  fail on the first instruction that would cause the constraint to be
+  violated. If a box is deleted after creation or modification, its
+  size is not considered in this sum.
+- Global state may only be read for the application ID whose program
+  is executing, or for an _available_ application ID. An attempt to
+  read global state for another application that is not _available_
+  will cause the program execution to fail.
+- Asset parameters may only be read for assets whose ID is
+  _available_. An attempt to read asset parameters for an asset that
+  is not _available_ will cause the program execution to fail.
+- Local state may be read for any _available_ application. An attempt
+  to read local state from any other account will cause program
+  execution to fail. Further, in programs version 4 or later, Local
+  state reads are restricted by application ID in the same way as
+  Global state reads.
 - Algo balances and asset balances may be read for the sender's
-  account or for any account referenced by an address listed in the
-  transaction's `Accounts` field. An attempt to read an Algo balance
-  or asset balance for any other account will cause program execution
-  to fail.  Further, in TEAL programs version 4 or later, asset
-  balances may only be read for assets whose parameters are also
-  readable.
+  account or for any _available_ account. An attempt to read a balance
+  for any other account will cause program execution to fail.
+  Further, in programs version 4 or later, asset balances may only be
+  read for assets whose parameters are also _available_.
+- Only _available_ boxes may be accessed. An attempt to access any other box
+  will cause the program exection to fail.
+- Boxes may not be accessed by an app's `ClearStateProgram`.
+
+## Heartbeat Transaction Semantics
+
+ If a heartbeat transaction's $grp$ is empty, and $f < f_{min}$, the
+ transaction fails to execute unless:
+
+   - The _note_ $N$ is empty
+   - The _lease_ $x$ is empty
+   - The _rekey to address_ $\RekeyTo$ is empty
+   - The _heartbeat_address_, $a$, is $online$
+   - The _heartbeat_address_, $a$, $\ie$ flag is true
+   - The _heartbeat_address_, $a$, is _at risk_ of suspension
+
+ An account is _at risk_ of suspension if the current round is between
+ 100-200 modulo 1000, and the blockseed of the most recent round that
+ is 0 modulo 1000 matches $a$ in the first 5 bits.
+
+ If successful, the `LastHeartbeat` of the specified heartbeat address
+ $a$ is updated to the current round.
+
 
 ## Validity and State Changes
 
@@ -1339,18 +1518,20 @@ the block's round $r$ and for the block's genesis identifier $\GenesisID_B$.
 For a transaction
 $$\Tx = (\GenesisID, \TxType, r_1, r_2, I, I', I_0, f, a, x, N, \pk, \sppk, \nonpart,
   \ldots)$$
-(where $\ldots$ represents fields specific to asset transaction types)
+(where $\ldots$ represents fields specific to transaction types
+besides "pay" and "keyreg")
 to be valid at the intermediate state $\rho$ in round $r$ for the genesis
 identifier $\GenesisID_B$, the following conditions must all hold:
 
  - It must represent a transition between two valid account states.
  - Either $\GenesisID = \GenesisID_B$ or $\GenesisID$ is the empty string.
- - $\TxType$ is either "pay" or "keyreg".
+ - $\TxType$ is either "pay", "keyreg", "acfg", "axfer", "afrz",
+   "appl", "stpf", or "hb".
  - There are no extra fields that do not correspond to $\TxType$.
  - $0 \leq r_2 - r_1 \leq T_{\max}$.
  - $r_1 \leq r \leq r_2$.
  - $|N| \leq N_{\max}$.
- - $I \neq I_{pool}$ and $I \neq 0$.
+ - $I \neq I_{pool}$, $I \neq I_f$, and $I \neq 0$.
  - $\Stake(r+1, I) \geq f \geq f_{\min}$.
  - The transaction is properly authorized as described in the [Authorization and Signatures][Authorization and Signatures] section.
  - $\Hash(\Tx) \notin \TxTail_r$.
@@ -1384,6 +1565,7 @@ state for intermediate state $\rho+1$:
             - $p_{\rho+1, I} = 0$ if $\pk = 0$ and $\nonpart = \text{false}$
             - $p_{\rho+1, I} = 2$ if $\pk = 0$ and $\nonpart = \text{true}$
             - $p_{\rho+1, I} = 1$ if $\pk \ne 0$.
+            - If $f > 2000000$, then $\ie{\rho+1, I} = true$
 
  - For $I'$ if $I \neq I'$ and either $I' \neq 0$ or $a \neq 0$:
     - $a_{\rho+1, I'} = \Stake(\rho+1, I') + a$.
@@ -1397,8 +1579,8 @@ state for intermediate state $\rho+1$:
                          (T_{r+1} - a'_{\rho, I_0}) \floor{\frac{a_{\rho, I_0}}{A}}$.
  - For all other $I^* \neq I$, the account state is identical to that in view $\rho$.
 
-For asset transaction types (asset configuration, asset transfer, and asset freeze),
-account state is updated based on the reference logic described in [Asset Transaction Semantics].
+For transaction types other than "pay" and "keyreg", account state is
+updated based on the reference logic described below.
 
 Additionally, for all types of transactions, if the RekeyTo address of the transaction is nonzero and does not match the transaction sender address, then the transaction sender account's spending key is set to the RekeyTo address. If the RekeyTo address of the transaction does match the transaction sender address, then the transaction sender account's spending key is set to zero.
 
@@ -1443,5 +1625,6 @@ not less than the threshold. Validation fails if any of signatures is invalid
 even if count of all remaining correct signatures is greater or equals than the threshold.
 
 
+[sp-crypto-spec]: https://github.com/algorandfoundation/specs/blob/master/dev/crypto.md#state-proofs
 [abft-spec]: https://github.com/algorand/spec/abft.md
 [partkey-spec]: https://github.com/algorand/spec/partkey.md
