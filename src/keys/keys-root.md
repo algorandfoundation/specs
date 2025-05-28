@@ -9,5 +9,5 @@ account would use the rekeyed key in lieu of the root key.
 A relationship between a _root key_ and _voting keys_ is established when accounts
 _register_ their participation in the agreement protocol.
 
-> For further details on the key registration (`kwyreg`) process, refer to Ledger
+> For further details on the key registration (`keyreg`) process, refer to Ledger
 > [specification](../ledger/ledger-transactions.md).
