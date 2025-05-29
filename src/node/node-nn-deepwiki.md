@@ -11,3 +11,7 @@ DeepWiki of the `go-algorand` repository:
 
 > The embedded chatbot, with deep-research capabilities over the `go-algorand`,
 > can answer to specific questions the readers may have over the codebase.
+
+<a href="https://deepwiki.com/algorand/go-algorand">
+  <img src="https://deepwiki.com/badge.svg" alt="Ask DeepWiki" style="display: block; margin: 0 auto;">
+</a>
