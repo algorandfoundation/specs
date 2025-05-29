@@ -110,6 +110,7 @@
 
 - [Overview](./node/node-overview.md)
 - [Non-Normative](./node/node-nn.md)
+- [AI DeepWiki (Experimental)](./node/node-nn-deepwiki.md)
 - [Initialization](./node/node-nn-init.md)
   - [Full Node](./node/node-nn-init-full.md)
   - [Follower Node](./node/node-nn-init-follower.md)
