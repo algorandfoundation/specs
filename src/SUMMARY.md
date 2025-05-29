@@ -79,8 +79,14 @@
 
 # Algorand Keys
 
-- [Overview]()
-- [Normative]()
+- [Overview](./keys/keys-overview.md)
+- [Normative](./keys/keys.md)
+  - [Root Keys](./keys/keys-root.md)
+  - [Voting and Participation Keys](./keys/keys-participation.md)
+    - [Two-Level Ephemeral Signature](./keys/keys-ephemeral.md)
+    - [One-Time Signature](./keys/keys-one-time.md)
+  - [VRF Selection Keys](./keys/keys-vrf.md)
+  - [State Proof Keys](./keys/keys-state-proof.md)
 - [Non-Normative]()
 
 # Algorand Cryptographic Primitives
