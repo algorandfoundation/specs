@@ -7,4 +7,4 @@
 
 DeepWiki of the `go-algorand` repository:
 
-https://deepwiki.com/algorand/go-algorand
+<https://deepwiki.com/algorand/go-algorand>
