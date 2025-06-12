@@ -67,9 +67,9 @@ The key file used for the [Relay network](../network/network-nn-definitions-ws.m
 
 ---
 
-| Parameter Name   |                                           Default Value                                            | Introduced in Version |           Last Updated in Version            |
-|------------------|:--------------------------------------------------------------------------------------------------:|:---------------------:|:--------------------------------------------:|
-| `DNSBootstrapID` | `<network>.algorand.network?backup=<network>.algorand.net&dedup=<name>.algorand-<network>.(network |         net)`         | 0 (default was `<network>.algorand.network`) | 28 |
+| Parameter Name   |                                               Default Value                                               |            Introduced in Version             | Last Updated in Version |
+|------------------|:---------------------------------------------------------------------------------------------------------:|:--------------------------------------------:|:-----------------------:|
+| `DNSBootstrapID` | `<network>.algorand.network?backup=<network>.algorand.net&dedup=<name>.algorand-<network>.(network\|net)` | 0 (default was `<network>.algorand.network`) |           28            |
 
 **Description:**
 
