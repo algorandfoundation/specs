@@ -12,8 +12,6 @@ The AVM _rejects_ a program execution if it ends with:
 
 Or in case of run-time errors.
 
-The following graphical example provides an intuition of the AVM stack execution.
-
 ## A Simple TEAL Program
 
 Let’s consider the following TEAL program:
