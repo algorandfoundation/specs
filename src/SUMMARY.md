@@ -98,7 +98,7 @@
     - [Domain Separation](./crypto/crypto-domain-separators.md)
   - [Hash Functions]()
     - [SHA512/256](./crypto/crypto-sha512.md)
-    - [SHA256]()
+    - [SHA256](./crypto/crypto-sha256.md)
     - [SUBSET-SUM]()
   - [Digital Signatures]()
     - [ED25519]()

@@ -13,11 +13,6 @@ abstract: >
 
 ## Hash Functions
 
-### SHA256
-Algorand uses [SHA-256 algorithm][sha256] to allow verification of Algorand's state and transactions
-on environments where SHA512_256 is not supported.
-
-
 ### SUBSET-SUM
 Algorand uses [SUBSET-SUM algorithm][sumhash] which is a quantum-resilient hash function.
 This function is used by the [Merkle Keystore](merklekeystore) to commit on
