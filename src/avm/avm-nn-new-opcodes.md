@@ -22,11 +22,11 @@ For the dummy `double` OpCode example, let's define the _operator_ function in
 `data/transactions/logic/eval.go` :
 
 ```go
-func opDobule(cx *EvalContext) error {
+func opDouble(cx *EvalContext) error {
     last := len(cx.Stack) - 1
     res, carry := bits.Add64(cx.Stack[last].Uint, cx.Stack[last].Uint, 0)
     if carry > 0 {
-        return errors.New("dobule overflowed")
+        return errors.New("double overflowed")
     }
     cx.Stack[last].Uint = res
     return nil
