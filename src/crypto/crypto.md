@@ -11,27 +11,6 @@ abstract: >
 
 # Algorand Cryptographic Primitive Specification
 
-### Canonical Msgpack
-
-Algorand uses a version of [msgpack][msgpack] to produce canonical
-encodings of data.  Algorand's msgpack encodings are valid msgpack
-encodings, but the encoding function is deterministic to ensure a
-canonical representation that can be reproduced to verify signatures.
-A canonical msgpack encoding in Algorand must follow these rules:
-
- 1. Maps must contain keys in lexicographic order;
- 2. Maps must omit key-value pairs where the value is a zero-value,
-    unless otherwise specified;
- 3. Positive integer values must be encoded as "unsigned" in msgpack,
-    regardless of whether the value space is semantically signed or
-    unsigned;
- 4. Integer values must be represented in the shortest possible
-    encoding;
- 5. Binary arrays must be represented using the "bin" format family
-    (that is, use the most recent version of msgpack rather than the
-    older msgpack version that had no "bin" family).
-
-
 ### Domain Separation
 
 Before an object is input to some cryptographic function, it is

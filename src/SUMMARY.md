@@ -94,7 +94,7 @@
 - [Overview]()
 - [Normative]()
   - [Representation](./crypto/crypto-representation.md)
-    - [Canonical Msgpack]()
+    - [Canonical Msgpack](./crypto/crypto-msgpack.md)
     - [Domain Separation]()
   - [Hash Functions]()
     - [SHA512/256]()
