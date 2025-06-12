@@ -20,12 +20,12 @@ Let’s consider the following TEAL program:
 #pragma version X
 
 // Macros
-#define assertEquals ==; assert
+#define compareAndReturn ==; return
 
 // Program
 int 1; int 2; +;
 int 3;
-assertEquals
+compareAndReturn
 ```
 
 The TEAL program above, although minimal, showcases most of the features of the
