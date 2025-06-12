@@ -101,7 +101,7 @@
     - [SHA256](./crypto/crypto-sha256.md)
     - [SUBSET-SUM](./crypto/crypto-subset-sum.md)
   - [Digital Signatures]()
-    - [ED25519]()
+    - [Ed25519](./crypto/crypto-ed25519.md)
     - [FALCON]()
   - [Verifiable Random Function]()
   - [Sortition]()
