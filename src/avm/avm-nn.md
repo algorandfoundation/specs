@@ -1,7 +1,7 @@
 # Algorand Virtual Machine Overview
 
 The following section offers a non-normative overview of the Algorand Virtual Machine
-(AVM). It is meant to complement the normative AVM [normative specification](./avm.md),
+(AVM). It is meant to complement the AVM [normative specification](./avm.md),
 helping readers and implementers develop a complete, high-level, holistic understanding
 of how the AVM works.
 
