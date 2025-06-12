@@ -66,7 +66,7 @@ For the `double` dummy OpCode:
 var OpSpecs = []OpSpec{
     ...
     // Double OpCode
-    {0x75, "dobule", opDouble, proto("i:i"), 42, detDefault()},
+    {0x75, "double", opDouble, proto("i:i"), 42, detDefault()},
     ...
 }
 ```
