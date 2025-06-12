@@ -111,13 +111,13 @@
     - [Verifying Proofs]()
   - [Vector Commitment]()
   - [State Proofs]()
+- [Non-Normative]()
+  - [Verifiable Random Function]()
+  - [Sortition]()
   - [Appendix A - Algorand Sodium Fork]()
     - [Constants]()
     - [Functions]()
     - [Examples]()
-- [Non-Normative]()
-  - [Verifiable Random Function]()
-  - [Sortition]()
 
 # Algorand Network
 
