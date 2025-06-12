@@ -93,7 +93,7 @@
 
 - [Overview]()
 - [Normative]()
-  - [Representation]()
+  - [Representation](./crypto/crypto-representation.md)
     - [Canonical Msgpack]()
     - [Domain Separation]()
   - [Hash Functions]()
