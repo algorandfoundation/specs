@@ -11,32 +11,9 @@ abstract: >
 
 # Algorand Cryptographic Primitive Specification
 
-## Digital Signature
-
-### FALCON
-
-Algorand uses a [deterministic][deterministic-falcon] version of [falcon scheme][falcon]. Falcon is quantum resilient and a SNARK friendly digital signature scheme used to sign in StateProofs. Falcon signatures contains 
-salt version. Algorand only accepts signatures with salt version = 0.
-
-The library defines the following sizes:
- - Publickey = 1793 bytes
- - Privatekey = 2305 bytes 
- - Signatures
-    - CT-format = 1538 bytes
-    - Compressed format = variable length up to a maximum size of 1423 bytes .
-
-For key generation, Algorand uses random seed of 48 bytes.
-
-
-### Ephemeral-key Signature
-
-
-
 ## Verifiable Random Function
 
-
 ### Cryptographic Sortition
-
 
 ## Merkle tree
 
