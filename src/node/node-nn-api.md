@@ -36,10 +36,7 @@ specification.
 > maintained.
 
 {{#include ../.include/styles.md:impl}}
-> The endpoints’ code is automatically generated from this specification using a
-> customized fork of [`oapi-codegen`](https://github.com/deepmap/oapi-codegen).
-> This fork includes necessary modifications, such as support for `uint64` types,
-> which the standard OpenAPI specification does not fully support. To address
-> this, the generator was extended with type-mapping capabilities.
+> The endpoints’ code is automatically generated from this specification using
+> [`oapi-codegen`](https://github.com/deepmap/oapi-codegen).
 >
 > - `algod.oas2.json` [specification file](https://github.com/algorand/go-algorand/blob/6f65ab1c290d953ff8132025088fd9f1af3baf4e/daemon/algod/api/algod.oas2.json).
