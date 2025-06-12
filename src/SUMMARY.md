@@ -97,7 +97,7 @@
     - [Canonical Msgpack](./crypto/crypto-msgpack.md)
     - [Domain Separation](./crypto/crypto-domain-separators.md)
   - [Hash Functions]()
-    - [SHA512/256]()
+    - [SHA512/256](./crypto/crypto-sha512.md)
     - [SHA256]()
     - [SUBSET-SUM]()
   - [Digital Signatures]()

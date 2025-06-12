@@ -13,14 +13,6 @@ abstract: >
 
 ## Hash Functions
 
-### SHA512/256
-Algorand uses the [SHA-512/256 algorithm][sha] as its primary
-cryptographic hash function.
-
-Algorand uses this hash function to (1) commit to data for signing and
-for the Byzantine Fault Tolerance protocol, and (2) rerandomize its
-random seed.
-
 ### SHA256
 Algorand uses [SHA-256 algorithm][sha256] to allow verification of Algorand's state and transactions
 on environments where SHA512_256 is not supported.
