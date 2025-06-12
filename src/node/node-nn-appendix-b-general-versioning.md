@@ -4,7 +4,7 @@
 
 | Parameter Name | Default Value | Introduced in Version | Last Updated in Version |
 |----------------|:-------------:|:---------------------:|:-----------------------:|
-| `Version`      |     `35`      |           0           |           35            |
+| `Version`      |     `36`      |           0           |           36            |
 
 **Description:**
 
