@@ -99,7 +99,7 @@
   - [Hash Functions]()
     - [SHA512/256](./crypto/crypto-sha512.md)
     - [SHA256](./crypto/crypto-sha256.md)
-    - [SUBSET-SUM]()
+    - [SUBSET-SUM](./crypto/crypto-subset-sum.md)
   - [Digital Signatures]()
     - [ED25519]()
     - [FALCON]()

@@ -11,13 +11,6 @@ abstract: >
 
 # Algorand Cryptographic Primitive Specification
 
-## Hash Functions
-
-### SUBSET-SUM
-Algorand uses [SUBSET-SUM algorithm][sumhash] which is a quantum-resilient hash function.
-This function is used by the [Merkle Keystore](merklekeystore) to commit on
-ephemeral public keys. It is also used to create Merkle trees for the StateProofs. 
-
 ## Digital Signature
 
 ### ED25519
