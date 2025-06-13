@@ -11,10 +11,6 @@ abstract: >
 
 # Algorand Cryptographic Primitive Specification
 
-## Vector commitment
-
-Algorand uses [Vector Commitments][vector-commitment], which allows for concisely committing to an ordered (indexed) vector of data entries, based on Merkle trees.
-
 # State Proofs
 
 State proofs (aka Compact Certificates) allow external parties to efficiently validate

@@ -106,7 +106,7 @@
   - [Verifiable Random Function]()
   - [Sortition]()
   - [Merkle Tree](./crypto/crypto-merkle-tree.md)
-  - [Vector Commitment]()
+  - [Vector Commitment](./crypto/crypto-vector-commitment.md)
   - [State Proofs]()
 - [Non-Normative]()
   - [Verifiable Random Function]()
