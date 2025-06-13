@@ -1,12 +1,6 @@
----
+# Algorand Cryptographic Primitives Specification
 
-numbersections: true
-title: "Algorand Cryptographic Primitive Specification"
-date: \today
-abstract: >
-  Algorand relies on a set of cryptographic primitives to guarantee
-  the integrity and finality of data.  This document describes these
-  primitives.
----
+Algorand relies on a set of cryptographic primitives to guarantee the integrity
+and finality of data.
 
-# Algorand Cryptographic Primitive Specification
+This normative section describes these primitives.

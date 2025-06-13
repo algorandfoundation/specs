@@ -92,7 +92,7 @@
 # Algorand Cryptographic Primitives
 
 - [Overview]()
-- [Normative]()
+- [Normative](./crypto/crypto.md)
   - [Representation](./crypto/crypto-representation.md)
     - [Canonical Msgpack](./crypto/crypto-msgpack.md)
     - [Domain Separation](./crypto/crypto-domain-separators.md)
