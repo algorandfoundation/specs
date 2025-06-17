@@ -108,8 +108,29 @@
 # Algorand Cryptographic Primitives
 
 - [Overview]()
-- [Normative]()
+- [Normative](./crypto/crypto.md)
+  - [Representation](./crypto/crypto-representation.md)
+    - [Canonical Msgpack](./crypto/crypto-msgpack.md)
+    - [Domain Separation](./crypto/crypto-domain-separators.md)
+  - [Hash Functions]()
+    - [SHA-512/256](./crypto/crypto-sha512.md)
+    - [SHA-256](./crypto/crypto-sha256.md)
+    - [SUBSET-SUM](./crypto/crypto-subset-sum.md)
+  - [Digital Signatures]()
+    - [Ed25519](./crypto/crypto-ed25519.md)
+    - [FALCON](./crypto/crypto-falcon.md)
+  - [Verifiable Random Function]()
+  - [Sortition]()
+  - [Merkle Tree](./crypto/crypto-merkle-tree.md)
+  - [Vector Commitment](./crypto/crypto-vector-commitment.md)
+  - [State Proofs](./crypto/crypto-state-proofs.md)
 - [Non-Normative]()
+  - [Verifiable Random Function]()
+  - [Sortition]()
+  - [Appendix A - Algorand Sodium Fork]()
+    - [Constants]()
+    - [Functions]()
+    - [Examples]()
 
 # Algorand Network
 
