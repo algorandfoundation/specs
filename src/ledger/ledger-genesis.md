@@ -1,8 +1,8 @@
 $$
 \newcommand \Genesis {\mathrm{Genesis}}
-\newcommand \GenesisID {\Genesis_{\mathrm{ID}}
+\newcommand \GenesisID {\Genesis{\mathrm{ID}}}
 \newcommand \Hash {\mathrm{Hash}}
-\newcommand \GenesisHash {\Genesis_\Hash}
+\newcommand \GenesisHash {\Genesis\Hash}
 $$
 
 # Genesis

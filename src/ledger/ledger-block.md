@@ -4,6 +4,7 @@ $$
 \newcommand \MinBalance {b_\min}
 \newcommand \PayoutsMaxBalance {A_{r,\max}}
 \newcommand \PayoutsMinBalance {A_{r,\min}}
+\newcommand \Heartbeat {\mathrm{hb}}
 \newcommand \PayoutsChallengeBits {\Heartbeat_\mathrm{bits}}
 \newcommand \PayoutsChallengeGracePeriod {\Heartbeat_\mathrm{grace}}
 \newcommand \PayoutsChallengeInterval {\Heartbeat_r}
