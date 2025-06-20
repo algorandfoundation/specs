@@ -49,7 +49,7 @@
 - [Normative]()
   - [Parameters](./ledger/ledger-parameters.md)
   - [States](./ledger/ledger-state.md)
-  - [Blocks]()
+  - [Blocks](./ledger/ledger-block.md)
   - [Round]()
   - [Previous Hash]()
   - [Genesis Identifier]()

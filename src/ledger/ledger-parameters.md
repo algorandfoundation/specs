@@ -35,7 +35,7 @@ $$
 $$
 
 $$
-\newcommand \MinBalance {\mathrm{MBR}}
+\newcommand \MinBalance {b_\min}
 \newcommand \Asset {\mathrm{Asa}}
 \newcommand \MaxAssetDecimals {\Asset_{d,\max}}
 \newcommand \MaxAssetNameBytes {\Asset_{n,\max}}
