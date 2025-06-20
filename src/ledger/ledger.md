@@ -9,19 +9,6 @@ abstract: >
 
 # Overview
 
-# Round
-
-The round or _round number_ is a 64-bit unsigned integer which indexes into the
-sequence of states and blocks.  The round $r$ of each block is one greater than
-the round of the previous block.  Given a ledger, the round of a block
-exclusively identifies it.
-
-The rest of this document describes components of states and blocks with respect
-to some implicit ledger.  Thus, the round exclusively describes some component,
-and we denote the round of a component with a subscript.  For instance, the
-timestamp of state/block $r$ is denoted $t_r$.
-
-
 # Genesis Identifier
 
 \newcommand \GenesisID {\mathrm{GenesisID}}
@@ -31,7 +18,6 @@ ledger.
 
 The genesis identifier of a valid block is the identifier of the block in the
 previous round.  In other words, $\GenesisID_{r+1} = \GenesisID_{r}$.
-
 
 # Genesis Hash
 
