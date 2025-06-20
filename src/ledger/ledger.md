@@ -1393,18 +1393,6 @@ all following conditions hold:
 
  - $\sum_I \Stake(\rho+1, I) = \sum_I \Stake(\rho, I)$.
 
-# Previous Hash
-
-\newcommand \Prev {\mathrm{Prev}}
-
-The previous hash is a cryptographic hash of the previous block header in the
-sequence of blocks.  The sequence of previous hashes in each block header forms
-an authenticated, linked-list of the reversed sequence.
-
-Let $B_{r}$ represent the block header in round $r$, and let $H$ be some
-cryptographic function.  Then the previous hash $\Prev_{r+1}$ in the block for
-round $r+1$ is $\Prev_{r+1} = H(B_{r})$.
-
 # Multisignature
 
 Multisignature term describes a special multisignature address, signing and

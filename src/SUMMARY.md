@@ -51,7 +51,7 @@
   - [States](./ledger/ledger-state.md)
   - [Blocks](./ledger/ledger-block.md)
   - [Round](./ledger/ledger-round.md)
-  - [Previous Hash]()
+  - [Previous Hash](./ledger/ledger-prev-hash.md)
   - [Genesis Identifier]()
   - [Genesis Hash]()
   - [Protocol Upgrade State]()
