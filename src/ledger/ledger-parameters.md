@@ -2,7 +2,7 @@ $$
 \newcommand \BonusBaseAmount {B_{b,\mathrm{base}}}
 \newcommand \BonusBaseRound {B_{b,\mathrm{start}}}
 \newcommand \BonusDecayInterval {B_{b,\mathrm{decay}}}
-\newcommand \MaxTimestampIncrement {\Delta B_{t,\max}}
+\newcommand \MaxTimestampIncrement {\Delta t_\max}
 \newcommand \MaxTxnBytesPerBlock {B_{\max}}
 \newcommand \MaxVersionStringLen {V_\max}
 \newcommand \Heartbeat {\mathrm{hb}}
