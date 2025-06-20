@@ -55,7 +55,7 @@
   - [Previous Hash](./ledger/ledger-prev-hash.md)
   - [Protocol Upgrade State](./ledger/ledger-protocol-upgrade.md)
   - [Timestamp](./ledger/ledger-timestamp.md)
-  - [Cryptographic Seed]()
+  - [Cryptographic Seed](./ledger/ledger-seed.md)
   - [Account State]()
     - [Applications]()
     - [Assets]()

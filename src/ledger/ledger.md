@@ -9,14 +9,6 @@ abstract: >
 
 # Overview
 
-# Cryptographic Seed
-
-\newcommand \Seed {\mathrm{Seed}}
-
-The seed is a 256-bit integer.  Seeds are validated and updated according to the
-[specification of the Algorand Byzantine Fault Tolerance protocol][abft-spec].
-The $\Seed$ procedure specified there returns the seed from the desired round.
-
 # Reward State
 
 \newcommand \Stake {\mathrm{Stake}}
