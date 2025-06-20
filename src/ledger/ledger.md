@@ -9,27 +9,6 @@ abstract: >
 
 # Overview
 
-# Genesis Identifier
-
-\newcommand \GenesisID {\mathrm{GenesisID}}
-
-The genesis identifier is a short string that identifies an instance of a
-ledger.
-
-The genesis identifier of a valid block is the identifier of the block in the
-previous round.  In other words, $\GenesisID_{r+1} = \GenesisID_{r}$.
-
-# Genesis Hash
-
-\newcommand \GenesisHash {\mathrm{GenesisHash}}
-
-The genesis hash is a cryptographic hash of the genesis configuration,
-used to unambiguously identify an instance of the ledger.
-
-The genesis hash is set in the genesis block (or the block at which
-an upgrade to a protocol supporting GenesisHash occurs), and must be
-preserved identically in all subsequent blocks.
-
 # Protocol Upgrade State
 
 A protocol version $v$ is a string no more than $V_{\max}$ bytes long. It
