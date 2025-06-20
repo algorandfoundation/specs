@@ -47,7 +47,7 @@
 
 - [Overview](./ledger/ledger-overview.md)
 - [Normative]()
-  - [Parameters]()
+  - [Parameters](./ledger/ledger-parameters.md)
   - [States]()
   - [Blocks]()
   - [Round]()
