@@ -9,39 +9,6 @@ abstract: >
 
 # Overview
 
-## States
-
-A _ledger_ is a sequence of states which comprise the common information
-established by some instantiation of the Algorand protocol.  A ledger is
-identified by a string called the _genesis identifier_, as well as a
-_genesis hash_ that cryptographically commits to the starting state of
-the ledger. Each state consists of the following components:
-
- - The _round_ of the state, which indexes into the ledger's sequence of
-   states.
-
- - The _genesis identifier_ and _genesis hash_, which identify the ledger
-   to which the state belongs.
-
- - The current _protocol version_ and the _upgrade state_.
-
- - A _timestamp_, which is informational and identifies when the state was first
-   proposed.
-
- - A _seed_, which is a source of randomness used to [establish consensus on the
-   next state][abft-spec].
-
- - The current _reward state_, which describes the policy at which incentives
-   are distributed to participants.
-
- - The current _account state_, which holds account balances and keys for all
-   stakeholding addresses.
-   - One component of this state is the _transaction tail_, which caches the
-	 _transaction sets_ (see below) in the last $T_{\max}$ blocks.
-
- - The current _box state_, which holds mappings from (app id, name)
-   tuples to box contents of arbitrary bytes.
-
 ## Blocks
 
 A _block_ is a data structure which specifies the transition between states.

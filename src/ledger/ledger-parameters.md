@@ -148,7 +148,7 @@ The Algorand _Ledger_ is parameterized by the values in the following tables.
 
 |           Parameter           |     Current Value      |  Unit  | Description                                                                                            | Reference Implementation Name | Last Update Version |
 |:-----------------------------:|:----------------------:|:------:|--------------------------------------------------------------------------------------------------------|-------------------------------|:-------------------:|
-|      \\( \MaxTxTail \\)       |    \\( 1{,}000 \\)     |  txn   | Length of the _Transaction Tail_                                                                       |                               |                     |
+|      \\( \MaxTxTail \\)       |    \\( 1{,}000 \\)     |        | Length of the _Transaction Tail_                                                                       |                               |                     |
 | \\( \MaxKeyregValidPeriod \\) | \\( 16{,}777{,}215 \\) | rounds | Maximum voting range in a `keyreg` transaction, defined as \\( (256 \times 2^{16})-1 \\)               | `MaxKeyregValidPeriod`        |         v31         |
 |    \\( \MaxTxGroupSize \\)    |       \\( 16 \\)       |  txn   | Maximum number of transactions allowed in a group                                                      | `MaxTxGroupSize `             |         v18         |
 |      \\( \MaxTxnLife \\)      |     \\( 1,000 \\)      | rounds | Maximum difference between last valid and first valid round, defines transaction lifespan in the pool  | `MaxTxnLife`                  |         v7          |
