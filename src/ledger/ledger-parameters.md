@@ -4,7 +4,7 @@ $$
 \newcommand \BonusDecayInterval {B_{b,\mathrm{decay}}}
 \newcommand \MaxTimestampIncrement {\Delta B_{t,\max}}
 \newcommand \MaxTxnBytesPerBlock {B_{\max}}
-\newcommand \MaxVersionStringLen {B_{V,\max}}
+\newcommand \MaxVersionStringLen {V_\max}
 \newcommand \Heartbeat {\mathrm{hb}}
 \newcommand \Fee {\mathrm{fee}}
 \newcommand \PayoutsChallengeBits {\Heartbeat_\mathrm{bits}}
