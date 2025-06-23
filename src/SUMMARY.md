@@ -21,6 +21,8 @@
     - [Bundles](./abft-messages-bundles.md)
     - [Proposals](./abft-messages-proposals.md)
     - [Seed](./abft-messages-seed.md)
+  - [State Machine](./abft-state-machine.md)
+  - [Player State](./abft-player-state.md)
 - [Non-Normative](./abft/abft-nn.md)
   - [General Concepts](./abft/abft-nn-general-concepts.md)
   - [Context Tuple](./abft/abft-nn-context-tuple.md)
