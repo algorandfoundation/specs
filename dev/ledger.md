@@ -455,12 +455,17 @@ parameters_, which can be encoded as a msgpack struct:
   msgpack field `epp` and may not exceed 3.
   This `ExtraProgramPages` field is taken into account on application update as well.
 
+- A "program version" (`Version`) value that begins at 0 when an
+  application is created or when this consensus version goes into
+  effect, whichever is later. This field is encoded with msgpack field
+  `v`.
+
 - The "global state" (`GlobalState`) associated with this application, stored as
   a [Key/Value Store][Key/Value Stores]. This field is encoded with
   msgpack field `gs`.
 
 Each application created increases the minimum balance
-requirements of the creator by 100,000*(1+`ExtraProgramPages`) microAlgos,
+requirement of the creator by 100,000*(1+`ExtraProgramPages`) microAlgos,
 plus the [`GlobalStateSchema`Minimum Balance contribution][App Minimum Balance Changes].
 
 Each application opted in to increases the minimum balance
@@ -915,6 +920,9 @@ An application call transaction additionally has the following fields:
   application's `ClearStateProgram`.
   - The Approval program and the Clear state program must have the
     same version number if either is 6 or higher.
+- A reject version, encoded as msgpack field `aprv`. If set to a
+  positive number, the transactions fails unless the application's program
+  version exceeds the reject version value.
 
 Furthermore, the sum of the number of Accounts in `apat`, Application
 IDs in `apfa`, Asset IDs in `apas`, and Box References in `apbx` is
@@ -1442,8 +1450,9 @@ point must be discarded and the entire transaction rejected.
           **FAIL**
         - Update the Approval and ClearState programs for this
           application according to the programs specified in this
-          `ApplicationCall` transaction. The new programs are not executed in
-          this transaction.  **SUCCEED.**
+          `ApplicationCall` transaction, and increment the program
+          version. The new programs are not executed in this
+          transaction.  **SUCCEED.**
 
 ### Application Stateful Execution Semantics
 
