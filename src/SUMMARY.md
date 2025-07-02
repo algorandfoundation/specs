@@ -58,7 +58,7 @@
   - [Cryptographic Seed](./ledger/ledger-seed.md)
   - [Account State](./ledger/ledger-account-state.md)
     - [Applications](./ledger/ledger-applications.md)
-    - [Assets]()
+    - [Assets](./ledger/ledger-assets.md)
   - [Consensus Participation]()
   - [Light Block Header]()
     - [Commitment]()

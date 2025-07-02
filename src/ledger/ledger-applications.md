@@ -93,7 +93,7 @@ some KV.
 - `NumByteSlice` represents the maximum number of _byte-array values_ that may appear
 in some KV.
 
-### App Minimum Balance Changes
+## App Minimum Balance Changes
 
 When an account opts in to an application or creates an application, the minimum
 balance requirements for that account increases. The minimum balance requirement
@@ -124,10 +124,10 @@ The box store is an associative array mapping keys of type: (64-bit unsigned int
 to values of type byte-array.
 
 - The _key_ is a pair in which the first value corresponds to an existing (or previously existing)
-application ID, and the second is a _box name_, 1 to \\( \MaxAppKeyLen \\) bytes
-in length. Unlike global/local state keys, an empty array is not a valid box name.
-However, empty box names may appear in transactions to increase the I/O budget (see
-below).
+application ID, and the second is a _box name_, \\( 1 \\) to \\( \MaxAppKeyLen \\)
+bytes in length. Unlike global/local state keys, an empty array is not a valid box
+name. However, empty box names may appear in transactions to increase the I/O budget
+(see below).
 
 - The _value_ is a byte-array of length not greater than \\( \MaxBoxSize \\).
 
