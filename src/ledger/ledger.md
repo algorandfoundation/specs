@@ -43,26 +43,6 @@ state is $(T_{r+1}, R_{r+1}, B^*_{r+1})$ where
 
 A valid block's reward state matches the expected reward state.
 
-# Light Block Header
-
-A light block header is a structure contains a subset of fields from Algorand's  _block header_.
-Light block header contains the following components:
-
-- The block's _seed_, under msgpack key `0`.
-
-- The block's _hash_, under msgpack key `1`.
-
-- The block's _genesis hash_, under msgpack key `gh`.
-
-- The block's _round_, under msgpack key `r`.
-
-- The block's SHA256 Transaction commitment, under msgpack key `tc`.
-
-# Light Block Header Commitment
-
-Light Block Header Commitment for rounds (_X_ $\cdot$ $\delta_{SP}$,...,(_X_+1) $\cdot$ $\delta_{SP}$] for some number _X_, defined as
-the root of a vector commitment whose leaves are light block headers for rounds  _X_ $\cdot$ $\delta_{SP}$,...,(_X_+1) $\cdot$ $\delta_{SP}$ respectively. We use SHA256 hash function to create this vector commitment.
-
 # State Proof message
 
 A state proof message for rounds (_X_ $\cdot$ $\delta_{SP}$,...,(_X_+1) $\cdot$ $\delta_{SP}$] for some number _X_, 
