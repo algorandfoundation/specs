@@ -43,26 +43,6 @@ state is $(T_{r+1}, R_{r+1}, B^*_{r+1})$ where
 
 A valid block's reward state matches the expected reward state.
 
-# Participation Updates
-
-Participation updates contains a two list of addressess of accounts
-for which changes are made to their particpation status.
-
-The first contains accounts that have been deemed to be _expired_. An
-account is said to be expired when the last valid vote round in its
-participation key is strictly less than the current round that is
-being processed.  Once included in this list, an account will be
-marked offline as part of applying the block changes to the ledger.
-
-The second contains accounts that have been deemed to be
-_suspended_. An account is said to be suspended according to the rules
-specified above for _suspended particpation accounts_ list.  Once
-included in this list, an account will be marked offline, but its
-voting keys will be retained in the account state, as part of applying
-the block changes to the ledger.  The `IncentiveEligible` flag of the
-account will be set to false.
-
-
 # Light Block Header
 
 A light block header is a structure contains a subset of fields from Algorand's  _block header_.

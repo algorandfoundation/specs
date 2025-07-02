@@ -59,7 +59,7 @@
   - [Account State](./ledger/ledger-account-state.md)
     - [Applications](./ledger/ledger-applications.md)
     - [Assets](./ledger/ledger-assets.md)
-  - [Consensus Participation]()
+  - [Consensus Participation Updates](./ledger/ledger-participation-updates.md)
   - [Light Block Header]()
     - [Commitment]()
   - [State Proof]()
