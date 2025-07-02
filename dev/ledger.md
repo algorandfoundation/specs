@@ -243,7 +243,7 @@ protocol.
 The upgrade vote in each block consists of a protocol version $v_r$, a 64-bit
 unsigned integer $x_r$ which indicates the delay between the acceptance of a
 protocol version and its execution, and a single bit $b$ indicating whether
-the block proposer supports the given version.
+the block proposer supports the given protocol version.
 
 The upgrade state in each block/state consists of the current protocol version
 $v^*_r$, the next proposed protocol version $v'_r$, a 64-bit round number
@@ -455,8 +455,8 @@ parameters_, which can be encoded as a msgpack struct:
   msgpack field `epp` and may not exceed 3.
   This `ExtraProgramPages` field is taken into account on application update as well.
 
-- A "program version" (`Version`) value that begins at 0 when an
-  application is created or when this consensus version goes into
+- A "application version" (`Version`) value that begins at 0 when an
+  application is created or when this protocol version goes into
   effect, whichever is later. This field is encoded with msgpack field
   `v`.
 
@@ -919,10 +919,10 @@ An application call transaction additionally has the following fields:
   both application creation and updates, and sets the corresponding
   application's `ClearStateProgram`.
   - The Approval program and the Clear state program must have the
-    same version number if either is 6 or higher.
+    same program version number if either is 6 or higher.
 - A reject version, encoded as msgpack field `aprv`. If set to a
   positive number, the transactions fails unless the reject version value
-  exceeds the application's program version.
+  exceeds the application version.
 
 Furthermore, the sum of the number of Accounts in `apat`, Application
 IDs in `apfa`, Asset IDs in `apas`, and Box References in `apbx` is
@@ -1124,7 +1124,7 @@ and contains the following fields:
     way that the top-level transaction is encoded, recursively,
     including `ApplyData` that applies to the inner transaction.
     - The recursive depth of inner transactions is limited 8.
-    - Up to 16 `InnerTxns` may be present in version 5. In version 6,
+    - Up to 16 `InnerTxns` may be present in program version 5. In version 6,
     the count of all inner transactions across the transaction group
     must not exceed 256.
     - InnerTxns are limited to `pay`, `axfer`, `acfg`, and `afrz`
@@ -1450,7 +1450,7 @@ point must be discarded and the entire transaction rejected.
           **FAIL**
         - Update the Approval and ClearState programs for this
           application according to the programs specified in this
-          `ApplicationCall` transaction, and increment the program
+          `ApplicationCall` transaction, and increment the application
           version. The new programs are not executed in this
           transaction.  **SUCCEED.**
 
