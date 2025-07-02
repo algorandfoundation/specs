@@ -605,6 +605,7 @@ Some of these have immediate data in the byte or bytes after the opcode.
 | 63 | StateProofPK | [64]byte | v6  | State proof public key |
 | 65 | NumApprovalProgramPages | uint64 | v7  | Number of Approval Program pages |
 | 67 | NumClearStateProgramPages | uint64 | v7  | Number of ClearState Program pages |
+| 68 | RejectVersion | uint64 | v12  | Application version for which the txn must reject |
 
 ##### Array Fields
 | Index | Name | Type | In | Notes |
@@ -681,17 +682,18 @@ Asset fields include `AssetHolding` and `AssetParam` fields that are used in the
 
 App fields used in the `app_params_get` opcode.
 
-| Index | Name | Type | Notes |
-| - | ------ | -- | --------- |
-| 0 | AppApprovalProgram | []byte | Bytecode of Approval Program |
-| 1 | AppClearStateProgram | []byte | Bytecode of Clear State Program |
-| 2 | AppGlobalNumUint | uint64 | Number of uint64 values allowed in Global State |
-| 3 | AppGlobalNumByteSlice | uint64 | Number of byte array values allowed in Global State |
-| 4 | AppLocalNumUint | uint64 | Number of uint64 values allowed in Local State |
-| 5 | AppLocalNumByteSlice | uint64 | Number of byte array values allowed in Local State |
-| 6 | AppExtraProgramPages | uint64 | Number of Extra Program Pages of code space |
-| 7 | AppCreator | address | Creator address |
-| 8 | AppAddress | address | Address for which this application has authority |
+| Index | Name | Type | In | Notes |
+| - | ------ | -- | - | --------- |
+| 0 | AppApprovalProgram | []byte |      | Bytecode of Approval Program |
+| 1 | AppClearStateProgram | []byte |      | Bytecode of Clear State Program |
+| 2 | AppGlobalNumUint | uint64 |      | Number of uint64 values allowed in Global State |
+| 3 | AppGlobalNumByteSlice | uint64 |      | Number of byte array values allowed in Global State |
+| 4 | AppLocalNumUint | uint64 |      | Number of uint64 values allowed in Local State |
+| 5 | AppLocalNumByteSlice | uint64 |      | Number of byte array values allowed in Local State |
+| 6 | AppExtraProgramPages | uint64 |      | Number of Extra Program Pages of code space |
+| 7 | AppCreator | address |      | Creator address |
+| 8 | AppAddress | address |      | Address for which this application has authority |
+| 9 | AppVersion | uint64 | v12  | Version of the app, incremented each time the approval or clear program changes |
 
 
 **Account Fields**

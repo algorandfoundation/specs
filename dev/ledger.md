@@ -921,8 +921,8 @@ An application call transaction additionally has the following fields:
   - The Approval program and the Clear state program must have the
     same version number if either is 6 or higher.
 - A reject version, encoded as msgpack field `aprv`. If set to a
-  positive number, the transactions fails unless the application's program
-  version exceeds the reject version value.
+  positive number, the transactions fails unless the reject version value
+  exceeds the application's program version.
 
 Furthermore, the sum of the number of Accounts in `apat`, Application
 IDs in `apfa`, Asset IDs in `apas`, and Box References in `apbx` is
