@@ -57,7 +57,7 @@
   - [Timestamp](./ledger/ledger-timestamp.md)
   - [Cryptographic Seed](./ledger/ledger-seed.md)
   - [Account State](./ledger/ledger-account-state.md)
-    - [Applications]()
+    - [Applications](./ledger/ledger-applications.md)
     - [Assets]()
   - [Consensus Participation]()
   - [Light Block Header]()

@@ -77,8 +77,7 @@ parameters_, which can be encoded as a msgpack struct:
 
 - An immutable "global state schema" (`GlobalStateSchema`), which sets a limit
   on the size of the global [Key/Value Store][Key/Value Stores] that
-  may be associated with this application (see ["State Schemas"][State
-  Schemas]). This field is encoded with msgpack field `gsch`.
+  may be associated with this application (see ["State Schemas"][State Schemas]). This field is encoded with msgpack field `gsch`.
 
   The maximum number of values that this schema may permit is 64.
 
@@ -93,22 +92,21 @@ parameters_, which can be encoded as a msgpack struct:
 - An immutable "extra pages" value (`ExtraProgramPages`), which limits
   the total size of the programs of the application. The sum of the
   lengths of `ApprovalProgram` and `ClearStateProgram` may not exceed
-  2048*(1+`ExtraProgramPages`) bytes. This field is encoded with
+  2048\*(1+`ExtraProgramPages`) bytes. This field is encoded with
   msgpack field `epp` and may not exceed 3.
   This `ExtraProgramPages` field is taken into account on application update as well.
 
 - The "global state" (`GlobalState`) associated with this application, stored as
-  a [Key/Value Store][Key/Value Stores]. This field is encoded with
+  a [Key/Value Store](#keyvalue-stores). This field is encoded with
   msgpack field `gs`.
 
 Each application created increases the minimum balance
-requirements of the creator by 100,000*(1+`ExtraProgramPages`) microAlgos,
-plus the [`GlobalStateSchema`Minimum Balance contribution][App Minimum Balance Changes].
+requirements of the creator by 100,000\*(1+`ExtraProgramPages`) microAlgos,
+plus the [`GlobalStateSchema` Minimum Balance contribution](#app-minimum-balance-changes).
 
-Each application opted in to increases the minimum balance
+Each application opted into increases the minimum balance
 requirements of the opting-in account by 100,000 microAlgos plus the
-[`LocalStateSchema` Minimum Balance contribution][App Minimum Balance
-Changes].
+[`LocalStateSchema` Minimum Balance contribution](#app-minimum-balance-changes).
 
 ### Key/Value Stores
 
@@ -116,6 +114,7 @@ A Key/Value Store, or KV, is an associative array mapping keys of type
 byte-array to values of type byte-array or 64-bit unsigned integer.
 
 The values in a KV are either
+
 - `Bytes`, representing a byte-array
 - `Uint`, representing an unsigned 64-bit integer value.
 
@@ -124,7 +123,7 @@ The maximum length of a key in a KV is 64 bytes.
 ### State Schemas
 
 A state schema represents limits on the number of each value type that may
-appear in a [Key/Value Store (KV)][Key/Value Stores]. State schemas
+appear in a [Key/Value Store (KV)](#keyvalue-stores). State schemas
 are used to control the maximum size of global and local state KVs.
 
 A state schema is composed of two fields:
@@ -143,13 +142,13 @@ closes out or deletes an app.
 
 When opting in to an application, there is a base minimum balance increase
 of 100,000 microAlgos. There is an additional minimum balance increase based on
-the `LocalStateSchema` for that application, described by following formula:
+the `LocalStateSchema` for that application, described by the following formula:
 
 `28500 * schema.NumUint + 50000 * schema.NumByteSlice` microAlgos.
 
 When creating an application, there is a base minimum balance increase
 of 100,000 microAlgos. There is an additional minimum balance increase
-of `100000 * ExtraProgramPages` microAlgos.  Finally, there is an
+of `100000 * ExtraProgramPages` microAlgos. Finally, there is an
 additional minimum balance increase based on the `GlobalStateSchema`
 for that application, described by the following formula:
 
@@ -157,11 +156,11 @@ for that application, described by the following formula:
 
 ### Boxes
 
-The box store is an associative array mapping keys of type (uint64 x
+The box store is an associative array mapping keys composed of pairs of type (uint64,
 byte-array) to values of type byte-array. The key is a pair in which
 the first value corresponds to an existing (or previously existing)
 application ID, and the second is a _box name_, 1 to 64 bytes in
-length.  The value is a byte-array of length not greater than 32,768.
+length. The value is a byte-array of length not greater than 32,768.
 Unlike global/local state keys, an empty array is not a valid box
 name. However, empty box names may appear in transactions to increase
 the I/O budget (see below).
@@ -170,7 +169,7 @@ When an application executes an opcode that creates, resizes or destroys a box,
 the minimum balance of the associated application account (whose
 address is the hash of the application ID) is modified. When a box
 with name $n$ and size $s$ is created, the minimum balance requirement
-is raised by `2500 + 400 * (len(n)+s)`.  When the box is destroyed,
+is raised by `2500 + 400 * (len(n)+s)`. When the box is destroyed,
 the minimum balance is decremented by the same amount.
 
 
