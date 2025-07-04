@@ -63,7 +63,7 @@
   - [Light Block Header](./ledger/ledger-light-block-header.md)
   - [State Proofs](./ledger/ledger-state-proofs.md)
   - [Transactions](./ledger/ledger-transactions.md)
-    - [Payment]()
+    - [Payment](./ledger/ledger-txn-payment.md)
     - [Key Registration]()
     - [Asset Configuration]()
     - [Asset Transfer]()

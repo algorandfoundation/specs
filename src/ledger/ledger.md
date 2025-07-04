@@ -43,18 +43,6 @@ state is $(T_{r+1}, R_{r+1}, B^*_{r+1})$ where
 
 A valid block's reward state matches the expected reward state.
 
-### Payment Transaction
-A payment transaction additionally has the following fields:
-
- - The _amount_ $a$, which is a 64-bit number that indicates the amount of money
-   to be transferred.
-
- - The _receiver_ $I'$, which is an optional address which specifies the
-   receiver of the funds in the transaction.
-
- - The _closing address_ $I_0$, which is an optional address that collects all
-   remaining funds in the account after the transfer to the receiver.
-
 ### Key Registration Transaction
 
 A key registration transaction additionally has the following fields:

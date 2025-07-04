@@ -94,6 +94,7 @@ by the \\( \Record \\) procedure in the [Byzantine Agreement Protocol]().
 There exist two special addresses:
 
 - \\( I_\mathrm{pool} \\), the address of the _incentive pool_,
+
 - \\( I_f \\), the address of the _fee sink_. 
 
 For both of these accounts, \\( p_I = 2 \\).
