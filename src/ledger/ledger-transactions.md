@@ -69,14 +69,17 @@ that specifies the processing fee the _sender_ pays to execute the transaction,
 expressed in μALGO. The _fee_ **MAY** be set to \\( 0 \\) if the transaction is
 part of a [group](./ledger-txn-group.md).
 
-- The _first valid_ \\( \FirstValidRound \\) and _last valid_ \\( \LastValidRound \\)
-for which the transaction **MAY** be executed.
+- The _first valid_ \\( \FirstValidRound \\) and _last valid_ \\( \LastValidRound \\),
+encoded respectively as msgpack fields `fv` and `lv`, are 64-bit unsigned integers
+which define a round interval for which the transaction **MAY** be executed.
 
-- The _lease_ \\( x \\), encoded as msgpack field `lx`, is an **OPTIONAL** 256-bit
-unsigned integer specifying mutual exclusion. If \\( x \neq 0 \\) (i.e., \\( x \\)
-is set) and this transaction is confirmed, then this transaction prevents another
-transaction from the same _sender_ and with the _same lease_ from being confirmed
-until \\( \LastValidRound \\) is confirmed.
+<!-- TODO: Specify the ordering between \FirstValidRound and \LastValidRound -->
+
+- The _lease_ \\( x \\), encoded as msgpack field `lx`, is an **OPTIONAL** 32-byte
+array specifying mutual exclusion. If \\( x \neq 0 \\) (i.e., \\( x \\) is set) and
+this transaction is confirmed, then this transaction prevents another transaction
+from the same _sender_ and with the _same lease_ from being confirmed until \\( \LastValidRound \\)
+is confirmed.
 
 - The _genesis identifier_ \\( \GenesisID \\), encoded as msgpack field `gen`, is
 an **OPTIONAL** string, which defines the Ledger for which this transaction is valid.
@@ -99,5 +102,5 @@ zero, and the original _spending keys_ are re-established.
 > now controlled by the _authorization address_ (i.e., transaction signatures are
 > checked against this address).
 
-- The _note_ \\( N \\), encoded as msgpack field `note`, is an **OPTIONAL** sequence
-of bytes with length at most \\( \MaxTxnNoteBytes \\) which contains arbitrary data.
+- The _note_ \\( N \\), encoded as msgpack field `note`, is an **OPTIONAL** bytes-array
+with length at most \\( \MaxTxnNoteBytes \\) which contains arbitrary data.

@@ -43,48 +43,6 @@ state is $(T_{r+1}, R_{r+1}, B^*_{r+1})$ where
 
 A valid block's reward state matches the expected reward state.
 
-### Key Registration Transaction
-
-A key registration transaction additionally has the following fields:
-
- - The _vote public key_ $\vpk$, (root) public authentication key
-   of an account's participation keys ($\pk$).
-
- - The _selection public key_ $\spk$, public authorization key of
-   an account's participation keys ($\pk$). 
-
- - The _state proof public key_ $\sppk$, public commitment to the account's
-   state proof keys ($\sppk$). If $\vpk$ , $\spk$ and $\sppk$ are all unset,
-   the transaction deregisters the account's participation
-   key set, as the result, marks the account offline.
-
- - The _vote first_ $\vf$, first valid round (inclusive) of
-   an account's participation key sets.
-
- - The _vote last_ $\vl$, last valid round (inclusive) of an account's
-   participation key sets.
-
- - The _vote key dilution_ $\vkd$, number of rounds that a single
-  leaf level authentication key can be used. The higher the number, the
-  more ``dilution'' added to the authentication key's security.
-
- - An optional (boolean) flag $\nonpart$ which, when deregistering keys,
-   specifies whether to mark the account offline (if $\nonpart$ is false)
-   or nonparticipatory (if $\nonpart$ is true).
-
-For a key registration transaction to be valid, the following needs to apply:
-
- - The set of \[_vote public key_, _selection public key_, _state proof public key_, _vote key dilution_\] are required to all be present, or all omitted (clear).
-   Providing the default value or the empty value for any of the members of the set
-   would be interpreted as if these values were omitted.
- - _vote first_ needs to be less than or equal to _vote last_.
- - If the set of \[_vote public key_, _selection public key_, _state proof public key_, _vote key dilution_\] is clear, then _vote first_ and _vote last_ need to be clear as well.
- - If the set of \[_vote public key_, _selection public key_, _state proof public key_, _vote key dilution_\] is not clear, the following applies:
-   - _vote last_ needs to be greater than or equal to the current network round _r_.
-   - _vote first_ needs to be less than or equal to (_first valid_+1).
-   - _vote first_ needs to be less than or equal to (_r_+1).
-- The value (_vote last_ - _vote first_) must be not be greater than 256*(2$^{16}$)-1.
-
 ### Application Call Transaction
 An application call transaction additionally has the following fields:
 

@@ -64,7 +64,7 @@
   - [State Proofs](./ledger/ledger-state-proofs.md)
   - [Transactions](./ledger/ledger-transactions.md)
     - [Payment](./ledger/ledger-txn-payment.md)
-    - [Key Registration]()
+    - [Key Registration](./ledger/ledger-txn-keyreg.md)
     - [Asset Configuration]()
     - [Asset Transfer]()
     - [Asset Freeze]()
