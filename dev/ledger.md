@@ -881,23 +881,42 @@ An application call transaction additionally has the following fields:
 - Accounts besides the `Sender` whose local states may be referred to by the
   executing `ApprovalProgram` or `ClearStateProgram`. These accounts are
   referred to by their addresses, and this field is encoded as msgpack field
-  `apat`. The maximum number of addresses in this field is 4.
+  `apat`.
 - Application IDs, besides the application whose `ApprovalProgram` or
   `ClearStateProgram` is executing, that the executing program may read global
-  state from. This field is encoded as msgpack field `apfa`. The maximum number
-  of entries in this field is 8.
+  state from. This field is encoded as msgpack field `apfa`.
 - Asset IDs that the executing program may read asset parameters from. This
-  field is encoded as msgpack field `apas`. The maximum number of entries in
-  this field is 8.
+  field is encoded as msgpack field `apas`.
 - Box references that the executing program or any other program in
-  the same group may access for reading or modification when the
+  the same group (with version >= 9) may access for reading or modification when the
   reference matches the running programs app ID. This field is encoded
   as msgpack field `apbx`, each element of which is encoded as a
   msgpack object containing an index (`i`) and name (`n`). The maximum
   number of entries in this field is 8. The index (`i`) is a 1-based
-  index in the ForeignApps (`apfa`) array. A 0 index is interpreted as
+  index in the ForeignApps (`apfa`) array. An omitted index is interpreted as
   the application ID of this transaction (`apid`, or the ID that is
   allocated for the created app when `apid` is 0).
+- Access list of up to 16 resources that the executing program or any other
+  program in the group (with version >= 9) may access.  This field is
+  encoded as msgpack field `al`.  Each element of the list encodes on
+  of
+  - An account, using msgpack field `d`
+  - An asset ID, using msgpack field `s`
+  - An app ID, using msgpack field `p`
+  - A holding, using msgpack field `h`. A holding contains subfields
+    `d` and `s` that refer to the address and asset of the holding,
+    respectively.
+  - A local state reference, using msgpack field `l`. A local state
+    contains subfields `d` and `p` that refer to the address and app of
+    the local state, respectively.
+  - A box reference, using msgpack field `b`. A box reference
+    contains subfields `i` and `n`, that refer to the app and name of
+    the box, respectively.
+  The subfields of `h`, `l`, `b` refer to accounts, assets, and apps
+  by using an 1-based index into the Access list. An omitted `d`
+  indicates the Sender of the transaction. A omitted app (`p` or `i`)
+  indicates the called app. The access list must be empty if any of
+  `apat`, `apfa`, `apas`, or `apbx` are populated.
 - Local state schema, encoded as msgpack field `apls`. This field is only used
   during application creation, and sets bounds on the size of the local state
   for users who opt in to this application.
@@ -916,9 +935,9 @@ An application call transaction additionally has the following fields:
   - The Approval program and the Clear state program must have the
     same version number if either is 6 or higher.
 
-Furthermore, the sum of the number of Accounts in `apat`, Application
-IDs in `apfa`, Asset IDs in `apas`, and Box References in `apbx` is
-limited to 8.
+The sum of the number of Accounts in `apat`, Application IDs in
+`apfa`, Asset IDs in `apas`, and Box References in `apbx` is limited
+to 8.
 
 
 ### Asset Configuration Transaction
@@ -1471,19 +1490,16 @@ point must be discarded and the entire transaction rejected.
   is executing, or for an _available_ application ID. An attempt to
   read global state for another application that is not _available_
   will cause the program execution to fail.
-- Asset parameters may only be read for assets whose ID is
+- Asset parameters may only be read for assets that are
   _available_. An attempt to read asset parameters for an asset that
   is not _available_ will cause the program execution to fail.
-- Local state may be read for any _available_ application. An attempt
-  to read local state from any other account will cause program
-  execution to fail. Further, in programs version 4 or later, Local
-  state reads are restricted by application ID in the same way as
-  Global state reads.
-- Algo balances and asset balances may be read for the sender's
-  account or for any _available_ account. An attempt to read a balance
+- Algo balances and asset balances may only be read for the sender's
+  account or for an _available_ account. An attempt to read a balance
   for any other account will cause program execution to fail.
   Further, in programs version 4 or later, asset balances may only be
-  read for assets whose parameters are also _available_.
+  read for assets whose holdings are also _available_.
+- Only _available_ local state may be read. An attempt to read local
+  state from any other account will cause program execution to
 - Only _available_ boxes may be accessed. An attempt to access any other box
   will cause the program exection to fail.
 - Boxes may not be accessed by an app's `ClearStateProgram`.
