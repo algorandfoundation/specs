@@ -1468,7 +1468,7 @@ point must be discarded and the entire transaction rejected.
 
 - Before the execution of the first ApplicationCall transaction in a
   group, the combined size of all boxes referred to in the box references
-  of all transactions in the group must be less than the I/O budget, i.e., 1,024 times the
+  of all transactions in the group must be less than the I/O budget, i.e., 2,048 times the
   total number of box references in the group, or else the group
   fails.
 - During the execution of an `ApprovalProgram` or `ClearStateProgram`,
@@ -1482,26 +1482,10 @@ point must be discarded and the entire transaction rejected.
   offending instruction.
 - During the execution of an `ApprovalProgram`, the total size of all
   boxes that are created or modified in the group must not exceed the
-  I/O budget or else the group fails.  The program's execution will
+  I/O budget.  The program's execution will
   fail on the first instruction that would cause the constraint to be
   violated. If a box is deleted after creation or modification, its
-  size is not considered in this sum.
-- Global state may only be read for the application ID whose program
-  is executing, or for an _available_ application ID. An attempt to
-  read global state for another application that is not _available_
-  will cause the program execution to fail.
-- Asset parameters may only be read for assets that are
-  _available_. An attempt to read asset parameters for an asset that
-  is not _available_ will cause the program execution to fail.
-- Algo balances and asset balances may only be read for the sender's
-  account or for an _available_ account. An attempt to read a balance
-  for any other account will cause program execution to fail.
-  Further, in programs version 4 or later, asset balances may only be
-  read for assets whose holdings are also _available_.
-- Only _available_ local state may be read. An attempt to read local
-  state from any other account will cause program execution to
-- Only _available_ boxes may be accessed. An attempt to access any other box
-  will cause the program exection to fail.
+  size is no longer considered in this sum.
 - Boxes may not be accessed by an app's `ClearStateProgram`.
 
 ## Heartbeat Transaction Semantics
