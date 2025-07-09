@@ -65,7 +65,7 @@
   - [Transactions](./ledger/ledger-transactions.md)
     - [Payment](./ledger/ledger-txn-payment.md)
     - [Key Registration](./ledger/ledger-txn-keyreg.md)
-    - [Asset Configuration]()
+    - [Asset Configuration](./ledger/ledger-txn-asset-config.md)
     - [Asset Transfer]()
     - [Asset Freeze]()
     - [Application Call]()

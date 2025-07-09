@@ -114,17 +114,6 @@ Furthermore, the sum of the number of Accounts in `apat`, Application
 IDs in `apfa`, Asset IDs in `apas`, and Box References in `apbx` is
 limited to 8.
 
-
-### Asset Configuration Transaction
-An asset configuration transaction additionally has the following fields:
-
- - The ID of the asset being configured, encoded as msgpack field `caid`.
-   If the ID is zero, this transaction is creating an asset.
-
- - The parameters for the asset being configured, encoded as a struct under
-   msgpack field `apar`.  If this value is omitted (zero value), this
-   transaction is deleting the asset.
-
 ### Asset Transfer Transaction
 An asset transfer transaction additionally has the following fields:
 
