@@ -19,6 +19,11 @@ and sends them to the specified address.
 
 > If the _closing address_ is omitted (\\( I_0 = 0 \\)), the field has no effect.
 
+
+## Validation
+
+TODO
+
 ## Semantic
 
-TBD
+TODO

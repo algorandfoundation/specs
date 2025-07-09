@@ -104,3 +104,7 @@ zero, and the original _spending keys_ are re-established.
 
 - The _note_ \\( N \\), encoded as msgpack field `note`, is an **OPTIONAL** bytes-array
 with length at most \\( \MaxTxnNoteBytes \\) which contains arbitrary data.
+
+## Validation
+
+TODO
