@@ -114,24 +114,6 @@ Furthermore, the sum of the number of Accounts in `apat`, Application
 IDs in `apfa`, Asset IDs in `apas`, and Box References in `apbx` is
 limited to 8.
 
-### Asset Transfer Transaction
-An asset transfer transaction additionally has the following fields:
-
- - The ID of the asset being transferred, encoded as msgpack field `xaid`.
-
- - The number of units of the asset being transferred, encoded as msgpack
-   field `aamt`.
-
- - The source address for the asset transfer (non-zero iff this is a
-   clawback), encoded as msgpack field `asnd`.
-
- - The destination address for the asset transfer, encoded as msgpack field
-   `arcv`.
-
- - The address to which all remaining asset units should be transferred
-   to close out this account's holdings of this asset, encoded as msgpack
-   field `aclose`.
-
 ### Asset Freeze Transaction
 An asset freeze transaction additionally has the following fields:
 
