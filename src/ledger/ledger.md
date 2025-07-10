@@ -114,19 +114,6 @@ Furthermore, the sum of the number of Accounts in `apat`, Application
 IDs in `apfa`, Asset IDs in `apas`, and Box References in `apbx` is
 limited to 8.
 
-### Asset Freeze Transaction
-An asset freeze transaction additionally has the following fields:
-
- - The address of the account whose holdings of an asset should be frozen
-   or unfrozen, encoded as msgpack field `fadd`.
-
- - The ID of the asset the holdings of which should be frozen or unfrozen,
-   encoded as msgpack field `faid`.
-
- - The new setting of whether the holdings should be frozen or unfrozen,
-   encoded as a boolean msgpack field `afrz` (true for frozen, false for
-   unfrozen).
-
 ## State proof transaction
 
 A special transaction is used to disseminate and store state 

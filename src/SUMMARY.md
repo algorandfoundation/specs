@@ -67,7 +67,7 @@
     - [Key Registration](./ledger/ledger-txn-keyreg.md)
     - [Asset Configuration](./ledger/ledger-txn-asset-config.md)
     - [Asset Transfer](./ledger/ledger-txn-asset-transfer.md)
-    - [Asset Freeze]()
+    - [Asset Freeze](./ledger/ledger-txn-asset-freeze.md)
     - [Application Call]()
     - [State Proof]()
     - [Heartbeat]()
