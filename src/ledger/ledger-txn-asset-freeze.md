@@ -15,3 +15,11 @@ should be _frozen_ or _unfrozen_.
 
 - The _frozen status_ \\( \Asset_f \\), encoded as a msgpack field `afrz`, is a boolean
 flag setting of whether the holdings should be frozen (`true`) or unfrozen (`false`).
+
+## Validation
+
+TODO
+
+## Semantic
+
+TODO
