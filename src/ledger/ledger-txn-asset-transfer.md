@@ -8,8 +8,8 @@ $$
 
 An _asset transfer_ transaction additionally has the following fields:
 
-- The _asset ID_ \\( \Asset_\mathrm{ID} \\), encoded as msgpack field `xaid`, is
-a 64-bit unsigned integer that identifies the asset being transferred.
+- The _asset ID_ \\( \Asset_\mathrm{xfer,ID} \\), encoded as msgpack field `xaid`,
+is a 64-bit unsigned integer that identifies the asset being transferred.
 
 - The _asset amount_ \\( \Asset_a \\), encoded as msgpack field `aamt`, is an **OPTIONAL**
 64-bit unsigned integer that indicates the number of _asset units_ being transferred.
