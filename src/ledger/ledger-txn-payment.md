@@ -23,10 +23,10 @@ the transfer.
 > If the _close to address_ is omitted (\\( I_0 = 0 \\)), the field has no effect.
 
 
-## Validation
+## Semantic
 
 TODO
 
-## Semantic
+## Validation
 
 TODO

@@ -16,10 +16,10 @@ _asset ID_ is omitted (zero), this transaction is _creating_ an asset.
 of parameters for the asset being configured. If _asset parameters_ are omitted
 (struct of zero values), this transaction is _deleting_ the asset.
 
-## Validation
+## Semantic
 
 TODO
 
-## Semantic
+## Validation
 
 TODO
