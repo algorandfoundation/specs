@@ -4,17 +4,30 @@ $$
 
 # Asset Freeze Transaction
 
+## Fields
+
 An _asset freeze_ transaction additionally has the following fields:
 
-- The _asset ID_ \\( \Asset_\mathrm{frz,ID} \\), encoded as msgpack field `faid`,
-is a 64-bit unsigned integer that identifies the asset being _frozen_ or _unfrozen_.
+| FIELD          | MSGPACK |   TYPE    | OPTIONAL |
+|:---------------|:-------:|:---------:|:--------:|
+| Asset ID       | `faid`  | `uint64`  |    No    |
+| Freeze Address | `fadd`  | `address` |    No    |
+| Frozen Status  | `afrz`  |  `bool`   |    No    |
 
-- The _freeze address_ \\( I_\mathrm{frz} \\), encoded as msgpack field `fadd`, is
-the 32-byte address that identifies the account whose holdings of the _asset ID_
-should be _frozen_ or _unfrozen_.
+### Asset ID
 
-- The _frozen status_ \\( \Asset_f \\), encoded as a msgpack field `afrz`, is a boolean
-flag setting of whether the holdings should be frozen (`true`) or unfrozen (`false`).
+The _asset ID_ \\( \Asset_\mathrm{frz,ID} \\) identifies the asset being _frozen_
+or _unfrozen_.
+
+### Freeze Address
+
+The _freeze address_ \\( I_\mathrm{frz} \\) identifies the account whose holdings
+of the _asset ID_ should be _frozen_ or _unfrozen_.
+
+### Frozen Status
+
+The _frozen status_ \\( \Asset_f \\) is a flag setting of whether the _freeze address_
+holdings of _asset ID_ should be frozen (`true`) or unfrozen (`false`).
 
 ## Semantic
 
