@@ -4,11 +4,11 @@
 
 A _payment_ transaction additionally has the following fields:
 
-| FIELD    |   MSGPACK    |   TYPE    | OPTIONAL |
-|:---------|:------------:|:---------:|:--------:|
-| Amount   |    `amt`     | `uint64`  |   Yes    |
-| Receiver |    `rcv`     | `address` |   Yes    |
-| Close-to |   `close`    | `address` |   Yes    |
+| FIELD    |  CODEC  |   TYPE    | REQUIRED |
+|:---------|:-------:|:---------:|:--------:|
+| Amount   |  `amt`  | `uint64`  |   Yes    |
+| Receiver |  `rcv`  | `address` |   Yes    |
+| Close-to | `close` | `address` |    No    |
 
 ### Amount
 
@@ -28,8 +28,8 @@ transaction.
 
 ### Close-to
 
-The _close to_ address \\( I_0 \\) collects all remaining μALGO in the _sender_
-account _after_ the payment transfer.
+The _close to_ address \\( I_0 \\) (**OPTIONAL**) collects all remaining μALGO in
+the _sender_ account _after_ the payment transfer.
 
 > If the _close to_ address is omitted (\\( I_0 = 0 \\)), the field has no effect.
 

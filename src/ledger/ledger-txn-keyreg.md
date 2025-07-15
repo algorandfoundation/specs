@@ -17,15 +17,15 @@ $$
 
 A _key registration_ transaction additionally has the following fields:
 
-| FIELD                   |   MSGPACK    |    TYPE    | OPTIONAL |
-|:------------------------|:------------:|:----------:|:--------:|
-| Vote Public Key         |  `votekey`   | `[32]byte` |    No    |
-| Selection Public Key    |   `selkey`   | `[32]byte` |    No    |
-| State Proof Public Key  |  `sprfkey`   | `[64]byte` |    No    |
-| Vote First              |  `votefst`   |  `uint64`  |    No    |
-| Vote Last               |  `votelst`   |  `uint64`  |    No    |
-| Vote Key Dilution       |   `votekd`   |  `uint64`  |    No    |
-| Non-Participation       |  `nonpart`   |   `bool`   |   Yes    |
+| FIELD                   |   CODEC   |    TYPE    | REQUIRED |
+|:------------------------|:---------:|:----------:|:--------:|
+| Vote Public Key         | `votekey` | `[32]byte` |    No    |
+| Selection Public Key    | `selkey`  | `[32]byte` |    No    |
+| State Proof Public Key  | `sprfkey` | `[64]byte` |    No    |
+| Vote First              | `votefst` |  `uint64`  |    No    |
+| Vote Last               | `votelst` |  `uint64`  |    No    |
+| Vote Key Dilution       | `votekd`  |  `uint64`  |    No    |
+| Non-Participation       | `nonpart` |   `bool`   |    No    |
 
 ### Vote Public Key
 

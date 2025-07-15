@@ -21,20 +21,20 @@ $$
 
 An _application call_ transaction additionally has the following fields:
 
-| FIELD                | MSGPACK |    TYPE     | OPTIONAL |
-|:---------------------|:-------:|:-----------:|:--------:|
-| Application ID       | `apid`  |  `uint64`   |   Yes    |
-| Approval Program     | `apap`  |  `[]byte`   |   Yes    |
-| Clear State Program  | `apsu`  |  `[]byte`   |   Yes    |
-| Extra Program Pages  | `apep`  |  `uint64`   |   Yes    |
-| Global State Schema  | `apgs`  |  `struct`   |   Yes    |
-| Local State Schema   | `apls`  |  `struct`   |   Yes    |
-| On Completion Action | `apan`  |  `uint64`   |    No    |
-| Arguments            | `apaa`  | `[][]byte`  |   Yes    |
-| Foreign Accounts     | `apat`  | `[]address` |   Yes    |
-| Foreign Applications | `apfa`  | `[]uint64`  |   Yes    |
-| Foreign Assets       | `apas`  | `[]uint64`  |   Yes    |
-| Box References       | `apbx`  | `[]struct`  |   Yes    |
+| FIELD                | CODEC  |    TYPE     | OPTIONAL |
+|:---------------------|:------:|:-----------:|:--------:|
+| Application ID       | `apid` |  `uint64`   |   Yes    |
+| Approval Program     | `apap` |  `[]byte`   |   Yes    |
+| Clear State Program  | `apsu` |  `[]byte`   |   Yes    |
+| Extra Program Pages  | `apep` |  `uint64`   |   Yes    |
+| Global State Schema  | `apgs` |  `struct`   |   Yes    |
+| Local State Schema   | `apls` |  `struct`   |   Yes    |
+| On Completion Action | `apan` |  `uint64`   |    No    |
+| Arguments            | `apaa` | `[][]byte`  |   Yes    |
+| Foreign Accounts     | `apat` | `[]address` |   Yes    |
+| Foreign Applications | `apfa` | `[]uint64`  |   Yes    |
+| Foreign Assets       | `apas` | `[]uint64`  |   Yes    |
+| Box References       | `apbx` | `[]struct`  |   Yes    |
 
 The sum of the number of _foreign accounts_ in `apat`, _foreign application_ in `apfa`,
 _foreign asset_ in `apas`, and _box references_ in `apbx` **MUST NOT** exceed \\( \MaxAppTotalTxnReferences \\).
@@ -82,10 +82,10 @@ account that of the _application ID_.
 
 The _global state schema_ is a struct containing:
 
-| FIELD           | MSGPACK |   TYPE   | DESCRIPTION                                                                   |
-|:----------------|:-------:|:--------:|:------------------------------------------------------------------------------|
-| Number of Uints |  `nui`  | `uint64` | The number of _global_ 64-bit unsigned integer variables for the application. |
-| Number of Bytes |  `nbs`  | `uint64` | The number of _global_ byte-array variables for the application.              |
+| FIELD           | CODEC |   TYPE   | DESCRIPTION                                                                   |
+|:----------------|:-----:|:--------:|:------------------------------------------------------------------------------|
+| Number of Uints | `nui` | `uint64` | The number of _global_ 64-bit unsigned integer variables for the application. |
+| Number of Bytes | `nbs` | `uint64` | The number of _global_ byte-array variables for the application.              |
 
 This field is only used during _application creation_, and sets bounds on the size
 of the _global state_ associated with this application.
@@ -102,10 +102,10 @@ opt-in the _application ID_.
 
 The _local state schema_ is a struct containing:
 
-| FIELD           | MSGPACK |   TYPE   | DESCRIPTION                                                                  |
-|:----------------|:-------:|:--------:|:-----------------------------------------------------------------------------|
-| Number of Uints |  `nui`  | `uint64` | The number of _local_ 64-bit unsigned integer variables for the application. |
-| Number of Bytes |  `nbs`  | `uint64` | The number of _local_ byte-array variables for the application.              |
+| FIELD           | CODEC |   TYPE   | DESCRIPTION                                                                  |
+|:----------------|:-----:|:--------:|:-----------------------------------------------------------------------------|
+| Number of Uints | `nui` | `uint64` | The number of _local_ 64-bit unsigned integer variables for the application. |
+| Number of Bytes | `nbs` | `uint64` | The number of _local_ byte-array variables for the application.              |
 
 This field is only used during _application creation_, and sets bounds on the size
 of the _local state_ for accounts that opt in to this application.
@@ -174,10 +174,10 @@ when the _box reference_ matches the running program _application IDs_.
 
 The _box_ is a struct containing:
 
-| FIELD | MSGPACK |   TYPE   | DESCRIPTION                                                          |
-|:------|:-------:|:--------:|:---------------------------------------------------------------------|
-| Index |   `i`   | `uint64` | A \\( 1 \\)-based index in the _foreign applications_ (`apfa`) list. |
-| Name  |   `n`   | `[]byte` | The box identifier.                                                  |
+| FIELD | CODEC |   TYPE   | DESCRIPTION                                                          |
+|:------|:-----:|:--------:|:---------------------------------------------------------------------|
+| Index |  `i`  | `uint64` | A \\( 1 \\)-based index in the _foreign applications_ (`apfa`) list. |
+| Name  |  `n`  | `[]byte` | The box identifier.                                                  |
  
 > A \\( 0 \\) index (`i`) is interpreted as the _application ID_ of this transaction
 > (`apid`, or the ID allocated for the created application when `apid` is \\( 0 \\)).

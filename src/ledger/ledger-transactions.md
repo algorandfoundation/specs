@@ -17,7 +17,7 @@ $$
 \newcommand \LastValidRound {r_\mathrm{lv}}
 \newcommand \Genesis {\mathrm{Genesis}}
 \newcommand \GenesisID {\Genesis\mathrm{ID}}
-\newcommand \GenesisID {\Genesis\Hash}
+\newcommand \GenesisHash {\Genesis\Hash}
 \newcommand \Group {\Tx\mathrm{G}}
 \newcommand \RekeyTo {\mathrm{RekeyTo}}
 \newcommand \MaxTxnNoteBytes {T_{m,\max}}
@@ -46,11 +46,28 @@ fields of the _body_, is called the _transaction identifier_. This is written as
 
 A transaction _header_ contains the following fields:
 
-- The _transaction type_ \\( \TxType \\), encoded as msgpack field `type`, is a
-short string indicating the type of transaction. The following transaction types
-are supported:
+| FIELD              |  CODEC  |    TYPE     | REQUIRED |
+|:-------------------|:-------:|:-----------:|:--------:|
+| Transaction Type   | `type`  |  `string`   |   Yes    |
+| Sender             |  `snd`  |  `address`  |   Yes    |
+| Fee                |  `fee`  |  `uint64`   |   Yes    |
+| First Valid Round  |  `fv`   |  `uint64`   |   Yes    |
+| Last Valid Round   |  `lv`   |  `uint64`   |   Yes    |
+| Genesis Hash       |  `gh`   | `[32]byte`  |    No    |
+| Lease              |  `lx`   | `[32]byte`  |    No    |
+| Genesis Identifier |  `gen`  |  `string`   |    No    |
+| Group              |  `grp`  | `[32]byte`  |    No    |
+| Rekey-to           | `rekey` |  `address`  |    No    |
+| Note               | `note`  | `[32]bytes` |    No    |
 
-|   TYPE   | DESCRIPTION                      |
+### Transaction Type
+
+The _transaction type_ \\( \TxType \\) is a short string indicating the type of
+transaction.
+
+The following transaction types are supported:
+
+|  CODEC   | DESCRIPTION                      |
 |:--------:|:---------------------------------|
 |  `pay`   | ALGO transfers (payment)         |
 | `keyreg` | Consensus keys registration      |
@@ -61,49 +78,62 @@ are supported:
 |  `stpf`  | State Proof                      |
 |   `hb`   | Consensus heartbeat              |
 
-- The _sender_ \\( I \\), encoded as msgpack field `snd`, is the 32-byte address
-that identifies the account that authorized the transaction.
+### Sender
 
-- The _fee_ \\( f \\), encoded as msgpack field `fee`, is a 64-bit unsigned integer
-that specifies the processing fee the _sender_ pays to execute the transaction,
-expressed in μALGO. The _fee_ **MAY** be set to \\( 0 \\) if the transaction is
-part of a [group](./ledger-txn-group.md).
+The _sender_ \\( I \\) identifies the account that authorized the transaction.
 
-- The _first valid_ \\( \FirstValidRound \\) and _last valid_ \\( \LastValidRound \\),
-encoded respectively as msgpack fields `fv` and `lv`, are 64-bit unsigned integers
-which define a round interval for which the transaction **MAY** be executed.
+### Fee
+
+The _fee_ \\( f \\) specifies the processing fee the _sender_ pays to execute the
+transaction, expressed in μALGO.
+
+The _fee_ **MAY** be set to \\( 0 \\) if the transaction is part of a [group](./ledger-txn-group.md).
+
+### First and Last Valid Round
+
+The _first valid round_ \\( \FirstValidRound \\) and _last valid round_ \\( \LastValidRound \\),
+define a round interval for which the transaction **MAY** be executed.
 
 <!-- TODO: Specify the ordering between \FirstValidRound and \LastValidRound -->
 
-- The _lease_ \\( x \\), encoded as msgpack field `lx`, is an **OPTIONAL** 32-byte
-array specifying mutual exclusion. If \\( x \neq 0 \\) (i.e., \\( x \\) is set) and
-this transaction is confirmed, then this transaction prevents another transaction
-from the same _sender_ and with the _same lease_ from being confirmed until \\( \LastValidRound \\)
-is confirmed.
+### Genesis Hash
 
-- The _genesis identifier_ \\( \GenesisID \\), encoded as msgpack field `gen`, is
-an **OPTIONAL** string, which defines the Ledger for which this transaction is valid.
+The _genesis hash_ \\( \GenesisHash \\) defines the Ledger for which this transaction
+is valid.
 
-- The _genesis hash_ \\( \GenesisHash \\), encoded as msgpack field `gh`, is a 32-byte
-hash, which defines the Ledger for which this transaction is valid.
+### Genesis Identifier
 
-- The _group_ \\( \Group \\), encoded as msgpack field `grp`, is an **OPTIONAL**
-32-byte hash whose meaning is described in the [Transaction Groups][Transaction Groups]
-section.
+The _genesis identifier_ \\( \GenesisID \\) (**OPTIONAL**) defines the Ledger for which this transaction is valid.
 
-- The _rekey to address_ \\( \RekeyTo \\), encoded as msgpack field `rekey`, is
-an **OPTIONAL** 32-byte address. If nonzero, the transaction will set the _sender_
-account's _authorization address_ field to this value. If the \\( \RekeyTo \\) address
-matches the _sender_ address, then the _authorization address_ is instead set to
-zero, and the original _spending keys_ are re-established.
+### Lease
+
+The _lease_ \\( x \\) (**OPTIONAL**) specifies transactions' mutual exclusion. If
+\\( x \neq 0 \\) (i.e., \\( x \\) is set) and this transaction is confirmed, then
+this transaction prevents another transaction from the same _sender_ and with the
+same _lease_ from being confirmed until \\( \LastValidRound \\) is confirmed.
+
+### Group
+
+The _group_ \\( \Group \\) (**OPTIONAL**) is a commitment whose meaning is described
+in the [Transaction Groups]() section.
+
+### Rekey-to
+
+The _rekey to_ \\( \RekeyTo \\) (**OPTIONAL**) is an address. If nonzero, the transaction
+will set the _sender_ account’s _authorization address_ field to this value. If the
+\\( \RekeyTo \\) address matches the _sender_ address, then the _authorization address_
+is instead set to zero, and the original _spending keys_ are re-established.
  
 > The _rekey_ functionally works as if the _account_ replaces its private [_spending
 > keys_](partkey.md#root-keys), while its address remains the same. The account is
 > now controlled by the _authorization address_ (i.e., transaction signatures are
 > checked against this address).
 
-- The _note_ \\( N \\), encoded as msgpack field `note`, is an **OPTIONAL** bytes-array
-with length at most \\( \MaxTxnNoteBytes \\) which contains arbitrary data.
+### Note
+
+The _note_ \\( N \\) (**OPTIONAL**) contains arbitrary data appended to the transaction.
+
+- The _note_ byte length **MUST NOT** exceed \\( \MaxTxnNoteBytes \\).
 
 ## Semantic
 

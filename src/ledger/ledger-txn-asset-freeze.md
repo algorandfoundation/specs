@@ -8,11 +8,11 @@ $$
 
 An _asset freeze_ transaction additionally has the following fields:
 
-| FIELD          | MSGPACK |   TYPE    | OPTIONAL |
-|:---------------|:-------:|:---------:|:--------:|
-| Asset ID       | `faid`  | `uint64`  |    No    |
-| Freeze Address | `fadd`  | `address` |    No    |
-| Frozen Status  | `afrz`  |  `bool`   |    No    |
+| FIELD          | CODEC  |   TYPE    | OPTIONAL |
+|:---------------|:------:|:---------:|:--------:|
+| Asset ID       | `faid` | `uint64`  |    No    |
+| Freeze Address | `fadd` | `address` |    No    |
+| Frozen Status  | `afrz` |  `bool`   |    No    |
 
 ### Asset ID
 

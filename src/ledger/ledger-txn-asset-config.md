@@ -12,10 +12,10 @@ $$
 
 An _asset configuration_ transaction additionally has the following fields:
 
-| FIELD            |   MSGPACK    |   TYPE   | OPTIONAL |
-|:-----------------|:------------:|:--------:|:--------:|
-| Asset ID         |    `caid`    | `uint64` |   Yes    |
-| Asset Parameters |    `apar`    | `struct` |   Yes    |
+| FIELD            | CODEC  |   TYPE   | OPTIONAL |
+|:-----------------|:------:|:--------:|:--------:|
+| Asset ID         | `caid` | `uint64` |   Yes    |
+| Asset Parameters | `apar` | `struct` |   Yes    |
 
 ### Asset ID
 
@@ -28,19 +28,19 @@ The _asset parameters_ are the parameters for configuring the asset.
 
 These _asset parameters_ is struct containing:
 
-| FIELD          | MSGPACK |    TYPE    | DESCRIPTION                                                                                |
-|:---------------|:-------:|:----------:|:-------------------------------------------------------------------------------------------|
-| Total          |   `t`   |  `uint64`  | Total amount of units of the asset                                                         |
-| Decimals       |  `dc`   |  `uint32`  | Number of digits after the decimal place                                                   |
-| Default Frozen |  `df`   |   `bool`   | Flag that specifies if the asset requires whitelisting (yes if `true`)                     |
-| Unit Name      |  `un`   |  `string`  | Asset unit symbol (or asset short-name)                                                    |
-| Asset Name     |  `an`   |  `string`  | Asset name                                                                                 |
-| URL            |  `au`   |  `string`  | URL to retrieve additional asset information                                               |
-| Metadata Hash  |  `am`   | `[32]byte` | Commitment to asset metadata                                                               |
-| Manager        |   `m`   | `address`  | Account allowed to set the asset role-based access control and destroy the asset           |
-| Reserve        |   `r`   | `address`  | Account whose asset holdings should be interpreted as “not mined” (this is purely a label) |
-| Freeze         |   `f`   | `address`  | Account allowed to change the account’s frozen state for the asset holdings                |
-| Clawback       |   `c`   | `address`  | Account allowed to transfer units of the asset from any account                            |
+| FIELD          | CODEC |    TYPE    | DESCRIPTION                                                                                |
+|:---------------|:-----:|:----------:|:-------------------------------------------------------------------------------------------|
+| Total          |  `t`  |  `uint64`  | Total amount of units of the asset                                                         |
+| Decimals       | `dc`  |  `uint32`  | Number of digits after the decimal place                                                   |
+| Default Frozen | `df`  |   `bool`   | Flag that specifies if the asset requires whitelisting (yes if `true`)                     |
+| Unit Name      | `un`  |  `string`  | Asset unit symbol (or asset short-name)                                                    |
+| Asset Name     | `an`  |  `string`  | Asset name                                                                                 |
+| URL            | `au`  |  `string`  | URL to retrieve additional asset information                                               |
+| Metadata Hash  | `am`  | `[32]byte` | Commitment to asset metadata                                                               |
+| Manager        |  `m`  | `address`  | Account allowed to set the asset role-based access control and destroy the asset           |
+| Reserve        |  `r`  | `address`  | Account whose asset holdings should be interpreted as “not mined” (this is purely a label) |
+| Freeze         |  `f`  | `address`  | Account allowed to change the account’s frozen state for the asset holdings                |
+| Clawback       |  `c`  | `address`  | Account allowed to transfer units of the asset from any account                            |
 
 - The _decimals_ **MUST NOT** exceed \\( \MaxAssetDecimals \\).
 

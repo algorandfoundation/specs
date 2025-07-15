@@ -8,7 +8,7 @@ $$
 
 An _asset transfer_ transaction additionally has the following fields:
 
-| FIELD          | MSGPACK  |   TYPE    | OPTIONAL |
+| FIELD          |  CODEC   |   TYPE    | OPTIONAL |
 |:---------------|:--------:|:---------:|:--------:|
 | Asset ID       |  `xaid`  | `uint64`  |    No    |
 | Asset Amount   |  `aamt`  | `uint64`  |   Yes    |
