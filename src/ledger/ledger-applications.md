@@ -1,4 +1,23 @@
+$$
+\newcommand \App {\mathrm{App}}
+\newcommand \MaxAppProgramCost {\App_{c,\max}}
 \newcommand \ExtraProgramPages {\mathrm{ExtraProgramPages}}
+\newcommand \MaxGlobalSchemaEntries {\App_{\mathrm{GS},\max}}
+\newcommand \MaxLocalSchemaEntries {\App_{\mathrm{LS},\max}}
+\newcommand \MaxAppTotalProgramLen {\App_{\mathrm{prog},t,\max}}
+\newcommand \MaxExtraAppProgramPages {\App_{\mathrm{page},\max}}
+\newcommand \MinBalance {b_\min}
+\newcommand \AppFlatOptInMinBalance {\App_{\mathrm{optin},\MinBalance}}
+\newcommand \AppFlatParamsMinBalance {\App_{\mathrm{create},\MinBalance}}
+\newcommand \MaxAppKeyLen {\App_{\mathrm{k},\max}}
+\newcommand \SchemaBytesMinBalance {\App_{\mathrm{b},\MinBalance}}
+\newcommand \SchemaMinBalancePerEntry {\App_{\mathrm{s},\MinBalance}}
+\newcommand \SchemaUintMinBalance {\App_{\mathrm{u},\MinBalance}}
+\newcommand \Box {\mathrm{Box}}
+\newcommand \MaxBoxSize {\Box_\max}
+\newcommand \BoxByteMinBalance {\Box_{\mathrm{byte},\MinBalance}}
+\newcommand \BoxFlatMinBalance {\Box_{\mathrm{flat},\MinBalance}}
+$$
 
 # Applications
 

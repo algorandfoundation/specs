@@ -1,8 +1,10 @@
+$$
 \newcommand \Record {\mathrm{Record}}
 \newcommand \PartKey {\mathrm{PartKey}}
 \newcommand \Eligibility {\mathrm{A_e}}
 \newcommand \Stake {\mathrm{Stake}}
 \newcommand \Units {\mathrm{Units}}
+$$
 
 # Account State
 
@@ -37,7 +39,7 @@ The _account stake_ is a function which maps a given account and round to the ac
 balance in that round and is defined as follows:
 
 $$
-\Stake(r, I) = a_I + (T_r - a^\ast_I) \floor{\frac{a_I}{A}}
+\Stake(r, I) = a_I + (T_r - a^\ast_I) \left\lfloor \frac{a_I}{A} \right\rfloor
 $$
 
 unless \\( p_I = 2 \\) (see below), in which case:
@@ -49,11 +51,11 @@ $$
 \\( \Units(r) \\) is a function that computes the total number of whole _earning
 units_ present in a system at round \\( r \\). 
 
-A user owns \\( \floor{\frac{a_I}{A}} \\) whole earning units, so the total number
-of earning units in the system is:
+A user owns \\( \left\lfloor \frac{a_I}{A} \right\rfloor \\) whole earning units,
+so the total number of earning units in the system is:
 
 $$
-\Units(r) = \sum_I \floor{\frac{a_I}{A}}
+\Units(r) = \sum_I \left\lfloor \frac{a_I}{A} \right\rfloor
 $$
 
 for the \\( a_I \\) corresponding to round \\( r \\).

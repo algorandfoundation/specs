@@ -1,3 +1,12 @@
+$$
+\newcommand \MinBalance {b_\min}
+\newcommand \Asset {\mathrm{Asa}}
+\newcommand \MaxAssetDecimals {\Asset_{d,\max}}
+\newcommand \MaxAssetNameBytes {\Asset_{n,\max}}
+\newcommand \MaxAssetUnitNameBytes {\Asset_{u,\max}}
+\newcommand \MaxAssetURLBytes {\Asset_{r,\max}}
+$$
+
 # Assets
 
 Each account can create assets, named by a globally-unique 64-bit unsigned
