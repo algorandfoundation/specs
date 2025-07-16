@@ -12,15 +12,16 @@ $$
 
 An _asset configuration_ transaction additionally has the following fields:
 
-| FIELD            | CODEC  |   TYPE   | OPTIONAL |
-|:-----------------|:------:|:--------:|:--------:|
-| Asset ID         | `caid` | `uint64` |   Yes    |
-| Asset Parameters | `apar` | `struct` |   Yes    |
+| FIELD            | CODEC  |   TYPE   |         REQUIRED          |
+|:-----------------|:------:|:--------:|:-------------------------:|
+| Asset ID         | `caid` | `uint64` | Yes (except for Creation) |
+| Asset Parameters | `apar` | `struct` |    Yes (for Creation)     |
 
 ### Asset ID
 
 The _asset ID_ \\( \Asset_\mathrm{cfg,ID} \\) identifies the asset being configured.
-If the _asset ID_ is omitted (zero), this transaction is _creating_ an asset.
+
+> If the _asset ID_ is omitted (zero), this transaction is _creating_ an asset.
 
 ### Asset Parameters
 

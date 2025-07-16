@@ -8,11 +8,11 @@ $$
 
 An _asset freeze_ transaction additionally has the following fields:
 
-| FIELD          | CODEC  |   TYPE    | OPTIONAL |
+| FIELD          | CODEC  |   TYPE    | REQUIRED |
 |:---------------|:------:|:---------:|:--------:|
-| Asset ID       | `faid` | `uint64`  |    No    |
-| Freeze Address | `fadd` | `address` |    No    |
-| Frozen Status  | `afrz` |  `bool`   |    No    |
+| Asset ID       | `faid` | `uint64`  |   Yes    |
+| Freeze Address | `fadd` | `address` |   Yes    |
+| Frozen Status  | `afrz` |  `bool`   |   Yes    |
 
 ### Asset ID
 

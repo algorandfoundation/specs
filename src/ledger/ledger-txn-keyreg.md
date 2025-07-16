@@ -17,15 +17,15 @@ $$
 
 A _key registration_ transaction additionally has the following fields:
 
-| FIELD                   |   CODEC   |    TYPE    | REQUIRED |
-|:------------------------|:---------:|:----------:|:--------:|
-| Vote Public Key         | `votekey` | `[32]byte` |    No    |
-| Selection Public Key    | `selkey`  | `[32]byte` |    No    |
-| State Proof Public Key  | `sprfkey` | `[64]byte` |    No    |
-| Vote First              | `votefst` |  `uint64`  |    No    |
-| Vote Last               | `votelst` |  `uint64`  |    No    |
-| Vote Key Dilution       | `votekd`  |  `uint64`  |    No    |
-| Non-Participation       | `nonpart` |   `bool`   |    No    |
+| FIELD                  |   CODEC   |    TYPE    |     REQUIRED     |
+|:-----------------------|:---------:|:----------:|:----------------:|
+| Vote Public Key        | `votekey` | `[32]byte` | Yes (for Online) |
+| Selection Public Key   | `selkey`  | `[32]byte` | Yes (for Online) |
+| State Proof Public Key | `sprfkey` | `[64]byte` | Yes (for Online) |
+| Vote First             | `votefst` |  `uint64`  | Yes (for Online) |
+| Vote Last              | `votelst` |  `uint64`  | Yes (for Online) |
+| Vote Key Dilution      | `votekd`  |  `uint64`  | Yes (for Online) |
+| Non-Participation      | `nonpart` |   `bool`   |        No        |
 
 ### Vote Public Key
 
@@ -67,9 +67,9 @@ to the authentication key’s security.
 
 ### Non-Participation
 
-The _non-participation_ \\( \NonPart \\) is flag which, when deregistering keys,
-specifies whether to mark the account just as _offline_ (if \\( \NonPart \\) is
-`false`) or as _non-participatory_ (if \\( \NonPart \\) is `true`).
+The _non-participation_ \\( \NonPart \\) (**OPTIONAL**) is flag which, when deregistering
+keys, specifies whether to mark the account just as _offline_ (if \\( \NonPart \\)
+is `false`) or as _non-participatory_ (if \\( \NonPart \\) is `true`).
 
 > The _non-participatory_ status is set to _true_ the account is irreversibly excluded
 > from consensus participation (i.e., can no longer be marked as _online_) and from
