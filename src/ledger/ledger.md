@@ -43,27 +43,6 @@ state is $(T_{r+1}, R_{r+1}, B^*_{r+1})$ where
 
 A valid block's reward state matches the expected reward state.
 
-### Heartbeat Transaction
-
-A heartbeat transaction includes five additional fields encoded as a
-struct under msgpack field `hb`.
-
- - The _heartbeat address_ $a$, an account address that this heartbeat
-   transaction proves liveness for.
-
- - The _heartbeat seed_ $sd$, which must be the block seed found in
-   the first valid block of the transaction.
-
- - The _heartbeat vote id_ $vid$, which must be the current public key
-   of the root voting key of the heartbeat address's account state.
-
- - The _heartbeat key dilution_ $kd$, which must be the current
-   `KeyDilution` of the heartbeat address's account state.
-
- - The _heartbeat proof_ $prf$, which must contain a valid signing of
-   $sd$ using $vid$ and $kd$ using the voting signature scheme
-   outlined in the discussion of [_participation keys_][partkey-spec].
-
 Authorization and Signatures
 ----------------------------
 
