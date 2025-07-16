@@ -43,49 +43,6 @@ state is $(T_{r+1}, R_{r+1}, B^*_{r+1})$ where
 
 A valid block's reward state matches the expected reward state.
 
-## State proof transaction
-
-A special transaction is used to disseminate and store state 
-proofs.
-
-The state proof transaction includes four additional fields:
-
- - Under msgpack key `sptype`, the type of the state proof; currently always zero.
- - Under msgpack key `sprnd`, the last round that this state proof attest to.
- - Under msgpack key `sp`, the state proof fields as defined in the [state proof format](https://github.com/algorandfoundation/specs/blob/master/dev/crypto.md#state-proof-format).
- - Under msgpack key `spmsg`, a structure that compose the state proof message, whose hash is being attested
-   by the state proof. This structure defined [above](#state-proof-message)
-
-
-In order for a state proof transaction to be valid the following conditions should be meet:
- - The type of a state proof transaction is `stpf`.
- - Sender address should be equal to a special sender address, which is the hash of the domain-separation prefix `SpecialAddr` with the string `StateProofSender`.
- - The transaction must not have any signature, must not have any fee, must have an empty note, must not have the rekeying field set, must not have any lease, and must not be part of a transaction group. 
- - The round of the state proof (`sprnd`) must be exactly equal to the next expected state proof round in the block header, as described [above](#state-proof-tracking).
- - The state proof verification code should return `True` (see [state proof validity](https://github.com/algorandfoundation/specs/blob/master/dev/crypto.md#state-proof-validity)), given the state proof message, the state proof fields extracted from the transaction. In addition, the verifier should also be given a trusted commitment to the participant array and Proven Weight value. The trusted data should be taken from the on-chain data at the relevant round. 
- 
-
-To encourage the formation of shorter state proof, the rule for
-validity of state proof transactions is dependent on the first valid `fv` round
-number in the transaction.
-In particular, the signed weight of a state proof must be:
-
-- Equal to the total online stake, `TotalWeight`, if the
-  first valid round number on the transaction is no greater than the proof's
-  `sprnd` plus $\delta_{SP}/2$.
-- At least $ProvenWeight + (TotalWeight - ProvenWeight) * Offset / (\delta_{SP} / 2)$,
-  if the first valid round number on the transaction is the proof's `sprnd` plus
-  $\delta_{SP}/2+Offset$.
-- At least the minimum weight being proven by the proof,
-  `ProvenWeight`, if the first valid round number on the transaction is no less than
-  the proof's `sprnd` plus $\delta_{SP}$.
-
-Where `ProvenWeight` = (`TotalWeight` * $f_{SP}$)  / 2^32
-
-When a state proof transaction is applied to the state, the next expected state proof round for that type of state proof is incremented by $\delta_{SP}$.
-
-A node should be able to verify state proof transaction at any point in time (even if `fv` is greater than next expected state proof round in the block header).
-
 ### Heartbeat Transaction
 
 A heartbeat transaction includes five additional fields encoded as a

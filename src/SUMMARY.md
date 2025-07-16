@@ -69,7 +69,7 @@
     - [Asset Transfer](./ledger/ledger-txn-asset-transfer.md)
     - [Asset Freeze](./ledger/ledger-txn-asset-freeze.md)
     - [Application Call](./ledger/ledger-txn-application-call.md)
-    - [State Proof]()
+    - [State Proof](./ledger/ledger-txn-state-proof.md)
     - [Heartbeat]()
     - [Groups]()
     - [Authorization and Signatures]()

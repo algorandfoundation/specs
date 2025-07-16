@@ -10,7 +10,6 @@ $$
 \newcommand \RewardUnit {U_r}
 $$
 
-
 # State Proofs
 
 ## Message
