@@ -97,7 +97,7 @@ pages_,
 The _global state schema_ (**OPTIONAL**) defines the _global_ state allocated into
 the creator account that of the _application ID_.
 
-The _global state schema_ is a struct containing:
+The _global state schema_ is a structure containing:
 
 | FIELD           | CODEC |   TYPE   | DESCRIPTION                                                                   |
 |:----------------|:-----:|:--------:|:------------------------------------------------------------------------------|
@@ -117,7 +117,7 @@ TODO: Restrictions on key-value lengths
 The _local state schema_ (**OPTIONAL**) defines the _local_ state allocated into
 the accounts that opt-in the _application ID_.
 
-The _local state schema_ is a struct containing:
+The _local state schema_ is a structure containing:
 
 | FIELD           | CODEC |   TYPE   | DESCRIPTION                                                                  |
 |:----------------|:-----:|:--------:|:-----------------------------------------------------------------------------|
@@ -174,7 +174,7 @@ Approval Program, or any other Approval Program in the same group, **MAY** acces
 for reading or writing when the _box reference_ matches the running program _application
 IDs_.
 
-The _box_ is a struct containing:
+The _box_ is a structure containing:
 
 | FIELD | CODEC |   TYPE   | DESCRIPTION                                                          |
 |:------|:-----:|:--------:|:---------------------------------------------------------------------|

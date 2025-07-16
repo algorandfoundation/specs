@@ -27,7 +27,7 @@ The _asset ID_ \\( \Asset_\mathrm{cfg,ID} \\) identifies the asset being configu
 
 The _asset parameters_ are the parameters for configuring the asset.
 
-These _asset parameters_ is struct containing:
+These _asset parameters_ is structure containing:
 
 | FIELD          | CODEC |    TYPE    | DESCRIPTION                                                                                |
 |:---------------|:-----:|:----------:|:-------------------------------------------------------------------------------------------|
