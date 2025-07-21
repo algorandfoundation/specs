@@ -73,7 +73,6 @@
     - [Heartbeat](./ledger/ledger-txn-heartbeat.md)
     - [Groups](./ledger/ledger-txn-groups.md)
     - [Authorization and Signatures](./ledger/ledger-txn-authorization.md)
-      - [Multisignatures]()
     - [Apply Data]()
       - [State Deltas]()
     - [Sequence, Set, and Tails]()
