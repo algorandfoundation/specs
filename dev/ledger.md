@@ -914,7 +914,7 @@ An application call transaction additionally has the following fields:
     the box, respectively.
   The subfields of `h`, `l`, `b` refer to accounts, assets, and apps
   by using an 1-based index into the Access list. An omitted `d`
-  indicates the Sender of the transaction. A omitted app (`p` or `i`)
+  indicates the Sender of the transaction. An omitted app (`p` or `i`)
   indicates the called app. The access list must be empty if any of
   `apat`, `apfa`, `apas`, or `apbx` are populated.
 - Local state schema, encoded as msgpack field `apls`. This field is only used
