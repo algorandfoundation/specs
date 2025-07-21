@@ -43,43 +43,6 @@ state is $(T_{r+1}, R_{r+1}, B^*_{r+1})$ where
 
 A valid block's reward state matches the expected reward state.
 
-Authorization and Signatures
-----------------------------
-
-Transactions are not valid unless they are somehow authorized by the sender account (for example, with a signature).
-The authorization information is not considered part of the transaction and does not affect the TXID.
-Rather, when serializing a transaction for submitting to a node or including in a block, the transaction and its authorization appear together in a struct called a SignedTxn.
-The SignedTxn struct contains the transaction (in msgpack field `txn`), optionally an _authorizer address_ (field `sgnr`), and exactly one of a _signature_ (field `sig`), _multisignature_ (field `msig`), or _logic signature_ (field `lsig`).
-
-The _authorizer address_, a 32 byte string, determines against what to verify the sig / msig / lsig, as described below. If the `sgnr` field is omitted (or zero), then the authorizer address defaults to the transaction sender address. At the time the transaction is applied to the ledger, the authorizer address must match the transaction sender account's spending key (or the sender address, if the account's spending key is zero) -- if it does not match, then the transaction was improperly authorized and is invalid.
-
- - A valid signature (`sig`) is a (64-byte) valid ed25519 signature of the transaction (encoded in canonical msgpack and with domain separation prefix "TX") where the public key is the authorizer address (interpreted as an ed25519 public key).
-
- - A valid multisignature (`msig`) is an object containing
-   the following fields and which hashes to the authorizer address as described in the [Multisignature][Multisignature] section:
-
-   - The _subsig_ array of subsignatures each consisting of a signer address and a 64-byte signature
-     of the transaction. Note, multisignature transaction must contain
-     all signer's addresses in the _subsig_ array even if the transaction has not
-     been signed by that address.
-
-   - The threshold _thr_ that is a minimum number of signatures required.
-
-   - The multisignature version _v_ (current value is 1).
-
-- A valid logic-signed transaction's signature is the _lsig_ object containing
-  the following fields:
-
-  - The logic _l_ which is versioned bytecode. (See [TEAL documentation](TEAL.md))
-
-  - An optional single signature _sig_ of 64 bytes valid for the authorizer address of the transaction which has signed the bytes in _l_.
-
-  - An optional multisignature _msig_ from the authorizer address over the bytes in _l_.
-
-  - An optional array of byte strings _arg_ which are arguments supplied to the program in _l_. (_arg_ bytes are not covered by _sig_ or _msig_)
-
-  The logic signature is valid if exactly one of _sig_ or _msig_ is a valid signature of the program by the authorizer address of the transaction, or if neither _sig_ nor _msig_ is set and the hash of the program is equal to the authorizer address. Also the program must execute and finish with a single non-zero value on the stack. See [TEAL documentation](TEAL.md) for details on program execution.
-
 ## ApplyData
 
 \newcommand \ClosingAmount {\mathrm{ClosingAmount}}
@@ -552,22 +515,6 @@ all following conditions hold:
    assets held by that account.
 
  - $\sum_I \Stake(\rho+1, I) = \sum_I \Stake(\rho, I)$.
-
-# Multisignature
-
-Multisignature term describes a special multisignature address, signing and
-validation procedures. In contrast with a regular account address
-that may be understood as a public key, multisignature address is a hash of
-a constant string identifier for multisignature, version, threshold, and
-all addresses used for multisignature address creation:
-$$MSig = \Hash("MultisigAddr", version, threshold, \pk_1, ..., \pk_s)$$
-One address might be specified multiple times in multisignature address creation.
-In this case every occurrence is counted independently in validation.
-
-Validation process checks all non-empty signatures are valid and their count
-not less than the threshold. Validation fails if any of signatures is invalid
-even if count of all remaining correct signatures is greater or equals than the threshold.
-
 
 [sp-crypto-spec]: https://github.com/algorandfoundation/specs/blob/master/dev/crypto.md#state-proofs
 [abft-spec]: https://github.com/algorand/spec/abft.md

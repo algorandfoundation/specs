@@ -72,7 +72,7 @@
     - [State Proof](./ledger/ledger-txn-state-proof.md)
     - [Heartbeat](./ledger/ledger-txn-heartbeat.md)
     - [Groups](./ledger/ledger-txn-groups.md)
-    - [Authorization and Signatures]()
+    - [Authorization and Signatures](./ledger/ledger-txn-authorization.md)
       - [Multisignatures]()
     - [Apply Data]()
       - [State Deltas]()
