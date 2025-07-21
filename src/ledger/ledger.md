@@ -231,67 +231,6 @@ $$\TxTail_{r+1} = \TxTail_r \setminus
 The transaction tail is part of the ledger state but is distinct from the
 account state and is not committed to in the block.
 
-## Transaction Groups
-
-A transaction may include a "Group" field (msgpack tag "grp"), a 32-byte hash
-that specifies what _transaction group_ the transaction belongs to.
-Informally, a transaction group is an ordered list of transactions that, in
-order to be confirmed at all, must all be confirmed together, in order, in the
-same block. The "Group" field in each transaction is set to what is essentially
-the hash of the list of transaction hashes in the group, except to avoid
-circularity, when hashing a transaction it is hashed with its "Group" field
-omitted. In this way a user wanting to require transaction A to confirm if and
-only if transactions B and C confirm can take the hashes of transactions A, B,
-and C (without the "Group" field set), hash them together, and set the "Group"
-field of all three transactions to that hash before signing them.
-A group may contain no more than $G_{max}$ transactions.
-
-More formally, when evaluating a block, consider the $i$th and $(i+1)$th
-transaction in the payset to belong to the same _transaction group_ if the
-"Group" fields of the two transactions are equal and nonzero.  The block may
-now be viewed as an ordered sequence of transaction groups, where each
-transaction group is a contiguous sublist of the payset consisting of one or
-more transactions with equal "Group" field.  For each transaction group where
-the transactions have nonzero "Group", compute the _TxGroup hash_ as follows:
-
- - Take the hash of each transaction in the group but with its "Group" field omitted.
- - Hash this ordered list of hashes -- more precisely, hash the canonical msgpack encoding of a struct with a field "txlist" containing the list of hashes, using "TG" as domain separation prefix.
-
-If the TxGroup hash of any transaction group in a block does not match the "Group" field of the transactions in that group (and that "Group" field is nonzero), then the block is invalid. Additionally, if a block contains a transaction group of more than $G_{max}$ transactions, the block is invalid.
-
-If the sum of the fees paid by the transactions in a transaction group
-is less than $f_{\min}$ times the number of transactions in the group,
-then the block is invalid. There are two exceptions. State proof
-transactions require no fee, and Heartbeat transactions require no fee
-if they have a zero "Group" field, and the _heartbeat address_ was
-challenged between 100 and 200 rounds ago, and has not proposed or
-heartbeat since that challenge. Further explanation of this rule is
-found in [Heartbeat Transaction Semantics] section, below.
-
-If the sum of the lengths of the boxes denoted by the box references in a
-transaction group exceeds 1,024 times the total number of box
-references in the transaction group, then the block is invalid. Call
-this limit the _I/O Budget_ for the group. Box references with an
-empty name are counted toward the total number of references, but add
-nothing to the sum of lengths.
-
-If the sum of the lengths of the boxes modified (by creation or
-modification) in a transaction group exceeds the I/O Budget of the
-group at any time during evaluation (see [ApplicationCall Transaction
-Semantics]), then the block is invalid.
-
-If the sum of the lengths of all the logic signatures and their arguments
-in a transaction group exceeds the number of transactions in the group times
-1000 bytes (consensus variable `MaxLogicSigSize`), then the block in invalid.
-
-Beyond the TxGroup, MinFee, Box size, and LogicSig size checks, each transaction in a
-group is evaluated separately and must be valid on its own, as
-described below in the [Validity and State Changes] section. For
-example, an account with balance 50 could not spend 100 in transaction
-A and afterward receive 500 in transaction B, even if transactions A
-and B are in the same group, because transaction A would leave the
-account with a negative balance.
-
 ## Asset Transaction Semantics
 
 An asset configuration transaction has the following semantics:

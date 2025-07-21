@@ -71,7 +71,7 @@
     - [Application Call](./ledger/ledger-txn-application-call.md)
     - [State Proof](./ledger/ledger-txn-state-proof.md)
     - [Heartbeat](./ledger/ledger-txn-heartbeat.md)
-    - [Groups]()
+    - [Groups](./ledger/ledger-txn-groups.md)
     - [Authorization and Signatures]()
       - [Multisignatures]()
     - [Apply Data]()
