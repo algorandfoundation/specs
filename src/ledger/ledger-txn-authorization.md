@@ -1,6 +1,7 @@
 $$
 \newcommand \Hash {\mathrm{Hash}}
 \newcommand \pk {\mathrm{pk}}
+\newcommand \MSigPrefix {\texttt{MultisigAddr}}
 $$
 
 # Authorization and Signatures
@@ -83,16 +84,16 @@ procedures.
 In contrast with a single signature address that may be understood as a public key,
 multisignature address is a hash of a constant string identifier for:
 
-- The `MultisigAddr` prefix,
+- The \\( \MSigPrefix \\) prefix,
 
 - A version \\( v \\),
 
 - The multisignature authorization threshold \\( t \\),
 
-- All \\( n \\) addresses (\\( pk \\)) used for multisignature address creation.
+- All \\( n \\) addresses (\\( \pk \\)) used for multisignature address creation.
 
 $$
-\mathrm{MSig} = \Hash(\texttt{MultisigAddr}, v}, t, \pk_1, \ldots \pk_s)
+\mathrm{MSig} = \Hash(\MSigPrefix, v, t, \pk_1, \ldots \pk_n)
 $$
 
 One address **MAY** be specified multiple times in multisignature address creation.
