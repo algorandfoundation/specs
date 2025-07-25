@@ -48,7 +48,14 @@ scheme defined in the [Algorand Participation Keys specification](../keys/keys-p
 
 ## Validation
 
-TODO
+ - If the fee is below the minimum fee:
+   - The _note_ field **MUST** not be set.
+   - The _lease_ field **MUST** not be set.
+   - The _rekey to_ field **MUST** not be set.
+ - The _heartbeat proof_ **MUST** be provided.
+ - The _heartbeat seed_ **MUST** be provided.
+ - The _heartbeat vote id_ **MUST** be provided.
+ - The _heartbeat key dilution_ **MUST** be provided.
 
 ## Semantic
 

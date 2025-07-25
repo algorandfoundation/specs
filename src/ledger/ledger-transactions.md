@@ -141,4 +141,25 @@ TODO
 
 ## Validation
 
-TODO
+Each transaction type must meet their own validation requirements. These can be found in the Validation section of each transaction type.
+[Payment Transaction](ledger-txn-payment#Validation)
+[Key Registration Transaction](ledger-txn-keyreg#Validation)
+[Asset Configuration Transaction](ledger-txn-asset-config#Validation)
+[Asset Transfer Transaction](ledger-txn-asset-transfer#Validation)
+[Asset Freeze Transaction](ledger-txn-asset-freeze#Validation)
+[Application Transaction](ledger-txn-application-call#Validation)
+[State Proof Transaction](ledger-txn-state-proof#Validation)
+[Heartbeat Transaction](ledger-txn-heartbeat#Validation)
+
+In addition, each transaction must also meet the following requirements:
+
+ - Fields from other transaction types **MUST NOT** exist within the transaction
+ - Before proto.EnableFeePooling, the _fee_ field **MUST** be greater than or equal to the _minimum fee_. Excluding State Proof transactions
+ - The _last round_ **MUST BE** less than the _first round_
+ - The _last round_ minus the _first round_ **MUST NOT** be greater than \\( \MaxTxnLife \\)
+ - The _node_ field **MUST NOT** exceed \\( \MaxTxnNodeBytes \\)
+ - The _sender_ **MUST NOT** be the RewardsPool address
+ - The _sender_ **MUST NOT** be missing
+ - If SupportTransactionLeases, and the _lease_ field is provided, it **MUST** be 32 bytes long
+ - Before SupportTxGroups, the _group_ field **MUST** be empty
+ - Before SupportRekeying, the _rekey_ field **MUST** be empty
