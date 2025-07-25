@@ -39,4 +39,5 @@ TODO
 
 ## Validation
 
-TODO
+ - The _close to_ address **MUST NOT** be the _sender_ address.
+ - If Payouts.Enabled, then FeeSink **SHALL NOT** send any payments. Otherwise, the _receiver_ address **MUST** be the RewardsPool address and the _close to_ address **MUST** be the _zero address_.
