@@ -80,7 +80,7 @@
     - [Assets](./ledger/ledger-txn-semantics-asset.md)
     - [Applications](./ledger/ledger-txn-semantics-application.md)
     - [Heartbeat](./ledger/ledger-txn-semantics-heartbeat.md)
-  - [Validity and State Changes]()
+  - [Validity and State Changes](./ledger/ledger-validation.md)
   - [Distribution Reward State (Legacy)]()
 - [Non-Normative](./ledger/ledger-nn.md)
   - [Blocks](./ledger/ledger-nn-blocks.md)
