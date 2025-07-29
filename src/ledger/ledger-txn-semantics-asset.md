@@ -6,7 +6,8 @@ $$
 
 ## Asset Configuration
 
-An _asset configuration_ transaction has the following semantics:
+An [_asset configuration_](./ledger-txn-asset-config.md) transaction has the following
+semantics:
 
 - If the [_asset ID_](./ledger-txn-asset-config.md#asset-id) is zero, create a new
 asset with an ID corresponding to one plus this transaction’s unique counter value.
@@ -38,7 +39,8 @@ A zero manager address means no such transaction can be issued.
 
 ## Asset Transfer
 
-An asset transfer transaction has the following semantics:
+An [_asset transfer_](./ledger-txn-asset-transfer.md) transaction has the following
+semantics:
 
 - If the [_asset sender_](./ledger-txn-asset-transfer.md#asset-sender) field is non-zero,
 the transaction **MUST** be issued by the asset’s clawback address, and this transaction
@@ -91,7 +93,8 @@ the [_close-to address_](./ledger-txn-asset-transfer.md#asset-close-to-address).
 
 ## Asset Freeze
 
-An asset freeze transaction has the following semantics:
+An [_asset freeze_](./ledger-txn-asset-freeze.md) transaction has the following
+semantics:
 
 - If the transaction is not issued by the _freeze address_ in the specified asset’s
 parameters, the transaction fails to execute.

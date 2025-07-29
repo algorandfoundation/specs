@@ -5,8 +5,8 @@ $$
 
 # Application Call Transaction Semantics
 
-When an _application call_ transaction is evaluated, it is processed according to
-the following procedure.
+When an [_application call_](./ledger-txn-application-call.md) transaction is evaluated,
+it is processed according to the following procedure.
 
 The transaction effects **MUST NOT** be visible to other transactions until the
 points marked **SUCCEED** below.
