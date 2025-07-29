@@ -79,7 +79,7 @@
   - [Transaction Semantics]()
     - [Assets](./ledger/ledger-txn-semantics-asset.md)
     - [Applications](./ledger/ledger-txn-semantics-application.md)
-    - [Heartbeat]()
+    - [Heartbeat](./ledger/ledger-txn-semantics-heartbeat.md)
   - [Validity and State Changes]()
   - [Distribution Reward State (Legacy)]()
 - [Non-Normative](./ledger/ledger-nn.md)

@@ -43,26 +43,6 @@ state is $(T_{r+1}, R_{r+1}, B^*_{r+1})$ where
 
 A valid block's reward state matches the expected reward state.
 
-## Heartbeat Transaction Semantics
-
- If a heartbeat transaction's $grp$ is empty, and $f < f_{min}$, the
- transaction fails to execute unless:
-
-   - The _note_ $N$ is empty
-   - The _lease_ $x$ is empty
-   - The _rekey to address_ $\RekeyTo$ is empty
-   - The _heartbeat_address_, $a$, is $online$
-   - The _heartbeat_address_, $a$, $\ie$ flag is true
-   - The _heartbeat_address_, $a$, is _at risk_ of suspension
-
- An account is _at risk_ of suspension if the current round is between
- 100-200 modulo 1000, and the blockseed of the most recent round that
- is 0 modulo 1000 matches $a$ in the first 5 bits.
-
- If successful, the `LastHeartbeat` of the specified heartbeat address
- $a$ is updated to the current round.
-
-
 ## Validity and State Changes
 
 The new account state which results from applying a block is the account state
