@@ -84,8 +84,8 @@ $$
 Where:
 
 - \\( \Hash \\) is the cryptographic [SHA-256](../crypto/crypto-sha256.md) hash function;
-- \\( \Hash(\TxID) = \Hash(\texttt{TX} || \Tx)
-- \Hash(\STIB) = \Hash(\texttt{STIB} || \Sig(\Tx) || \ApplyData)
+- \\( \Hash(\TxID) = \Hash(\texttt{TX} || \Tx) \\)
+- \\( \Hash(\STIB) = \Hash(\texttt{STIB} || \Sig(\Tx) || \ApplyData) \\)
 
 The Vector Commitment uses [SHA-256](../crypto/crypto-sha256.md) for internal nodes
 as well.
@@ -106,7 +106,7 @@ For a block to be _valid_, the sum of the sizes of each transaction in a transac
 sequence **MUST NOT** exceed \\( \MaxTxnBytesPerBlock \\); in other words:
 
 $$
-\sum_{\Tx \in \TxSeq_r} \abs(\Tx) \leq \MaxTxnBytesPerBlock
+\sum_{\Tx \in \TxSeq_r} \abs{\Tx} \leq \MaxTxnBytesPerBlock
 $$
 
 ## Transaction Tails
