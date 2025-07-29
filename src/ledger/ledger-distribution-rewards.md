@@ -1,48 +1,54 @@
----
-numbersections: true
-title: "Algorand Ledger State Machine Specification"
-date: \today
-abstract: >
-  Algorand replicates a state and the state's history between protocol
-  participants.  This state and its history is called the _Algorand Ledger_.
----
-
-# Overview
+$$
+\newcommand \Stake {\mathrm{Stake}}
+\newcommand \Units {\mathrm{Units}}
+\newcommand \floor [1]{\left \lfloor #1 \right \rfloor }
+\newcommand \MinBalance {b_\min}
+$$
 
 # Reward State
 
-\newcommand \Stake {\mathrm{Stake}}
-\newcommand \Units {\mathrm{RewardUnits}}
+The reward state consists of three 64-bit unsigned integers:
 
-\newcommand \floor [1]{\left \lfloor #1 \right \rfloor }
+- The total amount of money distributed to each earning unit since the genesis state
+\\( T_r \\),
 
-The reward state consists of three 64-bit unsigned integers: the total amount
-of money distributed to each earning unit since the genesis state $T_r$, the
-amount of money to be distributed to each earning unit at the next round $R_r$,
-and the amount of money left over after distribution $B^*_r$.
+- The amount of money to be distributed to each earning unit at the next round \\( R_r\\),
 
-The reward state depends on the $I_{pool}$, the address of the _incentive pool_, and
-the functions $\Stake(r, I_{pool})$ and $\Units(r)$.  These are defined as part of the
-[Account State][Account State] below.
+- The amount of money left over after distribution \\( B^\ast_r \\).
 
-Informally, every $\omega_r$ rounds, the rate $R_r$ is updated such that rewards given over the next
-$\omega_r$ rounds will drain the incentive pool, leaving it with the minimum balance $b_{min}$.
-The _rewards residue_ $B^*_r$ is the amount of leftover rewards that should have been given in the previous round but
-could not be evenly divided among all reward units. The residue carries over into the rewards to be given in the next round.
-The actual draining of the incentive pool account is described in the [Validity and State Changes][Validity and State Changes] section further below.
+The reward state depends on:
 
-More formally, let $Z = \Units(r)$. Given a reward state $(T_r, R_r, B^*_r)$, the new reward
-state is $(T_{r+1}, R_{r+1}, B^*_{r+1})$ where
+- The address of the _incentive pool_ \\( I_\mathrm{pool} \\),
 
- - $R_{r+1} = \floor{\frac{\Stake(r, I_{pool}) - B^*_r - b_{min}}{\omega_r}}$ if
-   $R_r \equiv 0 \bmod \omega_r$; $R_{r+1} = R_r$ otherwise,
- - $T_{r+1} = T_r + \floor{\frac{R_r}{Z}}$ if $Z \neq 0$; $T_{r+1} = T_r$
-   otherwise, and
- - $B^*_{r+1} = (B^*_r + R_r) \bmod Z$ if $Z \neq 0$; $B^*_{r+1} = B^*_r$
-   otherwise.
+- The functions \\( \Stake(r, I_\mathrm{pool}) \\)
 
-A valid block's reward state matches the expected reward state.
+- \\( \Units(r) \\).
 
-[sp-crypto-spec]: https://github.com/algorandfoundation/specs/blob/master/dev/crypto.md#state-proofs
-[abft-spec]: https://github.com/algorand/spec/abft.md
-[partkey-spec]: https://github.com/algorand/spec/partkey.md
+These are defined as part of the [Account State](./ledger-account-state.md).
+
+Informally, every \\( \omega_r \\) rounds, the rate \\( R_r \\) is updated such
+that rewards given over the next \\( \omega_r \\) rounds will drain the _incentive
+pool_, leaving it with the minimum balance \\( \MinBalance \\).
+
+The _rewards residue_ \\( B^\ast_r \\) is the amount of leftover rewards that should
+have been given in the previous round but could not be evenly divided among all reward
+units. The residue carries over into the rewards to be given in the next round.
+
+The actual draining of the incentive pool account is described in the [Validity
+and State Changes](./ledger-validation.md) section.
+
+More formally, let \\( Z = \Units(r) \\).
+
+Given a reward state \\( (T_r, R_r, B^\ast_r) \\), the new reward state is
+\\( (T_{r+1}, R_{r+1}, B^\ast_{r+1}) \\), where:
+
+- \\( R_{r+1} = \floor{\frac{\Stake(r, I_{pool}) - B^\ast_r - \MinBalance}{\omega_r}} \\)
+if \\(R_r \equiv 0 \bmod \omega_r \\) or \\( R_{r+1} = R_r \\) otherwise, and
+
+- \\( T_{r+1} = T_r + \floor{\frac{R_r}{Z}} \\) if \\( Z \neq 0 \\) or \\( T_{r+1} = T_r \\)
+otherwise, and
+
+- \\( B^\ast_{r+1} = (B^\ast_r + R_r) \bmod Z \\) if \\(Z \neq 0\\) or \\( B^\ast_{r+1} = B^\ast_r \\)
+otherwise.
+
+A valid block’s reward state matches the expected reward state.
