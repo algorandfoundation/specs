@@ -5,8 +5,8 @@ $$
 
 # Previous Hash
 
-The previous hash is a cryptographic hash of the previous block header in the sequence
-of blocks.
+The [_previous hash_](./ledger-block.md#previous-hash) is a cryptographic hash of
+the previous block header in the sequence of blocks.
 
 The sequence of previous hashes in each block header forms an authenticated, linked-list
 of the reversed sequence.
