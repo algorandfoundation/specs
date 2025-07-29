@@ -46,7 +46,7 @@
 # Algorand Ledger
 
 - [Overview](./ledger/ledger-overview.md)
-- [Normative]()
+- [Normative](./ledger/ledger.md)
   - [Parameters](./ledger/ledger-parameters.md)
   - [States](./ledger/ledger-state.md)
   - [Blocks](./ledger/ledger-block.md)
@@ -81,7 +81,7 @@
     - [Applications](./ledger/ledger-txn-semantics-application.md)
     - [Heartbeat](./ledger/ledger-txn-semantics-heartbeat.md)
   - [Validity and State Changes](./ledger/ledger-validation.md)
-  - [Distribution Reward State (Legacy)]()
+  - [Distribution Reward State (Legacy)](./ledger/ledger-distribution-rewards.md)
 - [Non-Normative](./ledger/ledger-nn.md)
   - [Blocks](./ledger/ledger-nn-blocks.md)
     - [Block Header](./ledger/ledger-nn-block-header.md)
