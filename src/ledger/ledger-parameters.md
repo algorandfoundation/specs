@@ -56,7 +56,7 @@ $$
 \newcommand \Box {\mathrm{Box}}
 \newcommand \BoxByteMinBalance {\Box_{\mathrm{byte},\MinBalance}}
 \newcommand \BoxFlatMinBalance {\Box_{\mathrm{flat},\MinBalance}}
-\newcommand \BytesPerBoxReference {\Box_{\mathrm{ry}}}
+\newcommand \BytesPerBoxReference {\Box_{\mathrm{IO}}}
 \newcommand \MaxBoxSize {\Box_\max}
 \newcommand \MaxAppArgs {\App_{\mathrm{arg},\max}}
 \newcommand \MaxAppBoxReferences {\App_{\Box,\max}}

@@ -78,7 +78,7 @@
     - [Apply Data](./ledger/ledger-apply-data.md)
   - [Transaction Semantics]()
     - [Assets](./ledger/ledger-txn-semantics-asset.md)
-    - [Applications]()
+    - [Applications](./ledger/ledger-txn-semantics-application.md)
     - [Heartbeat]()
   - [Validity and State Changes]()
   - [Distribution Reward State (Legacy)]()

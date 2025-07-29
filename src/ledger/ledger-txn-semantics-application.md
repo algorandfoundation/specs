@@ -1,281 +1,168 @@
----
-numbersections: true
-title: "Algorand Ledger State Machine Specification"
-date: \today
-abstract: >
-  Algorand replicates a state and the state's history between protocol
-  participants.  This state and its history is called the _Algorand Ledger_.
----
+$$
+\newcommand \Box {\mathrm{Box}}
+\newcommand \BytesPerBoxReference {\Box_{\mathrm{IO}}}
+$$
 
-# Overview
+# Application Call Transaction Semantics
 
-# Reward State
+When an _application call_ transaction is evaluated, it is processed according to
+the following procedure.
 
-\newcommand \Stake {\mathrm{Stake}}
-\newcommand \Units {\mathrm{RewardUnits}}
+The transaction effects **MUST NOT** be visible to other transactions until the
+points marked **SUCCEED** below.
 
-\newcommand \floor [1]{\left \lfloor #1 \right \rfloor }
+**FAIL** indicates that any modifications to state up to that point **MUST** be
+discarded and the entire transaction rejected.
 
-The reward state consists of three 64-bit unsigned integers: the total amount
-of money distributed to each earning unit since the genesis state $T_r$, the
-amount of money to be distributed to each earning unit at the next round $R_r$,
-and the amount of money left over after distribution $B^*_r$.
+## Procedure
 
-The reward state depends on the $I_{pool}$, the address of the _incentive pool_, and
-the functions $\Stake(r, I_{pool})$ and $\Units(r)$.  These are defined as part of the
-[Account State][Account State] below.
+### Step 1
 
-Informally, every $\omega_r$ rounds, the rate $R_r$ is updated such that rewards given over the next
-$\omega_r$ rounds will drain the incentive pool, leaving it with the minimum balance $b_{min}$.
-The _rewards residue_ $B^*_r$ is the amount of leftover rewards that should have been given in the previous round but
-could not be evenly divided among all reward units. The residue carries over into the rewards to be given in the next round.
-The actual draining of the incentive pool account is described in the [Validity and State Changes][Validity and State Changes] section further below.
+- If the [_application ID_](./ledger-txn-application-call.md#application-id) specified
+by the transaction is zero, create a new application with ID equal to one plus the
+system transaction counter (this is the same ID selection algorithm as used by [Assets](./ledger-txn-semantics-asset.md#asset-configuration)).
 
-More formally, let $Z = \Units(r)$. Given a reward state $(T_r, R_r, B^*_r)$, the new reward
-state is $(T_{r+1}, R_{r+1}, B^*_{r+1})$ where
+    When creating an application, the application parameters specified by the transaction
+    (Approval Program, Clear State Program, Global State Schema, Local State Schema,
+    and Extra Program Pages) are allocated into the sender’s account data, keyed
+    by the new application ID.
 
- - $R_{r+1} = \floor{\frac{\Stake(r, I_{pool}) - B^*_r - b_{min}}{\omega_r}}$ if
-   $R_r \equiv 0 \bmod \omega_r$; $R_{r+1} = R_r$ otherwise,
- - $T_{r+1} = T_r + \floor{\frac{R_r}{Z}}$ if $Z \neq 0$; $T_{r+1} = T_r$
-   otherwise, and
- - $B^*_{r+1} = (B^*_r + R_r) \bmod Z$ if $Z \neq 0$; $B^*_{r+1} = B^*_r$
-   otherwise.
+    Continue to [Step 2](#step-2).
 
-A valid block's reward state matches the expected reward state.
+- If the [_application ID_](./ledger-txn-application-call.md#application-id) specified
+by the transaction is nonzero, continue to [Step 2](#step-2).
 
-## ApplicationCall Transaction Semantics
+### Step 2
 
-When an `ApplicationCall` transaction is evaluated by the network, it is
-processed according to the following procedure. None of the effects of the
-transaction are made visible to other transactions until the points marked
-**SUCCEED** below. **FAIL** indicates that any modifications to state up to that
-point must be discarded and the entire transaction rejected.
+- If the [_on completion action_](./ledger-txn-application-call.md#on-completion-action)
+is equal to  `ClearStateOC`, then:
 
-### Procedure
+  - Check if the transaction’s sender is opted in to this [_application ID_](./ledger-txn-application-call.md#application-id).
+  If not, **FAIL**.
 
-1.
-    - If the application ID specified by the transaction is zero, create a new
-      application with ID equal to one plus the system transaction counter (this
-      is the same ID selection algorithm as used by Assets).
+  - Check if the application parameters still exist in the creator's account data.
+  
+    - If the application does not exist, delete the sender’s local state for this
+    application (marking them as no longer opted in), and **SUCCEED**.
 
-        When creating an application, the application parameters specified by
-        the transaction (`ApprovalProgram`, `ClearStateProgram`,
-        `GlobalStateSchema`, `LocalStateSchema`, and `ExtraProgramPages`) are allocated into the
-        sender’s account data, keyed by the new application ID.
+    - If the application does exist, continue to [Step 3](#step-3).
 
-        Continue to step 2.
+- If the [_on completion action_](./ledger-txn-application-call.md#on-completion-action)
+is not equal to `ClearStateOC`, continue to [Step 4](#step-4).
 
-    - If the application ID specified by the transaction is nonzero, continue to
-      step 2.
-2.
-    - If `OnCompletion == ClearState`, then:
-        - Check if the transaction’s sender is opted in to this application ID.
-          If not, **FAIL.**
-        - Check if the application parameters still exist in the creator's
-          account data.
-            - If the application does not exist, delete the sender’s local state
-              for this application (marking them as no longer opted in), and
-              **SUCCEED.**
-            - If the application does exist, continue to step 3.
-    - If the `OnCompletion != ClearState`, continue to step 4.
-3.
-    - Execute the `ClearStateProgram`.
-        - If the program execution returns `PASS == true`, apply the
-          local/global/box key/value store deltas generated by the program’s
-          execution.
-        - If the program execution returns `PASS == false`, do not apply any
-          local/global/box key/value store deltas generated by the program’s
-          execution.
-    - Delete the sender’s local state for this application (marking them as no
-      longer opted in). **SUCCEED.**
-4.
-    - If `OnCompletion == OptIn`, then at this point during execution we will
-      allocate a local key/value store for the sender for this application
-      ID, marking the sender as opted in.
+### Step 3
 
-        Continue to step 5.
-5.
-    - Execute the `ApprovalProgram`.
-        - If the program execution returns `PASS == true`, apply any
-          local/global key/value store deltas generated by the program’s
-          execution. Continue to step 6.
-        - If the program execution returns `PASS == false`, **FAIL.**
-6.
-    - If `OnCompletion == NoOp`
-        - **SUCCEED.**
-    - If `OnCompletion == OptIn`
-        - This was handled above. **SUCCEED.**
-    - If `OnCompletion == CloseOut`
-        - Check if the transaction’s sender is opted in to this application ID.
-          If not, **FAIL.**
-        - Delete the sender’s local state for this application (marking them as
-          no longer opted in). **SUCCEED.**
-    - If `OnCompletion == ClearState`
-        - This was handled above (unreachable).
-    - If `OnCompletion == DeleteApplication`
-        - Delete the application’s parameters from the creator’s account data.
-          (Note: this does not affect any local state). **SUCCEED.**
-    - If `OnCompletion == UpdateApplication`
-        - If an existing program is version 4 or higher, and the
-          supplied program is a downgrade from the existing version
-          **FAIL**
-        - Update the Approval and ClearState programs for this
-          application according to the programs specified in this
-          `ApplicationCall` transaction. The new programs are not executed in
-          this transaction.  **SUCCEED.**
+- Execute the Clear State Program.
 
-### Application Stateful Execution Semantics
+  - If the program execution returns `PASS == true`, apply the local/global/box
+  key/value store deltas generated by the program’s execution.
 
-- Before the execution of the first ApplicationCall transaction in a
-  group, the combined size of all boxes referred to in the box references
-  of all transactions in the group must be less than the I/O budget, i.e., 1,024 times the
-  total number of box references in the group, or else the group
-  fails.
-- During the execution of an `ApprovalProgram` or `ClearStateProgram`,
-  the application’s `LocalStateSchema` and `GlobalStateSchema` may
-  never be violated. The program's execution will fail on the first
-  instruction that would cause the relevant schema to be
-  violated. Writing a `Bytes` value to a local or global [Key/Value
-  Store][Key/Value Stores] such that the sum of the lengths of the key
-  and value in bytes exceeds 128, or writing any value to a key longer
-  than 64 bytes, will likewise cause the program to fail on the
-  offending instruction.
-- During the execution of an `ApprovalProgram`, the total size of all
-  boxes that are created or modified in the group must not exceed the
-  I/O budget or else the group fails.  The program's execution will
-  fail on the first instruction that would cause the constraint to be
-  violated. If a box is deleted after creation or modification, its
-  size is not considered in this sum.
-- Global state may only be read for the application ID whose program
-  is executing, or for an _available_ application ID. An attempt to
-  read global state for another application that is not _available_
-  will cause the program execution to fail.
-- Asset parameters may only be read for assets whose ID is
-  _available_. An attempt to read asset parameters for an asset that
-  is not _available_ will cause the program execution to fail.
-- Local state may be read for any _available_ application. An attempt
-  to read local state from any other account will cause program
-  execution to fail. Further, in programs version 4 or later, Local
-  state reads are restricted by application ID in the same way as
-  Global state reads.
-- Algo balances and asset balances may be read for the sender's
-  account or for any _available_ account. An attempt to read a balance
-  for any other account will cause program execution to fail.
-  Further, in programs version 4 or later, asset balances may only be
-  read for assets whose parameters are also _available_.
-- Only _available_ boxes may be accessed. An attempt to access any other box
-  will cause the program exection to fail.
-- Boxes may not be accessed by an app's `ClearStateProgram`.
+  - If the program execution returns `PASS == false`, do not apply any local/global/box
+  key/value store deltas generated by the program’s execution.
 
-## Heartbeat Transaction Semantics
+  - Delete the sender’s local state for this application (marking them as no longer
+  opted in). **SUCCEED**.
 
- If a heartbeat transaction's $grp$ is empty, and $f < f_{min}$, the
- transaction fails to execute unless:
+### Step 4
 
-   - The _note_ $N$ is empty
-   - The _lease_ $x$ is empty
-   - The _rekey to address_ $\RekeyTo$ is empty
-   - The _heartbeat_address_, $a$, is $online$
-   - The _heartbeat_address_, $a$, $\ie$ flag is true
-   - The _heartbeat_address_, $a$, is _at risk_ of suspension
+- If [_on completion action_](./ledger-txn-application-call.md#on-completion-action)
+is equal to `OptInOC`, then at this point during execution we will allocate a local
+key/value store for the sender for this application ID, marking the sender as opted
+in.
 
- An account is _at risk_ of suspension if the current round is between
- 100-200 modulo 1000, and the blockseed of the most recent round that
- is 0 modulo 1000 matches $a$ in the first 5 bits.
+  Continue to [Step 5](#step-5).
 
- If successful, the `LastHeartbeat` of the specified heartbeat address
- $a$ is updated to the current round.
+### Step 5
 
+- Execute the Approval Program.
 
-## Validity and State Changes
+  - If the program execution returns `PASS == true`, apply any local/global key/value
+  store deltas generated by the program’s execution. Continue to [Step 6](#step-6).
 
-The new account state which results from applying a block is the account state
-which results from applying each transaction in that block, in sequence. For a
-block to be valid, each transaction in its transaction sequence must be valid at
-the block's round $r$ and for the block's genesis identifier $\GenesisID_B$.
+  - If the program execution returns `PASS == false`, **FAIL**.
 
-For a transaction
-$$\Tx = (\GenesisID, \TxType, r_1, r_2, I, I', I_0, f, a, x, N, \pk, \sppk, \nonpart,
-  \ldots)$$
-(where $\ldots$ represents fields specific to transaction types
-besides "pay" and "keyreg")
-to be valid at the intermediate state $\rho$ in round $r$ for the genesis
-identifier $\GenesisID_B$, the following conditions must all hold:
+### Step 6
 
- - It must represent a transition between two valid account states.
- - Either $\GenesisID = \GenesisID_B$ or $\GenesisID$ is the empty string.
- - $\TxType$ is either "pay", "keyreg", "acfg", "axfer", "afrz",
-   "appl", "stpf", or "hb".
- - There are no extra fields that do not correspond to $\TxType$.
- - $0 \leq r_2 - r_1 \leq T_{\max}$.
- - $r_1 \leq r \leq r_2$.
- - $|N| \leq N_{\max}$.
- - $I \neq I_{pool}$, $I \neq I_f$, and $I \neq 0$.
- - $\Stake(r+1, I) \geq f \geq f_{\min}$.
- - The transaction is properly authorized as described in the [Authorization and Signatures][Authorization and Signatures] section.
- - $\Hash(\Tx) \notin \TxTail_r$.
- - If $x \neq 0$, there exists no $\Tx' \in TxTail$ with sender $I'$, lease value
-   $x'$, and last valid round $r_2'$ such that $I' = I$, $x' = x$, and
-   $r_2' \geq r$.
- - If $\TxType$ is "pay",
-    - $I \neq I_k$ or both $I' \neq I_{pool}$ and $I_0 \neq 0$.
-    - $\Stake(r+1, I) - f > a$ if $I' \neq I$ and $I' \neq 0$.
-    - If $I_0 \neq 0$, then $I_0 \neq I$.
-    - If $I_0 \neq 0$, $I$ cannot hold any assets.
- - If $\TxType$ is "keyreg",
-    - $p_{\rho, I} \ne 2$ (i.e., nonparticipatory accounts may not issue keyreg transactions)
-    - If $\nonpart$ is true then $\spk = 0$ ,$\pk = 0$ and $\sppk = 0$
+- If [_on completion action_](./ledger-txn-application-call.md#on-completion-action)
+is equal to `NoOpOC`
 
-Given that a transaction is valid, it produces the following updated account
-state for intermediate state $\rho+1$:
+  - **SUCCEED**.
 
- - For $I$:
-    - If $I_0 \neq 0$ then
-      $a_{\rho+1, I} = a'_{\rho+1, I} = a^*_{\rho+1, I} = p_{\rho+1, I} = \pk_{\rho+1, I} = 0$;
-    - otherwise,
-        - $a_{\rho+1, I} = \Stake(\rho+1, I) - a - f$ if $I' \neq I$ and
-		  $a_{\rho+1, I} = \Stake(\rho+1, I) - f$ otherwise.
-        - $a'_{\rho+1, I} = T_{r+1}$.
-        - $a^*_{\rho+1, I} = a^*_{\rho, I} +
-                             (T_{r+1} - a'_{\rho, I}) \floor{\frac{a_{\rho, I}}{A}}$.
-        - If $\TxType$ is "pay", then $\pk_{\rho+1, I} = \pk_{\rho, I}$ and $p_{\rho+1, I} = p_{\rho, I}$
-        - Otherwise (i.e., if $\TxType$ is "keyreg"),
-            - $\pk_{\rho+1, I} = \pk$
-            - $p_{\rho+1, I} = 0$ if $\pk = 0$ and $\nonpart = \text{false}$
-            - $p_{\rho+1, I} = 2$ if $\pk = 0$ and $\nonpart = \text{true}$
-            - $p_{\rho+1, I} = 1$ if $\pk \ne 0$.
-            - If $f > 2000000$, then $\ie{\rho+1, I} = true$
+- If [_on completion action_](./ledger-txn-application-call.md#on-completion-action)
+is equal to`OptInOC`
 
- - For $I'$ if $I \neq I'$ and either $I' \neq 0$ or $a \neq 0$:
-    - $a_{\rho+1, I'} = \Stake(\rho+1, I') + a$.
-    - $a'_{\rho+1, I'} = T_{r+1}$.
-    - $a^*_{\rho+1, I'} = a^*_{\rho, I'} +
-                         (T_{r+1} - a'_{\rho, I'}) \floor{\frac{a_{\rho, I'}}{A}}$.
- - For $I_0$ if $I_0 \neq 0$:
-    - $a_{\rho+1, I_0} = \Stake(\rho+1, I_0) + \Stake(\rho+1, I) - a - f$.
-    - $a'_{\rho+1, I_0} = T_{r+1}$.
-    - $a^*_{\rho+1, I_0} = a^*_{\rho, I_0} +
-                         (T_{r+1} - a'_{\rho, I_0}) \floor{\frac{a_{\rho, I_0}}{A}}$.
- - For all other $I^* \neq I$, the account state is identical to that in view $\rho$.
+  - This was handled above. **SUCCEED**.
 
-For transaction types other than "pay" and "keyreg", account state is
-updated based on the reference logic described below.
+- If [_on completion action_](./ledger-txn-application-call.md#on-completion-action)
+is equal to `CloseOutOC`
 
-Additionally, for all types of transactions, if the RekeyTo address of the transaction is nonzero and does not match the transaction sender address, then the transaction sender account's spending key is set to the RekeyTo address. If the RekeyTo address of the transaction does match the transaction sender address, then the transaction sender account's spending key is set to zero.
+  - Check if the transaction’s sender is opted in to this application ID. If not,
+  **FAIL**.
 
-The final intermediate account $\rho_k$ state changes the balance of the
-incentive pool as follows:
-$$a_{\rho_k, I_{pool}} = a_{\rho_{k-1}, I_{pool}} - R_r(\Units(r))$$
+  - Delete the sender’s local state for this application (marking them as no longer
+  opted in). **SUCCEED.**
 
-An account state in the intermediate state $\rho+1$ and at round $r$ is valid if
-all following conditions hold:
+- If [_on completion action_](./ledger-txn-application-call.md#on-completion-action)
+is equal to `ClearStateOC`
 
- - For all addresses $I \notin \{I_{pool}, I_f\}$, either $\Stake(\rho+1, I) = 0$ or
-   $\Stake(\rho+1, I) \geq b_{\min} \times (1 + NA)$, where $NA$ is the number of
-   assets held by that account.
+  - This was handled above (unreachable).
 
- - $\sum_I \Stake(\rho+1, I) = \sum_I \Stake(\rho, I)$.
+- If [_on completion action_](./ledger-txn-application-call.md#on-completion-action)
+is equal to `DeleteApplicationOC`
 
-[sp-crypto-spec]: https://github.com/algorandfoundation/specs/blob/master/dev/crypto.md#state-proofs
-[abft-spec]: https://github.com/algorand/spec/abft.md
-[partkey-spec]: https://github.com/algorand/spec/partkey.md
+  - Delete the application’s parameters from the creator’s account data. (Note:
+  this does not affect any local state). **SUCCEED**.
+
+- If [_on completion action_](./ledger-txn-application-call.md#on-completion-action)
+is equal to `UpdateApplicationOC`
+
+  - If an existing program is version 4 or higher, and the supplied program is a
+  downgrade from the existing version. **FAIL**.
+
+  - Update the Approval Program and Clear State Program for this application according
+  to the programs specified in this _application call_ transaction. The new programs
+  are not executed in this transaction. **SUCCEED**.
+
+## Application Stateful Execution Semantics
+
+- Before the execution of the first _application call_ transaction in a _group_,
+the combined size of all boxes referred to in the box references of all transactions
+in the group **MUST NOT** exceed the I/O budget (i.e., \\( \BytesPerBoxReference \\)
+times the total number of box references in the group), or else the group fails.
+
+- During the execution of an Approval Program or Clear State Program, the application’s
+Local State Schema and Global State Schema **SHALL** never be violated. The program’s
+execution will fail on the first instruction that would cause the relevant schema
+to be violated. Writing a `Bytes` value to a local or global [Key/Value Store](./ledger-applications.md#keyvalue-stores)
+such that the sum of the lengths of the key and value in bytes exceeds \\( \MaxAppBytesValueLen \\),
+or writing any value to a key longer than \\( \MaxAppKeyLen \\) bytes, will likewise
+cause the program to fail on the offending instruction.
+
+- During the execution of an Approval Program, the total size of all boxes that are
+created or modified in the group **MUST NOT** exceed the I/O budget or else the group
+fails. The program’s execution will fail on the first instruction that would cause
+the constraint to be violated. If a box is deleted after creation or modification,
+its size is not considered in this sum.
+
+- Global State may only be read for the application ID whose program is executing,
+or for an _available_ application ID. An attempt to read Global State for another
+application that is not _available_ will cause the program execution to fail.
+
+- Asset Parameters may only be read for assets whose ID is _available_. An attempt
+to read Asset Parameters for an asset that is not _available_ will cause the program
+execution to fail.
+
+- Local State may be read for any _available_ application. An attempt to read Local
+State from any other account will cause program execution to fail. Further, in programs
+version 4 or later, Local State reads are restricted by application ID in the same
+way as Global State reads.
+
+- ALGO balances and asset balances may be read for the sender’s account or for any
+_available_ account. An attempt to read a balance for any other account will cause
+program execution to fail. Further, in programs version 4 or later, asset balances
+may only be read for assets whose parameters are also _available_.
+
+- Only _available_ boxes may be accessed. An attempt to access any other box will
+cause the program execution to fail.
+
+- Boxes **MAY NOT** be accessed by an application’s Clear State Program.
