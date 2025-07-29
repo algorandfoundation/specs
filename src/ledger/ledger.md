@@ -1,0 +1,370 @@
+---
+numbersections: true
+title: "Algorand Ledger State Machine Specification"
+date: \today
+abstract: >
+  Algorand replicates a state and the state's history between protocol
+  participants.  This state and its history is called the _Algorand Ledger_.
+---
+
+# Overview
+
+# Reward State
+
+\newcommand \Stake {\mathrm{Stake}}
+\newcommand \Units {\mathrm{RewardUnits}}
+
+\newcommand \floor [1]{\left \lfloor #1 \right \rfloor }
+
+The reward state consists of three 64-bit unsigned integers: the total amount
+of money distributed to each earning unit since the genesis state $T_r$, the
+amount of money to be distributed to each earning unit at the next round $R_r$,
+and the amount of money left over after distribution $B^*_r$.
+
+The reward state depends on the $I_{pool}$, the address of the _incentive pool_, and
+the functions $\Stake(r, I_{pool})$ and $\Units(r)$.  These are defined as part of the
+[Account State][Account State] below.
+
+Informally, every $\omega_r$ rounds, the rate $R_r$ is updated such that rewards given over the next
+$\omega_r$ rounds will drain the incentive pool, leaving it with the minimum balance $b_{min}$.
+The _rewards residue_ $B^*_r$ is the amount of leftover rewards that should have been given in the previous round but
+could not be evenly divided among all reward units. The residue carries over into the rewards to be given in the next round.
+The actual draining of the incentive pool account is described in the [Validity and State Changes][Validity and State Changes] section further below.
+
+More formally, let $Z = \Units(r)$. Given a reward state $(T_r, R_r, B^*_r)$, the new reward
+state is $(T_{r+1}, R_{r+1}, B^*_{r+1})$ where
+
+ - $R_{r+1} = \floor{\frac{\Stake(r, I_{pool}) - B^*_r - b_{min}}{\omega_r}}$ if
+   $R_r \equiv 0 \bmod \omega_r$; $R_{r+1} = R_r$ otherwise,
+ - $T_{r+1} = T_r + \floor{\frac{R_r}{Z}}$ if $Z \neq 0$; $T_{r+1} = T_r$
+   otherwise, and
+ - $B^*_{r+1} = (B^*_r + R_r) \bmod Z$ if $Z \neq 0$; $B^*_{r+1} = B^*_r$
+   otherwise.
+
+A valid block's reward state matches the expected reward state.
+
+## Asset Transaction Semantics
+
+An asset configuration transaction has the following semantics:
+
+ - If the asset ID is zero, create a new asset with an ID corresponding to
+   one plus this transaction's unique counter value.  The transaction's
+   counter value is the transaction counter field from the block header
+   plus the positional index of this transaction in the block (starting
+   from 0).
+
+   On asset creation, the asset parameters for the created asset are
+   stored in the creator's account under the newly allocated asset ID.
+   The creating account also allocates space to hold asset units of the
+   newly allocated asset.  All units of the newly created asset (i.e.,
+   the total specified in the parameters) are held by the creator. When
+   the creator holding is initialized it ignores the default freeze flag
+   and is always initialized to unfrozen.
+
+ - If the asset ID is non-zero, the transaction must be issued by the
+   manager of the asset (based on the asset's current parameters).  A
+   zero manager address means no such transaction can be issued.
+
+   If the parameters are omitted (the zero value), the asset is destroyed.
+   This is allowed only if the creator holds all of the units of that asset
+   (i.e., equal to the total in the parameters).
+
+   If the parameters are not omitted, any non-zero key in the asset's
+   current parameters (as stored in the asset creator's account) is
+   updated to the key specified in the asset parameters.  This applies to
+   the manager, reserve, freeze, and clawback keys.  Once a key is set to
+   zero, it cannot be updated.  Other parameters are immutable.
+
+An asset transfer transaction has the following semantics:
+
+ - If the asset source field is non-zero, the transaction must be issued
+   by the asset's clawback account, and this transaction can neither
+   allocate nor close out holdings of an asset (i.e., the asset close-to
+   field must not be specified, and the source account must already have
+   allocated space to store holdings of the asset in question).  In this
+   clawback case, freezes are bypassed on both the source and destination
+   of this transfer.
+
+   If the asset source field is zero, the asset source is assumed to be the
+   transaction's sender, and freezes are not bypassed.
+
+ - If the transfer amount is 0, the transaction allocates space in the
+   sender's account to store the asset ID.  The holdings are initialized
+   with a zero number of units of that asset, and the default freeze flag
+   from the asset's parameters.  Space cannot be allocated for asset IDs
+   that have never been created, or that have been destroyed, at the time
+   of space allocation.  Space can remain allocated, however, after the
+   asset is destroyed.
+
+ - The transaction moves the specified number of units of the asset from
+   the source to the destination.  If either account is frozen, and
+   freezes are not bypassed, the transaction fails to execute.  If either
+   account does not have any space allocated to hold units of this asset,
+   the transaction fails to execute.  If the source account has fewer
+   than the specified number of units of that asset, the transaction
+   fails to execute.
+
+ - If the asset close-to field is specified, the transaction transfers
+   all remaining units of the asset to the close-to address.  If the
+   close-to address is not the creator address, then neither the sender
+   account's holdings of this asset nor the close-to address's holdings
+   can be frozen; otherwise, the transaction fails to execute.  Closing to
+   the asset creator is always allowed, even if the source and/or creator
+   account's holdings are frozen.  If the sender or close-to address does
+   not have allocated space for the asset in question, the transaction
+   fails to execute.  After transferring all outstanding units of the
+   asset, space for the asset is deallocated from the sender account.
+
+An asset freeze transaction has the following semantics:
+
+ - If the transaction is not issued by the freeze address in the specified
+   asset's parameters, the transaction fails to execute.
+
+ - If the specified asset does not exist in the specified account, the
+   transaction fails to execute.
+
+ - The freeze flag of the specified asset in the specified account is updated
+   to the flag value from the freeze transaction.
+
+When an asset transaction allocates space in an account for an asset,
+whether by creation or opt-in, the sender's minimum balance
+requirement is incremented by 100,000 microAlgos.  When the space is
+deallocated, whether by asset destruction or asset-close-to, the balance
+requirement of the sender is decremented by 100,000 microAlgos.
+
+## ApplicationCall Transaction Semantics
+
+When an `ApplicationCall` transaction is evaluated by the network, it is
+processed according to the following procedure. None of the effects of the
+transaction are made visible to other transactions until the points marked
+**SUCCEED** below. **FAIL** indicates that any modifications to state up to that
+point must be discarded and the entire transaction rejected.
+
+### Procedure
+
+1.
+    - If the application ID specified by the transaction is zero, create a new
+      application with ID equal to one plus the system transaction counter (this
+      is the same ID selection algorithm as used by Assets).
+
+        When creating an application, the application parameters specified by
+        the transaction (`ApprovalProgram`, `ClearStateProgram`,
+        `GlobalStateSchema`, `LocalStateSchema`, and `ExtraProgramPages`) are allocated into the
+        sender’s account data, keyed by the new application ID.
+
+        Continue to step 2.
+
+    - If the application ID specified by the transaction is nonzero, continue to
+      step 2.
+2.
+    - If `OnCompletion == ClearState`, then:
+        - Check if the transaction’s sender is opted in to this application ID.
+          If not, **FAIL.**
+        - Check if the application parameters still exist in the creator's
+          account data.
+            - If the application does not exist, delete the sender’s local state
+              for this application (marking them as no longer opted in), and
+              **SUCCEED.**
+            - If the application does exist, continue to step 3.
+    - If the `OnCompletion != ClearState`, continue to step 4.
+3.
+    - Execute the `ClearStateProgram`.
+        - If the program execution returns `PASS == true`, apply the
+          local/global/box key/value store deltas generated by the program’s
+          execution.
+        - If the program execution returns `PASS == false`, do not apply any
+          local/global/box key/value store deltas generated by the program’s
+          execution.
+    - Delete the sender’s local state for this application (marking them as no
+      longer opted in). **SUCCEED.**
+4.
+    - If `OnCompletion == OptIn`, then at this point during execution we will
+      allocate a local key/value store for the sender for this application
+      ID, marking the sender as opted in.
+
+        Continue to step 5.
+5.
+    - Execute the `ApprovalProgram`.
+        - If the program execution returns `PASS == true`, apply any
+          local/global key/value store deltas generated by the program’s
+          execution. Continue to step 6.
+        - If the program execution returns `PASS == false`, **FAIL.**
+6.
+    - If `OnCompletion == NoOp`
+        - **SUCCEED.**
+    - If `OnCompletion == OptIn`
+        - This was handled above. **SUCCEED.**
+    - If `OnCompletion == CloseOut`
+        - Check if the transaction’s sender is opted in to this application ID.
+          If not, **FAIL.**
+        - Delete the sender’s local state for this application (marking them as
+          no longer opted in). **SUCCEED.**
+    - If `OnCompletion == ClearState`
+        - This was handled above (unreachable).
+    - If `OnCompletion == DeleteApplication`
+        - Delete the application’s parameters from the creator’s account data.
+          (Note: this does not affect any local state). **SUCCEED.**
+    - If `OnCompletion == UpdateApplication`
+        - If an existing program is version 4 or higher, and the
+          supplied program is a downgrade from the existing version
+          **FAIL**
+        - Update the Approval and ClearState programs for this
+          application according to the programs specified in this
+          `ApplicationCall` transaction. The new programs are not executed in
+          this transaction.  **SUCCEED.**
+
+### Application Stateful Execution Semantics
+
+- Before the execution of the first ApplicationCall transaction in a
+  group, the combined size of all boxes referred to in the box references
+  of all transactions in the group must be less than the I/O budget, i.e., 1,024 times the
+  total number of box references in the group, or else the group
+  fails.
+- During the execution of an `ApprovalProgram` or `ClearStateProgram`,
+  the application’s `LocalStateSchema` and `GlobalStateSchema` may
+  never be violated. The program's execution will fail on the first
+  instruction that would cause the relevant schema to be
+  violated. Writing a `Bytes` value to a local or global [Key/Value
+  Store][Key/Value Stores] such that the sum of the lengths of the key
+  and value in bytes exceeds 128, or writing any value to a key longer
+  than 64 bytes, will likewise cause the program to fail on the
+  offending instruction.
+- During the execution of an `ApprovalProgram`, the total size of all
+  boxes that are created or modified in the group must not exceed the
+  I/O budget or else the group fails.  The program's execution will
+  fail on the first instruction that would cause the constraint to be
+  violated. If a box is deleted after creation or modification, its
+  size is not considered in this sum.
+- Global state may only be read for the application ID whose program
+  is executing, or for an _available_ application ID. An attempt to
+  read global state for another application that is not _available_
+  will cause the program execution to fail.
+- Asset parameters may only be read for assets whose ID is
+  _available_. An attempt to read asset parameters for an asset that
+  is not _available_ will cause the program execution to fail.
+- Local state may be read for any _available_ application. An attempt
+  to read local state from any other account will cause program
+  execution to fail. Further, in programs version 4 or later, Local
+  state reads are restricted by application ID in the same way as
+  Global state reads.
+- Algo balances and asset balances may be read for the sender's
+  account or for any _available_ account. An attempt to read a balance
+  for any other account will cause program execution to fail.
+  Further, in programs version 4 or later, asset balances may only be
+  read for assets whose parameters are also _available_.
+- Only _available_ boxes may be accessed. An attempt to access any other box
+  will cause the program exection to fail.
+- Boxes may not be accessed by an app's `ClearStateProgram`.
+
+## Heartbeat Transaction Semantics
+
+ If a heartbeat transaction's $grp$ is empty, and $f < f_{min}$, the
+ transaction fails to execute unless:
+
+   - The _note_ $N$ is empty
+   - The _lease_ $x$ is empty
+   - The _rekey to address_ $\RekeyTo$ is empty
+   - The _heartbeat_address_, $a$, is $online$
+   - The _heartbeat_address_, $a$, $\ie$ flag is true
+   - The _heartbeat_address_, $a$, is _at risk_ of suspension
+
+ An account is _at risk_ of suspension if the current round is between
+ 100-200 modulo 1000, and the blockseed of the most recent round that
+ is 0 modulo 1000 matches $a$ in the first 5 bits.
+
+ If successful, the `LastHeartbeat` of the specified heartbeat address
+ $a$ is updated to the current round.
+
+
+## Validity and State Changes
+
+The new account state which results from applying a block is the account state
+which results from applying each transaction in that block, in sequence. For a
+block to be valid, each transaction in its transaction sequence must be valid at
+the block's round $r$ and for the block's genesis identifier $\GenesisID_B$.
+
+For a transaction
+$$\Tx = (\GenesisID, \TxType, r_1, r_2, I, I', I_0, f, a, x, N, \pk, \sppk, \nonpart,
+  \ldots)$$
+(where $\ldots$ represents fields specific to transaction types
+besides "pay" and "keyreg")
+to be valid at the intermediate state $\rho$ in round $r$ for the genesis
+identifier $\GenesisID_B$, the following conditions must all hold:
+
+ - It must represent a transition between two valid account states.
+ - Either $\GenesisID = \GenesisID_B$ or $\GenesisID$ is the empty string.
+ - $\TxType$ is either "pay", "keyreg", "acfg", "axfer", "afrz",
+   "appl", "stpf", or "hb".
+ - There are no extra fields that do not correspond to $\TxType$.
+ - $0 \leq r_2 - r_1 \leq T_{\max}$.
+ - $r_1 \leq r \leq r_2$.
+ - $|N| \leq N_{\max}$.
+ - $I \neq I_{pool}$, $I \neq I_f$, and $I \neq 0$.
+ - $\Stake(r+1, I) \geq f \geq f_{\min}$.
+ - The transaction is properly authorized as described in the [Authorization and Signatures][Authorization and Signatures] section.
+ - $\Hash(\Tx) \notin \TxTail_r$.
+ - If $x \neq 0$, there exists no $\Tx' \in TxTail$ with sender $I'$, lease value
+   $x'$, and last valid round $r_2'$ such that $I' = I$, $x' = x$, and
+   $r_2' \geq r$.
+ - If $\TxType$ is "pay",
+    - $I \neq I_k$ or both $I' \neq I_{pool}$ and $I_0 \neq 0$.
+    - $\Stake(r+1, I) - f > a$ if $I' \neq I$ and $I' \neq 0$.
+    - If $I_0 \neq 0$, then $I_0 \neq I$.
+    - If $I_0 \neq 0$, $I$ cannot hold any assets.
+ - If $\TxType$ is "keyreg",
+    - $p_{\rho, I} \ne 2$ (i.e., nonparticipatory accounts may not issue keyreg transactions)
+    - If $\nonpart$ is true then $\spk = 0$ ,$\pk = 0$ and $\sppk = 0$
+
+Given that a transaction is valid, it produces the following updated account
+state for intermediate state $\rho+1$:
+
+ - For $I$:
+    - If $I_0 \neq 0$ then
+      $a_{\rho+1, I} = a'_{\rho+1, I} = a^*_{\rho+1, I} = p_{\rho+1, I} = \pk_{\rho+1, I} = 0$;
+    - otherwise,
+        - $a_{\rho+1, I} = \Stake(\rho+1, I) - a - f$ if $I' \neq I$ and
+		  $a_{\rho+1, I} = \Stake(\rho+1, I) - f$ otherwise.
+        - $a'_{\rho+1, I} = T_{r+1}$.
+        - $a^*_{\rho+1, I} = a^*_{\rho, I} +
+                             (T_{r+1} - a'_{\rho, I}) \floor{\frac{a_{\rho, I}}{A}}$.
+        - If $\TxType$ is "pay", then $\pk_{\rho+1, I} = \pk_{\rho, I}$ and $p_{\rho+1, I} = p_{\rho, I}$
+        - Otherwise (i.e., if $\TxType$ is "keyreg"),
+            - $\pk_{\rho+1, I} = \pk$
+            - $p_{\rho+1, I} = 0$ if $\pk = 0$ and $\nonpart = \text{false}$
+            - $p_{\rho+1, I} = 2$ if $\pk = 0$ and $\nonpart = \text{true}$
+            - $p_{\rho+1, I} = 1$ if $\pk \ne 0$.
+            - If $f > 2000000$, then $\ie{\rho+1, I} = true$
+
+ - For $I'$ if $I \neq I'$ and either $I' \neq 0$ or $a \neq 0$:
+    - $a_{\rho+1, I'} = \Stake(\rho+1, I') + a$.
+    - $a'_{\rho+1, I'} = T_{r+1}$.
+    - $a^*_{\rho+1, I'} = a^*_{\rho, I'} +
+                         (T_{r+1} - a'_{\rho, I'}) \floor{\frac{a_{\rho, I'}}{A}}$.
+ - For $I_0$ if $I_0 \neq 0$:
+    - $a_{\rho+1, I_0} = \Stake(\rho+1, I_0) + \Stake(\rho+1, I) - a - f$.
+    - $a'_{\rho+1, I_0} = T_{r+1}$.
+    - $a^*_{\rho+1, I_0} = a^*_{\rho, I_0} +
+                         (T_{r+1} - a'_{\rho, I_0}) \floor{\frac{a_{\rho, I_0}}{A}}$.
+ - For all other $I^* \neq I$, the account state is identical to that in view $\rho$.
+
+For transaction types other than "pay" and "keyreg", account state is
+updated based on the reference logic described below.
+
+Additionally, for all types of transactions, if the RekeyTo address of the transaction is nonzero and does not match the transaction sender address, then the transaction sender account's spending key is set to the RekeyTo address. If the RekeyTo address of the transaction does match the transaction sender address, then the transaction sender account's spending key is set to zero.
+
+The final intermediate account $\rho_k$ state changes the balance of the
+incentive pool as follows:
+$$a_{\rho_k, I_{pool}} = a_{\rho_{k-1}, I_{pool}} - R_r(\Units(r))$$
+
+An account state in the intermediate state $\rho+1$ and at round $r$ is valid if
+all following conditions hold:
+
+ - For all addresses $I \notin \{I_{pool}, I_f\}$, either $\Stake(\rho+1, I) = 0$ or
+   $\Stake(\rho+1, I) \geq b_{\min} \times (1 + NA)$, where $NA$ is the number of
+   assets held by that account.
+
+ - $\sum_I \Stake(\rho+1, I) = \sum_I \Stake(\rho, I)$.
+
+[sp-crypto-spec]: https://github.com/algorandfoundation/specs/blob/master/dev/crypto.md#state-proofs
+[abft-spec]: https://github.com/algorand/spec/abft.md
+[partkey-spec]: https://github.com/algorand/spec/partkey.md
