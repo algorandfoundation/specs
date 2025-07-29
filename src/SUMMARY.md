@@ -77,7 +77,7 @@
     - [Authorization and Signatures](./ledger/ledger-txn-authorization.md)
     - [Apply Data](./ledger/ledger-apply-data.md)
   - [Transaction Semantics]()
-    - [Assets]()
+    - [Assets](./ledger/ledger-txn-semantics-asset.md)
     - [Applications]()
     - [Heartbeat]()
   - [Validity and State Changes]()
