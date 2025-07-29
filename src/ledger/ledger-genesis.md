@@ -7,7 +7,7 @@ $$
 
 # Genesis
 
-# Genesis Identifier
+## Genesis Identifier
 
 The _genesis identifier_ is a short string that identifies an instance of a Ledger
 \\( L \\).
@@ -15,7 +15,7 @@ The _genesis identifier_ is a short string that identifies an instance of a Ledg
 The genesis identifier of a valid block is the identifier of the block in the previous
 round. In other words, \\( \GenesisID_{r+1} = \GenesisID_{r} \\).
 
-# Genesis Hash
+## Genesis Hash
 
 The _genesis hash_ is a cryptographic hash of the genesis configuration, used to unambiguously
 identify an instance of the Ledger \\( L \\).
