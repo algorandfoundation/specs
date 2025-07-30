@@ -29,50 +29,6 @@ single non-zero uint64 value, though `return` can be used to signal an
 early approval which approves based only upon the top stack value
 being a non-zero uint64 value.
 
-## The Stack
-
-The stack starts empty and can contain values of either uint64 or byte-arrays
-(byte-arrays may not exceed
-4096 bytes in length). Most operations act on the stack, popping
-arguments from it and pushing results to it. Some operations have
-_immediate_ arguments that are encoded directly into the instruction,
-rather than coming from the stack.
-
-The maximum stack depth is 1000. If the stack depth is exceeded or if
-a byte-array element exceeds 4096 bytes, the program fails. If an
-opcode is documented to access a position in the stack that does not
-exist, the operation fails. Most often, this is an attempt to access
-an element below the stack -- the simplest example is an operation
-like `concat` which expects two arguments on the stack. If the stack
-has fewer than two elements, the operation fails. Some operations, like
-`frame_dig` and `proto` could fail because of an attempt to access
-above the current stack.
-
-## Stack Types
-
-While every element of the stack is restricted to the types `uint64` and `bytes`, 
-the values of these types may be known to be bounded.  The more common bounded types are 
-named to provide more semantic information in the documentation. They're also used during
-assembly time to do type checking and to provide more informative error messages.
-
-
-#### Definitions
-
-| Name | Bound | AVM Type |
-| ---- | ---- | -------- |
-| []byte | len(x) <= 4096 | []byte |
-| address | len(x) == 32 | []byte |
-| any |  | any |
-| bigint | len(x) <= 64 | []byte |
-| bool | x <= 1 | uint64 |
-| boxName | 1 <= len(x) <= 64 | []byte |
-| method | len(x) == 4 | []byte |
-| none |  | none |
-| stateKey | len(x) <= 64 | []byte |
-| uint64 | x <= 18446744073709551615 | uint64 |
-
-
-
 ## Scratch Space
 
 In addition to the stack there are 256 positions of scratch
