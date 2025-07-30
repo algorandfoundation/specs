@@ -29,16 +29,6 @@ single non-zero uint64 value, though `return` can be used to signal an
 early approval which approves based only upon the top stack value
 being a non-zero uint64 value.
 
-## Scratch Space
-
-In addition to the stack there are 256 positions of scratch
-space. Like stack values, scratch locations may be uint64s or
-byte-arrays. Scratch locations are initialized as uint64 zero. Scratch
-space is accessed by the `load(s)` and `store(s)` opcodes which move
-data from or to scratch space, respectively. Application calls may
-inspect the final scratch space of earlier application calls in the
-same group using `gload(s)(s)`
-
 ## Versions
 
 In order to maintain existing semantics for previously written

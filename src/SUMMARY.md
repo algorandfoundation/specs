@@ -84,7 +84,7 @@
 - [Overview](./avm/avm-overview.md)
 - [Normative]()
   - [Stack](./avm/avm-stack.md)
-  - [Heap]()
+  - [Heap](./avm/avm-scratch-space.md)
   - [Constants]()
   - [Execution Modes]()
     - [Logic Signatures]()
