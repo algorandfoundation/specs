@@ -53,7 +53,7 @@ A transaction _header_ contains the following fields:
 | Fee                |  `fee`  |  `uint64`   |   Yes    |
 | First Valid Round  |  `fv`   |  `uint64`   |   Yes    |
 | Last Valid Round   |  `lv`   |  `uint64`   |   Yes    |
-| Genesis Hash       |  `gh`   | `[32]byte`  |    No    |
+| Genesis Hash       |  `gh`   | `[32]byte`  |   Yes    |
 | Lease              |  `lx`   | `[32]byte`  |    No    |
 | Genesis Identifier |  `gen`  |  `string`   |    No    |
 | Group              |  `grp`  | `[32]byte`  |    No    |
@@ -103,7 +103,8 @@ is valid.
 
 ### Genesis Identifier
 
-The _genesis identifier_ \\( \GenesisID \\) (**OPTIONAL**) defines the Ledger for which this transaction is valid.
+The _genesis identifier_ \\( \GenesisID \\) (**OPTIONAL**) defines the Ledger for
+which this transaction is valid.
 
 ### Lease
 
