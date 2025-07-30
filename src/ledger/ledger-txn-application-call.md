@@ -188,10 +188,28 @@ The _box_ is a structure containing:
 
 - The _box name_ byte length **MUST NOT** exceed \\( \MaxAppKeyLen \\).
 
-## Validation
-
-TODO
-
 ## Semantic
 
 TODO
+
+## Validation
+
+ - The _on completion action_ **MUST** be a valid value.
+ - The _approval program_ and _clear state program_ **MUST NOT** be supplied unless the _application id_ is \\( 0 \\) or when the _on completion action_ is \\( 4 \\).
+ - The _local state_, _global state_, and _extra program pages_ **MUST NOT** be supplied unless the _application id_ is \\( 0 \\)
+ - The _application arguments_ **MUST NOT** exceed \\( \MaxAppArgs \\) entries.
+ - The sum of all _application arguments_ bytes **MUST NOT** exceed \\( \MaxAppTotalArgLen \\).
+ - The number of _foreign accounts_ **MUST NOT** exceed \\( \MaxAppTxnAccounts \\).
+ - The number of _foreign applications_ **MUST NOT** exceed \\( \MaxAppTxnForeignApps \\).
+ - The number of _foreign assets_ **MUST NOT** exceed \\( \MaxAppTxnForeignAssets \\).
+ - The number of _boxes_ **MUST NOT** exceed \\( \MaxAppBoxReferences \\).
+ - The sum of all _foreign accounts_, _foreign applications_, _foreign assets_, and _boxes_ **MUST NOT** exceed \\( \MaxAppTotalTxnReferences \\).
+ - The _extra program pages_ **MUST NOT** exceed \\( \MaxExtraAppProgramPages \\).
+ - The _approval program_ **MUST NOT** be supplied unless the _application id_ is \\( 0 \\) or when the _on completion action_ is \\( 4 \\).
+ - The _approval program_ byte length **MUST NOT** exceed _extra program pages_ * MaxAppProgramLen.
+ - The _clear state program_ byte length **MUST NOT** exceed _extra program pages_ * MaxAppProgramLen.
+ - The sum of the _approval program_ byte length and _clear state program_ byte length **MUST NOT** exceed _extra program pages_ * MaxAppTotalProgramLen.
+ - All _boxes_ **MUST** be supplied with an index no greater than the number of _foreign applications_ entries.
+ - All _boxes_ **MUST** be supplied with a name no longer than MaxAppKeyLen.
+ - The _local state schema_ **MUST NOT** exceed MaxLocalSchemaEntries.
+ - The _global state schema_ **MUST NOT** exceed MaxGlobalSchemaEntries.
