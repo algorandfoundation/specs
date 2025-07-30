@@ -84,7 +84,10 @@ then that account received the sum of the respective reward distributions (i.e.,
 
 # Inner Transactions
 
-TODO (Similarities and differences with respect to regular transactions)
+Inner transactions differ from top-level transactions in several key ways:
+
+- They do not require a signature from the sender account. However, the sender's _spending key_ is still checked to be the application's address if sending on behalf of another account
+- There may be multiple identical transactions within the same group (e.g., the same `itxn` may appear multiple times)
 
 # State Deltas
 

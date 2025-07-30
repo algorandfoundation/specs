@@ -46,10 +46,17 @@ The _heartbeat proof_ **MUST** contain a valid signing of the _heartbeat seed_ u
 the _heartbeat vote id_ and the _heartbeat key dilution_ using the voting signature
 scheme defined in the [Algorand Participation Keys specification](../keys/keys-participation.md).
 
-## Validation
-
-TODO
-
 ## Semantic
 
 TODO
+
+## Validation
+
+ - If the fee is below the minimum fee:
+   - The _note_ field **MUST** not be set.
+   - The _lease_ field **MUST** not be set.
+   - The _rekey to_ field **MUST** not be set.
+ - The _heartbeat proof_ **MUST** be provided.
+ - The _heartbeat seed_ **MUST** be provided.
+ - The _heartbeat vote id_ **MUST** be provided.
+ - The _heartbeat key dilution_ **MUST** be provided.

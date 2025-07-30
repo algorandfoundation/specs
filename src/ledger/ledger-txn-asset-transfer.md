@@ -55,4 +55,5 @@ TODO
 
 ## Validation
 
-TODO
+ - The _asset ID_ \\( \Asset_\mathrm{xfer,ID} \\) **MUST** be non-zero.
+ - If the _asset sender_ \\( \Asset_I \\) is set, then the _asset close to_ address \\( \Asset_{I_0}\\) **MUST NOT** be set.

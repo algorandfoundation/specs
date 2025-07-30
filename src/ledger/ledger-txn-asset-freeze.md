@@ -35,4 +35,5 @@ TODO
 
 ## Validation
 
-TODO
+-   The _asset ID_ \\( \Asset_\mathrm{frz,ID} \\) **MUST** be non-zero.
+-   The _freeze address_ \\( I_\mathrm{frz} \\) **MUST** be provided.
