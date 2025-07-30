@@ -41,6 +41,10 @@ being attested to by the State Proof.
 
 The _message_ structure is defined in the [State Proof message section](./ledger-state-proofs.md#message).
 
+## Semantic
+
+TODO
+
 ## Validation
 
 In order for a _state proof_ transaction to be valid, the following conditions **MUST**
@@ -101,7 +105,3 @@ Proof round for that type of State Proof is incremented by \\( \StateProofInterv
 > A node should be able to verify a _state proof_ transaction at any time, even if
 > the transaction _first valid round_ is greater than the next expected State Proof
 > round in the _block header_.
-
-## Semantic
-
-TODO
