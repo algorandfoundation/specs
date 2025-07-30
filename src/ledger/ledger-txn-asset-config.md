@@ -52,7 +52,6 @@ TODO
 
 ## Validation
 
-TODO the following aren't actually in Asset.wellFormed, but rather Transaction.WellFormed
 - The _asset name_ byte length **MUST NOT** exceed \\( \MaxAssetNameBytes \\).
 - The _unit name_ byte length **MUTS NOT** exceed \\( \MaxAssetUnitNameBytes \\).
 - The _URL_ byte length **MUST NOT** exceed \\( \MaxAssetURLBytes \\).
