@@ -38,19 +38,6 @@ old versions are executed with their original semantics. In the AVM
 bytecode, the version is an incrementing integer, currently 6, and
 denoted vX throughout this document.
 
-## Execution Modes
-
-Starting from v2, the AVM can run programs in two modes:
-1. LogicSig or _stateless_ mode, used to execute Smart Signatures
-2. Application or _stateful_ mode, used to execute Smart Contracts
-
-Differences between modes include:
-1. Max program length (consensus parameters LogicSigMaxSize, MaxAppTotalProgramLen & MaxExtraAppProgramPages)
-2. Max program cost (consensus parameters LogicSigMaxCost, MaxAppProgramCost)
-3. Opcode availability. Refer to [opcodes document](TEAL_opcodes.md) for details.
-4. Some global values, such as LatestTimestamp, are only available in stateful mode.
-5. Only Applications can observe transaction effects, such as Logs or IDs allocated to ASAs or new Applications.
-
 ## Execution Environment for Smart Signatures
 
 Smart Signatures execute as part of testing a proposed transaction to
