@@ -86,7 +86,7 @@
   - [Stack](./avm/avm-stack.md)
   - [Heap](./avm/avm-scratch-space.md)
   - [Execution Modes](./avm/avm-execution-modes.md)
-    - [Logic Signatures]()
+    - [Logic Signatures](./avm/avm-mode-logic-signatures.md)
     - [Applications]()
   - [Resource Availability]()
   - [Constants]()

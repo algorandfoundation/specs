@@ -38,64 +38,6 @@ old versions are executed with their original semantics. In the AVM
 bytecode, the version is an incrementing integer, currently 6, and
 denoted vX throughout this document.
 
-## Execution Environment for Smart Signatures
-
-Smart Signatures execute as part of testing a proposed transaction to
-see if it is valid and authorized to be committed into a block. If an
-authorized program executes and finishes with a single non-zero uint64
-value on the stack then that program has validated the transaction it
-is attached to.
-
-The program has access to data from the transaction it is attached to
-(`txn` op), any transactions in a transaction group it is part of
-(`gtxn` op), and a few global values like consensus parameters
-(`global` op). Some "Args" may be attached to a transaction being
-validated by a program. Args are an array of byte strings. A common
-pattern would be to have the key to unlock some contract as an Arg. Be
-aware that Smart Signature Args are recorded on the blockchain and
-publicly visible when the transaction is submitted to the network,
-even before the transaction has been included in a block. These Args
-are _not_ part of the transaction ID nor of the TxGroup hash. They
-also cannot be read from other programs in the group of transactions.
-
-A program can either authorize some delegated action on a normal
-signature-based or multisignature-based account or be wholly in charge
-of a contract account.
-
-* If the account has signed the program (by providing a valid ed25519
-  signature or valid multisignature for the authorizer address on the
-  string "Program" concatenated with the program bytecode) then: if the
-  program returns true the transaction is authorized as if the account
-  had signed it. This allows an account to hand out a signed program
-  so that other users can carry out delegated actions which are
-  approved by the program. Note that Smart Signature Args are _not_
-  signed.
-
-* If the SHA512_256 hash of the program (prefixed by "Program") is
-  equal to authorizer address of the transaction sender then this is a
-  contract account wholly controlled by the program. No other
-  signature is necessary or possible. The only way to execute a
-  transaction against the contract account is for the program to
-  approve it.
-
-The size of a Smart Signature is defined as the length of its bytecode
-plus the length of all its Args. The sum of the sizes of all Smart
-Signatures in a group must not exceed 1000 bytes times the number of
-transactions in the group (1000 bytes is defined in consensus parameter
-`LogicSigMaxSize`).
-
-Each opcode has an associated cost, usually 1, but a few slow operations
-have higher costs. Prior to v4, the program's cost was estimated as the
-static sum of all the opcode costs in the program (whether they were
-actually executed or not). Beginning with v4, the program's cost is
-tracked dynamically while being evaluated. If the program exceeds its
-budget, it fails.
-
-The total program cost of all Smart Signatures in a group must not
-exceed 20,000 (consensus parameter LogicSigMaxCost) times the number
-of transactions in the group.
-
-
 ## Execution Environment for Smart Contracts (Applications)
 
 Smart Contracts are executed in ApplicationCall transactions. Like
