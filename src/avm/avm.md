@@ -549,60 +549,6 @@ different transaction types, are rejected by `itxn_submit`.
 | `gitxna t f i` | Ith value of the array field F from the Tth transaction in the last inner group submitted |
 | `gitxnas t f` | Ath value of the array field F from the Tth transaction in the last inner group submitted |
 
-
-# Assembler Syntax
-
-The assembler parses line by line. Ops that only take stack arguments
-appear on a line by themselves. Immediate arguments follow the opcode
-on the same line, separated by whitespace.
-
-The first line may contain a special version pragma `#pragma version X`, which directs the assembler to generate bytecode targeting a certain version. For instance, `#pragma version 2` produces bytecode targeting v2. By default, the assembler targets v1.
-
-Subsequent lines may contain other pragma declarations (i.e., `#pragma <some-specification>`), pertaining to checks that the assembler should perform before agreeing to emit the program bytes, specific optimizations, etc. Those declarations are optional and cannot alter the semantics as described in this document.
-
-"`//`" prefixes a line comment.
-
-## Constants and Pseudo-Ops
-
-A few pseudo-ops simplify writing code. `int` and `byte` and `addr` and `method` followed by a constant record the constant to a `intcblock` or `bytecblock` at the beginning of code and insert an `intc` or `bytec` reference where the instruction appears to load that value. `addr` parses an Algorand account address base32 and converts it to a regular bytes constant. `method` is passed a method signature and takes the first four bytes of the hash to convert it to the standard method selector defined in [ARC4](https://github.com/algorandfoundation/ARCs/blob/main/ARCs/arc-0004.md)
-
-`byte` constants are:
-
-```text
-byte base64 AAAA...
-byte b64 AAAA...
-byte base64(AAAA...)
-byte b64(AAAA...)
-byte base32 AAAA...
-byte b32 AAAA...
-byte base32(AAAA...)
-byte b32(AAAA...)
-byte 0x0123456789abcdef...
-byte "\x01\x02"
-byte "string literal"
-```
-
-`int` constants may be `0x` prefixed for hex, `0o` or `0` prefixed for
-octal, `0b` for binary, or decimal numbers.
-
-`intcblock` may be explicitly assembled. It will conflict with the assembler gathering `int` pseudo-ops into a `intcblock` program prefix, but may be used if code only has explicit `intc` references. `intcblock` should be followed by space separated int constants all on one line.
-
-`bytecblock` may be explicitly assembled. It will conflict with the assembler if there are any `byte` pseudo-ops but may be used if only explicit `bytec` references are used. `bytecblock` should be followed with byte constants all on one line, either 'encoding value' pairs (`b64 AAA...`) or 0x prefix or function-style values (`base64(...)`) or string literal values.
-
-## Labels and Branches
-
-A label is defined by any string not some other opcode or keyword and ending in ':'. A label can be an argument (without the trailing ':') to a branching instruction.
-
-Example:
-
-```text
-int 1
-bnz safe
-err
-safe:
-pop
-```
-
 # Encoding and Versioning
 
 A compiled program starts with a varuint declaring the version of the compiled code. Any addition, removal, or change of opcode behavior increments the version. For the most part opcode behavior should not change, addition will be infrequent (not likely more often than every three months and less often as the language matures), and removal should be very rare.

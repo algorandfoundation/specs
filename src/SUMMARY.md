@@ -102,7 +102,7 @@
     - [Flow Control]()
     - [State Access]()
     - [Inner Transactions]()
-  - [Assembler]()
+  - [Assembler](./avm/avm-assembler.md)
   - [Encoding and Versioning]()
   - [Appendix B - Opcodes Specifications]()
   - [Appendix A - What AVM programs cannot do]()
