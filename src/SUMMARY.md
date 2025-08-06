@@ -88,7 +88,7 @@
   - [Execution Modes](./avm/avm-execution-modes.md)
     - [Logic Signatures](./avm/avm-mode-logic-signatures.md)
     - [Applications](./avm/avm-mode-applications.md)
-  - [Constants]()
+  - [Constants](./avm/avm-constants.md)
   - [Operations]()
     - [Arithmetic and Logic]()
     - [Byte Array Manipulation]()

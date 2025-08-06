@@ -38,62 +38,6 @@ old versions are executed with their original semantics. In the AVM
 bytecode, the version is an incrementing integer, currently 6, and
 denoted vX throughout this document.
 
-## Constants
-
-Constants can be pushed onto the stack in two different ways:
-
-1. Constants can be pushed directly with `pushint` or
-   `pushbytes`. This method is more efficient for constants that are
-   only used once.
-
-2. Constants can be loaded into storage separate from the stack and
-   scratch space, using two opcodes `intcblock` and
-   `bytecblock`. Then, constants from this storage can be
-   pushed onto the stack by referring to the type and index using
-   `intc`, `intc_[0123]`, `bytec`, and `bytec_[0123]`. This method is
-   more efficient for constants that are used multiple times.
-
-The assembler will hide most of this, allowing simple use of `int 1234`
-and `byte 0xcafed00d`. Constants introduced via `int` and `byte` will
-be assembled into appropriate uses of `pushint|pushbytes` and
-`{int|byte}c, {int|byte}c_[0123]` to minimize program size.
-
-
-The opcodes `intcblock` and `bytecblock` use [proto-buf style variable length unsigned int](https://developers.google.com/protocol-buffers/docs/encoding#varint),
-reproduced [here](#varuint). The `intcblock` opcode is followed by a
-varuint specifying the number of integer constants and then that
-number of varuints. The `bytecblock` opcode is followed by a varuint
-specifying the number of byte constants, and then that number of pairs
-of (varuint, bytes) length prefixed byte strings.
-
-### Named Integer Constants
-
-#### OnComplete
-
-An application transaction must indicate the action to be taken following the execution of its approvalProgram or clearStateProgram. The constants below describe the available actions.
-
-| Value | Name | Description |
-| - | ---- | -------- |
-| 0 | NoOp | Only execute the `ApprovalProgram` associated with this application ID, with no additional effects. |
-| 1 | OptIn | Before executing the `ApprovalProgram`, allocate local state for this application into the sender's account data. |
-| 2 | CloseOut | After executing the `ApprovalProgram`, clear any local state for this application out of the sender's account data. |
-| 3 | ClearState | Don't execute the `ApprovalProgram`, and instead execute the `ClearStateProgram` (which may not reject this transaction). Additionally, clear any local state for this application out of the sender's account data as in `CloseOutOC`. |
-| 4 | UpdateApplication | After executing the `ApprovalProgram`, replace the `ApprovalProgram` and `ClearStateProgram` associated with this application ID with the programs specified in this transaction. |
-| 5 | DeleteApplication | After executing the `ApprovalProgram`, delete the application parameters from the account data of the application's creator. |
-
-#### TypeEnum constants
-
-| Value | Name | Description |
-| - | --- | ------ |
-| 0 | unknown | Unknown type. Invalid transaction |
-| 1 | pay | Payment |
-| 2 | keyreg | KeyRegistration |
-| 3 | acfg | AssetConfig |
-| 4 | axfer | AssetTransfer |
-| 5 | afrz | AssetFreeze |
-| 6 | appl | ApplicationCall |
-
-
 ## Operations
 
 Most operations work with only one type of argument, uint64 or bytes, and fail if the wrong type value is on the stack.
