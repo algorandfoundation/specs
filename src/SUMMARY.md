@@ -97,7 +97,7 @@
     - [Fields](./avm/avm-ops-fields.md)
     - [Flow Control](./avm/avm-ops-flow-conrol.md)
     - [State Access](./avm/avm-ops-state-access.md)
-    - [Inner Transactions]()
+    - [Inner Transactions](./avm/avm-ops-inner-transactions.md)
   - [Assembler](./avm/avm-assembler.md)
   - [Versioning and Encoding](./avm/avm-versioning.md)
   - [Appendix A - Opcodes Specifications](./avm/avm-teal-opcodes.md)
