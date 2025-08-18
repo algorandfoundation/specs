@@ -103,7 +103,7 @@
     - [State Access]()
     - [Inner Transactions]()
   - [Assembler](./avm/avm-assembler.md)
-  - [Encoding and Versioning]()
+  - [Versioning and Encoding](./avm/avm-versioning.md)
   - [Appendix B - Opcodes Specifications]()
   - [Appendix A - What AVM programs cannot do]()
 - [Non-Normative](./avm/avm-nn.md)

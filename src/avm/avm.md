@@ -29,15 +29,6 @@ single non-zero uint64 value, though `return` can be used to signal an
 early approval which approves based only upon the top stack value
 being a non-zero uint64 value.
 
-## Versions
-
-In order to maintain existing semantics for previously written
-programs, AVM code is versioned.  When new opcodes are introduced, or
-behavior is changed, a new version is introduced.  Programs carrying
-old versions are executed with their original semantics. In the AVM
-bytecode, the version is an incrementing integer, currently 6, and
-denoted vX throughout this document.
-
 ## Operations
 
 Most operations work with only one type of argument, uint64 or bytes, and fail if the wrong type value is on the stack.
@@ -548,37 +539,6 @@ different transaction types, are rejected by `itxn_submit`.
 | `gitxn t f` | field F of the Tth transaction in the last inner group submitted |
 | `gitxna t f i` | Ith value of the array field F from the Tth transaction in the last inner group submitted |
 | `gitxnas t f` | Ath value of the array field F from the Tth transaction in the last inner group submitted |
-
-# Encoding and Versioning
-
-A compiled program starts with a varuint declaring the version of the compiled code. Any addition, removal, or change of opcode behavior increments the version. For the most part opcode behavior should not change, addition will be infrequent (not likely more often than every three months and less often as the language matures), and removal should be very rare.
-
-For version 1, subsequent bytes after the varuint are program opcode bytes. Future versions could put other metadata following the version identifier.
-
-It is important to prevent newly-introduced transaction types and
-fields from breaking assumptions made by programs written before they
-existed. If one of the transactions in a group will execute a program
-whose version predates a transaction type or field that can violate
-expectations, that transaction type or field must not be used anywhere
-in the transaction group.
-
-Concretely, the above requirement is translated as follows: A v1
-program included in a transaction group that includes a
-ApplicationCall transaction or a non-zero RekeyTo field will fail
-regardless of the program itself.
-
-This requirement is enforced as follows:
-
-* For every transaction, compute the earliest version that supports
-  all the fields and values in this transaction.
-  
-* Compute the largest version number across all the transactions in a group (of size 1 or more), call it `maxVerNo`. If any transaction in this group has a program with a version smaller than `maxVerNo`, then that program will fail.
-
-In addition, applications must be v4 or greater to be called in an inner transaction.
-
-## Varuint
-
-A '[proto-buf style variable length unsigned int](https://developers.google.com/protocol-buffers/docs/encoding#varint)' is encoded with 7 data bits per byte and the high bit is 1 if there is a following byte and 0 for the last byte. The lowest order 7 bits are in the first byte, followed by successively higher groups of 7 bits.
 
 # What AVM Programs Cannot Do
 
