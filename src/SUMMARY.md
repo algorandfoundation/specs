@@ -82,9 +82,9 @@
 # Algorand Virtual Machine
 
 - [Overview](./avm/avm-overview.md)
-- [Normative]()
+- [Normative](./avm/avm.md)
   - [Stack](./avm/avm-stack.md)
-  - [Heap](./avm/avm-scratch-space.md)
+  - [Scratch Space](./avm/avm-scratch-space.md)
   - [Execution Modes](./avm/avm-execution-modes.md)
     - [Logic Signatures](./avm/avm-mode-logic-signatures.md)
     - [Applications](./avm/avm-mode-applications.md)
