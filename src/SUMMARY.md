@@ -90,7 +90,7 @@
     - [Applications](./avm/avm-mode-applications.md)
   - [Constants](./avm/avm-constants.md)
   - [Operations](./avm/avm-operations.md)
-    - [Arithmetic and Logic]()
+    - [Arithmetic and Logic](./avm/avm-ops-arithmetic-and-logic.md)
     - [Byte Array Manipulation]()
     - [Cryptography]()
     - [Loading Values]()
