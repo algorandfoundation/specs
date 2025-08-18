@@ -96,7 +96,7 @@
     - [Loading Values](./avm/avm-ops-loading-values.md)
     - [Fields](./avm/avm-ops-fields.md)
     - [Flow Control](./avm/avm-ops-flow-conrol.md)
-    - [State Access]()
+    - [State Access](./avm/avm-ops-state-access.md)
     - [Inner Transactions]()
   - [Assembler](./avm/avm-assembler.md)
   - [Versioning and Encoding](./avm/avm-versioning.md)
