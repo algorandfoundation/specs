@@ -93,7 +93,7 @@
     - [Arithmetic and Logic](./avm/avm-ops-arithmetic-and-logic.md)
     - [Byte Array Manipulation](./avm/avm-ops-byte-array-manipulation.md)
     - [Cryptography](./avm/avm-ops-cryptography.md)
-    - [Loading Values]()
+    - [Loading Values](./avm/avm-ops-loading-values.md)
     - [Transaction Fields]()
     - [Global Fields]()
     - [Account Fields]()
