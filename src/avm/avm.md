@@ -29,30 +29,6 @@ single non-zero uint64 value, though `return` can be used to signal an
 early approval which approves based only upon the top stack value
 being a non-zero uint64 value.
 
-## Operations
-
-Most operations work with only one type of argument, uint64 or bytes, and fail if the wrong type value is on the stack.
-
-Many instructions accept values to designate Accounts, Assets, or Applications. Beginning with v4, these values may be given as an _offset_ in the corresponding Txn fields (Txn.Accounts, Txn.ForeignAssets, Txn.ForeignApps) _or_ as the value itself (a byte-array address for Accounts, or a uint64 ID). The values, however, must still be present in the Txn fields. Before v4, most opcodes required the use of an offset, except for reading account local values of assets or applications, which accepted the IDs directly and did not require the ID to be present in the corresponding _Foreign_ array. (Note that beginning with v4, those IDs _are_ required to be present in their corresponding _Foreign_ array.) See individual opcodes for details. In the case of account offsets or application offsets, 0 is specially defined to Txn.Sender or the ID of the current application, respectively.
-
-This summary is supplemented by more detail in the [opcodes document](TEAL_opcodes.md).
-
-Some operations immediately fail the program.
-A transaction checked by a program that fails is not valid.
-An account governed by a buggy program might not have a way to get assets back out of it. Code carefully.
-
-In the documentation for each opcode, the stack arguments that are
-popped are referred to alphabetically, beginning with the deepest
-argument as `A`.  These arguments are shown in the opcode description,
-and if the opcode must be of a specific type, it is noted there.  All
-opcodes fail if a specified type is incorrect.
-
-If an opcode pushes more than one result, the values are named for
-ease of exposition and clarity concerning their stack positions.  When
-an opcode manipulates the stack in such a way that a value changes
-position but is otherwise unchanged, the name of the output on the
-return stack matches the name of the input value.
-
 ### Arithmetic and Logic Operations
 
 | Opcode | Description |

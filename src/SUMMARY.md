@@ -89,7 +89,7 @@
     - [Logic Signatures](./avm/avm-mode-logic-signatures.md)
     - [Applications](./avm/avm-mode-applications.md)
   - [Constants](./avm/avm-constants.md)
-  - [Operations]()
+  - [Operations](./avm/avm-operations.md)
     - [Arithmetic and Logic]()
     - [Byte Array Manipulation]()
     - [Cryptography]()
