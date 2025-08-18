@@ -104,7 +104,7 @@
     - [Inner Transactions]()
   - [Assembler](./avm/avm-assembler.md)
   - [Versioning and Encoding](./avm/avm-versioning.md)
-  - [Appendix A - Opcodes Specifications]()
+  - [Appendix A - Opcodes Specifications](./avm/avm-teal-opcodes.md)
   - [Appendix B - What AVM programs cannot do](./avm/avm-appendix-b.md)
 - [Non-Normative](./avm/avm-nn.md)
   - [Stack Execution](./avm/avm-nn-stack-execution.md)
