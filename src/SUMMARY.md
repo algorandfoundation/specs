@@ -91,7 +91,7 @@
   - [Constants](./avm/avm-constants.md)
   - [Operations](./avm/avm-operations.md)
     - [Arithmetic and Logic](./avm/avm-ops-arithmetic-and-logic.md)
-    - [Byte Array Manipulation]()
+    - [Byte Array Manipulation](./avm/avm-ops-byte-array-manipulation.md)
     - [Cryptography]()
     - [Loading Values]()
     - [Transaction Fields]()
