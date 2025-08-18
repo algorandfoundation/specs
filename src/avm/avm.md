@@ -515,30 +515,3 @@ different transaction types, are rejected by `itxn_submit`.
 | `gitxn t f` | field F of the Tth transaction in the last inner group submitted |
 | `gitxna t f i` | Ith value of the array field F from the Tth transaction in the last inner group submitted |
 | `gitxnas t f` | Ath value of the array field F from the Tth transaction in the last inner group submitted |
-
-# What AVM Programs Cannot Do
-
-Design and implementation limitations to be aware of with various versions.
-
-* Stateless programs cannot lookup balances of Algos or other
-  assets. (Standard transaction accounting will apply after the Smart
-  Signature has authorized a transaction. A transaction could still be
-  invalid by other accounting rules just as a standard signed
-  transaction could be invalid. e.g. I can't give away money I don't
-  have.)
-* Programs cannot access information in previous blocks. Programs
-  cannot access information in other transactions in the current
-  block, unless they are a part of the same atomic transaction group.
-* Smart Signatures cannot know exactly what round the current transaction
-  will commit in (but it is somewhere in FirstValid through
-  LastValid).
-* Programs cannot know exactly what time its transaction is committed.
-* Programs cannot loop prior to v4. In v3 and prior, the branch
-  instructions `bnz` "branch if not zero", `bz` "branch if zero" and
-  `b` "branch" can only branch forward.
-* Until v4, the AVM had no notion of subroutines (and therefore no
-  recursion). As of v4, use `callsub` and `retsub`.
-* Programs cannot make indirect jumps. `b`, `bz`, `bnz`, and `callsub`
-  jump to an immediately specified address, and `retsub` jumps to the
-  address currently on the top of the call stack, which is manipulated
-  only by previous calls to `callsub` and `retsub`.
