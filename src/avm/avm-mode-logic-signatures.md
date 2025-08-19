@@ -1,4 +1,5 @@
 $$
+\newcommand \LogicSig {\mathrm{LSig}}
 \newcommand \LogicSigMaxSize {\LogicSig_\max}
 \newcommand \LogicSigMaxCost {\LogicSig_{c,\max}}
 $$
@@ -7,12 +8,12 @@ $$
 
 Logic Signatures execute as part of testing a proposed transaction to see if it is
 valid and authorized to be committed into a block. If an authorized program executes
-and finishes with a single non-zero `uint64` value on the stack then that program
+and finishes with a single non-zero `uint64` value on the Stack, then that program
 has validated the transaction it is attached to.
 
-The program has access to data from the transaction it is attached to (`txn` op),
-any transactions in a transaction group it is part of (`gtxn` op), and a few global
-values like consensus parameters (`global` op).
+The program has access to data from the transaction it is attached to (`txn` opcode),
+any transactions in a transaction group it is part of (`gtxn` opcode), and a few global
+values like consensus parameters (`global` opcode).
 
 Some _arguments_ may be attached to a transaction being validated by a program. Arguments
 are an array of byte strings. A common pattern would be to have the key to unlock
@@ -33,9 +34,12 @@ group[^1].
 
 ## Opcode Budget
 
-Each opcode has an associated cost, usually 1, but a few slow operations have higher
-costs. Before Version 4, the program's cost was estimated as the _static sum_ of
-all the opcode costs in the program (whether they were actually executed or not).
+Each opcode has an associated cost, usually \\( 1 \\), but a few slow operations
+have higher costs.
+
+Before Version 4, the program's cost was estimated as the _static sum_ of all the
+opcode costs in the program (whether they were actually executed or not).
+
 Beginning with Version 4, the program's cost is tracked dynamically while being
 evaluated. If the program exceeds its opcode budget, it fails.
 

@@ -14,7 +14,7 @@ Starting from Version 2, the AVM can run programs in two modes:
 
 1. _Logic Signature_ (or _stateless_) mode, used to execute Logic Signatures;
 
-2. _Application_(or _stateful_) mode, used to execute Smart Contracts.
+2. _Application_ (or _stateful_) mode, used to execute Smart Contracts.
 
 Differences between modes include:
 

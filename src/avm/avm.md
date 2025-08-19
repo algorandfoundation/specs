@@ -20,5 +20,5 @@ per-application arbitrary state in named _boxes_.
 
 For both types of program, approval is signaled by finishing with the stack containing
 a _single non-zero_ `uint64` value, though `return` can be used to signal an early
-approval which approves based only upon the top Stack value being a non-zero `uint64`
+approval which approves based only upon the top stack value being a non-zero `uint64`
 value.

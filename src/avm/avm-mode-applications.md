@@ -1,4 +1,5 @@
 $$
+\newcommand \App {\mathrm{App}}
 \newcommand \MaxAppProgramCost {\App_{c,\max}}
 \newcommand \MaxTxGroupSize {GT_\max}
 \newcommand \MaxInnerTransactions {\App_\mathrm{itxn}}
@@ -8,7 +9,7 @@ $$
 
 Applications (Smart Contracts) are executed in [_Application Call_ transactions]().
 Like Logic Signatures, Applications indicate success by leaving a single non-zero
-`uint64` value on the stack.
+`uint64` value on the Stack.
 
 A failed Application Call to an Approval Program is not a valid transaction, thus
 not written to the blockchain.
