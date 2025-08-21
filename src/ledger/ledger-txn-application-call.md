@@ -188,10 +188,6 @@ The _box_ is a structure containing:
 
 - The _box name_ byte length **MUST NOT** exceed \\( \MaxAppKeyLen \\).
 
-## Semantic
-
-TODO
-
 ## Validation
 
  - The _on completion action_ **MUST** be a valid value.
@@ -213,3 +209,7 @@ TODO
  - All _boxes_ **MUST** be supplied with a name no longer than MaxAppKeyLen.
  - The _local state schema_ **MUST NOT** exceed MaxLocalSchemaEntries.
  - The _global state schema_ **MUST NOT** exceed MaxGlobalSchemaEntries.
+
+## Semantic
+
+TODO

@@ -46,13 +46,13 @@ These _asset parameters_ is structure containing:
 > If the _asset parameters_ are omitted (struct of zero values), this transaction
 > is _deleting_ the asset.
 
-## Semantic
-
-TODO
-
 ## Validation
 
 - The _asset name_ byte length **MUST NOT** exceed \\( \MaxAssetNameBytes \\).
 - The _unit name_ byte length **MUTS NOT** exceed \\( \MaxAssetUnitNameBytes \\).
 - The _URL_ byte length **MUST NOT** exceed \\( \MaxAssetURLBytes \\).
 - The _decimals_ **MUST NOT** exceed \\( \MaxAssetDecimals \\).
+
+## Semantic
+
+TODO

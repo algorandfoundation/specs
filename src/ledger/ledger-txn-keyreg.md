@@ -75,10 +75,6 @@ is `false`) or as _non-participatory_ (if \\( \NonPart \\) is `true`).
 > from consensus participation (i.e., can no longer be marked as _online_) and from
 > the legacy distribution rewards mechanism.
 
-## Semantic
-
-TODO
-
 ## Validation
 
 For a _key registration_ transaction to be valid, the following conditions **MUST** apply:
@@ -109,3 +105,7 @@ _not clear_, the following **MUST** apply:
 
 > It is **RECOMMENDED** that \\( \VoteLastValid - \VoteFirstValid \leq 3{,}000{,}000 \\)
 > rounds for security reasons, to ensure safe rotation of participation keys.
+
+## Semantic
+
+TODO
