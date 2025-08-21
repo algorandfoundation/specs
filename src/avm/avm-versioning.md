@@ -35,7 +35,7 @@ If one of the transactions in a group executes a program whose Version predates 
 transaction type or field that can violate expectations, that transaction type or
 field **MUST NOT** be used anywhere in the transaction group.
 
-{{#include ./.include/styles.md:example}}
+{{#include ../.include/styles.md:example}}
 > A Version \\( 1 \\) program included in a transaction group that includes an [application
 > call transaction]() or a non-zero [rekey-to field]() will fail regardless of the
 > program itself.
