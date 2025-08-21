@@ -3,6 +3,8 @@ $$
 \newcommand \MaxAppProgramCost {\App_{c,\max}}
 \newcommand \MaxTxGroupSize {GT_\max}
 \newcommand \MaxInnerTransactions {\App_\mathrm{itxn}}
+\newcommand \MaxAppTotalProgramLen {\App_{\mathrm{prog},t,\max}}
+\newcommand \MaxExtraAppProgramPages {\App_{\mathrm{page},\max}}
 $$
 
 # Execution Environment for Applications (Smart Contracts)
@@ -32,7 +34,7 @@ each time a block is added to the blockchain.
 
 ## Bytecode Size
 
-TODO
+The size of an Application is defined as the length of its approval program bytecode plus its clearstate program bytecode. The sum of these two programs **MUST NOT** exceed \\( \MaxAppTotalProgramLen \times \MaxExtraAppProgramPages \\).
 
 ## Opcode Budget
 
