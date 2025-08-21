@@ -51,7 +51,7 @@ _asset units_ in the _sender_ account _after_ the asset transfer.
 
 ## Validation
 
- - The _asset ID_ \\( \Asset_\mathrm{xfer,ID} \\) **MUST** be non-zero.
+ - The _asset ID_ \\( \Asset_\mathrm{xfer,ID} \\) **MAY** be zero if the _asset amount_\\( \Asset_a \\) is also zero.
  - If the _asset sender_ \\( \Asset_I \\) is set, then the _asset close to_ address \\( \Asset_{I_0}\\) **MUST NOT** be set.
 
 ## Semantic

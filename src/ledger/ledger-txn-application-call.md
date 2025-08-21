@@ -190,7 +190,7 @@ The _box_ is a structure containing:
 
 ## Validation
 
- - The _on completion action_ **MUST** be a valid value.
+ - The _on completion action_ **MUST** be a valid [value](#On Completion Action).
  - The _approval program_ and _clear state program_ **MUST NOT** be supplied unless the _application id_ is \\( 0 \\) or when the _on completion action_ is \\( 4 \\).
  - The _local state_, _global state_, and _extra program pages_ **MUST NOT** be supplied unless the _application id_ is \\( 0 \\)
  - The _application arguments_ **MUST NOT** exceed \\( \MaxAppArgs \\) entries.
@@ -201,7 +201,6 @@ The _box_ is a structure containing:
  - The number of _boxes_ **MUST NOT** exceed \\( \MaxAppBoxReferences \\).
  - The sum of all _foreign accounts_, _foreign applications_, _foreign assets_, and _boxes_ **MUST NOT** exceed \\( \MaxAppTotalTxnReferences \\).
  - The _extra program pages_ **MUST NOT** exceed \\( \MaxExtraAppProgramPages \\).
- - The _approval program_ **MUST NOT** be supplied unless the _application id_ is \\( 0 \\) or when the _on completion action_ is \\( 4 \\).
  - The _approval program_ byte length **MUST NOT** exceed _extra program pages_ * MaxAppProgramLen.
  - The _clear state program_ byte length **MUST NOT** exceed _extra program pages_ * MaxAppProgramLen.
  - The sum of the _approval program_ byte length and _clear state program_ byte length **MUST NOT** exceed _extra program pages_ * MaxAppTotalProgramLen.
