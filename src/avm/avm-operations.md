@@ -6,7 +6,7 @@ fail if the wrong type value is on the Stack.
 Many instructions accept values to designate Accounts, Assets, or Applications.
 
 Beginning with Version 4, these values may be given as an _offset_ in the corresponding
-transaction fields ([foreign accounts](), [foreign assets](), [foreign applications])
+transaction fields ([foreign accounts](), [foreign assets](), [foreign applications]())
 _or_ as the value itself (`bytes` address for foreign accounts, or a `uint64` ID
 for foreign assets and applications). The values, however, **MUST** still be present
 in the transaction fields.
