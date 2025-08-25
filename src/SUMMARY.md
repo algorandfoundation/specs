@@ -169,6 +169,7 @@
   - [Hash Functions]()
     - [SHA-512/256](crypto/crypto-sha512-256.md)
     - [SHA-256](./crypto/crypto-sha256.md)
+    - [SHA-512](./crypto/crypto-sha512.md)
     - [SUBSET-SUM](./crypto/crypto-subset-sum.md)
   - [Digital Signatures]()
     - [Ed25519](./crypto/crypto-ed25519.md)
