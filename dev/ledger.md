@@ -1077,7 +1077,8 @@ The _authorizer address_, a 32 byte string, determines against what to verify th
 
   - An optional single signature _sig_ of 64 bytes valid for the authorizer address of the transaction which has signed the bytes in _l_.
 
-  - An optional multisignature _msig_ from the authorizer address over the bytes in _l_.
+  - An optional multisignature _lmsig_ from the authorizer address
+    over the bytes of the authorizer address and the bytes in _l_.
 
   - An optional array of byte strings _arg_ which are arguments supplied to the program in _l_. (_arg_ bytes are not covered by _sig_ or _msig_)
 
