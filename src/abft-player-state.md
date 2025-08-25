@@ -36,7 +36,7 @@ We say that a player has _observed_
 - That the round \\( r \\) (period \\( p = 0 \\)) has _begun_ if there exists some
 \\( p \\) such that \\( \Bundle(r-1, p, \Cert, v) \\) was also observed for some
 \\( v \\),
-- that the round \\( r \\), period \\( p > 0 \\) has _begun_ if there exists some
+- That the round \\( r \\), period \\( p > 0 \\) has _begun_ if there exists some
 \\( p \\) such that either
   - \\( \Bundle(r, p-1, s, v) \\) was also observed for some \\( s > \Cert, v \\), or
   - \\( \Bundle(r, p, \Soft, v) \\) was observed for some \\( v \\).
@@ -69,20 +69,7 @@ We define two functions \\( \mu(S, r, p), \sigma(S, r, p) \\), which are
 defined as follows:
 
 The _frozen value_ \\( \mu(S, r, p) \\) is defined as the _proposal-value_ \\( v \\)
-in the proposal vote in round \\( r \\) and period \\( p \\) that minimizes a credential
-priority function \\( \Priority(v) \\).
-
-Let
-
-- \\( I_j \\) be the address of a distinct player identified by the subscript \\( j \\),
-- \\( w_j \\) be the weight of the proposal vote for \\( v \\) by player \\( I_j \\),
-- \\( y \\) be the result of the signing procedure for \\( v \\) by player \\( I_j \\).
-
-Then the priority function is defined as
-
-$$
-\Priority(v) = \min_{i \in [0, w_j)} \left\\{ \Hash \left( \VRF.\ProofToHash(y) || I_j || i \right) \right\\}
-$$
+in the proposal vote in round \\( r \\) and period \\( p \\) with the minimal credential.
 
 More formally, then, let
 
@@ -92,14 +79,8 @@ $$
 
 where \\( V \\) is the set of votes in \\( S \\).
 
-Now if \\( \Vote(r, p, 0, v_{min}) \in V_{r, p, 0} \\) is the vote for the proposal
-value \\( v_\text{min} \\) such that
-
-$$
-v_\text{min} = \min_{\Vote(I, \ldots , v) \in V_{r, p, 0}}\\{\Priority(v)\\}
-$$
-
-then \\( \mu(S, r, p) = v_{min} \\).
+Then if \\( \Vote_l(r, p, 0, v_l) \\) is the vote with the smallest weight in
+\\( V_{r, p} \\), then \\( \mu(S, r, p) = v_l \\).
 
 If \\( V_{r, p} \\) is empty, then \\( \mu(S, r, p) = \bot \\).
 
