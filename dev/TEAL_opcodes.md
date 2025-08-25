@@ -1,6 +1,15 @@
+---
+numbersections: true
+title: "Algorand Transaction Execution Approval Language, Opcodes"
+date: \today
+abstract: >
+  Algorand allows transactions to be effectively signed by a small program. If the program evaluates to true then the transaction is allowed. This document defines the language opcodes and byte encoding.
+---
+
 # v11 Opcodes
 
-Opcodes have a cost of 1 unless otherwise specified.
+Ops have a 'cost' of 1 unless otherwise specified.
+
 
 ## err
 
@@ -425,9 +434,10 @@ Fields (see [transaction reference](https://developer.algorand.org/docs/referenc
 | 60 | CreatedAssetID | uint64 | v5  | Asset ID allocated by the creation of an ASA (only with `itxn` in v5). Application mode only |
 | 61 | CreatedApplicationID | uint64 | v5  | ApplicationID allocated by the creation of an application (only with `itxn` in v5). Application mode only |
 | 62 | LastLog | []byte | v6  | The last message emitted. Empty bytes if none were emitted. Application mode only |
-| 63 | StateProofPK | []byte | v6  | 64 byte state proof public key |
+| 63 | StateProofPK | [64]byte | v6  | State proof public key |
 | 65 | NumApprovalProgramPages | uint64 | v7  | Number of Approval Program pages |
 | 67 | NumClearStateProgramPages | uint64 | v7  | Number of ClearState Program pages |
+| 68 | RejectVersion | uint64 | v12  | Application version for which the txn must reject |
 
 
 ## global
@@ -1044,17 +1054,18 @@ params: Txn.ForeignAssets offset (or, since v4, an _available_ asset id. Return:
 
 Fields
 
-| Index | Name | Type | Notes |
-| - | ------ | -- | --------- |
-| 0 | AppApprovalProgram | []byte | Bytecode of Approval Program |
-| 1 | AppClearStateProgram | []byte | Bytecode of Clear State Program |
-| 2 | AppGlobalNumUint | uint64 | Number of uint64 values allowed in Global State |
-| 3 | AppGlobalNumByteSlice | uint64 | Number of byte array values allowed in Global State |
-| 4 | AppLocalNumUint | uint64 | Number of uint64 values allowed in Local State |
-| 5 | AppLocalNumByteSlice | uint64 | Number of byte array values allowed in Local State |
-| 6 | AppExtraProgramPages | uint64 | Number of Extra Program Pages of code space |
-| 7 | AppCreator | address | Creator address |
-| 8 | AppAddress | address | Address for which this application has authority |
+| Index | Name | Type | In | Notes |
+| - | ------ | -- | - | --------- |
+| 0 | AppApprovalProgram | []byte |      | Bytecode of Approval Program |
+| 1 | AppClearStateProgram | []byte |      | Bytecode of Clear State Program |
+| 2 | AppGlobalNumUint | uint64 |      | Number of uint64 values allowed in Global State |
+| 3 | AppGlobalNumByteSlice | uint64 |      | Number of byte array values allowed in Global State |
+| 4 | AppLocalNumUint | uint64 |      | Number of uint64 values allowed in Local State |
+| 5 | AppLocalNumByteSlice | uint64 |      | Number of byte array values allowed in Local State |
+| 6 | AppExtraProgramPages | uint64 |      | Number of Extra Program Pages of code space |
+| 7 | AppCreator | address |      | Creator address |
+| 8 | AppAddress | address |      | Address for which this application has authority |
+| 9 | AppVersion | uint64 | v12  | Version of the app, incremented each time the approval or clear program changes |
 
 
 params: Txn.ForeignApps offset or an _available_ app id. Return: did_exist flag (1 if the application existed and 0 otherwise), value.
