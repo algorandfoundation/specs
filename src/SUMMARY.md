@@ -149,7 +149,7 @@
     - [Cryptography](./avm/avm-ops-cryptography.md)
     - [Loading Values](./avm/avm-ops-loading-values.md)
     - [Fields](./avm/avm-ops-fields.md)
-    - [Flow Control](./avm/avm-ops-flow-conrol.md)
+    - [Flow Control](./avm/avm-ops-flow-control.md)
     - [State Access](./avm/avm-ops-state-access.md)
     - [Inner Transactions](./avm/avm-ops-inner-transactions.md)
   - [Assembler](./avm/avm-assembler.md)
