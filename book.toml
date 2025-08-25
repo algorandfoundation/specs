@@ -1,13 +1,25 @@
 [book]
-authors = ["Algorand Foundation"]
-language = "en"
-multilingual = false
-src = "src"
 title = "Algorand Specifications"
+authors = ["Algorand Foundation"]
+description = "Algorand normative and non-normative specifications"
+multilingual = false
+language = "en"
+src = "src"
 
 [preprocessor.mermaid]
 command = "mdbook-mermaid"
 
 [output.html]
+default-theme = "light"
+preferred-dark-theme = "navy"
+smart-punctuation = true
 mathjax-support = true
 additional-js = ["mermaid.min.js", "mermaid-init.js"]
+git-repository-url = "https://github.com/algorandfoundation/specs"
+git-repository-icon = "fa-github"
+edit-url-template = "https://github.com/algorandfoundation/specs/edit/develop/{path}"
+site-url = "https://algorand-specs.pages.dev/"
+
+[output.html.fold]
+enable = true
+level = 3  # Navigation sidebar unfolded up to the 4th 0-based level. Tune it according to the max SUMMARY.md level depth.
