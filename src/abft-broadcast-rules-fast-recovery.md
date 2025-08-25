@@ -9,8 +9,8 @@ $$
 
 # Fast Recovery
 
-On observing a timeout event of \\( T = k\lambda_f + r \\) where \\( k \\) is a positive
-integer and \\( r \in [0, \lambda_f] \\) sampled uniformly at random, the player
+On observing a timeout event of \\( T = k\lambda_f + u \\) where \\( k \\) is a positive
+integer and \\( u \in [0, \lambda_f] \\) sampled uniformly at random, the player
 attempts to resynchronize. Then,
 
 - The player broadcasts* \\( \Vote(I, r, p, \Late, v) \\) if \\( v = \sigma(S, r, p) \\)

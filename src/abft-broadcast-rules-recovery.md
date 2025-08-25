@@ -12,8 +12,8 @@ On observing a timeout event of
 
 - \\( T = \DeadlineTimeout(p) \\) or
 
-- \\( T = \DeadlineTimeout(p) + 2^{s_t}\lambda + u \\) where \\( 0 < s_t \leq 249 \\)
-and \\( u \in [0, 2^{s_t}\lambda] \\) sampled uniformly at random, 
+- \\( T = \DeadlineTimeout(p) + 2^{s_t}\lambda + u \\) where
+\\( u \in [0, 2^{s_t}\lambda] \\) sampled uniformly at random, 
 
 the player attempts to resynchronize and then broadcasts*
 \\( \Vote(I, r, p, \Next_h, v) \\) where
@@ -25,13 +25,6 @@ the player attempts to resynchronize and then broadcasts*
 such that \\( \Bundle(r, p-1, s_1, \bar{v} )\\) was observed,
 
 - and \\( v = \bot \\) otherwise.
-
-Note that the broadcast vote:
-
-- Is for step \\( \Next_0 \\) if \\( T = \DeadlineTimeout(p) \\),
-
-- Is for step \\( \Next_{s_t} \\) in any other case (this is, \\( h = 0 \\) or
-\\( h = s_t \\) according to the observed timeout event).
 
 {{#include ./.include/styles.md:impl}}
 > Next vote issuance [reference implementation](https://github.com/algorand/go-algorand/blob/b6e5bcadf0ad3861d4805c51cbf3f695c38a93b7/agreement/player.go#L214).
