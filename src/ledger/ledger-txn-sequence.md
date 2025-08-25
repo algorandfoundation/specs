@@ -70,7 +70,7 @@ Individual _transaction signatures_ cover the original encoding of transactions 
 standalone transactions (\\( \Tx \\)).
 
 In addition to _transaction commitment_, each block contains a _[SHA-256](../crypto/crypto-sha256.md)
-transaction commitment_. It allows a verifier not supporting [SHA-512/256 function](../crypto/crypto-sha512.md)
+transaction commitment_. It allows a verifier not supporting [SHA-512/256 function](../crypto/crypto-sha512-256.md)
 to verify proof of membership on a transaction.
 
 To construct this commitment we use [Vector Commitment](../crypto/crypto-vector-commitment.md).

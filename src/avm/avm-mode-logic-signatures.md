@@ -66,7 +66,7 @@ signed.
 
 ### Contract Account Mode
 
-If the [SHA-512/256](../crypto/crypto-sha512.md) hash of the program (prefixed by
+If the [SHA-512/256](../crypto/crypto-sha512-256.md) hash of the program (prefixed by
 `Program`) is equal to the authorizer address of the transaction sender, then this
 is a contract account wholly controlled by the program. No other signature is necessary
 or possible. The only way to execute a transaction against the contract account is
