@@ -1,4 +1,5 @@
 $$
+\newcommand \EventHandler {\mathrm{EventHandler}}
 \newcommand \BlockProposal {\mathrm{BlockProposal}}
 \newcommand \BlockAssembly {\mathrm{BlockAssembly}}
 \newcommand \SoftVote {\mathrm{SoftVote}}
@@ -69,7 +70,7 @@ We may model the state machine’s main algorithm in the following way:
 
 $$
 \begin{aligned}
-&\text{1: } \function \mathrm{EventHandler}(ev) \\\\
+&\text{1: } \function \EventHandler(ev) \\\\
 &\text{2: } \qquad \if \ev \text{ is a } \TimeoutEvent \then \\\\
 &\text{3: } \qquad \quad \t \gets \ev_\t \\\\
 &\text{4: } \qquad \quad \if \t = 0 \then \comment{# Last round should have left us with s := propose} \\\\
@@ -115,7 +116,7 @@ Note that in the case of \\( \Propose \\), if a block is not assembled and final
 in time for the \\( \BlockAssembly() \\) timeout, this might trigger advancement
 to the next step.
 
-> For more information on this process, refer to the Algorand Ledger [non-normative section](./ledger-overview.md#block-assembly).
+> For more information on this process, refer to the Algorand Ledger [non-normative section](ledger/ledger-overview.md#block-assembly).
 
 The \\( \Next_{s-3} \\) with \\( s \in [3, 252] \\) are _recovery_ steps, while
 the last three (\\( \Late, \Redo, \Down \\)) are special _fast recovery_ steps.
@@ -141,7 +142,7 @@ and
 Events are _the only way_ for the node state machine to transition internally and
 produce output.
 
-{{#include ./.include/styles.md:impl}}
+{{#include ../.include/styles.md:impl}}
 > Events [reference implementation](https://github.com/algorand/go-algorand/blob/c60db8dbc4b0dd164f0bb764e1464d4ebef38bb4/agreement/events.go#L76).
 
 If an event is not identified as _misconstrued_ or _malicious_, it will produce
@@ -191,7 +192,7 @@ since the start of the _current period_ reaches \\( \DeadlineTimeout(p) + 2^{s_t
 for some \\( 4 \le s_t \le 252 \\). The algorithm run is the same as in the \\( \Next_0 \\)
 step.
 
-{{#include ./.include/styles.md:impl}}
+{{#include ../.include/styles.md:impl}}
 > Next vote ranges [to reference implementation](https://github.com/algorand/go-algorand/blob/55011f93fddb181c643f8e3f3d3391b62832e7cd/agreement/types.go#L103C15-L103C29).
 
 - (\\( \Late, \Redo, \Down \\)) fast recovery timeouts: on observing a timeout of

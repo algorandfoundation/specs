@@ -58,26 +58,26 @@ For the seed calculation algorithm, consider the following pseudocode:
 $$
 \begin{aligned}
 &\text{1: } \function \mathrm{ComputeSeedAndProof}(I) \\\\
-&\text{2: } \qquad \if p = 0 \then \\\\
-&\text{3: } \qquad \quad y \gets \VRF.\Prove(\Secrets(I)_{\text{VRFkey}}, L[r - \delta_s]_Q) \\\\
-&\text{4: } \qquad \quad \alpha \gets H(I || \VRF.\ProofToHash(y)) \\\\
-&\text{5: } \qquad \else \\\\
-&\text{6: } \qquad \quad y \gets 0 \\\\
-&\text{6: } \qquad \quad \alpha \gets H(L[r - \delta_s]_Q) \\\\
-&\text{7: } \qquad \endif \\\\
-&\text{9: } \qquad \if r \bmod (\delta_s\delta_r) < \delta_s \then \\\\
-&\text{10:} \qquad \quad Q \gets H(\alpha || H(L[r - \delta_s \delta_r])) \\\\
-&\text{11:} \qquad \else \\\\
-&\text{12:} \qquad \quad Q \gets H(\alpha) \\\\
-&\text{13:} \qquad \endif \\\\
-&\text{14:} \qquad \return (Q, y) \\\\
+&\text{2: } \quad \if p = 0 \then \\\\
+&\text{3: } \quad \quad y \gets \VRF.\Prove(\Secrets(I)_{\text{VRFkey}}, L[r - \delta_s]_Q) \\\\
+&\text{4: } \quad \quad \alpha \gets H(I || \VRF.\ProofToHash(y)) \\\\
+&\text{5: } \quad \else \\\\
+&\text{6: } \quad \quad y \gets 0 \\\\
+&\text{6: } \quad \quad \alpha \gets H(L[r - \delta_s]_Q) \\\\
+&\text{7: } \quad \endif \\\\
+&\text{9: } \quad \if r \bmod (\delta_s\delta_r) < \delta_s \then \\\\
+&\text{10:} \quad \quad Q \gets H(\alpha || H(L[r - \delta_s \delta_r])) \\\\
+&\text{11:} \quad \else \\\\
+&\text{12:} \quad \quad Q \gets H(\alpha) \\\\
+&\text{13:} \quad \endif \\\\
+&\text{14:} \quad \return (Q, y) \\\\
 &\text{15: } \endfunction
 \end{aligned}
 $$
 
 ---
 
-{{#include ./.include/styles.md:impl}}
+{{#include ../.include/styles.md:impl}}
 > Seed computation [reference implementation](https://github.com/algorand/go-algorand/blob/b6e5bcadf0ad3861d4805c51cbf3f695c38a93b7/agreement/proposal.go#L155).
 
 The function takes as input the _address_ \\( I \\) of an _online player_ who will
@@ -117,7 +117,7 @@ We define \\( \Rerand(r) = r \bmod \delta_s\delta_r \\).
 When \\( \Rerand(r) < \delta_s \\) we say we are _re-randomizing_ the seed \\( Q \\)
 for the round \\( r \\).
 
-{{#include ./.include/styles.md:example}}
+{{#include ../.include/styles.md:example}}
 > Take the process for a player with _address_ \\( I \\) at the first consensus
 > attempt of the round (\\( p = 0 \\)).
 >
