@@ -60,18 +60,29 @@ of the reward updates components are described in detail below.
 
 ### Transaction Commitments
 
-- A cryptographic commitment to the block’s _transaction sequence_ (referred also
-as _payset_), described below, stored under msgpack key `txn`.
+Cryptographic commitments to the block’s _transaction sequence_, described below
+(referred also as _payset_), using:
 
-- A cryptographic commitment, using the [SHA-256 hash function](crypto.md#sha256),
-to the block’s _transaction sequence_ (referred also as _payset_), described below,
-stored under msgpack key `txn256`.
+- [SHA-512/256 hash function](../crypto/crypto-sha512-256.md), stored under msgpack
+key `txn`;
+
+- [SHA-256 hash function](../crypto/crypto-sha256.md), stored under msgpack key
+`txn256`;
+
+- [SHA512 hash function](../crypto/crypto-sha512.md), stored under msgpack key
+`txn512`.
 
 ### Previous Hash
 
-The block’s _previous hash_, which is the cryptographic hash of the previous block
-in the sequence. (The previous hash of the [genesis block](#genesis) is \\( 0 \\)).
-The previous hash is stored under msgpack key `prev`.
+The block’s _previous hash_, which is the cryptographic hash of the previous Block
+Header in the sequence, using:
+
+- [SHA-512/256 hash function](../crypto/crypto-sha512-256.md), stored under msgpack
+key `prev`;
+
+- [SHA512 hash function](../crypto/crypto-sha512.md), stored under msgpack key `prev512`.
+
+The _previous hash_ of the [genesis block](./ledger-genesis.md) is \\( 0 \\)).
 
 ### Transaction Counter
 
