@@ -73,6 +73,7 @@ below specifies each prefix (in quotation marks):
     - "PS": A _Proposer Seed_.
     - "VO": A _Vote_.
  - In other places:
+    - "arc": Prefix for ARCs-related hashes https://github.com/algorandfoundation/ARCs. The prefix for ARC-XXXX should start with "arcXXXX" (where "XXXX" is the 0-padded number of the ARC). For example ARC-0003 can use any prefix starting with "arc0003".
     - "MX": An arbitrary message used to prove ownership of a
       cryptographic secret.
     - "NPR": A message which proves a peer's stake in an Algorand

@@ -41,12 +41,12 @@ library primitives for \\( \Peer \\) addressing, identification and connection.
 > and [developer documentation](https://docs.libp2p.io/concepts/fundamentals/).
 
 In this addressing scheme, each node participating in the \\( \PtoP \\) network
-holds a public and private [Ed25519](../crypto.md#ed25519) key pair. The private
+holds a public and private [Ed25519](../crypto/crypto.md#ed25519) key pair. The private
 key is kept secret, and the public key is shared to all participants.
 
 The _peer identity_ (`PeerID`) is a _unique_ reference to a specific \\( \Peer \\)
 within the \\( \PtoP \\) network, serving as a unique identifier for each \\( \Peer \\).
-It is linked to the public key of the participant, as it is derived as [hash](../crypto.md#hash-functions)
+It is linked to the public key of the participant, as it is derived as [hash](../crypto/crypto.md#hash-functions)
 of said key, encoded in `base58`.
 
 > See `libp2p` [PeerID specification](https://github.com/libp2p/specs/blob/master/peer-ids/peer-ids.md)

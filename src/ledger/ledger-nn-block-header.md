@@ -82,12 +82,12 @@ seconds
 ## Transaction Commitment
 
 Cryptographic commitments (hash) to the block’s transaction sequence. Internally,
-it uses a [Merkle Tree](../crypto.md#merkle-tree) and commits to the tree’s root.
+it uses a [Merkle Tree](../crypto/crypto.md#merkle-tree) and commits to the tree’s root.
 
 Two different hashes are provided:
 
-- [SHA512/256](../crypto.md#sha512256),
-- [SHA256](../crypto.md#sha256).
+- [SHA512/256](../crypto/crypto.md#sha512256),
+- [SHA256](../crypto/crypto.md#sha256).
 
 {{#include ../.include/styles.md:impl}}
 > Transactions (`payset`) commit [reference implementation](https://github.com/algorand/go-algorand/blob/b6e5bcadf0ad3861d4805c51cbf3f695c38a93b7/data/bookkeeping/block.go#L591).
