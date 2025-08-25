@@ -120,12 +120,19 @@ The block header contains the following components:
  - A cryptographic commitment to the block's _transaction sequence_, described
    below, stored under msgpack key `txn`.
 
- - A cryptographic commitment, using SHA256 hash function, to the block's _transaction sequence_, described
+ - A cryptographic commitment, using the SHA256 hash function, to the block's _transaction sequence_, described
    below, stored under msgpack key `txn256`.
+
+ - A cryptographic commitment, using the SHA512 hash function, to the block's _transaction sequence_, described
+   below, stored under msgpack key `txn512`.
 
  - The block's _previous hash_, which is the cryptographic hash of the previous
    block in the sequence.  (The previous hash of the genesis block is 0.)  The
    previous hash is stored under msgpack key `prev`.
+
+ - The block's _previous SHA512 hash_, which is exactly like the `prev` hash,
+   but uses the SHA512 hash function. This previous SHA512 hash is stored under
+   msgpack key `prev512`.
 
  - The block's _transaction counter_, which is the total number of transactions
    issued prior to this block.  This count starts from the first block with a
@@ -1188,15 +1195,18 @@ The transaction commitment for a block covers the transaction encodings
 with the changes described above.  Individual transaction signatures
 cover the original encoding of transactions as standalone.
 
-In addition to _transaction commitment_, each block will also contain _SHA256 transaction commitment_.
-It can allow a verifier which does not support SHA512_256 function to verify proof of membership on transaction.
-In order to construct this commitment we use Vector Commitment. The leaves in the Vector Commitment
-tree are hashed as $$SHA256("TL", txidSha256, stibSha256)$$.  Where:
+In addition, each block will also contain _SHA256 and SHA512 transaction commitments_.
+They allow a verifier which does not support SHA512_256 to verify proof of membership for transactions.
+In order to construct these commitments, we use a vector commitment. The leaves in the vector commitment
+tree are hashed as $$SHA256("TL", txidSha256, stibSha256)$$ and $$SHA512("TL", txidSha512, stibSha512)$$, respectively.
+Where:
 
-- txidSha256 = SHA256(`TX` || transcation)
+- txidSha256 = SHA256(`TX` || transaction)
 - stibSha256 = SHA256(`STIB` || signed transaction || ApplyData)
+- txidSha512 = SHA512(`TX` || transaction)
+- stibSha512 = SHA512(`STIB` || signed transaction || ApplyData)
 
-The vector commitment uses SHA256 for internal nodes as well.
+These vector commitments use SHA256 or SHA512 for internal nodes as well.
 
 A valid transaction sequence contains no duplicates: each transaction in the
 transaction sequence appears exactly once.  We can call the set of these
