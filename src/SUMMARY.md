@@ -22,6 +22,8 @@
     - [Bundles](./abft-messages-bundles.md)
     - [Proposals](./abft-messages-proposals.md)
     - [Seed](./abft-messages-seed.md)
+  - [State Machine](./abft-state-machine.md)
+  - [Player State](./abft-player-state.md)
   - [Relay Rules](./abft-relay-rules.md)
     - [Votes](./abft-relay-rules-votes.md)
     - [Bundles](./abft-relay-rules-bundles.md)
