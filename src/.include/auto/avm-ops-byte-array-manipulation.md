@@ -1,5 +1,3 @@
-# Byte Array Manipulation
-
 |      OPCODE       | DESCRIPTION                                                                                                                                                                               |
 |:-----------------:|:------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 |     `getbit`      | Bth bit of (byte-array or integer) A. If B is greater than or equal to the bit length of the value (8*byte length), the program fails                                                     |
@@ -19,43 +17,3 @@
 |    `replace3`     | Copy of A with the bytes starting at B replaced by the bytes of C. Fails if B+len(C) exceeds len(A) `replace3` can be called using `replace` with no immediates.                          |
 | `base64_decode e` | decode A which was base64-encoded using _encoding_ E. Fail if A is not base64 encoded with encoding E                                                                                     |
 |   `json_ref r`    | key B's value, of type R, from a [valid](jsonspec.md) UTF-8 encoded json object A                                                                                                         |
-
-The following opcodes take byte-array values that are interpreted as
-big-endian unsigned integers.  For mathematical operators, the
-returned values are the shortest byte-array that can represent the
-returned value.  For example, the zero value is the empty
-byte-array. For comparison operators, the returned value is a uint64.
-
-Input lengths are limited to a maximum length of 64 bytes,
-representing a 512 bit unsigned integer. Output lengths are not
-explicitly restricted, though only `b*` and `b+` can produce a larger
-output than their inputs, so there is an implicit length limit of 128
-bytes on outputs.
-
-| OPCODE  | DESCRIPTION                                                                                                      |
-|:-------:|:-----------------------------------------------------------------------------------------------------------------|
-|  `b+`   | A plus B. A and B are interpreted as big-endian unsigned integers                                                |
-|  `b-`   | A minus B. A and B are interpreted as big-endian unsigned integers. Fail on underflow.                           |
-|  `b/`   | A divided by B (truncated division). A and B are interpreted as big-endian unsigned integers. Fail if B is zero. |
-|  `b*`   | A times B. A and B are interpreted as big-endian unsigned integers.                                              |
-|  `b<`   | 1 if A is less than B, else 0. A and B are interpreted as big-endian unsigned integers                           |
-|  `b>`   | 1 if A is greater than B, else 0. A and B are interpreted as big-endian unsigned integers                        |
-|  `b<=`  | 1 if A is less than or equal to B, else 0. A and B are interpreted as big-endian unsigned integers               |
-|  `b>=`  | 1 if A is greater than or equal to B, else 0. A and B are interpreted as big-endian unsigned integers            |
-|  `b==`  | 1 if A is equal to B, else 0. A and B are interpreted as big-endian unsigned integers                            |
-|  `b!=`  | 0 if A is equal to B, else 1. A and B are interpreted as big-endian unsigned integers                            |
-|  `b%`   | A modulo B. A and B are interpreted as big-endian unsigned integers. Fail if B is zero.                          |
-| `bsqrt` | The largest integer I such that I^2 <= A. A and I are interpreted as big-endian unsigned integers                |
-
-These opcodes operate on the bits of byte-array values.  The shorter
-input array is interpreted as though left padded with zeros until it is the
-same length as the other input.  The returned values are the same
-length as the longer input.  Therefore, unlike array arithmetic,
-these results may contain leading zero bytes.
-
-| OPCODE | DESCRIPTION                                                                     |
-|:------:|:--------------------------------------------------------------------------------|
-| `b\|`  | A bitwise-or B. A and B are zero-left extended to the greater of their lengths  |
-|  `b&`  | A bitwise-and B. A and B are zero-left extended to the greater of their lengths |
-|  `b^`  | A bitwise-xor B. A and B are zero-left extended to the greater of their lengths |
-|  `b~`  | A with all bits inverted                                                        |

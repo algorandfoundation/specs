@@ -1,9 +1,3 @@
-# Loading Values
-
-Opcodes for getting data onto the stack.
-
-Some of these have immediate data in the byte or bytes after the opcode.
-
 |         OPCODE         | DESCRIPTION                                                                                                                          |
 |:----------------------:|:-------------------------------------------------------------------------------------------------------------------------------------|
 |  `intcblock uint ...`  | prepare block of uint64 constants for use by intc                                                                                    |
