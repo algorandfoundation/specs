@@ -6,7 +6,7 @@ abstract: >
   Algorand allows transactions to be effectively signed by a small program. If the program evaluates to true then the transaction is allowed. This document defines the language opcodes and byte encoding.
 ---
 
-# v11 Opcodes
+# v12 Opcodes
 
 Ops have a 'cost' of 1 unless otherwise specified.
 
