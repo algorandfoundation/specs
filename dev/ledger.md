@@ -120,12 +120,19 @@ The block header contains the following components:
  - A cryptographic commitment to the block's _transaction sequence_, described
    below, stored under msgpack key `txn`.
 
- - A cryptographic commitment, using SHA256 hash function, to the block's _transaction sequence_, described
+ - A cryptographic commitment, using the SHA256 hash function, to the block's _transaction sequence_, described
    below, stored under msgpack key `txn256`.
+
+ - A cryptographic commitment, using the SHA512 hash function, to the block's _transaction sequence_, described
+   below, stored under msgpack key `txn512`.
 
  - The block's _previous hash_, which is the cryptographic hash of the previous
    block in the sequence.  (The previous hash of the genesis block is 0.)  The
    previous hash is stored under msgpack key `prev`.
+
+ - The block's _previous SHA512 hash_, which is exactly like the `prev` hash,
+   but uses the SHA512 hash function. This previous SHA512 hash is stored under
+   msgpack key `prev512`.
 
  - The block's _transaction counter_, which is the total number of transactions
    issued prior to this block.  This count starts from the first block with a
@@ -243,7 +250,7 @@ protocol.
 The upgrade vote in each block consists of a protocol version $v_r$, a 64-bit
 unsigned integer $x_r$ which indicates the delay between the acceptance of a
 protocol version and its execution, and a single bit $b$ indicating whether
-the block proposer supports the given version.
+the block proposer supports the given protocol version.
 
 The upgrade state in each block/state consists of the current protocol version
 $v^*_r$, the next proposed protocol version $v'_r$, a 64-bit round number
@@ -455,12 +462,17 @@ parameters_, which can be encoded as a msgpack struct:
   msgpack field `epp` and may not exceed 3.
   This `ExtraProgramPages` field is taken into account on application update as well.
 
+- A "application version" (`Version`) value that begins at 0 when an
+  application is created or when this protocol version goes into
+  effect, whichever is later. This field is encoded with msgpack field
+  `v`.
+
 - The "global state" (`GlobalState`) associated with this application, stored as
   a [Key/Value Store][Key/Value Stores]. This field is encoded with
   msgpack field `gs`.
 
 Each application created increases the minimum balance
-requirements of the creator by 100,000*(1+`ExtraProgramPages`) microAlgos,
+requirement of the creator by 100,000*(1+`ExtraProgramPages`) microAlgos,
 plus the [`GlobalStateSchema`Minimum Balance contribution][App Minimum Balance Changes].
 
 Each application opted in to increases the minimum balance
@@ -517,12 +529,13 @@ for that application, described by the following formula:
 
 The box store is an associative array mapping keys of type (uint64 x
 byte-array) to values of type byte-array. The key is a pair in which
-the first value corresponds to an existing (or previously existing)
+the first value corresponds to an
 application ID, and the second is a _box name_, 1 to 64 bytes in
 length.  The value is a byte-array of length not greater than 32,768.
 Unlike global/local state keys, an empty array is not a valid box
 name. However, empty box names may appear in transactions to increase
-the I/O budget (see below).
+the I/O budget or allow creation of boxes whose application ID is not
+known at transaction group construction time (see below).
 
 When an application executes an opcode that creates, resizes or destroys a box,
 the minimum balance of the associated application account (whose
@@ -544,7 +557,7 @@ which can be encoded as a msgpack struct:
  - The number of digits after the decimal place to be used when displaying the
    asset, encoded with msgpack field `dc`.  A value of 0 represents an asset
    that is not divisible, while a value of 1 represents an asset divisible into
-   into tenths, 2 into hundredths, and so on.  This value must be between 0 
+   into tenths, 2 into hundredths, and so on.  This value must be between 0
    and 19 (inclusive) ($2^{64}-1$ is 20 decimal digits).
 
  - Whether holdings of that asset are frozen by default, a boolean flag encoded
@@ -881,23 +894,42 @@ An application call transaction additionally has the following fields:
 - Accounts besides the `Sender` whose local states may be referred to by the
   executing `ApprovalProgram` or `ClearStateProgram`. These accounts are
   referred to by their addresses, and this field is encoded as msgpack field
-  `apat`. The maximum number of addresses in this field is 4.
+  `apat`.
 - Application IDs, besides the application whose `ApprovalProgram` or
   `ClearStateProgram` is executing, that the executing program may read global
-  state from. This field is encoded as msgpack field `apfa`. The maximum number
-  of entries in this field is 8.
+  state from. This field is encoded as msgpack field `apfa`.
 - Asset IDs that the executing program may read asset parameters from. This
-  field is encoded as msgpack field `apas`. The maximum number of entries in
-  this field is 8.
+  field is encoded as msgpack field `apas`.
 - Box references that the executing program or any other program in
-  the same group may access for reading or modification when the
+  the same group (with version >= 9) may access for reading or modification when the
   reference matches the running programs app ID. This field is encoded
   as msgpack field `apbx`, each element of which is encoded as a
   msgpack object containing an index (`i`) and name (`n`). The maximum
   number of entries in this field is 8. The index (`i`) is a 1-based
-  index in the ForeignApps (`apfa`) array. A 0 index is interpreted as
+  index in the ForeignApps (`apfa`) array. An omitted index is interpreted as
   the application ID of this transaction (`apid`, or the ID that is
   allocated for the created app when `apid` is 0).
+- Access list of up to 16 resources that the executing program or any other
+  program in the group (with version >= 9) may access.  This field is
+  encoded as msgpack field `al`.  Each element of the list encodes on
+  of
+  - An account, using msgpack field `d`
+  - An asset ID, using msgpack field `s`
+  - An app ID, using msgpack field `p`
+  - A holding, using msgpack field `h`. A holding contains subfields
+    `d` and `s` that refer to the address and asset of the holding,
+    respectively.
+  - A local state reference, using msgpack field `l`. A local state
+    contains subfields `d` and `p` that refer to the address and app of
+    the local state, respectively.
+  - A box reference, using msgpack field `b`. A box reference
+    contains subfields `i` and `n`, that refer to the app and name of
+    the box, respectively.
+  The subfields of `h`, `l`, `b` refer to accounts, assets, and apps
+  by using an 1-based index into the Access list. An omitted `d`
+  indicates the Sender of the transaction. An omitted app (`p` or `i`)
+  indicates the called app. The access list must be empty if any of
+  `apat`, `apfa`, `apas`, or `apbx` are populated.
 - Local state schema, encoded as msgpack field `apls`. This field is only used
   during application creation, and sets bounds on the size of the local state
   for users who opt in to this application.
@@ -914,11 +946,14 @@ An application call transaction additionally has the following fields:
   both application creation and updates, and sets the corresponding
   application's `ClearStateProgram`.
   - The Approval program and the Clear state program must have the
-    same version number if either is 6 or higher.
+    same program version number if either is 6 or higher.
+- A reject version, encoded as msgpack field `aprv`. If set to a
+  positive number, the transactions fails unless the reject version value
+  exceeds the application version.
 
-Furthermore, the sum of the number of Accounts in `apat`, Application
-IDs in `apfa`, Asset IDs in `apas`, and Box References in `apbx` is
-limited to 8.
+The sum of the number of Accounts in `apat`, Application IDs in
+`apfa`, Asset IDs in `apas`, and Box References in `apbx` is limited
+to 8.
 
 
 ### Asset Configuration Transaction
@@ -1057,7 +1092,8 @@ The _authorizer address_, a 32 byte string, determines against what to verify th
 
   - An optional single signature _sig_ of 64 bytes valid for the authorizer address of the transaction which has signed the bytes in _l_.
 
-  - An optional multisignature _msig_ from the authorizer address over the bytes in _l_.
+  - An optional multisignature _lmsig_ from the authorizer address
+    over the bytes of the authorizer address and the bytes in _l_.
 
   - An optional array of byte strings _arg_ which are arguments supplied to the program in _l_. (_arg_ bytes are not covered by _sig_ or _msig_)
 
@@ -1116,7 +1152,7 @@ and contains the following fields:
     way that the top-level transaction is encoded, recursively,
     including `ApplyData` that applies to the inner transaction.
     - The recursive depth of inner transactions is limited 8.
-    - Up to 16 `InnerTxns` may be present in version 5. In version 6,
+    - Up to 16 `InnerTxns` may be present in program version 5. In version 6,
     the count of all inner transactions across the transaction group
     must not exceed 256.
     - InnerTxns are limited to `pay`, `axfer`, `acfg`, and `afrz`
@@ -1180,15 +1216,18 @@ The transaction commitment for a block covers the transaction encodings
 with the changes described above.  Individual transaction signatures
 cover the original encoding of transactions as standalone.
 
-In addition to _transaction commitment_, each block will also contain _SHA256 transaction commitment_.
-It can allow a verifier which does not support SHA512_256 function to verify proof of membership on transaction.
-In order to construct this commitment we use Vector Commitment. The leaves in the Vector Commitment
-tree are hashed as $$SHA256("TL", txidSha256, stibSha256)$$.  Where:
+In addition, each block will also contain _SHA256 and SHA512 transaction commitments_.
+They allow a verifier which does not support SHA512_256 to verify proof of membership for transactions.
+In order to construct these commitments, we use a vector commitment. The leaves in the vector commitment
+tree are hashed as $$SHA256("TL", txidSha256, stibSha256)$$ and $$SHA512("TL", txidSha512, stibSha512)$$, respectively.
+Where:
 
-- txidSha256 = SHA256(`TX` || transcation)
+- txidSha256 = SHA256(`TX` || transaction)
 - stibSha256 = SHA256(`STIB` || signed transaction || ApplyData)
+- txidSha512 = SHA512(`TX` || transaction)
+- stibSha512 = SHA512(`STIB` || signed transaction || ApplyData)
 
-The vector commitment uses SHA256 for internal nodes as well.
+These vector commitments use SHA256 or SHA512 for internal nodes as well.
 
 A valid transaction sequence contains no duplicates: each transaction in the
 transaction sequence appears exactly once.  We can call the set of these
@@ -1252,7 +1291,7 @@ heartbeat since that challenge. Further explanation of this rule is
 found in [Heartbeat Transaction Semantics] section, below.
 
 If the sum of the lengths of the boxes denoted by the box references in a
-transaction group exceeds 1,024 times the total number of box
+transaction group exceeds 2,048 times the total number of box
 references in the transaction group, then the block is invalid. Call
 this limit the _I/O Budget_ for the group. Box references with an
 empty name are counted toward the total number of references, but add
@@ -1402,10 +1441,10 @@ point must be discarded and the entire transaction rejected.
 3.
     - Execute the `ClearStateProgram`.
         - If the program execution returns `PASS == true`, apply the
-          local/global/box key/value store deltas generated by the program’s
+          local/global key/value store deltas generated by the program’s
           execution.
         - If the program execution returns `PASS == false`, do not apply any
-          local/global/box key/value store deltas generated by the program’s
+          local/global key/value store deltas generated by the program’s
           execution.
     - Delete the sender’s local state for this application (marking them as no
       longer opted in). **SUCCEED.**
@@ -1442,14 +1481,15 @@ point must be discarded and the entire transaction rejected.
           **FAIL**
         - Update the Approval and ClearState programs for this
           application according to the programs specified in this
-          `ApplicationCall` transaction. The new programs are not executed in
-          this transaction.  **SUCCEED.**
+          `ApplicationCall` transaction, and increment the application
+          version. The new programs are not executed in this
+          transaction.  **SUCCEED.**
 
 ### Application Stateful Execution Semantics
 
 - Before the execution of the first ApplicationCall transaction in a
   group, the combined size of all boxes referred to in the box references
-  of all transactions in the group must be less than the I/O budget, i.e., 1,024 times the
+  of all transactions in the group must be less than the I/O budget, i.e., 2,048 times the
   total number of box references in the group, or else the group
   fails.
 - During the execution of an `ApprovalProgram` or `ClearStateProgram`,
@@ -1463,30 +1503,15 @@ point must be discarded and the entire transaction rejected.
   offending instruction.
 - During the execution of an `ApprovalProgram`, the total size of all
   boxes that are created or modified in the group must not exceed the
-  I/O budget or else the group fails.  The program's execution will
+  I/O budget.  The program's execution will
   fail on the first instruction that would cause the constraint to be
   violated. If a box is deleted after creation or modification, its
-  size is not considered in this sum.
-- Global state may only be read for the application ID whose program
-  is executing, or for an _available_ application ID. An attempt to
-  read global state for another application that is not _available_
-  will cause the program execution to fail.
-- Asset parameters may only be read for assets whose ID is
-  _available_. An attempt to read asset parameters for an asset that
-  is not _available_ will cause the program execution to fail.
-- Local state may be read for any _available_ application. An attempt
-  to read local state from any other account will cause program
-  execution to fail. Further, in programs version 4 or later, Local
-  state reads are restricted by application ID in the same way as
-  Global state reads.
-- Algo balances and asset balances may be read for the sender's
-  account or for any _available_ account. An attempt to read a balance
-  for any other account will cause program execution to fail.
-  Further, in programs version 4 or later, asset balances may only be
-  read for assets whose parameters are also _available_.
-- Only _available_ boxes may be accessed. An attempt to access any other box
-  will cause the program exection to fail.
+  size is no longer considered in this sum.
 - Boxes may not be accessed by an app's `ClearStateProgram`.
+- In addition to the group's named boxes, transactions may also access
+  the boxes of apps that were previously created in the same group.
+  Across the execution of the entire group, the group can access as
+  many of these unnamed boxes as the group has empty box references.
 
 ## Heartbeat Transaction Semantics
 
