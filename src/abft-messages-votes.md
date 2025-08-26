@@ -18,6 +18,7 @@ $$
 \newcommand \CommitteeThreshold {\mathrm{CommitteeThreshold}}
 \newcommand \Sign {\mathrm{Sign}}
 \newcommand \Verify {\mathrm{Verify}}
+\newcommand \abs[1] {\lvert #1 \rvert}
 $$
 
 # Votes
@@ -55,9 +56,7 @@ $$
 {{#include ./.include/styles.md:impl}}
 > Vote [reference implementation](https://github.com/algorand/go-algorand/blob/b6e5bcadf0ad3861d4805c51cbf3f695c38a93b7/agreement/vote.go#L152).
 
-Moreover, let \\( L \\) be a ledger where \\( |L| \geq \delta_b \\).
-Moreover, let \\( L \\) be a ledger where \\( |L| \geq \delta_b \geq \max\\{\delta_r, \delta_s\\} \\)
-(conceptually, the ledger is larger than the largest lookback parameter).
+Moreover, let \\( L \\) be a ledger where \\( \abs{L} \geq \delta_b \\).
 
 Let
 
@@ -66,7 +65,7 @@ Let
 - \\( Q \\) be a 256-bit integer,
 - \\( \tau, \bar{\tau} \\) 32-bit integers.
 
-We say that this vote is _valid with respect to_ \\ (L \\) (or simply _valid_ if
+We say that this vote is _valid with respect to_ \\( L \\) (or simply _valid_ if
 \\( L \\) is unambiguous) if the following conditions are true:
 
 {{#include ./.include/styles.md:impl}}
@@ -81,8 +80,8 @@ We say that this vote is _valid with respect to_ \\ (L \\) (or simply _valid_ if
 - \\( r \leq |L| + 2 \\)
 
 - Let \\( v = (I_{orig}, p_{orig}, d, h )\\).
-  - If \\ (s = 0 \\), then \\( p_{orig} \le p \\).
-  - Furthermore, if \\(s = 0\\) and \\( p = p_{orig} \\), then \\( I = I_{orig} \\).
+  - If \\( s = 0 \\), then \\( p_{orig} \le p \\).
+  - Furthermore, if \\( s = 0 \\) and \\( p = p_{orig} \\), then \\( I = I_{orig} \\).
 
 <!-- This condition is not enforced in the verifying side, only in the `makeVote()`
 side. It would be easy to add this as an additional check. -->
