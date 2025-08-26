@@ -100,13 +100,9 @@ for the Byzantine Fault Tolerance protocol, and (2) rerandomize its
 random seed.
 
 ### SHA256
-Algorand uses [SHA-256 algorithm][rfcsha] to allow verification of Algorand's state and transactions
+Algorand uses [SHA-256 algorithm][sha256] to allow verification of Algorand's state and transactions
 on environments where SHA512_256 is not supported.
 
-### SHA512
-Algorand uses the [SHA-512 algorithm][rfcsha] to strengthen post-quantum security
-for the previous block hash (`prev512`) and transaction commitment (`txn512`)
-in the block header by increasing collision resistance against Grover's algorithm.
 
 ### SUBSET-SUM
 Algorand uses [SUBSET-SUM algorithm][sumhash] which is a quantum-resilient hash function.
@@ -527,7 +523,7 @@ Since the quantum-secure verifier is not bottlenecked by reveals, we can take ${
 [abft-spec]: https://github.com/algorand/spec/abft.md
 
 [sha]: https://doi.org/10.6028/NIST.FIPS.180-4
-[rfcsha]: https://datatracker.ietf.org/doc/html/rfc4634
+[sha256]: https://datatracker.ietf.org/doc/html/rfc4634
 [sumhash]: https://github.com/algorandfoundation/specs/blob/master/dev/cryptographic-specs/sumhash-spec.pdf
 [ed25519]: https://tools.ietf.org/html/rfc8032
 [msgpack]: https://github.com/msgpack/msgpack/blob/master/spec.md

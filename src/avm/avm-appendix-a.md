@@ -1,1 +1,0 @@
-{{#include ../.include/auto-avm-teal-opcodes.md}}
