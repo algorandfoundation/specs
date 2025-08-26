@@ -11,11 +11,15 @@ On receiving a vote \\( \Vote_k(r_k, p_k, s_k, v) \\) a player
 
 - Ignores* it if \\( \Vote_k \\) is malformed or trivially invalid.
 
-- Ignores it if \\( s = 0 \\) and \\( \Vote_k \in V \\).
+- Ignores* it if \\( \Vote_k \in V \\).
 
 - Ignores it if \\( s = 0 \\) and \\( \Vote_k \\) is an equivocation.
 
 - Ignores it if \\( s > 0 \\) and \\( \Vote_k \\) is a second equivocation.
+
+- Ignores it if \\( s \not \in \\{Next_{[0...252]}, \Down \\} \\) and \\( v = \bot \\).
+
+- Ignores it if \\( s = \Down \\) and \\( v \neq \bot \\).
 
 - Ignores it if
 
@@ -31,7 +35,8 @@ On receiving a vote \\( \Vote_k(r_k, p_k, s_k, v) \\) a player
     - \\( p_k = p - 1 \\) and \\( s_k \in (\Next_0, \Late) \\) and \\( s_k \notin [\bar{s}-1,\bar{s}+1] \\).
 
 - Otherwise, relays \\( \Vote_k \\), observes it, and then produces any consequent
-output.
+output (in the specific case that the vote \\( \Vote_k \\) was a valid first equivocation,
+the observation* may also result in the peer being flagged).
 
 Specifically, if a player ignores the vote, then
 
