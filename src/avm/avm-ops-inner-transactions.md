@@ -54,4 +54,4 @@ set fields.
 Illegal interactions between fields, such as setting fields that belong to two different
 transaction types, are rejected by `itxn_submit`.
 
-{{#include ../.include/auto-avm-ops-inner-transactions.md}}
+{{#include ../.include/auto/avm-ops-inner-transactions.md}}
