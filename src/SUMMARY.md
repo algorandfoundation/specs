@@ -257,4 +257,4 @@
 ---
 
 [Contribution Guidelines](./contribution-guidelines.md)
-[License]()
+[License](./LICENSE.md)
