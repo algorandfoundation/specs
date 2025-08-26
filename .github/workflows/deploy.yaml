@@ -38,10 +38,12 @@ jobs:
         with:
           name: mdbook-build
           path: book
+          retention-days: 1
 
   deployment:
     needs:
       - integration
+    if: github.event.pull_request.head.repo.full_name == github.repository
     runs-on: ubuntu-latest
     name: Run Cloudflare Deployment
     steps:
