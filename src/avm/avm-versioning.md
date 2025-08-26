@@ -10,7 +10,7 @@ Programs carrying old versions are executed with their original semantics.
 In the AVM bytecode, the Version is an incrementing integer, denoted in the program
 as `vX` (where `X` is the version number, see [Pragma directive section](./avm-assembler.md#pragma)).
 
-The AVM current Version is: \\( 11 \\).
+The AVM current Version is: \\( {{#include ../.include/auto-avm-version}} \\).
 
 > For further details about the available opcodes per version, refer to the [AVM Opcodes
 > Specification]().
