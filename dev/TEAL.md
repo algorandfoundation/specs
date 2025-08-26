@@ -89,7 +89,7 @@ In order to maintain existing semantics for previously written
 programs, AVM code is versioned.  When new opcodes are introduced, or
 behavior is changed, a new version is introduced.  Programs carrying
 old versions are executed with their original semantics. In the AVM
-bytecode, the version is an incrementing integer, currently 6, and
+bytecode, the version is an incrementing integer, currently 12, and
 denoted vX throughout this document.
 
 ## Execution Modes
@@ -508,6 +508,7 @@ these results may contain leading zero bytes.
 | `keccak256` | Keccak256 hash of value A, yields [32]byte |
 | `sha512_256` | SHA512_256 hash of value A, yields [32]byte |
 | `sha3_256` | SHA3_256 hash of value A, yields [32]byte |
+| `falcon_verify` | for (data A, compressed-format signature B, pubkey C) verify the signature of data against the pubkey => {0 or 1} |
 | `ed25519verify` | for (data A, signature B, pubkey C) verify the signature of ("ProgData" \|\| program_hash \|\| data) against the pubkey => {0 or 1} |
 | `ed25519verify_bare` | for (data A, signature B, pubkey C) verify the signature of the data against the pubkey => {0 or 1} |
 | `ecdsa_verify v` | for (data A, signature B, C and pubkey D, E) verify the signature of the data against the pubkey => {0 or 1} |
