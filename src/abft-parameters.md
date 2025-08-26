@@ -7,7 +7,7 @@ $$
 
 The Algorand protocol is parameterized by the following constants:
 
-**TIME CONSTANTS**
+## Time Constants
 
 These values represent durations of _time_.
 
@@ -20,7 +20,7 @@ These values represent durations of _time_.
 |    \\( \Lambda \\)     | Time for big message (e.g., a block) propagation in ideal network conditions                       |
 |   \\( \Lambda_0 \\)    | Time for big message propagation in good network conditions, for \\(p = 0\\)                       |
 
-**ROUNDS CONSTANTS**
+## Round Constants
 
 These are positive integers that represent an amount of protocol _rounds_.
 
