@@ -37,17 +37,21 @@ For convenience, we define:
 
 We define \\( \FilterTimeout(p) \\) on a _period_ \\( p \\) as follows:
 
-- If \\( p = 0 \\) the \\( \FilterTimeout(p) \\) is calculated dynamically based on the
+- If \\( p = 0 \\) and a sufficient history of lowest credential arrival times is
+available, the \\( \FilterTimeout(p) \\) is calculated dynamically based on the
 lower 95th percentile of the observed lowest credentials per round arrival time:
 
-  - \\( 2\lambda_{0min} \leq \FilterTimeout(p) \leq 2\lambda_{0max} \\)
+  - \\( \lambda_{0min} \leq \FilterTimeout(p) \leq \lambda_{0max} \\)
 
 > Refer to the [non-normative](abft-overview.md#dynamic-filter-timeout) section
 > for details about the implementation of the dynamic filtering mechanism.
 
 - If \\( p \ne 0 \\):
 
-  - \\( \FilterTimeout(p) = 2\lambda \\).
+  - \\( \FilterTimeout(p) = 4 \\) seconds (that coincide with \\( 2\lambda \\)).
+
+> This value is currently hardcoded in the reference implementation. However, it
+> should be equal to \\( 2\lambda \\).
 
 We define \\( \DeadlineTimeout(p) \\) on _period_ \\( p \\) as follows:
 
@@ -57,7 +61,7 @@ We define \\( \DeadlineTimeout(p) \\) on _period_ \\( p \\) as follows:
 
 - If \\( p \ne 0 \\):
 
-  - \\( \DeadlineTimeout(p) = \Lambda \\)
+  - \\( \DeadlineTimeout(p) = \Lambda + \lambda \\)
 
 {{#include ./.include/styles.md:impl}}
 > \\( \DeadlineTimeout \\) [reference implementation](https://github.com/algorand/go-algorand/blob/b6e5bcadf0ad3861d4805c51cbf3f695c38a93b7/agreement/types.go#L67).
@@ -69,8 +73,8 @@ We define \\( \DeadlineTimeout(p) \\) on _period_ \\( p \\) as follows:
 | [\\( \delta_s \\)](https://github.com/algorand/go-algorand/blob/5c49e9a54dfea12c6cee561b8611d2027c401163/config/consensus.go#L969)                          |   2   | rounds  |
 | [\\( \delta_r \\)](https://github.com/algorand/go-algorand/blob/5c49e9a54dfea12c6cee561b8611d2027c401163/config/consensus.go#L983)                          |  80   | rounds  |
 | [\\( \lambda \\)](https://github.com/algorand/go-algorand/blob/5c49e9a54dfea12c6cee561b8611d2027c401163/config/consensus.go#L1616)                          |   2   | seconds |
-| [\\( \lambda_{0min} \\)](https://github.com/algorand/go-algorand/blob/5c49e9a54dfea12c6cee561b8611d2027c401163/agreement/dynamicFilterTimeoutParams.go#L34) | 0.25  | seconds |
-| [\\( \lambda_{0max} \\)](https://github.com/algorand/go-algorand/blob/5c49e9a54dfea12c6cee561b8611d2027c401163/config/consensus.go#L1486)                   |  1.5  | seconds |
+| [\\( \lambda_{0min} \\)](https://github.com/algorand/go-algorand/blob/5c49e9a54dfea12c6cee561b8611d2027c401163/agreement/dynamicFilterTimeoutParams.go#L34) |  2.5  | seconds |
+| [\\( \lambda_{0max} \\)](https://github.com/algorand/go-algorand/blob/5c49e9a54dfea12c6cee561b8611d2027c401163/config/consensus.go#L1486)                   |   3   | seconds |
 | [\\( \lambda_f \\)](https://github.com/algorand/go-algorand/blob/5c49e9a54dfea12c6cee561b8611d2027c401163/config/consensus.go#L967)                         |  300  | seconds |
-| [\\( \Lambda \\)](https://github.com/algorand/go-algorand/blob/5c49e9a54dfea12c6cee561b8611d2027c401163/config/consensus.go#L1617)                          |  17   | seconds |
+| [\\( \Lambda \\)](https://github.com/algorand/go-algorand/blob/5c49e9a54dfea12c6cee561b8611d2027c401163/config/consensus.go#L1617)                          |  15   | seconds |
 | [\\( \Lambda_0 \\)](https://github.com/algorand/go-algorand/blob/5c49e9a54dfea12c6cee561b8611d2027c401163/config/consensus.go#L1501)                        |   4   | seconds |
