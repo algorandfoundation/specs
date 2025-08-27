@@ -191,7 +191,7 @@ The Algorand _Ledger_ is parameterized by the values in the following tables.
 | \\( \AppFlatParamsMinBalance \\)  | \\( 100{,}000 \\) |    μALGO     | MBR for creating a single application                                   | `AppFlatParamsMinBalance`     |         v24         |
 |    \\( \BoxByteMinBalance \\)     |    \\( 400 \\)    | μALGO / byte | MBR per byte of box storage                                             | `BoxByteMinBalance`           |         v36         |
 |    \\( \BoxFlatMinBalance \\)     |  \\( 2{,}500 \\)  |    μALGO     | MBR per box created                                                     | `BoxFlatMinBalance`           |         v36         |
-|   \\( \BytesPerBoxReference \\)   |  \\( 2{,}048\\)   |    bytes     | Box read and write payload per reference                                | `BytesPerBoxReference`        |         v36         |
+|   \\( \BytesPerBoxReference \\)   |  \\( 2{,}048\\)   |    bytes     | Box read and write payload per reference                                | `BytesPerBoxReference`        |         v41         |
 |        \\( \MaxBoxSize \\)        | \\( 32{,}768 \\)  |    bytes     | Maximum size of a box                                                   | `MaxBoxSize`                  |         v36         |
 |        \\( \MaxAppArgs \\)        |    \\( 16 \\)     |              | Maximum number of arguments for an `appl` transaction                   | `MaxAppArgs`                  |         v24         |
 |   \\( \MaxAppBoxReferences \\)    |     \\( 8 \\)     |              | Maximum number of box references for an `appl` transaction              | `MaxAppBoxReferences`         |         v36         |
@@ -203,10 +203,10 @@ The Algorand _Ledger_ is parameterized by the values in the following tables.
 |    \\( \MaxAppTotalArgLen \\)     |  \\( 2{,}048 \\)  |    bytes     | Maximum sum of the lengths of argument for an `appl` transaction        | `MaxAppTotalArgLen`           |         v24         |
 |  \\( \MaxAppTotalProgramLen \\)   |  \\( 2{,}048 \\)  |    bytes     | Maximum combined length of application Approval and ClearState programs | `MaxAppTotalProgramLen`       |         v24         |
 | \\( \MaxAppTotalTxnReferences \\) |     \\( 8 \\)     |              | Maximum number of references for an `appl` transaction                  | `MaxAppTotalTxnReferences`    |         v24         |
-|    \\( \MaxAppTxnAccounts \\)     |     \\( 8 \\)     |              | Maximum number of account references for an `appl` transaction          | `MaxAppTxnAccounts`           |         v24         |
+|    \\( \MaxAppTxnAccounts \\)     |     \\( 8 \\)     |              | Maximum number of account references for an `appl` transaction          | `MaxAppTxnAccounts`           |         v41         |
 |   \\( \MaxAppTxnForeignApps \\)   |     \\( 8 \\)     |              | Maximum number of application references for an `appl` transaction      | `MaxAppTxnForeignApps`        |         v28         |
 |  \\( \MaxAppTxnForeignAssets \\)  |     \\( 8 \\)     |              | Maximum number of asset references for an `appl` transaction            | `MaxAppTxnForeignAssets`      |         v28         |
-|       \\( \MaxAppAccess \\)       |    \\( 16 \\)     |              | Maximum number of resources access list for an `appl` transaction       | `MaxAppAccess`                |         v28         |
+|       \\( \MaxAppAccess \\)       |    \\( 16 \\)     |              | Maximum number of resources access list for an `appl` transaction       | `MaxAppAccess`                |         v41         |
 | \\( \MaxExtraAppProgramPages \\)  |     \\( 3 \\)     |              | Maximum extra length for application program in pages                   | `MaxExtraAppProgramPages`     |         v28         |
 |  \\( \MaxGlobalSchemaEntries \\)  |    \\( 64 \\)     |              | Maximum number of key/value pairs of application global state           | `MaxGlobalSchemaEntries`      |         v24         |
 |  \\( \MaxLocalSchemaEntries \\)   |    \\( 16 \\)     |              | Maximum number of key/value pairs of application local state            | `MaxLocalSchemaEntries`       |         v24         |
