@@ -28,6 +28,7 @@ An _application call_ transaction additionally has the following fields:
 | On Completion Action | `apan` |  `uint64`   |            Yes            |
 | Approval Program     | `apap` |  `[]byte`   |            No             |
 | Clear State Program  | `apsu` |  `[]byte`   |            No             |
+| Reject Version       | `aprv` |  `uint64`   |            No             |
 | Extra Program Pages  | `apep` |  `uint64`   |            No             |
 | Global State Schema  | `apgs` |  `struct`   |            No             |
 | Local State Schema   | `apls` |  `struct`   |            No             |
@@ -80,6 +81,14 @@ The _clear state program_ (**OPTIONAL**) contains the clear state program byteco
 
 - The Approval Program and the Clear State Program **MUST** have the same version
 number if either is \\( 6 \\) or higher.
+
+### Reject Version
+
+The _reject version_ (**OPTIONAL**), if set to a positive number, specifies that
+the application call **MUST** fail unless the reject version value exceeds the Application
+Version.
+
+> For further details on Application Versions, refer to the [Applications Specifications](./ledger-applications.md).
 
 ### Extra Program Pages
 

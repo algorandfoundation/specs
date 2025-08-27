@@ -120,8 +120,9 @@ is equal to `UpdateApplicationOC`
   downgrade from the existing version. **FAIL**.
 
   - Update the Approval Program and Clear State Program for this application according
-  to the programs specified in this _application call_ transaction. The new programs
-  are not executed in this transaction. **SUCCEED**.
+  to the programs specified in this _application call_ transaction and increment
+  the Application Version. The new programs are not executed in this transaction.
+  **SUCCEED**.
 
 ## Application Stateful Execution Semantics
 

@@ -75,10 +75,14 @@ and `ClearStateProgram` may not exceed \\( \MaxAppTotalProgramLen \times (1+\Ext
 bytes. This field is encoded with msgpack field `epp` and may not exceed \\( \MaxExtraAppProgramPages \\).
 This `ExtraProgramPages` field is taken into account on application update as well.
 
+- An “application version” (`Version`) value that begins at \\( 0 \\) when an Application
+is created or when the _protocol version_ including this field goes into effect
+whichever is later. This field is encoded with msgpack field `v`.
+
 - The “global state” (`GlobalState`) associated with this application, stored as
 a [Key/Value Store](#keyvalue-stores). This field is encoded with msgpack field `gs`.
 
-Each application created increases the minimum balance requirements of the creator
+Each application created increases the minimum balance requirement of the creator
 by \\( \AppFlatParamsMinBalance \times (1+\ExtraProgramPages) \\) μALGO, plus the
 [`GlobalStateSchema` minimum balance contribution](#app-minimum-balance-changes).
 
