@@ -190,7 +190,7 @@ The Algorand _Ledger_ is parameterized by the values in the following tables.
 | \\( \AppFlatParamsMinBalance \\)  | \\( 100{,}000 \\) |    μALGO     | MBR for creating a single application                                   | `AppFlatParamsMinBalance`     |         v24         |
 |    \\( \BoxByteMinBalance \\)     |    \\( 400 \\)    | μALGO / byte | MBR per byte of box storage                                             | `BoxByteMinBalance`           |         v36         |
 |    \\( \BoxFlatMinBalance \\)     |  \\( 2{,}500 \\)  |    μALGO     | MBR per box created                                                     | `BoxFlatMinBalance`           |         v36         |
-|   \\( \BytesPerBoxReference \\)   |  \\( 1{,}024\\)   |    bytes     | Box read and write payload per reference                                | `BytesPerBoxReference`        |         v36         |
+|   \\( \BytesPerBoxReference \\)   |  \\( 2{,}048\\)   |    bytes     | Box read and write payload per reference                                | `BytesPerBoxReference`        |         v36         |
 |        \\( \MaxBoxSize \\)        | \\( 32{,}768 \\)  |    bytes     | Maximum size of a box                                                   | `MaxBoxSize`                  |         v36         |
 |        \\( \MaxAppArgs \\)        |    \\( 16 \\)     |              | Maximum number of arguments for an `appl` transaction                   | `MaxAppArgs`                  |         v24         |
 |   \\( \MaxAppBoxReferences \\)    |     \\( 8 \\)     |              | Maximum number of box references for an `appl` transaction              | `MaxAppBoxReferences`         |         v36         |

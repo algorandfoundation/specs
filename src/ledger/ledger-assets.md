@@ -16,14 +16,14 @@ Assets are associated with a set of _asset parameters_, which can be encoded as 
 msgpack struct:
 
 - The _total_ number of units of the asset created, encoded with msgpack field `t`.
-This value **MUST BE** between \\( 0 \\) and \\( 2^{64}-1 \\).
+This value **MUST** be between \\( 0 \\) and \\( 2^{64}-1 \\).
 
 - The number of digits after the decimal place to be used when displaying the asset,
 encoded with msgpack field `dc`. The divisibility of the asset is given by \\( 10^{-\mathrm{dc}} \\).
 A `dc` value of \\( 0 \\) represents an asset that is not divisible, while a value of \\( 1 \\)
-represents an asset divisible into tenths, 2 into hundredths, etc. This value **MUST BE**
-between \\( 0 \\) and \\( \MaxAssetDecimals \\) (inclusive) (because \\( 2^{64}-1 \\)
-is \\( 20 \\) decimal digits integer).
+represents an asset divisible into tenths, \\( 2 \\) into hundredths, etc. This value
+**MUST** be between \\( 0 \\) and \\( \MaxAssetDecimals \\) (inclusive) (because
+\\( 2^{64}-1 \\) is \\( 20 \\) decimal digits integer).
 
 - Whether holdings of that asset are _frozen by default_, a boolean flag encoded
 with msgpack field `df`.

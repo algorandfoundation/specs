@@ -53,15 +53,15 @@ prefix `SpecialAddr` (see the corresponding section in the [Algorand Cryptograph
 Primitive Specification](./crypto.md#domain-separation)) with the string constant
 `StateProofSender`.
 
-- The _fee_ **MUST BE** \\( 0 \\).
+- The _fee_ **MUST** be \\( 0 \\).
 
-- The _lease_ **MUST BE** omitted.
+- The _lease_ **MUST** be omitted.
 
-- The _group_ **MUST BE** omitted. 
+- The _group_ **MUST** be omitted. 
 
-- The _rekey to_ **MUST BE** omitted.
+- The _rekey to_ **MUST** be omitted.
 
-- The _note_ **MUST BE** omitted.
+- The _note_ **MUST** be omitted.
 
 - The transaction **MUST NOT** have any signature.
 

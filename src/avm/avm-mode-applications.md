@@ -48,7 +48,8 @@ and **MUST NOT** exceed \\( \MaxAppProgramCost \\).
 
 Beginning with Version 5, programs costs are pooled and tracked dynamically across
 Application executions in a group. If \\( n \\) application invocations appear in
-a group, then the total execution cost of all such calls **MUST NOT** exceed \\( n \times \MaxAppProgramCost \\).
+a group, then the total execution cost of all such calls **MUST NOT** exceed
+\\( n \times \MaxAppProgramCost \\).
 
 In Version 6, inner Application Calls become possible, and each such call increases
 the pooled opcode budget by \\( \MaxAppProgramCost \\) at the time the inner group
@@ -60,7 +61,7 @@ $$
 
 ## Clear Program Execution
 
-Executions of the Clear State Program are more stringent, to ensure that Applications
+Executions of the Clear State Program are more stringent to ensure that Applications
 may be closed out (by accounts) and have a chance to clean up their internal state.
 
 At the beginning of a Clear State Program execution, the pooled budget available
@@ -75,8 +76,29 @@ the Application's state _is cleared_.
 
 Applications have limits on the amount of blockchain state they may examine.
 
-Opcodes may only access blockchain resources such as Accounts, Assets, Boxes, and
-Application state if the given resource is _available_.
+These limits are enforced by failing any opcode that attempts to access a resource
+unless the resource is _available_. These resources are:
+
+- _Accounts_, which **MUST** be available to access their balance, or other account
+parameters such as voting details.
+
+- _Assets_, which **MUST** be available to access global asset parameters, such as
+the asset's URL, name, or privileged addresses.
+
+- _Holdings_, which **MUST** be available to access a particular address's balance
+or frozen status for a particular asset.
+
+- _Applications_, which **MUST** be available to read an Application's programs,
+parameters, or Global Sstate.
+
+- _Locals_, which **MUST** be available to read a particular address's Local State
+for a particular Application.
+
+- _Boxes_, which **MUST** be available to read or write a box, designated by an
+Application and name for the Box.
+
+Resources are _available_ based on the contents of the executing transaction and,
+in later versions, the contents of other transactions in the same group.
 
 - A resource in the _foreign array_ fields of the [Application Call transaction]()
 ([_foreign accounts_](), [_foreign assets_](), and [_foreign applications_]()) is
@@ -86,28 +108,49 @@ _available_.
 
 - The Global Fields `CurrentApplicationID`, and `CurrentApplicationAddress` are _available_.
 
-- Prior to Version 4, all Assets were considered _available_ to the `asset_holding_get`
-opcode, and all Applications were _available_ to the `app_local_get_ex` opcode.
+- In pre-Version 4 Applications, all Holdings are _available_ to the `asset_holding_get`
+opcode, and all Locals are _available_ to the `app_local_get_ex` opcode if the Account
+of the resource is _available_.
 
-- Since Version 6, any Asset or Application created earlier in the same transaction
-group (whether by a top-level or inner transaction) is _available_. In addition,
-any Account associated with an Application created earlier in the group is _available_.
+- In Version 6 (and later) Applications, any Asset or Application created earlier
+in the same transaction group (whether by a top-level or inner transaction) is _available_.
+In addition, any Account that is the associated Account of an Application that was
+created earlier in the group is _available_.
 
-- Since Version 7, the Account associated with any Application in the _foreign applications_
-field is _available_.
-   
-- Since Version 9, resources are shared and pooled at group-level. Any resource
-available in _some_ top-level transaction in a transaction group is available in
-_all_ Version 9 or later application calls in the group, whether those application
+- In Version 7 (and later) Applications, the Account associated with any Application
+present in the [_foreign applications_ field](../ledger/ledger-txn-application-call.md#foreign-applications)
+is _available_.
+
+- In Version 4 (and later) Applications, Holdings and Locals are _available_ if both
+components of the resource are _available_ according to the above rules.
+
+- In Version 9 (and later) Applications, there is _group resource sharing_. Any
+resource that is _available_ in _some_ top-level transaction in a group is _available_
+in _all_ Version 9 or later Application calls in the group, whether those Application
 calls are top-level or inner.
 
-- When considering whether an _asset holding_ or _application local state_ is _available_
-by group-level resource sharing, the _holding_ or _local state_ **MUST BE** _available_
-in a top-level transaction _without_ considering group sharing.
+- Version 9 (and later) Applications **MAY** use the [_transaction access list_]()
+instead of the _foreign arrays_. When using the _transaction access list_, each resource
+**MUST** be listed explicitly, since the _automatic availability_ of the _foreign
+arrays_ is no longer provided, in particular:
+
+  - Holdings and Locals are _no longer automatically available_ because their components
+  are.
+
+  - Application Accounts are _no longer automatically available_ because of the availability
+  of their corresponding Applications.
+
+However, the _transaction access list_ allows for the listing of more resources
+than the _foreign arrays_. Listed resources become _available_ to other (post-Version 8)
+Applications through _group resource sharing_.
+
+- When considering whether a Holding or Local is _available_ by _group resource sharing_,
+the Holding or Local **MUST** be _available_ in a top-level transaction based on
+pre-Version 9 rules.
 
 {{#include ../.include/styles.md:example}}
 > If account `A` is made available in one transaction, and asset `X` is made available
-> in another, group resource sharing does _not_ make `A`'s `X` holding available.
+> in another, _group resource sharing_ does _not_ make `A`'s `X` Holding available.
      
 - Top-level transactions that are not Application Calls also make resources _available_
 to group-level resource sharing. The following resources are made _available_ by
@@ -129,11 +172,12 @@ other transaction types:
   of the _sender_ is _not_ made available.
 
 - A Box is _available_ to an Approval Program if _any_ transaction in the same group
-contains a [box reference]() (`apbx`) that denotes the box. A box reference contains
-an index `i`, and name `n`. The index refers to the `i`-th application in the transaction's
-_foreign applications_ array, with the usual convention that `0` indicates the application
-ID of the Application called by that transaction. No box is ever _available_ to a
-Clear State Program.
+contains a [box reference]() (in transaction's _box references_ `apbx` or _access
+list_ `al`) that denotes the Box. A _box reference_ contains an index `i`, and name
+`n`. The index refers to the `i`-th Application in the transaction's _foreign applications_
+or _access list_ array (only one of which can be used), with the usual convention that
+`0` indicates the Application ID of the Application called by that transaction. No
+Box is ever _available_ to a Clear State Program.
 
 Regardless of _availability_, any attempt to access an Asset or Application with
 an ID less than \\( 256 \\) from within an Application will fail immediately. This

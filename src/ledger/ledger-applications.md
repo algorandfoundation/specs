@@ -139,13 +139,14 @@ $$
 
 ## Boxes
 
-The box store is an associative array mapping keys of type: (64-bit unsigned integer, byte-array)
-to values of type byte-array.
+The Box store is an associative array mapping keys of type: `(uint64 x []byte)` to
+values of type `[]byte`.
 
-- The _key_ is a pair in which the first value corresponds to an existing (or previously existing)
-application ID, and the second is a _box name_, \\( 1 \\) to \\( \MaxAppKeyLen \\)
-bytes in length. Unlike global/local state keys, an empty array is not a valid box
-name. However, empty box names may appear in transactions to increase the I/O budget
+- The _key_ is a pair in which the first value corresponds to an Application ID,
+and the second is a _box name_, \\( 1 \\) to \\( \MaxAppKeyLen \\) bytes in length.
+Unlike Global/Local State keys, an empty array is not a valid Box name. However,
+empty Box names may appear in transactions to increase the I/O budget or allow creation
+of Boxes whose Application ID is not known at transaction group construction time
 (see below).
 
 - The _value_ is a byte-array of length not greater than \\( \MaxBoxSize \\).
