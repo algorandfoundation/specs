@@ -108,28 +108,28 @@ _available_.
 
 - The Global Fields `CurrentApplicationID`, and `CurrentApplicationAddress` are _available_.
 
-- In pre-Version 4 Applications, all Holdings are _available_ to the `asset_holding_get`
+- In pre-Version 4 programs, all Holdings are _available_ to the `asset_holding_get`
 opcode, and all Locals are _available_ to the `app_local_get_ex` opcode if the Account
 of the resource is _available_.
 
-- In Version 6 (and later) Applications, any Asset or Application created earlier
+- In Version 6 (and later) programs, any Asset or Application created earlier
 in the same transaction group (whether by a top-level or inner transaction) is _available_.
 In addition, any Account that is the associated Account of an Application that was
 created earlier in the group is _available_.
 
-- In Version 7 (and later) Applications, the Account associated with any Application
+- In Version 7 (and later) programs, the Account associated with any Application
 present in the [_foreign applications_ field](../ledger/ledger-txn-application-call.md#foreign-applications)
 is _available_.
 
-- In Version 4 (and later) Applications, Holdings and Locals are _available_ if both
+- In Version 4 (and later) programs, Holdings and Locals are _available_ if both
 components of the resource are _available_ according to the above rules.
 
-- In Version 9 (and later) Applications, there is _group resource sharing_. Any
+- In Version 9 (and later) programs, there is _group resource sharing_. Any
 resource that is _available_ in _some_ top-level transaction in a group is _available_
 in _all_ Version 9 or later Application calls in the group, whether those Application
 calls are top-level or inner.
 
-- Version 9 (and later) Applications **MAY** use the [_transaction access list_]()
+- Version 9 (and later) programs **MAY** use the [_transaction access list_]()
 instead of the _foreign arrays_. When using the _transaction access list_, each resource
 **MUST** be listed explicitly, since the _automatic availability_ of the _foreign
 arrays_ is no longer provided, in particular:
@@ -141,8 +141,8 @@ arrays_ is no longer provided, in particular:
   of their corresponding Applications.
 
 However, the _transaction access list_ allows for the listing of more resources
-than the _foreign arrays_. Listed resources become _available_ to other (post-Version 8)
-Applications through _group resource sharing_.
+than the _foreign arrays_. Listed resources become _available_ to other (post-Version 8
+programs) Applications through _group resource sharing_.
 
 - When considering whether a Holding or Local is _available_ by _group resource sharing_,
 the Holding or Local **MUST** be _available_ in a top-level transaction based on
@@ -186,5 +186,6 @@ IDs _or_ indexes into the _foreign assets_ or _foreign applications_ arrays.
 
 It is **RECOMMENDED** that Application authors avoid supplying array indexes to these 
 opcodes, and always use explicit resource IDs. By using explicit IDs, contracts will
-better take advantage of group resource sharing. The array indexing interpretation
-**MAY** be deprecated in a future version.
+better take advantage of group resource sharing.
+
+The array indexing interpretation **MAY** be deprecated in a future program version.
