@@ -82,11 +82,11 @@ clamped on the minimum and maximum bounds defined in the [ABFT normative section
 
 ## Parameters
 
-| NAME                           | VALUE           | DESCRIPTION                                                                                                                                 |
-|--------------------------------|-----------------|---------------------------------------------------------------------------------------------------------------------------------------------|
-| \\( \CredentialHistorySize \\) | 40              | Size of the credential arrival time history circular array \\( \CredentialHistory \\).                                                      |
-| \\( \CredentialIdx \\)         | 37              | Entry of the (sorted) array \\( \CredentialHistory \\). Set to represent the 95th percentile (according to \\( \CredentialHistorySize \\)). |
-| \\( \TimeoutGracePeriod \\)    | 50 milliseconds | Filter extra time, atop the one calculated from \\( \CredentialHistory \\).                                                                 |
+|              NAME              | VALUE (seconds) | DESCRIPTION                                                                                                                                 |
+|:------------------------------:|:---------------:|---------------------------------------------------------------------------------------------------------------------------------------------|
+| \\( \CredentialHistorySize \\) |   \\( 40 \\)    | Size of the credential arrival time history circular array \\( \CredentialHistory \\).                                                      |
+|     \\( \CredentialIdx \\)     |   \\( 37 \\)    | Entry of the (sorted) array \\( \CredentialHistory \\). Set to represent the 95th percentile (according to \\( \CredentialHistorySize \\)). |
+|  \\( \TimeoutGracePeriod \\)   |  \\( 0.05 \\)   | Filter extra time, atop the one calculated from \\( \CredentialHistory \\).                                                                 |
 
 ---
 
