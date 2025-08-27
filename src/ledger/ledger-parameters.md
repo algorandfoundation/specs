@@ -71,6 +71,7 @@ $$
 \newcommand \MaxAppTxnAccounts {\App_{\mathrm{acc},\max}}
 \newcommand \MaxAppTxnForeignApps {\App_{\mathrm{app},\max}}
 \newcommand \MaxAppTxnForeignAssets {\App_{\mathrm{asa},\max}}
+\newcommand \MaxAppAccess {\App_{\mathrm{access},\max}}
 \newcommand \MaxExtraAppProgramPages {\App_{\mathrm{page},\max}}
 \newcommand \MaxGlobalSchemaEntries {\App_{\mathrm{GS},\max}}
 \newcommand \MaxLocalSchemaEntries {\App_{\mathrm{LS},\max}}
@@ -202,9 +203,10 @@ The Algorand _Ledger_ is parameterized by the values in the following tables.
 |    \\( \MaxAppTotalArgLen \\)     |  \\( 2{,}048 \\)  |    bytes     | Maximum sum of the lengths of argument for an `appl` transaction        | `MaxAppTotalArgLen`           |         v24         |
 |  \\( \MaxAppTotalProgramLen \\)   |  \\( 2{,}048 \\)  |    bytes     | Maximum combined length of application Approval and ClearState programs | `MaxAppTotalProgramLen`       |         v24         |
 | \\( \MaxAppTotalTxnReferences \\) |     \\( 8 \\)     |              | Maximum number of references for an `appl` transaction                  | `MaxAppTotalTxnReferences`    |         v24         |
-|    \\( \MaxAppTxnAccounts \\)     |     \\( 4 \\)     |              | Maximum number of account references for an `appl` transaction          | `MaxAppTxnAccounts`           |         v24         |
+|    \\( \MaxAppTxnAccounts \\)     |     \\( 8 \\)     |              | Maximum number of account references for an `appl` transaction          | `MaxAppTxnAccounts`           |         v24         |
 |   \\( \MaxAppTxnForeignApps \\)   |     \\( 8 \\)     |              | Maximum number of application references for an `appl` transaction      | `MaxAppTxnForeignApps`        |         v28         |
 |  \\( \MaxAppTxnForeignAssets \\)  |     \\( 8 \\)     |              | Maximum number of asset references for an `appl` transaction            | `MaxAppTxnForeignAssets`      |         v28         |
+|       \\( \MaxAppAccess \\)       |    \\( 16 \\)     |              | Maximum number of resources access list for an `appl` transaction       | `MaxAppAccess`                |         v28         |
 | \\( \MaxExtraAppProgramPages \\)  |     \\( 3 \\)     |              | Maximum extra length for application program in pages                   | `MaxExtraAppProgramPages`     |         v28         |
 |  \\( \MaxGlobalSchemaEntries \\)  |    \\( 64 \\)     |              | Maximum number of key/value pairs of application global state           | `MaxGlobalSchemaEntries`      |         v24         |
 |  \\( \MaxLocalSchemaEntries \\)   |    \\( 16 \\)     |              | Maximum number of key/value pairs of application local state            | `MaxLocalSchemaEntries`       |         v24         |

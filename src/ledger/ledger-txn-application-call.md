@@ -10,6 +10,7 @@ $$
 \newcommand \MaxAppTxnAccounts {\App_{\mathrm{acc},\max}}
 \newcommand \MaxAppTxnForeignApps {\App_{\mathrm{app},\max}}
 \newcommand \MaxAppTxnForeignAssets {\App_{\mathrm{asa},\max}}
+\newcommand \MaxAppAccess {\App_{\mathrm{access},\max}}
 \newcommand \Box {\mathrm{Box}}
 \newcommand \MaxAppBoxReferences {\App_{\Box,\max}}
 \newcommand \MaxAppKeyLen {\App_{\mathrm{k},\max}}
@@ -220,6 +221,8 @@ An omitted app (`p` or `i`) indicates the called Application.
 
 The _access list_ **MUST** be empty if any of the _foreign arrays_ (`apat`, `apfa`,
 `apas`), or _box reference_ list (`apbx`) fields are populated.
+
+- There **MUST NOT** be more than \\( \MaxAppAccess \\) entries in this list.
 
 ## Validation
 
