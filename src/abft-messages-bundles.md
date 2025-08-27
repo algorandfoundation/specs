@@ -27,11 +27,22 @@ We say that this bundle is _valid with respect to_ \\( L \\) (or simply _valid_ 
 > See the non-normative [Algorand ABFT Overview](./abft-overview.md) for further
 > details.
 
+- \\(s \neq 0\\) (there are no bundles for the \\( \Propose \\) step).
+
 - Every element \\( a_i \in V \\) is valid with respect to \\( L \\).
+
+- \\( \abs{V} \leq \CommitteeThreshold(s) \\).
+
+> Intuitively, the largest possible bundle is a bundle where every vote's weight
+> is exactly one.
 
 - For any two elements \\( a_i, a_j \in V \\), \\( I_i \neq I_j \\).
 
+<!-- These checks seem to be missing or not explicit in the reference implementation-->
+
 - For any element \\( a_i \in V \\), \\( r_i = r, p_i = p, s_i = s \\).
+
+<!-- These checks seem to be missing or not explicit in the reference implementation-->
 
 - For any element \\( a_i \in V \\), either \\( a_i \\) is a vote and \\( v_i = v \\),
 or \\( a_i \\) is an equivocation vote.

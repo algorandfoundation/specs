@@ -22,6 +22,13 @@ proposer. Additionally, every \\( \delta_s\delta_r \\) rounds, the digest of a p
 entry (specifically, from round \\( r-\delta_s\delta_r \\)) is hashed into the result.
 The seed proof is the corresponding VRF proof, or 0 if the \\( \VRF \\) was not used.
 
+> This section makes use of the \\( \VRF.\Prove(.) \\), \\( \VRF.\ProofToHash(.) \\)
+> and \\( \VRF.\Verify(.) \\) cryptographic low-leve functions defined in the reference
+> implementation's Algorand Sodium Fork. They respectively output a \\( \VRF \\)
+> proof and a \\( \VRF \\) hash for a given input, and perform verification of a
+> \\( \VRF \\) run. For details on the input structure and inner workings, please
+> refer to the Appendix A in the [Algorand Crypto Specification](./crypto/crypto.md).
+
 More formally, suppose \\( I \\) is a correct proposer in round \\( r \\) and period
 \\( p \\).
 
@@ -37,7 +44,7 @@ Then \\( I \\) computes the seed proof \\( y \\) for a new entry as follows:
 
 - If \\( p = 0 \\):
   - \\( y = \VRF.\Prove(\Seed(L, r-\delta_s), \sk) \\),
-  - \\( \alpha = \Hash(\VRF.\ProofToHash(y), I) \\).
+  - \\( \alpha = \Hash(I || \VRF.\ProofToHash(y)) \\).
 
 - If \\( p \ne 0 \\):
   - \\( y = 0 \\),
@@ -63,7 +70,7 @@ The seed is valid if the following verification procedure succeeds:
 let \\( q_0 = \Seed(L, r-\delta_s) \\).
 
 1. If \\( p = 0 \\), check \\( \VRF.\Verify(y, q_0, \pk) \\), immediately
-returning failure if verification fails. Let \\( q_1 = \Hash(\VRF.\ProofToHash(y), I) \\)
+returning failure if verification fails. Let \\( q_1 = \Hash(I||\VRF.\ProofToHash(y)) \\)
 and continue to step 4.
 
 1. If \\( p \ne 0 \\), let \\( q_1 = \Hash(q_0) \\). Continue.
