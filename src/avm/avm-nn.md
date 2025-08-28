@@ -9,7 +9,7 @@ of how the AVM works.
 
 The following diagram provides an overview of the full AVM architecture.
 
-![AVM Architecture](../images/avm.svg "AVM Architecture Overview")
+![AVM Architecture](../_images/avm.svg "AVM Architecture Overview")
 
 At a high level, the Algorand Virtual Machine (AVM) architecture is composed of
 four main components:

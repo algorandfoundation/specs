@@ -1,0 +1,82 @@
+$$
+\newcommand \VRF {\mathrm{VRF}}
+\newcommand \Prove {\mathrm{Prove}}
+\newcommand \ProofToHash {\mathrm{ProofToHash}}
+\newcommand \Verify {\mathrm{Verify}}
+\newcommand \pk {\mathrm{pk}}
+\newcommand \sk {\mathrm{sk}}
+\newcommand \fv {\text{first}}
+\newcommand \lv {\text{last}}
+\newcommand \Record {\mathrm{Record}}
+\newcommand \Seed {\mathrm{Seed}}
+\newcommand \Hash {\mathrm{Hash}}
+\newcommand \DigestLookup {\mathrm{DigestLookup}}
+$$
+
+# Seed
+
+Informally, the protocol interleaves \\( \delta_s \\) seeds in an alternating
+sequence. Each seed is derived from a seed \\( \delta_s \\) rounds in the past through
+either a hash function or through a \\( \VRF \\), keyed on the entry
+proposer. Additionally, every \\( \delta_s\delta_r \\) rounds, the digest of a previous
+entry (specifically, from round \\( r-\delta_s\delta_r \\)) is hashed into the result.
+The seed proof is the corresponding VRF proof, or 0 if the \\( \VRF \\) was not used.
+
+More formally, suppose \\( I \\) is a correct proposer in round \\( r \\) and period
+\\( p \\).
+
+Let
+
+- \\( (\pk, B, r_\fv, r_\lv) = \Record(L, r - \delta_b, I) \\),
+
+- \\( \sk \\) be the secret key corresponding to \\( \pk \\),
+
+- \\( \alpha \\) be a 256-bit integer.
+
+Then \\( I \\) computes the seed proof \\( y \\) for a new entry as follows:
+
+- If \\( p = 0 \\):
+  - \\( y = \VRF.\Prove(\Seed(L, r-\delta_s), \sk) \\),
+  - \\( \alpha = \Hash(\VRF.\ProofToHash(y), I) \\).
+
+- If \\( p \ne 0 \\):
+  - \\( y = 0 \\),
+  - \\( \alpha = \Hash(\Seed(L, r-\delta_s)) \\).
+
+Now \\( I \\) computes the seed \\( Q \\) as follows:
+
+$$
+Q = \left\\{
+\begin{array}{rl}
+  H(\alpha, \DigestLookup(L, r-\delta_s\delta_r)) & : (r \bmod \delta_s\delta_r) < \delta_s \\
+  H(\alpha) & : \text{otherwise}
+\end{array}
+\right.
+$$
+
+{{#include ../_include/styles.md:impl}}
+> Seed computation [reference implementation](https://github.com/algorand/go-algorand/blob/b6e5bcadf0ad3861d4805c51cbf3f695c38a93b7/agreement/proposal.go#L155).
+
+The seed is valid if the following verification procedure succeeds:
+
+1. Let \\( (\pk, B, r_\fv, r_\lv) = \Record(L, r-\delta_b, I) \\);
+let \\( q_0 = \Seed(L, r-\delta_s) \\).
+
+1. If \\( p = 0 \\), check \\( \VRF.\Verify(y, q_0, \pk) \\), immediately
+returning failure if verification fails. Let \\( q_1 = \Hash(\VRF.\ProofToHash(y), I) \\)
+and continue to step 4.
+
+1. If \\( p \ne 0 \\), let \\( q_1 = \Hash(q_0) \\). Continue.
+
+1. If \\( r \equiv (r \bmod \delta_s) \mod \delta_r\delta_s \\), then check
+\\( Q = \Hash(q_1||\DigestLookup(L, r-\delta_s\delta_r)) \\). Otherwise,
+check \\( Q = q_1 \\).
+
+> Round \\( r \\) leader selection and committee selection both use the seed from
+> \\( r-\delta_s \\) and the balances / public keys from \\( r-\delta_b \\).
+
+> For re-proposals, the period \\( p \\) used in this section is the _original_
+> period, not the reproposal period.
+
+> For a detailed overview of the seed computation algorithm and some explanatory
+> examples, refer to the non-normative [Algorand ABFT Overview](./abft-overview.md).

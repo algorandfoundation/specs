@@ -18,7 +18,7 @@ Packets are decoded from `msgpakc` to `JSON`, with:
 ## Agreement Vote (`AV`)
 
 ```json
-{{#include ../.include/msgs/AV/av-1.json}}
+{{#include ../_include/msgs/AV/av-1.json}}
 ```
 
 ## Message of Interest (`MI`)
@@ -44,7 +44,7 @@ To be added.
 ## State Proof (`SP`)
 
 ```json
-{{#include ../.include/msgs/SP/sp-1.json}}
+{{#include ../_include/msgs/SP/sp-1.json}}
 ```
 
 ## Topic Message Response (`TS`)
@@ -56,19 +56,19 @@ To be added.
 ### Application Call
 
 ```json
-{{#include ../.include/msgs/TX/tx-1.json}}
+{{#include ../_include/msgs/TX/tx-1.json}}
 ```
 
 ### Asset Transfer
 
 ```json
-{{#include ../.include/msgs/TX/tx-2.json}}
+{{#include ../_include/msgs/TX/tx-2.json}}
 ```
 
 ### Asset Opt-In
 
 ```json
-{{#include ../.include/msgs/TX/tx-4.json}}
+{{#include ../_include/msgs/TX/tx-4.json}}
 ```
 
 ## Unicast Catch-up Request (`UE`)

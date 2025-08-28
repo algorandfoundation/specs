@@ -37,7 +37,7 @@ $$
 
 ---
 
-{{#include ../.include/styles.md:impl}}
+{{#include ../_include/styles.md:impl}}
 > Commit block proposal [reference implementation](https://github.com/algorand/go-algorand/blob/55011f93fddb181c643f8e3f3d3391b62832e7cd/agreement/player.go#L366-L374).
 
 The function commits to the Ledger the block corresponding to the received

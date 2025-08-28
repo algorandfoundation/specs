@@ -11,7 +11,7 @@ The Algorand Virtual Machine has two _run-time_ (execution) modes:
 Each _mode_ differs in opcode availability, Ledger resources accessibility, program
 sizes, and computational budget.
 
-![AVM Run-Time](../images/avm-run-times.svg "AVM Run-Time Modes")
+![AVM Run-Time](../_images/avm-run-times.svg "AVM Run-Time Modes")
 
 ## Logic Signature Mode
 

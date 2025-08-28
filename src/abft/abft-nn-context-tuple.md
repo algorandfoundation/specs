@@ -30,8 +30,8 @@ The components of the _context tuple_ are:
    - A round is composed of one or more _periods_.
    - Rounds are identified by a monotonically increasing unsigned 64-bit integer
    representing the ledger’s current size and the committed block’s round number.
-   - Fundamentally, it serves as a monotonically increasing index into the blockchain,
-   reflecting the progression of confirmed blocks.
+   - Fundamentally, it serves as an increasing index into the blockchain, reflecting
+   the progression of confirmed blocks.
    - Rounds’ progression is driven by _threshold events_.
 
 1. **Period (\\( p \\))**:

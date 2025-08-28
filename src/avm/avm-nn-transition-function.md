@@ -65,7 +65,7 @@ flowchart TD
   classDef reject fill:#FF6347,stroke:#FFF,stroke-width:2px
 ```
 
-{{#include ../.include/styles.md:impl}}
+{{#include ../_include/styles.md:impl}}
 > Step function [reference implementation](https://github.com/algorand/go-algorand/blob/7e562c35b02289ca95114b4b3a20a7dc2df79018/data/transactions/logic/eval.go#L1525C24-L1525C28).
 
 ### Step-by-Step Execution

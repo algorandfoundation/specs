@@ -39,7 +39,7 @@ nd discover peers for specific capabilities (see [section below](#capabilities))
 
 A \\( \PtoP \\) network implements the `GossipNode` interface to manage peer-to-peer communication.
 
-{{#include ../.include/styles.md:impl}}
+{{#include ../_include/styles.md:impl}}
 > \\( \PtoP \\) network [reference implementation](https://github.com/algorand/go-algorand/blob/8c5fd6301ff57b69c5e2709aa1bf76e48def7566/network/p2pNetwork.go#L52).
 
 > Currently, transactions are distributed using the `GossipSub` protocol (`/meshsub/1.1.0`).
@@ -58,7 +58,7 @@ where:
 - \\( \PeerNode_p \\) represents a _peer node_ connected to \\( \PeerNode \\),
 - A \\( \PeerNode_p \\) is connected on average to \\( 4 \PeerNode \\).
 
-![P2P Network Topology](../images/network-p2p-topology.svg "P2P Network Topology")
+![P2P Network Topology](../_images/network-p2p-topology.svg "P2P Network Topology")
 
 ## `pubsub` for Transaction Dissemination
 
@@ -80,7 +80,7 @@ The naming convention used for the _topics_ is: the word `algo`, followed by a 2
 protocol \\( \tag \\) (`TX` in this case) followed by the 2-byte version identifier
 (`01` in this case).
 
-{{#include ../.include/styles.md:impl}}
+{{#include ../_include/styles.md:impl}}
 > Pubsub protocol [reference implementation](https://github.com/algorand/go-algorand/blob/8c5fd6301ff57b69c5e2709aa1bf76e48def7566/network/p2p/pubsub.go).
 
 The `makePubSub(.)` function initializes the `pubsub` protocol with a list of options
@@ -123,7 +123,7 @@ the message should be penalized by peer-scoring routers.
 - `ValidationIgnore(2)` and `validationThrottled(-1)` are `libp2p` internals that
 should not be exposed.
 
-{{#include ../.include/styles.md:impl}}
+{{#include ../_include/styles.md:impl}}
 > Pubsub protocol message validation `libp2p` [extrenal implementation](https://github.com/libp2p/go-libp2p-pubsub/blob/c06df2f9a38e9382e644b241adf0e96e5ca00955/validation.go#L38C1-L52C2).
 
 ## Node Capabilities
@@ -143,7 +143,7 @@ validation of messages and efficiently route them to peers.
 
 Each node advertises its capabilities and keeps track of peers in a [distributed hash table](#distributed-hash-table-dht).
 
-{{#include ../.include/styles.md:impl}}
+{{#include ../_include/styles.md:impl}}
 > \\( \PtoP \\) node capabilities [reference implementation](https://github.com/algorand/go-algorand/blob/ce9b2b0870043ef9d89be9ccf5cda0c42e3af70c/network/p2p/capabilities.go).
 
 ### Distributed Hash Table (DHT)
@@ -160,7 +160,7 @@ storing resource locations throughout the network.
 The Algorand node reference implementation (`go-algorand`) uses [Kadmelia DHT](https://github.com/libp2p/go-libp2p-kad-dht),
 to keep track of the peers’ capabilities.
 
-{{#include ../.include/styles.md:impl}}
+{{#include ../_include/styles.md:impl}}
 > DHT [reference implementation](https://github.com/algorand/go-algorand/blob/df0613a04432494d0f437433dd1efd02481db838/network/p2p/dht/dht.go).
 
 ---

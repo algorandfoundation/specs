@@ -35,7 +35,7 @@ specification.
 > Due to limited tool support for OpenAPI v3, both v2 and v3 specifications are
 > maintained.
 
-{{#include ../.include/styles.md:impl}}
+{{#include ../_include/styles.md:impl}}
 > The endpoints’ code is automatically generated from this specification using
 > [`oapi-codegen`](https://github.com/deepmap/oapi-codegen).
 >

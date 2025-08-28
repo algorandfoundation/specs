@@ -11,7 +11,7 @@ or `bytes` types) and are initialized as zeroed-out `uint64` values.
 > stay the same for long periods. It provides a convenient place to keep such persistent
 > or reusable data during the program execution.
 
-{{#include ../.include/styles.md:impl}}
+{{#include ../_include/styles.md:impl}}
 > Scratch Space [reference implementation.](https://github.com/algorand/go-algorand/blob/b7b3e5e3c9a83cbd6bd038f4f1856039d941b958/data/transactions/logic/eval.go#L650)
 
 ## Indexing

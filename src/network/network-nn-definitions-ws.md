@@ -77,7 +77,7 @@ where:
 - A \\( \PeerNode_r \\) is not connected to other \\( \PeerNode \\),
 - A \\( \RelayNode \\) is connected to multiple \\( \RelayNode \\).
 
-![Relay Network Topology](../images/network-ws-topology.svg "Relay Network Topology")
+![Relay Network Topology](../_images/network-ws-topology.svg "Relay Network Topology")
 
 ## Relay Network Peer Definition
 
@@ -162,7 +162,7 @@ The following is a list performance monitor fields in `go-algorand`:
 | `msgCount`               | Total number of accumulated messages                                                                              |
 | `accumulationTime`       | Duration for message accumulation, randomized to prevent cross-node synchronization                               |
 
-{{#include ../.include/styles.md:impl}}
+{{#include ../_include/styles.md:impl}}
 > Connection performance monitor [reference implementation.](https://github.com/algorand/go-algorand/blob/df0613a04432494d0f437433dd1efd02481db838/network/connPerfMon.go#L80)
 
 ## The Peers Heap and Prioritization
@@ -175,13 +175,13 @@ connection to peers.
 When a \\( \Peer \\) is added, it’s pushed on the `PeersHeap` with its weight, evicting
 the previous one. 
 
-{{#include ../.include/styles.md:impl}}
+{{#include ../_include/styles.md:impl}}
 > Peers heap [reference implementation](https://github.com/algorand/go-algorand/blob/df0613a04432494d0f437433dd1efd02481db838/network/peersheap.go#L19).
 
 The _network priority challenge_ is a two-way handshake that prioritizes connections
 resolving the challenge.
 
-{{#include ../.include/styles.md:impl}}
+{{#include ../_include/styles.md:impl}}
 > Network priority challenge [reference implementation](https://github.com/algorand/go-algorand/blob/df0613a04432494d0f437433dd1efd02481db838/network/netprio.go)
 
 ## Multiplexer
@@ -192,7 +192,7 @@ to protocol \\( \tag \\).
 A multiplexer contains both message handlers \\( \MessageHandler \\) and message
 validator handlers \\( \MessageValidatorHandler \\) (see [network notation](network-nn-notation.mdessage-handlers)).
 
-{{#include ../.include/styles.md:impl}}
+{{#include ../_include/styles.md:impl}}
 > Message handlers and message validator handlers are implemented using _atomic
 > pointers_ in `go-algorand`, to avoid data races when accessing them. They are
 > loaded upon the network initialization and never modified again until garbage
@@ -201,5 +201,5 @@ validator handlers \\( \MessageValidatorHandler \\) (see [network notation](netw
 Through the use of atomic getters, the multiplexer may atomically retrieve a given
 message handler from the mappings given a protocol \\( \tag \\).
 
-{{#include ../.include/styles.md:impl}}
+{{#include ../_include/styles.md:impl}}
 > Multiplexer [reference implementation](https://github.com/algorand/go-algorand/blob/df0613a04432494d0f437433dd1efd02481db838/network/multiplexer.go#L26).

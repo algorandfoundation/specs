@@ -31,21 +31,21 @@ the seed computation, to ease its understanding.
 
 For the seed calculation algorithm, consider the following notation:
 
-| SYMBOL                    | DESCRIPTION                                      |
-|---------------------------|--------------------------------------------------|
-| \\( I \\)                 | Player address                                   |
-| \\( L \\)                 | Ledger (blocks and present sate)                 |
-| \\( r \\)                 | Current protocol round                           |
-| \\( p \\)                 | Current protocol period                          |
-| \\( \delta_s \\)          | Seed lookback (rounds)                           |
-| \\( \delta_r \\)          | Seed refresh interval (rounds)                   |
-| \\( L[r - n] \\)          | Block \\( r - n \\) of the ledger                |
-| \\( L[r - n]_Q \\)        | Seed of the block \\( r - n \\) of the ledger    |
-| \\( H(x) \\)              | Hash of \\( x \\)                                |
-| \\( \VRF \\)              | Verifiable Random Function                       |
-| \\( \VRF.\Prove \\)       | Computes the proof \\( y \\) of the \\( \VRF \\) |
+|          SYMBOL           | DESCRIPTION                                      |
+|:-------------------------:|--------------------------------------------------|
+|         \\( I \\)         | Player address                                   |
+|         \\( L \\)         | Ledger (blocks and present sate)                 |
+|         \\( r \\)         | Current protocol round                           |
+|         \\( p \\)         | Current protocol period                          |
+|     \\( \delta_s \\)      | Seed lookback (rounds)                           |
+|     \\( \delta_r \\)      | Seed refresh interval (rounds)                   |
+|     \\( L[r - n] \\)      | Block \\( r - n \\) of the ledger                |
+|    \\( L[r - n]_Q \\)     | Seed of the block \\( r - n \\) of the ledger    |
+|       \\( H(x) \\)        | Hash of \\( x \\)                                |
+|       \\( \VRF \\)        | Verifiable Random Function                       |
+|    \\( \VRF.\Prove \\)    | Computes the proof \\( y \\) of the \\( \VRF \\) |
 | \\( \VRF.\ProofToHash \\) | Computes the hash of \\( y \\)                   |
-| \\( Q \\)                 | Randomness seed                                  |
+|         \\( Q \\)         | Randomness seed                                  |
 
 ## Algorithm
 
@@ -77,7 +77,7 @@ $$
 
 ---
 
-{{#include ../.include/styles.md:impl}}
+{{#include ../_include/styles.md:impl}}
 > Seed computation [reference implementation](https://github.com/algorand/go-algorand/blob/b6e5bcadf0ad3861d4805c51cbf3f695c38a93b7/agreement/proposal.go#L155).
 
 The function takes as input the _address_ \\( I \\) of an _online player_ who will
@@ -117,7 +117,7 @@ We define \\( \Rerand(r) = r \bmod \delta_s\delta_r \\).
 When \\( \Rerand(r) < \delta_s \\) we say we are _re-randomizing_ the seed \\( Q \\)
 for the round \\( r \\).
 
-{{#include ../.include/styles.md:example}}
+{{#include ../_include/styles.md:example}}
 > Take the process for a player with _address_ \\( I \\) at the first consensus
 > attempt of the round (\\( p = 0 \\)).
 >

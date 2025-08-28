@@ -50,5 +50,5 @@ under the _voting keys_.
 > The _Old Style Signature_ (\\( \PKSigOld \\)) is **deprecated**, still included
 > in the message only for compatibility reasons.
 
-{{#include ../.include/styles.md:impl}}
+{{#include ../_include/styles.md:impl}}
 > One-Time Signature [reference implementation](https://github.com/algorand/go-algorand/blob/b6e5bcadf0ad3861d4805c51cbf3f695c38a93b7/crypto/onetimesig.go#L36).

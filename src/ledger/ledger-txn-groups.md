@@ -22,7 +22,7 @@ an ordered list of the hashes of all transactions in the group. When computing e
 transaction’s hash for this purpose, its own _group_ field is omitted to avoid circular
 dependency.
 
-{{#include ../.include/styles.md:example}}
+{{#include ../_include/styles.md:example}}
 > A user wants to require transaction \\( A \\) to confirm _if and only if_ transactions
 > \\( B \\) and \\( C \\) confirm in a certain order. The user performs the following
 > procedure:
@@ -94,7 +94,7 @@ Beyond the _group_ field, group minimum fee, group I/O Budget, and group logic s
 size checks, each transaction in a group is evaluated separately and **MUST** be
 valid on its own, as described in the [Validity and State Changes]() section.
 
-{{#include ../.include/styles.md:example}}
+{{#include ../_include/styles.md:example}}
 > An account with balance \\( 50 \\) ALGO could not spend \\( 100 \\) ALGO in transaction
 > \\( A \\) and afterward receive \\( 500 \\) in transaction \\( B \\), even if
 > transactions \\( A \\) and \\( B \\) are in the same group, because transaction

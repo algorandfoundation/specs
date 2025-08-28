@@ -58,7 +58,7 @@ are considered and relevant for \\( \CredentialHistory \\). If the round is comp
 in later periods (\\( p > 0 \\)), that round is skipped and \\( \CredentialHistory \\)
 remains unchanged.
 
-{{#include ../.include/styles.md:impl}}
+{{#include ../_include/styles.md:impl}}
 > Update credential arrival history [reference implementation](https://github.com/algorand/go-algorand/blob/df0613a04432494d0f437433dd1efd02481db838/agreement/player.go#L293).
 
 When computing the dynamic filter timeout, if a sufficient history of credentials
@@ -77,16 +77,16 @@ $$
 Note that the filter timeout \\( \lambdaMin \leq \Timeout \leq \lambdaMax \\) is
 clamped on the minimum and maximum bounds defined in the [ABFT normative section](./abft-parameters.md).
 
-{{#include ../.include/styles.md:impl}}
+{{#include ../_include/styles.md:impl}}
 > \\( \CredentialIdx \\)-th element selection [reference implementation](https://github.com/algorand/go-algorand/blob/df0613a04432494d0f437433dd1efd02481db838/agreement/credentialArrivalHistory.go#L69).
 
 ## Parameters
 
-| NAME                           | VALUE           | DESCRIPTION                                                                                                                                 |
-|--------------------------------|-----------------|---------------------------------------------------------------------------------------------------------------------------------------------|
-| \\( \CredentialHistorySize \\) | 40              | Size of the credential arrival time history circular array \\( \CredentialHistory \\).                                                      |
-| \\( \CredentialIdx \\)         | 37              | Entry of the (sorted) array \\( \CredentialHistory \\). Set to represent the 95th percentile (according to \\( \CredentialHistorySize \\)). |
-| \\( \TimeoutGracePeriod \\)    | 50 milliseconds | Filter extra time, atop the one calculated from \\( \CredentialHistory \\).                                                                 |
+|              NAME              | VALUE (seconds) | DESCRIPTION                                                                                                                                 |
+|:------------------------------:|:---------------:|---------------------------------------------------------------------------------------------------------------------------------------------|
+| \\( \CredentialHistorySize \\) |   \\( 40 \\)    | Size of the credential arrival time history circular array \\( \CredentialHistory \\).                                                      |
+|     \\( \CredentialIdx \\)     |   \\( 37 \\)    | Entry of the (sorted) array \\( \CredentialHistory \\). Set to represent the 95th percentile (according to \\( \CredentialHistorySize \\)). |
+|  \\( \TimeoutGracePeriod \\)   |  \\( 0.05 \\)   | Filter extra time, atop the one calculated from \\( \CredentialHistory \\).                                                                 |
 
 ---
 
