@@ -97,7 +97,7 @@ If there exists a proposal-value \\( v \\) such that \\( \Proposal(v) \in P \\) 
 period_ \\( p \\) (or simply that \\( v \\) is _committable_ if \\( (r, p) \\) is
 unambiguous).
 
-{{#include ./.include/styles.md:impl}}
+{{#include ../.include/styles.md:impl}}
 > The current implementation constructs a [Proposal Tracker](https://github.com/algorand/go-algorand/blob/b6e5bcadf0ad3861d4805c51cbf3f695c38a93b7/agreement/proposalTracker.go#L93)
 > which, amongst other things, is in charge of handling both frozen and staged value
 > tracking.

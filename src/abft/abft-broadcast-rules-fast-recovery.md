@@ -26,7 +26,7 @@ Finally, the player broadcasts all \\( \Vote(I, r, p, \Late, v) \in V\\), all
 \\( \Vote(I, r, p, \Redo, v) \in V\\), and all \\( \Vote(I, r, p, \Down, \bot) \in V \\)
 that it has observed.
 
-{{#include ./.include/styles.md:impl}}
+{{#include ../.include/styles.md:impl}}
 > Fast recovery [reference implementation](https://github.com/algorand/go-algorand/blob/b6e5bcadf0ad3861d4805c51cbf3f695c38a93b7/agreement/player.go#L150).
 
 > For a detailed pseudocode overview of the fast recovery routine, along with protocol
