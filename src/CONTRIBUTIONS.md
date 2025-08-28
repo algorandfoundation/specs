@@ -20,9 +20,9 @@ The source code is structured as follows:
 .github/            -> GitHub actions and CI/CD workflows
 .archive/           -> Legacy specification archive
 src/                -> mdBook source code
-└── .include/       -> Code snippets, templates, TeX-macros, and examples
-└── .excalidraw/    -> Excalidraw diagrams source code
-└── images/         -> SVG files
+└── _include/       -> Code snippets, templates, TeX-macros, and examples
+└── _excalidraw/    -> Excalidraw diagrams source code
+└── _images/        -> SVG files
 └── Part_A/         -> Part A files
 └── Part_B/         -> Part B files
 └── Part.../        -> ...
