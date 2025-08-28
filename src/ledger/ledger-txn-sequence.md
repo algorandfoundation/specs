@@ -5,6 +5,8 @@ $$
 \newcommand \TxCommit {\Tx\mathrm{Commit}}
 \newcommand \TxTail {\Tx\mathrm{Tail}}
 \newcommand \Hash {\mathrm{Hash}}
+\newcommand \SHA256 {\mathrm{SHA256}}
+\newcommand \SHA512 {\mathrm{SHA512}}
 \newcommand \Sig {\mathrm{Sig}}
 \newcommand \STIB {\mathrm{STIB}}
 \newcommand \Genesis {\mathrm{Genesis}}
@@ -26,14 +28,18 @@ in that block.
 The transaction sequence of block \\( r \\) is denoted \\( \TxSeq_r \\).
 
 Each valid block contains a _transaction commitment_ \\( \TxCommit_r \\) which is
-a [Merkle tree commitment](../crypto/crypto-merkle-tree.md) to this sequence. The
-leaves in the Merkle tree are hashed as:
+a [Merkle Tree Commitment](../crypto/crypto-merkle-tree.md) to this sequence.
+
+The leaves in the Merkle Tree are hashed as:
 
 $$
 \Hash(\texttt{TL}, \TxID, \Hash(\STIB))
 $$
 
 Where:
+
+- \\( \Hash \\) is the cryptographic [SHA-512-256](../crypto/crypto-sha512-256.md)
+hash function;
 
 - The \\( \TxID \\) is the 32-byte transaction identifier;
 
@@ -69,26 +75,43 @@ with the changes described above.
 Individual _transaction signatures_ cover the original encoding of transactions as
 standalone transactions (\\( \Tx \\)).
 
-In addition to _transaction commitment_, each block contains a _[SHA-256](../crypto/crypto-sha256.md)
-transaction commitment_. It allows a verifier not supporting [SHA-512/256 function](../crypto/crypto-sha512.md)
-to verify proof of membership on a transaction.
+In addition to the _transaction commitment_, each block contains _[SHA-256](../crypto/crypto-sha256.md)
+and [SHA-512](../crypto/crypto-sha512.md) transaction commitments_. They allow a
+verifier not supporting [SHA-512/256](../crypto/crypto-sha512-256.md) function to
+verify proof of membership for transactions.
 
-To construct this commitment we use [Vector Commitment](../crypto/crypto-vector-commitment.md).
+To construct these commitments, we use a [Vector Commitment](../crypto/crypto-vector-commitment.md).
 
-The leaves in the Vector Commitment tree are hashed as:
+The leaves in the Vector Commitment tree are hashed respectively as:
 
 $$
-\Hash(\texttt{TL}, \Hash(\TxID), \Hash(\STIB))
+\SHA256(\texttt{TL}, \SHA256(\TxID), \SHA256(\STIB))
+$$
+
+and
+
+$$
+\SHA512(\texttt{TL}, \SHA512(\TxID), \SHA512(\STIB))
 $$
 
 Where:
 
-- \\( \Hash \\) is the cryptographic [SHA-256](../crypto/crypto-sha256.md) hash function;
-- \\( \Hash(\TxID) = \Hash(\texttt{TX} || \Tx) \\)
-- \\( \Hash(\STIB) = \Hash(\texttt{STIB} || \Sig(\Tx) || \ApplyData) \\)
+- \\( \SHA256 \\) is the cryptographic [SHA-256](../crypto/crypto-sha256.md) hash
+function;
 
-The Vector Commitment uses [SHA-256](../crypto/crypto-sha256.md) for internal nodes
-as well.
+- \\( \SHA256(\TxID) = \SHA256(\texttt{TX} || \Tx) \\)
+
+- \\( \SHA256(\STIB) = \SHA256(\texttt{STIB} || \Sig(\Tx) || \ApplyData) \\)
+
+- \\( \SHA512 \\) is the cryptographic [SHA-512](../crypto/crypto-sha512.md) hash
+function;
+
+- \\( \SHA512(\TxID) = \SHA512(\texttt{TX} || \Tx) \\)
+
+- \\( \SHA512(\STIB) = \SHA512(\texttt{STIB} || \Sig(\Tx) || \ApplyData) \\)
+
+These Vector Commitments use [SHA-256](../crypto/crypto-sha256.md) and [SHA-512](../crypto/crypto-sha512.md)
+for internal nodes as well.
 
 A _valid transaction sequence_ \\( \TxSeq \\) contains no duplicates: each transaction
 in the transaction sequence **MUST** appear exactly once.

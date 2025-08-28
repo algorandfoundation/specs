@@ -15,7 +15,7 @@ The most important differences are that:
 Instead, their effects are noted in metadata associated with their top-level application
 call transaction.
 
-An inner transaction's _sender_ **MUST** be the [SHA512/256 hash](../crypto/crypto-sha512.md)
+An inner transaction's _sender_ **MUST** be the [SHA512/256 hash](../crypto/crypto-sha512-256.md)
 of the Application ID (prefixed by `appID`), or an account that has been rekeyed
 to that hash.
 
