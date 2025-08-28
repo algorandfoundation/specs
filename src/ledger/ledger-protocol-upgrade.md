@@ -19,7 +19,7 @@ The upgrade vote in each block consists of:
 - A 64-bit unsigned integer \\( x_r \\) which indicates the delay between the acceptance
 of a protocol version and its execution;
 - A single bit \\( b \\) indicating whether the block proposer supports the given
-version.
+protocol version.
 
 The upgrade state in each block/state consists of:
 

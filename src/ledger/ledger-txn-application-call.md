@@ -10,6 +10,7 @@ $$
 \newcommand \MaxAppTxnAccounts {\App_{\mathrm{acc},\max}}
 \newcommand \MaxAppTxnForeignApps {\App_{\mathrm{app},\max}}
 \newcommand \MaxAppTxnForeignAssets {\App_{\mathrm{asa},\max}}
+\newcommand \MaxAppAccess {\App_{\mathrm{access},\max}}
 \newcommand \Box {\mathrm{Box}}
 \newcommand \MaxAppBoxReferences {\App_{\Box,\max}}
 \newcommand \MaxAppKeyLen {\App_{\mathrm{k},\max}}
@@ -27,6 +28,7 @@ An _application call_ transaction additionally has the following fields:
 | On Completion Action | `apan` |  `uint64`   |            Yes            |
 | Approval Program     | `apap` |  `[]byte`   |            No             |
 | Clear State Program  | `apsu` |  `[]byte`   |            No             |
+| Reject Version       | `aprv` |  `uint64`   |            No             |
 | Extra Program Pages  | `apep` |  `uint64`   |            No             |
 | Global State Schema  | `apgs` |  `struct`   |            No             |
 | Local State Schema   | `apls` |  `struct`   |            No             |
@@ -35,9 +37,10 @@ An _application call_ transaction additionally has the following fields:
 | Foreign Applications | `apfa` | `[]uint64`  |            No             |
 | Foreign Assets       | `apas` | `[]uint64`  |            No             |
 | Box References       | `apbx` | `[]struct`  |            No             |
+| Access List          |  `al`  | `[]struct`  |            No             |
 
-The sum of the number of _foreign accounts_ in `apat`, _foreign application_ in `apfa`,
-_foreign asset_ in `apas`, and _box references_ in `apbx` **MUST NOT** exceed \\( \MaxAppTotalTxnReferences \\).
+The sum of the elements in _foreign accounts_ (`apat`), _foreign applications_ (`apfa`),
+_foreign assets_ (`apas`), and _box references_ (`apbx`) **MUST NOT** exceed \\( \MaxAppTotalTxnReferences \\).
 
 ### Application ID
 
@@ -78,6 +81,14 @@ The _clear state program_ (**OPTIONAL**) contains the clear state program byteco
 
 - The Approval Program and the Clear State Program **MUST** have the same version
 number if either is \\( 6 \\) or higher.
+
+### Reject Version
+
+The _reject version_ (**OPTIONAL**), if set to a positive number, specifies that
+the application call **MUST** fail unless the reject version value exceeds the Application
+Version.
+
+> For further details on Application Versions, refer to the [Applications Specifications](./ledger-applications.md).
 
 ### Extra Program Pages
 
@@ -143,9 +154,9 @@ the application being called.
 
 ### Foreign Accounts
 
-The _foreign accounts_ (**OPTIONAL**) list specifies the accounts, besides the _sender_,
-whose _local states_ **MAY** be referred to by executing the Approval Program or
-the Clear State Program. These accounts are referred to by their 32-byte addresses.
+The _foreign accounts_ (**OPTIONAL**) list specifies the _accounts_, besides the
+_sender_, whose _local states_ **MAY** be referred to by executing the Approval Program
+or the Clear State Program. These accounts are referred to by their 32-byte addresses.
 
 - There **MUST NOT** be more than \\( \MaxAppTxnAccounts \\) entries in this list.
 
@@ -170,23 +181,57 @@ list.
 ### Box References
 
 The _box references_ (**OPTIONAL**) list specifies the _boxes_ that the executing
-Approval Program, or any other Approval Program in the same group, **MAY** access
-for reading or writing when the _box reference_ matches the running program _application
-IDs_.
+Approval Program (with AVM Version 9 or later), or any other Approval Program in
+the same group, **MAY** access for reading or writing when the _box reference_ matches
+the running program _application IDs_.
 
-The _box_ is a structure containing:
+> For further details on AVM resource availability, refer to the [AVM Specifications](../avm/avm-mode-applications.md#resource-availability).
+
+Each element of the _box reference_ encodes a structure containing:
 
 | FIELD | CODEC |   TYPE   | DESCRIPTION                                                          |
 |:------|:-----:|:--------:|:---------------------------------------------------------------------|
 | Index |  `i`  | `uint64` | A \\( 1 \\)-based index in the _foreign applications_ (`apfa`) list. |
 | Name  |  `n`  | `[]byte` | The box identifier.                                                  |
  
-> A \\( 0 \\) index (`i`) is interpreted as the _application ID_ of this transaction
-> (`apid`, or the ID allocated for the created application when `apid` is \\( 0 \\)).
+An omitted index (`i`) is interpreted as the _application ID_ of this transaction
+(`apid`, or the ID allocated for the created application when `apid` is \\( 0 \\)).
 
 - There **MUST NOT** be more than \\( \MaxAppBoxReferences \\) entries in this list.
 
 - The _box name_ byte length **MUST NOT** exceed \\( \MaxAppKeyLen \\).
+
+### Access List
+
+The _access list_ (**OPTIONAL**) specifies _resources_ (_accounts_, _application
+IDs_, _asset IDs_, and _box references_) that the executing Approval Program (with
+AVM Version 9 or later), or any other Approval Program in the same group, **MAY**
+access for reading or writing.
+
+> For further details on AVM resource availability, refer to the [AVM Specifications](../avm/avm-mode-applications.md#resource-availability).
+
+Each element of the _access list_ encodes one of the following resources:
+
+| FIELD         | CODEC |   TYPE   | DESCRIPTION                                                                                                        |
+|:--------------|:-----:|:--------:|:-------------------------------------------------------------------------------------------------------------------|
+| Address       |  `d`  | `[]byte` | An Account                                                                                                         |
+| Asset         |  `s`  | `uint64` | An Asset ID                                                                                                        |
+| Application   |  `p`  | `uint64` | An Application ID                                                                                                  |
+| Holding       |  `h`  | `struct` | A Holding contains subfields `d` and `s` that refer to the Address and Asset of the Holding, respectively.         |
+| Locals        |  `l`  | `struct` | A Local contains subfields `d` and `p` that refer to the Address and Application of the Local State, respectively. |
+| Box Reference |  `b`  | `struct` | A Box Reference contains subfields `i` and `n`, that refer to the Application and Box Name, respectively.          |
+
+The subfields of `h`, `l`, `b` refer to Accounts, Assets, and Applications by using
+an \\( 1 \\)-based index into the Access List.
+
+An omitted `d` indicates the _sender_ of the transaction.
+
+An omitted app (`p` or `i`) indicates the called Application.
+
+The _access list_ **MUST** be empty if any of the _foreign arrays_ (`apat`, `apfa`,
+`apas`), or _box reference_ list (`apbx`) fields are populated.
+
+- There **MUST NOT** be more than \\( \MaxAppAccess \\) entries in this list.
 
 ## Validation
 

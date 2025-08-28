@@ -63,8 +63,8 @@ section:
   - An **OPTIONAL** single signature `sig` of 64-bytes valid from the authorizer
   address of the transaction which has signed the bytes in `l`.
 
-  - An **OPTIONAL** multisignature `msig` from the authorizer address of the transaction
-  over the bytes in `l`.
+  - An **OPTIONAL** multisignature `lmsig` from the authorizer address of the transaction
+  over the bytes of the authorizer address and the bytes in `l`.
 
   - An **OPTIONAL** array of byte strings `arg` which are arguments supplied to the
   program in `l` (`arg` bytes are not covered by `sig` or `msig`).
