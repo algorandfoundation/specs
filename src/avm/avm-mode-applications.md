@@ -79,19 +79,19 @@ Applications have limits on the amount of blockchain state they may examine.
 These limits are enforced by failing any opcode that attempts to access a resource
 unless the resource is _available_. These resources are:
 
-- _Accounts_, which **MUST** be available to access their balance, or other account
+- _Accounts_, which **MUST** be available to access their balance, or other Account
 parameters such as voting details.
 
 - _Assets_, which **MUST** be available to access global asset parameters, such as
 the asset's URL, name, or privileged addresses.
 
-- _Holdings_, which **MUST** be available to access a particular address's balance
+- _Holdings_, which **MUST** be available to access a particular Account's balance
 or frozen status for a particular asset.
 
 - _Applications_, which **MUST** be available to read an Application's programs,
 parameters, or Global State.
 
-- _Locals_, which **MUST** be available to read a particular address's Local State
+- _Locals_, which **MUST** be available to read a particular Account's Local State
 for a particular Application.
 
 - _Boxes_, which **MUST** be available to read or write a box, designated by an
