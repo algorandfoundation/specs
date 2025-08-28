@@ -11,7 +11,7 @@
 # Algorand BFT Protocol
 
 - [Overview]()
-- [Normative]()
+- [Normative](./abft/abft.md)
   - [Notation](abft/abft-notation.md)
   - [Parameters](abft/abft-parameters.md)
   - [Players](abft/abft-participants.md)
