@@ -43,21 +43,16 @@ These _asset parameters_ is structure containing:
 | Freeze         |  `f`  | `address`  | Account allowed to change the account’s frozen state for the asset holdings                |
 | Clawback       |  `c`  | `address`  | Account allowed to transfer units of the asset from any account                            |
 
-- The _decimals_ **MUST NOT** exceed \\( \MaxAssetDecimals \\).
-
-- The _unit name_ byte length **MUTS NOT** exceed \\( \MaxAssetUnitNameBytes \\).
-
-- The _asset name_ byte length **MUST NOT** exceed \\( \MaxAssetNameBytes \\).
-
-- The _URL_ byte length **MUST NOT** exceed \\( \MaxAssetURLBytes \\).
-
 > If the _asset parameters_ are omitted (struct of zero values), this transaction
 > is _deleting_ the asset.
 
-## Semantic
-
-TODO
-
 ## Validation
+
+- The _asset name_ byte length **MUST NOT** exceed \\( \MaxAssetNameBytes \\).
+- The _unit name_ byte length **MUST NOT** exceed \\( \MaxAssetUnitNameBytes \\).
+- The _URL_ byte length **MUST NOT** exceed \\( \MaxAssetURLBytes \\).
+- The _decimals_ **MUST NOT** exceed \\( \MaxAssetDecimals \\).
+
+## Semantic
 
 TODO

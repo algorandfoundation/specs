@@ -29,10 +29,11 @@ of the _asset ID_ should be _frozen_ or _unfrozen_.
 The _frozen status_ \\( \Asset_f \\) is a flag setting of whether the _freeze address_
 holdings of _asset ID_ should be frozen (`true`) or unfrozen (`false`).
 
-## Semantic
-
-TODO
-
 ## Validation
+
+-   The _asset ID_ \\( \Asset_\mathrm{frz,ID} \\) **MUST** be non-zero.
+-   The _freeze address_ \\( I_\mathrm{frz} \\) **MUST** be provided.
+
+## Semantic
 
 TODO

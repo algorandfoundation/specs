@@ -33,10 +33,11 @@ the _sender_ account _after_ the payment transfer.
 
 > If the _close to_ address is omitted (\\( I_0 = 0 \\)), the field has no effect.
 
-## Semantic
-
-TODO
-
 ## Validation
+
+ - The _close to_ address **MUST NOT** be the _sender_ address.
+ - If Payouts.Enabled, then FeeSink **SHALL NOT** send any payments. Otherwise, the _receiver_ address **MUST** be the RewardsPool address and the _close to_ address **MUST** be the _zero address_.
+
+## Semantic
 
 TODO
