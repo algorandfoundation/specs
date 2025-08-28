@@ -2,7 +2,7 @@
 
 Each _Tracker_ exposes tracker-specific APIs to access the state it maintains.
 
-{{#include ../.include/styles.md:impl}}
+{{#include ../_include/styles.md:impl}}
 > Tracker [reference implementation](https://github.com/algorand/go-algorand/blob/df0613a04432494d0f437433dd1efd02481db838/ledger/tracker.go#L156-L169).
 
 Trackers can access the Ledger via a restricted interface called `ledgerForTracker`,

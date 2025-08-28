@@ -16,7 +16,7 @@ the node can process them using the same logic and flow as actual network messag
 This ensures consistency within the state machine and leverages existing validation
 and routing infrastructure.
 
-{{#include ../.include/styles.md:example}}
+{{#include ../_include/styles.md:example}}
 > The following example from the [reference implementation](https://github.com/algorand/go-algorand/blob/df0613a04432494d0f437433dd1efd02481db838/agreement/actions.go#L387)
 > illustrates how the _Pseudo Node_ mechanism is used during proposal assembly.
 > The `Loopback` component creates proposals internally. These are then turned into

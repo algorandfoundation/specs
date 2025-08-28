@@ -16,7 +16,7 @@ sync time, but it requires trust in the Catchpoint file provider.
 
 ## Regular Synchronization
 
-![Node Synchronization](../images/node-sync.svg "Node Synchronization")
+![Node Synchronization](../_images/node-sync.svg "Node Synchronization")
 
 > The degree of trust in the block validation process can be tuned with the `CatchupBlockValidateMode`
 > configuration parameter.
@@ -42,7 +42,7 @@ Instead of replaying the entire transaction history from the Genesis Block, the 
 Catchup_ allows the node to skip ahead efficiently, becoming operational with minimal
 delay.
 
-{{#include ../.include/styles.md:example}}
+{{#include ../_include/styles.md:example}}
 > To generate Catchpoints “in-house”, users need an Archival Node, and override
 > the gossip lookup to force it to download the _Catchpoint File_ from their local
 > server on the gossip port (usually `4160`). Using the `algod` CLI:
@@ -51,14 +51,14 @@ delay.
 > goal node catchup <catchpoint label> -d data -p ip_of_user_server:gossip_port
 > ```
 
-{{#include ../.include/styles.md:impl}}
+{{#include ../_include/styles.md:impl}}
 > Catchup [reference implementation](https://github.com/algorand/go-algorand/tree/98ac36a21232294ae984077665fbfb92940f87da/catchup).
 >
 > Catchpoint Labels [reference implementation](https://github.com/algorand/go-algorand/blob/98ac36a21232294ae984077665fbfb92940f87da/ledger/ledgercore/catchpointlabel.go).
 >
 > Catchpoint Tracking Modes [configuration](https://github.com/algorand/go-algorand/blob/02266d7f98e47873b01086d309d1a934a445595f/config/config.go#L97).
 
-![Node Fast Catchup](../images/node-fast-catchup.svg "Node Fast Catchup")
+![Node Fast Catchup](../_images/node-fast-catchup.svg "Node Fast Catchup")
 
 The diagram below illustrates the Fast Catchup process and how it interacts with
 other node components, including the HTTP API and the internal Catchup Service.

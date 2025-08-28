@@ -28,7 +28,7 @@ Leaving this field blank disables incoming connections. The value can be an `IP`
 `IP:port` pair, or just a `:port`. The node defaults to port `4160` if no port is specified.
 Setting the port to `:0` allows the system to assign an available port automatically.
 
-{{#include ../.include/styles.md:example}}
+{{#include ../_include/styles.md:example}}
 > `127.0.0.1:0` binds the node to _any available port_ on `localhost`.
 
 ---

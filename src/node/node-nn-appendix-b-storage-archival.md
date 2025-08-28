@@ -164,7 +164,7 @@ are identical to the ones in `LedgerSynchronousMode`.
 
 Sets the maximum lookback range for Account states.
 
-{{#include ../.include/styles.md:example}}
+{{#include ../_include/styles.md:example}}
 > The Ledger can answer Account state questions for the range `[Latest - MaxAcctLookback, Latest]`.
 
 ---
@@ -177,7 +177,7 @@ Sets the maximum lookback range for Account states.
 
 Sets the maximum lookback range for Block information.
 
-{{#include ../.include/styles.md:example}}
+{{#include ../_include/styles.md:example}}
 > The Block DB can return transaction IDs for questions for the range `[Latest - MaxBlockHistoryLookback, Latest]`
 
 ---

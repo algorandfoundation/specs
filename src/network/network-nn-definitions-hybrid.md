@@ -52,4 +52,4 @@ where:
 - A \\( \HybridNode \\) is connected on average to \\( 4 \PeerNode \\),
 - A \\( \RelayNode \\) is connected to multiple \\( \RelayNode \\).
 
-![Hybrid Network Topology](../images/network-hyb-topology.svg "Hybrid Network Topology")
+![Hybrid Network Topology](../_images/network-hyb-topology.svg "Hybrid Network Topology")

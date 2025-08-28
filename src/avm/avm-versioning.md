@@ -10,7 +10,7 @@ Programs carrying old versions are executed with their original semantics.
 In the AVM bytecode, the Version is an incrementing integer, denoted in the program
 as `vX` (where `X` is the version number, see [Pragma directive section](./avm-assembler.md#pragma)).
 
-The AVM current Version is: \\( {{#include ../.include/auto/avm-version}} \\).
+The AVM current Version is: \\( {{#include ../_include/auto/avm-version}} \\).
 
 > For further details about the available opcodes per version, refer to the [AVM Opcodes
 > Specification]().
@@ -35,7 +35,7 @@ If one of the transactions in a group executes a program whose Version predates 
 transaction type or field that can violate expectations, that transaction type or
 field **MUST NOT** be used anywhere in the transaction group.
 
-{{#include ../.include/styles.md:example}}
+{{#include ../_include/styles.md:example}}
 > A Version \\( 1 \\) program included in a transaction group that includes an [application
 > call transaction]() or a non-zero [rekey-to field]() will fail regardless of the
 > program itself.

@@ -71,7 +71,7 @@ $$
 
 ---
 
-{{#include ../.include/styles.md:impl}}
+{{#include ../_include/styles.md:impl}}
 > Block assembly [reference implementation](https://github.com/algorand/go-algorand/blob/b6e5bcadf0ad3861d4805c51cbf3f695c38a93b7/data/pools/transactionPool.go#L860).
 
 This algorithm begins by taking a target round \\( r \\), for which a new block

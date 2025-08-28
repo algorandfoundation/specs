@@ -57,7 +57,7 @@ Each `algod` endpoint path has two _tags_ to separate endpoints into groups:
 
 - Tag 2: `participating`, `nonparticipating`, `data`, or `experimental`.
 
-{{#include ../.include/styles.md:impl}}
+{{#include ../_include/styles.md:impl}}
 > Each endpoint implements a [`Handler`](https://github.com/algorand/go-algorand/blob/cec401cc6127c6af742685e4c39e71389586c595/daemon/algod/api/server/v2/handlers.go)
 > and a [`Client`](https://github.com/algorand/go-algorand/blob/cec401cc6127c6af742685e4c39e71389586c595/daemon/algod/api/client/restClient.go).
 
