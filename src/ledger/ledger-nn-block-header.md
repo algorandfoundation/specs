@@ -47,7 +47,7 @@ increasing).
 A 32-byte array holding a random value used as a seed for cryptographic processes
 (e.g., block proposer selection).
 
-The seed calculation algorithm (see ABFT [normative specification](../abft-messages-seed.md))
+The seed calculation algorithm (see ABFT [normative specification](../abft/abft-messages-seed.md))
 defines implicitly a sequence of seeds, whose values alternate according to:
 
 - The seed lookup constant \\( \delta_s \\),
