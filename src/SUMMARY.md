@@ -6,7 +6,7 @@
 
 # Introduction
 
-- [Reading Guidelines](./reading-guidelines.md)
+- [Reading Guidelines](READING-GUIDELINES.md)
 
 # Algorand BFT Protocol
 
@@ -258,5 +258,5 @@
 
 ---
 
-[Contribution Guidelines](./contribution-guidelines.md)
+[Contribution Guidelines](CONTRIBUTIONS.md)
 [License](./LICENSE.md)
