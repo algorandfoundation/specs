@@ -28,7 +28,7 @@ whose _network layer_ implements a specific type of network.
 A \\( \Peer \\) has all the necessary contents to communicate with the node it represents
 (the HTTP client, the URL representing the node, and extra metadata necessary to maintain an active connection).
 
-{{#include ../.include/styles.md:impl}}
+{{#include ../_include/styles.md:impl}}
 > Peer struct [reference implementation](https://github.com/algorand/go-algorand/blob/df0613a04432494d0f437433dd1efd02481db838/network/wsPeer.go#L177).
 
 ## Protocol Tags
@@ -66,12 +66,12 @@ Agreement Vote (`"AV"`) and Proposal Payload (`"PP"`) are the only ones consider
 of _“high priority”_. This means they impact internal ordering in the broadcast
 queue, as a priority function discriminates against them.
 
-{{#include ../.include/styles.md:impl}}
+{{#include ../_include/styles.md:impl}}
 > High priority tags [reference implementation](https://github.com/algorand/go-algorand/blob/ce9b2b0870043ef9d89be9ccf5cda0c42e3af70c/network/gossipNode.go#L140C6-L140C21).
 
 Messages tagged with `AV` or `PP` get pushed into a separate high-priority queue.
 
-{{#include ../.include/styles.md:impl}}
+{{#include ../_include/styles.md:impl}}
 > High priority queue [reference implementation](https://github.com/algorand/go-algorand/blob/ce9b2b0870043ef9d89be9ccf5cda0c42e3af70c/network/wsNetwork.go#L388).
 
 Every \\( tag \\) has a corresponding set of handlers, described in detail in the
@@ -176,7 +176,7 @@ it with the \\( \MessageHandler_t(\InMsg) \\) functions.
 
 The prototype of message validator handlers is similar to regular handlers.
 
-{{#include ../.include/styles.md:impl}}
+{{#include ../_include/styles.md:impl}}
 > The reference implementation defines a helper function, `Propagate(msg IncomingMessage)`,
 > representing the prevalent case of a message handler re-propagating an incoming
 > message \\( \InMsg \\). Internally, it creates an outgoing message \\( \OutMsg \\),

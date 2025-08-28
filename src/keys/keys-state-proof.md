@@ -38,7 +38,7 @@ digital signature algorithm.
 The tree’s depth is bound to \\( 16 \\) to bound verification paths on the tree.
 Hence, the maximum number of keys which can be created is at most \\( 2^{16} \\).
 
-{{#include ../.include/styles.md:impl}}
+{{#include ../_include/styles.md:impl}}
 > Merkle signature scheme [reference implementation](https://github.com/algorand/go-algorand/blob/b6e5bcadf0ad3861d4805c51cbf3f695c38a93b7/crypto/merklesignature/merkleSignatureScheme.go).
 
 ### Public Commitment

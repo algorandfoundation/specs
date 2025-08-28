@@ -10,7 +10,7 @@ Transactions consist of:
 
 - A _body_ (type-specific).
 
-{{#include ../.include/styles.md:impl}}
+{{#include ../_include/styles.md:impl}}
 > Transaction [package](https://github.com/algorand/go-algorand/tree/18990e06116efa0ad29008d5879c8e4dcfa51653/data/transactions).
 
 ## Transaction Levels
@@ -38,12 +38,12 @@ The transaction type is identified with a short string of at most [7 characters]
 
 > For a formal definition of all transaction fields, refer to the [normative section](ledger.md#transactions).
 
-{{#include ../.include/styles.md:impl}}
+{{#include ../_include/styles.md:impl}}
 > The reference implementation also defines the `unknown` transaction type.
 >
 > Transaction types [definition](https://github.com/algorand/go-algorand/blob/b6e5bcadf0ad3861d4805c51cbf3f695c38a93b7/protocol/txntype.go#L28-L55).
 
-{{#include ../.include/styles.md:impl}}
+{{#include ../_include/styles.md:impl}}
 > Transaction types [reference implementation](https://github.com/algorand/go-algorand/blob/b6e5bcadf0ad3861d4805c51cbf3f695c38a93b7/data/transactions/transaction.go#L87-L109).
 
 ## Transaction Header

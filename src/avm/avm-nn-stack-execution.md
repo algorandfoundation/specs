@@ -61,4 +61,4 @@ $$
 
 The following illustrations show the program execution step-by-step.
 
-![Stack](../images/avm-stack-execution.svg "Stack execution example")
+![Stack](../_images/avm-stack-execution.svg "Stack execution example")

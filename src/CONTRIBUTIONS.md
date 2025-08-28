@@ -40,7 +40,7 @@ The CI pipeline enforces Markdown linting, formatting, and style checking with
 
 Numbered lists **MUST** be defined with `1`-only style.
 
-{{#include ./.include/styles.md:example}}
+{{#include ./_include/styles.md:example}}
 > ```text
 > 1. First item
 > 1. Second item
@@ -56,7 +56,7 @@ Numbered lists **MUST** be defined with `1`-only style.
 
 Table rows **MUST** use the same column widths.
 
-{{#include ./.include/styles.md:example}}
+{{#include ./_include/styles.md:example}}
 > ✅ Correct table format
 > ```text
 > | Month    | Savings |
@@ -86,7 +86,7 @@ Consider aligning text in the columns to the left, right, or center by adding a
 colon `:` to the left, right, or on both sides of the dashes `---` within the header
 row.
 
-{{#include ./.include/styles.md:example}}
+{{#include ./_include/styles.md:example}}
 > ```text
 > | Name   | Quantity | Size |
 > |:-------|:--------:|-----:|
@@ -112,7 +112,7 @@ Mathematical formulas are defined with [MathJax](https://www.mathjax.org/).
 
 Inline equations **MUST** include extra spaces in the MathJax delimiters.
 
-{{#include ./.include/styles.md:example}}
+{{#include ./_include/styles.md:example}}
 > Equation: \\( \int x dx = \frac{x^2}{2} + C \\)
 > 
 > ✅ Correct inline delimiter
@@ -129,7 +129,7 @@ Inline equations **MUST** include extra spaces in the MathJax delimiters.
 
 Block equations **MUST** use the `$$` delimiter (instead of `\\[ ... \\]`).
 
-{{#include ./.include/styles.md:example}}
+{{#include ./_include/styles.md:example}}
 > Equation:
 >
 > $$
@@ -161,7 +161,7 @@ TeX-macros **MUST** be imported at the top of the consumer files using the mdBoo
 
 TeX macros can be imported entirely or partially (e.g., just a functional block).
 
-{{#include ./.include/styles.md:example}}
+{{#include ./_include/styles.md:example}}
 > Import all TeX-macros:
 > ```text
 > \{{#include ./.include/tex-macros.md:all}}
@@ -180,10 +180,10 @@ Block styles are defined in the `./src/.include/styles.md` file using the mdBook
 Block styles (e.g., examples, implementation notes, etc.) are “styled quote” blocks
 included in the book.
 
-{{#include ./.include/styles.md:example}}
+{{#include ./_include/styles.md:example}}
 > This example block has been included with the following syntax:
 > ```text
-> \{{#include ./.include/styles.md:example}}
+> \{{#include ./_include/styles.md:example}}
 > > This example block has been included with the following syntax:
 > ```
 

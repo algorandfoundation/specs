@@ -7,7 +7,7 @@ $$
 
 Block commitment is the process by which a valid block is added to the Ledger.
 
-{{#include ../.include/styles.md:impl}}
+{{#include ../_include/styles.md:impl}}
 > Block commitment entry point in the [reference implementation](https://github.com/algorand/go-algorand/blob/b6e5bcadf0ad3861d4805c51cbf3f695c38a93b7/ledger/eval/eval.go#L2060).
 
 To support block commitment, verification, and assembly, the node uses a structure
@@ -27,7 +27,7 @@ block’s context.
 During the block assembly phase, the \\( \BlockEval \\) can also discard invalid
 transactions and continue assembling the block with valid ones.
 
-{{#include ../.include/styles.md:impl}}
+{{#include ../_include/styles.md:impl}}
 > Block Evaluator [reference implementation](https://github.com/algorand/go-algorand/blob/b6e5bcadf0ad3861d4805c51cbf3f695c38a93b7/ledger/eval/eval.go#L672).
 
 Once a block has been certified, the Ledger is responsible for successfully adding it to the blockchain.
@@ -64,7 +64,7 @@ its initialization, the \\( \BlockEval \\) retrieves the previous block and the
 relevant protocol parameters to guarantee that the evaluation is consistent with
 the current blockchain state.
 
-{{#include ../.include/styles.md:impl}}
+{{#include ../_include/styles.md:impl}}
 > Start Evaluator [reference implementation](https://github.com/algorand/go-algorand/blob/b6e5bcadf0ad3861d4805c51cbf3f695c38a93b7/ledger/eval/eval.go#L718).
 
 The core interface of a \\( \BlockEval \\) can be broken down into three primary
@@ -84,5 +84,5 @@ logic as the evaluation process to ensure consistency.
 This function processes the block to generate a _State Delta_, which captures all
 the changes the block makes to the Ledger and its associated [Trackers](ledger-nn-trackers.md).
 
-{{#include ../.include/styles.md:impl}}
+{{#include ../_include/styles.md:impl}}
 > Validate block [reference implementation](https://github.com/algorand/go-algorand/blob/b6e5bcadf0ad3861d4805c51cbf3f695c38a93b7/ledger/ledger.go#L978).

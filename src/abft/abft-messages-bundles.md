@@ -13,7 +13,7 @@ We say that \\( V \\) _is a bundle for \\( v \\) in round \\( r \\), period \\( 
 and step_ \\( s \\) (or a _bundle for \\( v \\) at_ \\( (r, p, s) \\)), denoted
 \\( \Bundle(r, p, s, v) \\).
 
-{{#include ../.include/styles.md:impl}}
+{{#include ../_include/styles.md:impl}}
 > Bundle [reference implementation](https://github.com/algorand/go-algorand/blob/b6e5bcadf0ad3861d4805c51cbf3f695c38a93b7/agreement/bundle.go#L46).
 
 Moreover, let \\( L \\) be a ledger where \\( \abs{L} \geq \delta_b \\).
@@ -21,7 +21,7 @@ Moreover, let \\( L \\) be a ledger where \\( \abs{L} \geq \delta_b \\).
 We say that this bundle is _valid with respect to_ \\( L \\) (or simply _valid_ if
 \\( L \\) is unambiguous) if the following conditions are true:
 
-{{#include ../.include/styles.md:impl}}
+{{#include ../_include/styles.md:impl}}
 > The reference implementation makes use of an asynchronous [Bundle verifying function](https://github.com/algorand/go-algorand/blob/b6e5bcadf0ad3861d4805c51cbf3f695c38a93b7/agreement/bundle.go#L147).
 
 > See the non-normative [Algorand ABFT Overview](./abft-overview.md) for further

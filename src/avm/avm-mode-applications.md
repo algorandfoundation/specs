@@ -105,7 +105,7 @@ calls are top-level or inner.
 by group-level resource sharing, the _holding_ or _local state_ **MUST BE** _available_
 in a top-level transaction _without_ considering group sharing.
 
-{{#include ../.include/styles.md:example}}
+{{#include ../_include/styles.md:example}}
 > If account `A` is made available in one transaction, and asset `X` is made available
 > in another, group resource sharing does _not_ make `A`'s `X` holding available.
      
