@@ -89,7 +89,7 @@ the asset's URL, name, or privileged addresses.
 or frozen status for a particular asset.
 
 - _Applications_, which **MUST** be available to read an Application's programs,
-parameters, or Global Sstate.
+parameters, or Global State.
 
 - _Locals_, which **MUST** be available to read a particular address's Local State
 for a particular Application.
