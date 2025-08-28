@@ -152,7 +152,7 @@ Block equations **MUST** use the `$$` delimiter (instead of `\\[ ... \\]`).
 
 ### TeX-Macros
 
-TeX-macros are defined in the `./src/.include/tex-macros.md` file using the mdBook
+TeX-macros are defined in the `./src/_include/tex-macros/` folder using the mdBook
 [include feature](https://rust-lang.github.io/mdBook/format/mdbook.html#including-files).
 
 TeX-macros are divided into functional blocks (e.g., pseudocode, operators, constants, etc.).

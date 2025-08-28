@@ -1,18 +1,11 @@
+{{#include ../_include/tex-macros/pseudocode.md}}
+
 $$
 \newcommand \TP {\mathrm{TxPool}}
 \newcommand \FeePB {\mathrm{feePerByte}}
 \newcommand \FeeMul {\mathrm{feeThresholdMultiplier}}
 \newcommand \FeeExp {\mathrm{expFeeFactor}}
 \newcommand \PendingFB {\mathrm{pendingFullBlocks}}
-\newcommand \function {\textbf{function }}
-\newcommand \return {\textbf{return }}
-\newcommand \endfunction {\textbf{end function}}
-\newcommand \if {\textbf{if }}
-\newcommand \then {\textbf{ then}}
-\newcommand \endif {\textbf{end if}}
-\newcommand \for {\textbf{for }}
-\newcommand \do {\textbf{ do}}
-\newcommand \endfor {\textbf{end for}}
 \newcommand \ComputeFeePerByte {\mathrm{ComputeFeePerByte}}
 $$
 
@@ -35,16 +28,16 @@ The function `computeFeePerByte` below demonstrates how this value is computed:
 
 $$
 \begin{aligned}
-&\text{1: } \function \ComputeFeePerByte() \\\\
+&\text{1: } \PSfunction \ComputeFeePerByte() \\\\
 &\text{2: } \quad \FeePB \gets \FeeMul \\\\
-&\text{3: } \quad \if \FeePB = 0 \land \TP.\PendingFB > 1 \then \\\\
+&\text{3: } \quad \PSif \FeePB = 0 \land \TP.\PendingFB > 1 \PSthen \\\\
 &\text{4: } \quad \quad \FeePB \gets 1 \\\\
-&\text{5: } \quad \endif \\\\
-&\text{6: } \quad \for i {\textbf{ from }} 0 \textbf{ to } \TP.\PendingFB \do \\\\
+&\text{5: } \quad \PSendif \\\\
+&\text{6: } \quad \PSfor i {\textbf{ from }} 0 \textbf{ to } \TP.\PendingFB \PSdo \\\\
 &\text{7: } \quad \quad \FeePB \gets \FeePB \cdot \TP.\FeeExp \\\\
-&\text{8: } \quad \endfor \\\\
-&\text{9: } \quad \return \FeePB \\\\
-&\text{10: } \endfunction
+&\text{8: } \quad \PSendfor \\\\
+&\text{9: } \quad \PSreturn \FeePB \\\\
+&\text{10: } \PSendfunction
 \end{aligned}
 $$
 

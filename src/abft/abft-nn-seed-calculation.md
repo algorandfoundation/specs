@@ -1,16 +1,11 @@
+{{#include ../_include/tex-macros/pseudocode.md}}
+
 $$
 \newcommand \VRF {\mathrm{VRF}}
 \newcommand \Prove {\mathrm{Prove}}
 \newcommand \ProofToHash {\mathrm{ProofToHash}}
 \newcommand \Secrets {\mathrm{Secrets}}
 \newcommand \Rerand {\mathrm{Rerand}}
-\newcommand \function {\textbf{function }}
-\newcommand \endfunction {\textbf{end function}}
-\newcommand \if {\textbf{if }}
-\newcommand \then {\textbf{ then}}
-\newcommand \else {\textbf{else}}
-\newcommand \endif {\textbf{end if}}
-\newcommand \return {\textbf{return }}
 $$
 
 # Seed Calculation
@@ -57,21 +52,21 @@ For the seed calculation algorithm, consider the following pseudocode:
 
 $$
 \begin{aligned}
-&\text{1: } \function \mathrm{ComputeSeedAndProof}(I) \\\\
-&\text{2: } \quad \if p = 0 \then \\\\
+&\text{1: } \PSfunction \mathrm{ComputeSeedAndProof}(I) \\\\
+&\text{2: } \quad \PSif p = 0 \PSthen \\\\
 &\text{3: } \quad \quad y \gets \VRF.\Prove(\Secrets(I)_{\text{VRFkey}}, L[r - \delta_s]_Q) \\\\
 &\text{4: } \quad \quad \alpha \gets H(I || \VRF.\ProofToHash(y)) \\\\
-&\text{5: } \quad \else \\\\
+&\text{5: } \quad \PSelse \\\\
 &\text{6: } \quad \quad y \gets 0 \\\\
 &\text{6: } \quad \quad \alpha \gets H(L[r - \delta_s]_Q) \\\\
-&\text{7: } \quad \endif \\\\
-&\text{9: } \quad \if r \bmod (\delta_s\delta_r) < \delta_s \then \\\\
+&\text{7: } \quad \PSendif \\\\
+&\text{9: } \quad \PSif r \bmod (\delta_s\delta_r) < \delta_s \PSthen \\\\
 &\text{10:} \quad \quad Q \gets H(\alpha || H(L[r - \delta_s \delta_r])) \\\\
-&\text{11:} \quad \else \\\\
+&\text{11:} \quad \PSelse \\\\
 &\text{12:} \quad \quad Q \gets H(\alpha) \\\\
-&\text{13:} \quad \endif \\\\
-&\text{14:} \quad \return (Q, y) \\\\
-&\text{15: } \endfunction
+&\text{13:} \quad \PSendif \\\\
+&\text{14:} \quad \PSreturn (Q, y) \\\\
+&\text{15: } \PSendfunction
 \end{aligned}
 $$
 

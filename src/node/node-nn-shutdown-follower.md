@@ -1,12 +1,6 @@
+{{#include ../_include/tex-macros/pseudocode.md}}
+
 $$
-\newcommand \function {\textbf{function }}
-\newcommand \return {\textbf{return }}
-\newcommand \endfunction {\textbf{end function}}
-\newcommand \if {\textbf{if }}
-\newcommand \else {\textbf{else}}
-\newcommand \then {\textbf{ then}}
-\newcommand \endif {\textbf{end if}}
-\newcommand \comment {\qquad \small \textsf}
 \newcommand \Node {\mathrm{node}}
 \newcommand \FollowerNode {\mathrm{FollowerlNode}}
 \newcommand \Stop {\mathrm{Stop}}
@@ -36,25 +30,25 @@ and predictable state.
 
 $$
 \begin{aligned}
-&\text{1: } \function \FollowerNode.\Stop() \\\\
-&\text{2: } \comment{# Network Cleanup} \\\\
+&\text{1: } \PSfunction \FollowerNode.\Stop() \\\\
+&\text{2: } \PScomment{# Network Cleanup} \\\\
 &\text{3: } \quad \Node.\Network.\Stop\Handlers() \\\\
-&\text{4: } \quad \if \neg \Node.\Config.\Stop\Network \then \\\\
+&\text{4: } \quad \PSif \neg \Node.\Config.\Stop\Network \PSthen \\\\
 &\text{5: } \quad \quad \Node.\Network.\Stop() \\\\
-&\text{6: } \quad \endif \\\\
-&\text{7: } \comment{# Service Shutdown} \\\\
-&\text{8: } \quad \if \exists \Node.\Catchpoint\Catchup\Service \then \\\\
+&\text{6: } \quad \PSendif \\\\
+&\text{7: } \PScomment{# Service Shutdown} \\\\
+&\text{8: } \quad \PSif \exists \Node.\Catchpoint\Catchup\Service \PSthen \\\\
 &\text{9: } \quad \quad \Node.\Catchpoint\Catchup\Service.\Stop() \\\\
-&\text{10:} \quad \else \\\\
-&\text{11:} \comment{# Follower Services Only} \\\\
+&\text{10:} \quad \PSelse \\\\
+&\text{11:} \PScomment{# Follower Services Only} \\\\
 &\text{12:} \quad \quad \Node.\Catchup\Service.\Stop() \\\\
 &\text{13:} \quad \quad \Node.\Block\Service.\Stop() \\\\
-&\text{14:} \quad \endif \\\\
-&\text{15:} \comment{# Resource Cleanup} \\\\
+&\text{14:} \quad \PSendif \\\\
+&\text{15:} \PScomment{# Resource Cleanup} \\\\
 &\text{16:} \quad \Node.\Catchup.\Block\Auth.\Stop() \\\\
 &\text{17:} \quad \Node.\CryptoPool.\mathrm{lowPriority}.\Stop() \\\\
 &\text{18:} \quad \Node.\CryptoPool.\Stop() \\\\
-&\text{19:} \endfunction
+&\text{19:} \PSendfunction
 \end{aligned}
 $$
 

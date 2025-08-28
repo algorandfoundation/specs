@@ -1,3 +1,5 @@
+{{#include ../_include/tex-macros/pseudocode.md}}
+
 $$
 \newcommand \ValidateVote {\mathrm{ValidateVote}}
 \newcommand \VerifyVote {\mathrm{VerifyVote}}
@@ -23,18 +25,6 @@ $$
 \newcommand \Soft {\mathit{soft}}
 \newcommand \Cert {\mathit{cert}}
 \newcommand \sk {\mathrm{sk}}
-\newcommand \function {\textbf{function }}
-\newcommand \return {\textbf{return }}
-\newcommand \endfunction {\textbf{end function}}
-\newcommand \not {\textbf{not }}
-\newcommand \if {\textbf{if }}
-\newcommand \elseif {\textbf{else if }}
-\newcommand \then {\textbf{ then}}
-\newcommand \endif {\textbf{end if}}
-\newcommand \for {\textbf{for }}
-\newcommand \do {\textbf{ do}}
-\newcommand \endfor {\textbf{end for}}
-\newcommand \comment {\qquad \small \textsf}
 \newcommand \vt {\mathit{vote}}
 \newcommand \c {\mathit{credentials}}
 $$
@@ -61,71 +51,71 @@ for some \\( v_1  \neq v_2 \\).
 
 $$
 \begin{aligned}
-&\text{1: } \function \ValidateVote(\vt): \\\\
-&\text{2: } \quad \if \not \VerifyVote(\vt) \then \\\\
+&\text{1: } \PSfunction \ValidateVote(\vt): \\\\
+&\text{2: } \quad \PSif \PSnot \VerifyVote(\vt) \PSthen \\\\
 &\text{3: } \quad \quad \DisconnectFromPeer(\SenderPeer(\vt)) \\\\
-&\text{4: } \quad \quad \return \comment{# Ignore invalid vote} \\\\
-&\text{5: } \quad \endif \\\\
-&\text{6: } \quad \if \vt_s = 0 \land (\vt \in V \lor \IsEquivocation(\vt)) \then \\\\
-&\text{7: } \quad \quad \return \comment{# Ignore vote, equivocation not allowed in proposal votes} \\\\
-&\text{8: } \quad \endif \\\\
-&\text{9: } \quad \if \vt_s > 0 \land \IsSecondEquivocation(\vt) \then \\\\
-&\text{10:} \quad \quad \return \comment{# Ignore vote if it’s a second equivocation} \\\\
-&\text{11:} \quad \endif \\\\
-&\text{12:} \quad \if \vt_r < r \then \\\\
-&\text{13:} \quad \quad \return \comment{# Ignore vote of past round}\\\\
-&\text{14:} \quad \endif \\\\
-&\text{15:} \quad \if \vt_r = r + 1 \land (\vt_p > 0 \lor \vt_s \in \\{\Next_0, \dots, \Next_{249}\\}) \then\\\\
-&\text{16:} \quad \quad \return \comment{# Ignore vote of next round if non-zero period or "next_k" step} \\\\
-&\text{17:} \quad \endif \\\\
-&\text{18:} \quad \if \vt_r = r \land (\vt_p \notin \\{p-1, p, p+1\\} \lor \\\\
+&\text{4: } \quad \quad \PSreturn \PScomment{# Ignore invalid vote} \\\\
+&\text{5: } \quad \PSendif \\\\
+&\text{6: } \quad \PSif \vt_s = 0 \land (\vt \in V \lor \IsEquivocation(\vt)) \PSthen \\\\
+&\text{7: } \quad \quad \PSreturn \PScomment{# Ignore vote, equivocation not allowed in proposal votes} \\\\
+&\text{8: } \quad \PSendif \\\\
+&\text{9: } \quad \PSif \vt_s > 0 \land \IsSecondEquivocation(\vt) \PSthen \\\\
+&\text{10:} \quad \quad \PSreturn \PScomment{# Ignore vote if it’s a second equivocation} \\\\
+&\text{11:} \quad \PSendif \\\\
+&\text{12:} \quad \PSif \vt_r < r \PSthen \\\\
+&\text{13:} \quad \quad \PSreturn \PScomment{# Ignore vote of past round}\\\\
+&\text{14:} \quad \PSendif \\\\
+&\text{15:} \quad \PSif \vt_r = r + 1 \land (\vt_p > 0 \lor \vt_s \in \\{\Next_0, \dots, \Next_{249}\\}) \PSthen\\\\
+&\text{16:} \quad \quad \PSreturn \PScomment{# Ignore vote of next round if non-zero period or "next_k" step} \\\\
+&\text{17:} \quad \PSendif \\\\
+&\text{18:} \quad \PSif \vt_r = r \land (\vt_p \notin \\{p-1, p, p+1\\} \lor \\\\
 &\text{} \quad \quad \quad \quad \quad \quad (\vt_p = p+1 \land \vt_s \in \\{\Next_1, \dots, \Next_{249}\\}) \lor \\\\
 &\text{} \quad \quad \quad \quad \quad \quad (\vt_p = p \land \vt_s \in \\{\Next_1, \dots, \Next_{249}\\} \land \vt_s \notin \\{s-1, s, s+1\\}) \lor \\\\
-&\text{} \quad \quad \quad \quad \quad \quad (\vt_p = p-1 \land \vt_s \in \\{\Next_1, \dots, \Next_{249}\\} \land \vt_s \notin \\{\bar{s}-1, \bar{s}, \bar{s}+1\\})) \then \\\\
-&\text{19:} \quad \quad \return \comment{# Ignore vote} \\\\
-&\text{20:} \quad \endif \\\\
-&\text{21: } \endfunction \\\\
+&\text{} \quad \quad \quad \quad \quad \quad (\vt_p = p-1 \land \vt_s \in \\{\Next_1, \dots, \Next_{249}\\} \land \vt_s \notin \\{\bar{s}-1, \bar{s}, \bar{s}+1\\})) \PSthen \\\\
+&\text{19:} \quad \quad \PSreturn \PScomment{# Ignore vote} \\\\
+&\text{20:} \quad \PSendif \\\\
+&\text{21: } \PSendfunction \\\\
 \\\\
-&\text{22: } \function \HandleVote(\vt): \\\\
-&\text{23:} \quad \ValidateVote(\vt) \comment{# Check the validity of the vote} \\\\
-&\text{24:} \quad V \gets V \cup \vt \comment{# Observe the vote}\\\\
+&\text{22: } \PSfunction \HandleVote(\vt): \\\\
+&\text{23:} \quad \ValidateVote(\vt) \PScomment{# Check the validity of the vote} \\\\
+&\text{24:} \quad V \gets V \cup \vt \PScomment{# Observe the vote}\\\\
 &\text{25:} \quad \Relay(\vt) \\\\
-&\text{26:} \quad \if \vt_s = \Prop \then \\\\
-&\text{27:} \quad \quad \if \RetrieveProposal(\vt_v) \neq \bot \then \\\\
+&\text{26:} \quad \PSif \vt_s = \Prop \PSthen \\\\
+&\text{27:} \quad \quad \PSif \RetrieveProposal(\vt_v) \neq \bot \PSthen \\\\
 &\text{28:} \quad \quad \quad \Broadcast(\RetrieveProposal(\vt_v)) \\\\
-&\text{29:} \quad \quad \endif \\\\
-&\text{30:} \quad \elseif \vt_s = \Soft \then \\\\
-&\text{31:} \quad \quad \if \exists v : \Bundle(\vt_r, \vt_p, \Soft, v) \subset V \then \\\\
-&\text{32:} \quad \quad \quad \for a \in A \do \\\\
+&\text{29:} \quad \quad \PSendif \\\\
+&\text{30:} \quad \PSelseif \vt_s = \Soft \PSthen \\\\
+&\text{31:} \quad \quad \PSif \exists v : \Bundle(\vt_r, \vt_p, \Soft, v) \subset V \PSthen \\\\
+&\text{32:} \quad \quad \quad \PSfor a \in A \PSdo \\\\
 &\text{33:} \quad \quad \quad \quad \c \gets \Sortition(a_{\sk}, r, p, \Cert) \\\\
-&\text{34:} \quad \quad \quad \quad \if \c_j > 0 \then \\\\
+&\text{34:} \quad \quad \quad \quad \PSif \c_j > 0 \PSthen \\\\
 &\text{35:} \quad \quad \quad \quad \quad \Broadcast(\Vote(a_I, r, p, \Cert, v, \c)) \\\\
-&\text{36:} \quad \quad \quad \quad \endif \\\\
-&\text{37:} \quad \quad \quad \endfor \\\\
-&\text{38:} \quad \quad \endif \\\\
-&\text{39:} \quad \elseif \vt_s = \Cert \then \\\\
-&\text{40:} \quad \quad \if \exists v : \Bundle(\vt_r, \vt_p, \Cert, v) \subset V \then \\\\
-&\text{41:} \quad \quad \quad \if \RetrieveProposal(v) = \bot \then \\\\
+&\text{36:} \quad \quad \quad \quad \PSendif \\\\
+&\text{37:} \quad \quad \quad \PSendfor \\\\
+&\text{38:} \quad \quad \PSendif \\\\
+&\text{39:} \quad \PSelseif \vt_s = \Cert \PSthen \\\\
+&\text{40:} \quad \quad \PSif \exists v : \Bundle(\vt_r, \vt_p, \Cert, v) \subset V \PSthen \\\\
+&\text{41:} \quad \quad \quad \PSif \RetrieveProposal(v) = \bot \PSthen \\\\
 &\text{42:} \quad \quad \quad \quad \RequestProposal(v) \\\\
-&\text{43:} \quad \quad \quad \quad \if p < \vt_p \then \\\\
+&\text{43:} \quad \quad \quad \quad \PSif p < \vt_p \PSthen \\\\
 &\text{44:} \quad \quad \quad \quad \quad p_{old} \gets p \\\\
 &\text{45:} \quad \quad \quad \quad \quad \StartNewPeriod(\vt_p) \\\\
 &\text{46:} \quad \quad \quad \quad \quad \GarbageCollect(r, p_{old}) \\\\
-&\text{47:} \quad \quad \quad \quad \endif \\\\
-&\text{48:} \quad \quad \quad \endif \\\\
+&\text{47:} \quad \quad \quad \quad \PSendif \\\\
+&\text{48:} \quad \quad \quad \PSendif \\\\
 &\text{49:} \quad \quad \quad \Commit(v) \\\\
 &\text{50:} \quad \quad \quad r_{old} \gets r \\\\
 &\text{51:} \quad \quad \quad \StartNewRound(\vt_r + 1) \\\\
 &\text{52:} \quad \quad \quad \GarbageCollect(r_{old}, p) \\\\
-&\text{53:} \quad \quad \endif \\\\
-&\text{54:} \quad \elseif \vt_s > \Cert \then \\\\
-&\text{55:} \quad \quad \if \exists v : \Bundle(\vt_r, \vt_p, \vt_s, v) \subset V \then \\\\
+&\text{53:} \quad \quad \PSendif \\\\
+&\text{54:} \quad \PSelseif \vt_s > \Cert \PSthen \\\\
+&\text{55:} \quad \quad \PSif \exists v : \Bundle(\vt_r, \vt_p, \vt_s, v) \subset V \PSthen \\\\
 &\text{56:} \quad \quad \quad p_{old} \gets p \\\\
 &\text{57:} \quad \quad \quad \StartNewPeriod(\vt_p + 1) \\\\
 &\text{58:} \quad \quad \quad \GarbageCollect(r, p_{old}) \\\\
-&\text{59:} \quad \quad \endif \\\\
-&\text{60:} \quad \endif \\\\
-&\text{61: } \endfunction \\\\
+&\text{59:} \quad \quad \PSendif \\\\
+&\text{60:} \quad \PSendif \\\\
+&\text{61: } \PSendfunction \\\\
 \end{aligned}
 $$
 

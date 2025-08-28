@@ -1,3 +1,5 @@
+{{#include ../_include/tex-macros/pseudocode.md}}
+
 $$
 \newcommand \TP {\mathrm{TxPool}}
 \newcommand \NB {\mathrm{newBlock}}
@@ -5,18 +7,6 @@ $$
 \newcommand \FeeMul {\mathrm{feeThresholdMultiplier}}
 \newcommand \FeeExp {\mathrm{expFeeFactor}}
 \newcommand \PendingFB {\mathrm{pendingFullBlocks}}
-\newcommand \function {\textbf{function }}
-\newcommand \return {\textbf{return }}
-\newcommand \endfunction {\textbf{end function}}
-\newcommand \if {\textbf{if }}
-\newcommand \then {\textbf{ then}}
-\newcommand \endif {\textbf{end if}}
-\newcommand \else {\textbf{else}}
-\newcommand \switch {\textbf{switch }}
-\newcommand \case {\textbf{case }}
-\newcommand \default {\textbf{default}}
-\newcommand \endswitch {\textbf{end switch}}
-\newcommand \comment {\qquad \small \textsf}
 \newcommand \Update {\mathrm{Update}}
 $$
 
@@ -38,23 +28,23 @@ The state of the \\( \TP \\) is then updated as follows:
 
 $$
 \begin{aligned}
-&\text{1: } \function \Update(\NB\ b, \SD\ sd) \\\\
-&\text{2: } \quad \if \TP_{pq} \text{ is empty or outdated} \then \\\\
-&\text{3: } \quad \quad \switch \TP.\PendingFB \\\\
-&\text{4: } \quad \quad \quad \case\ 0: \\\\
+&\text{1: } \PSfunction \Update(\NB\ b, \SD\ sd) \\\\
+&\text{2: } \quad \PSif \TP_{pq} \text{ is empty or outdated} \PSthen \\\\
+&\text{3: } \quad \quad \PSswitch \TP.\PendingFB \\\\
+&\text{4: } \quad \quad \quad \PScase\ 0: \\\\
 &\text{5: } \quad \quad \quad \quad \FeeMul \gets \frac{FeeMul}{FeeExp} \\\\
-&\text{6: } \quad \quad \quad \case\ 1: \\\\
-&\text{7: } \quad \quad \quad \quad \comment{# Intentionally left blank to maintain the value of } \FeeMul \\\\
-&\text{8: } \quad \quad \quad \case\ \default: \\\\
-&\text{9: } \quad \quad \quad \quad \if \FeeMul = 0 \then \\\\
+&\text{6: } \quad \quad \quad \PScase\ 1: \\\\
+&\text{7: } \quad \quad \quad \quad \PScomment{# Intentionally left blank to maintain the value of } \FeeMul \\\\
+&\text{8: } \quad \quad \quad \PScase\ \PSdefault: \\\\
+&\text{9: } \quad \quad \quad \quad \PSif \FeeMul = 0 \PSthen \\\\
 &\text{10:} \quad \quad \quad \quad \quad \FeeMul \gets 1 \\\\
-&\text{11:} \quad \quad \quad \quad \else \\\\
+&\text{11:} \quad \quad \quad \quad \PSelse \\\\
 &\text{12:} \quad \quad \quad \quad \quad \FeeMul \gets \FeeMul \cdot \FeeExp \\\\
-&\text{13:} \quad \quad \quad \quad \endif \\\\
-&\text{14:} \quad \quad \endswitch \\\\
-&\text{15:} \quad \endif \\\\
+&\text{13:} \quad \quad \quad \quad \PSendif \\\\
+&\text{14:} \quad \quad \PSendswitch \\\\
+&\text{15:} \quad \PSendif \\\\
 &\text{16:} \quad \TP.\mathrm{Prune}(b, sd) \\\\
-&\text{17: } \endfunction
+&\text{17: } \PSendfunction
 \end{aligned}
 $$
 

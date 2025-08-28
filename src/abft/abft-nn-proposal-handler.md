@@ -1,3 +1,5 @@
+{{#include ../_include/tex-macros/pseudocode.md}}
+
 $$
 \newcommand \HandleProposal {\mathrm{HandleProposal}}
 \newcommand \VerifyProposal {\mathrm{VerifyProposal}}
@@ -14,17 +16,6 @@ $$
 \newcommand \Soft {\mathit{soft}}
 \newcommand \Cert {\mathit{cert}}
 \newcommand \Next {\mathit{next}}
-\newcommand \function {\textbf{function }}
-\newcommand \return {\textbf{return }}
-\newcommand \endfunction {\textbf{end function}}
-\newcommand \if {\textbf{if }}
-\newcommand \then {\textbf{ then}}
-\newcommand \endif {\textbf{end if}}
-\newcommand \for {\textbf{for }}
-\newcommand \do {\textbf{ do}}
-\newcommand \endfor {\textbf{end for}}
-\newcommand \not {\textbf{not }}
-\newcommand \comment {\qquad \small \textsf}
 \newcommand \pr {\mathit{proposal}}
 \newcommand \c {\mathit{credentials}}
 $$
@@ -115,29 +106,29 @@ steps of the protocol when a \\( \Next \\) vote has been successful.
 
 $$
 \begin{aligned}
-&\text{1: } \function \HandleProposal(\pr) \\\\
+&\text{1: } \PSfunction \HandleProposal(\pr) \\\\
 &\text{2: } \quad v \gets \Proposal_v(\pr, \pr_p, \pr_I) \\\\
-&\text{3: } \quad \if \exists \Bundle(r+1, 0, \Soft, v) \in B \then \\\\
+&\text{3: } \quad \PSif \exists \Bundle(r+1, 0, \Soft, v) \in B \PSthen \\\\
 &\text{4: } \quad \quad \Relay(\pr) \\\\
-&\text{5: } \quad \quad \return \comment{# Future round, do not observe (node is behind)} \\\\
-&\text{6: } \quad \endif \\\\
-&\text{7: } \quad \if \not \VerifyProposal(\pr) \lor \pr \in P \then \\\\
-&\text{8: } \quad \quad \return \comment{# Ignore proposal} \\\\
-&\text{9: } \quad \endif \\\\
-&\text{10:} \quad \if v \notin \\{\sigma, \bar{v}, \mu\\} \then \\\\
-&\text{11:} \quad \quad \return \comment{# Ignore proposal} \\\\
-&\text{12:} \quad \endif \\\\
+&\text{5: } \quad \quad \PSreturn \PScomment{# Future round, do not observe (node is behind)} \\\\
+&\text{6: } \quad \PSendif \\\\
+&\text{7: } \quad \PSif \PSnot \VerifyProposal(\pr) \lor \pr \in P \PSthen \\\\
+&\text{8: } \quad \quad \PSreturn \PScomment{# Ignore proposal} \\\\
+&\text{9: } \quad \PSendif \\\\
+&\text{10:} \quad \PSif v \notin \\{\sigma, \bar{v}, \mu\\} \PSthen \\\\
+&\text{11:} \quad \quad \PSreturn \PScomment{# Ignore proposal} \\\\
+&\text{12:} \quad \PSendif \\\\
 &\text{13:} \quad \Relay(\pr) \\\\
 &\text{14:} \quad P \gets P \cup \pr \\\\
-&\text{15:} \quad \if \IsCommittable(v) \land s \le \Cert \then \\\\
-&\text{16:} \quad \quad \for a \in A \do \\\\
+&\text{15:} \quad \PSif \IsCommittable(v) \land s \le \Cert \PSthen \\\\
+&\text{16:} \quad \quad \PSfor a \in A \PSdo \\\\
 &\text{17:} \quad \quad \quad \c \gets \Sortition(a_I, r, p, \Cert) \\\\
-&\text{18:} \quad \quad \quad \if \c_j > 0 \then \\\\
+&\text{18:} \quad \quad \quad \PSif \c_j > 0 \PSthen \\\\
 &\text{19:} \quad \quad \quad \quad \Broadcast(\Vote(a_I, r, p, \Cert, v, \c)) \\\\
-&\text{20:} \quad \quad \quad \endif \\\\
-&\text{21:} \quad \quad \endfor \\\\
-&\text{22:} \quad \endif \\\\
-&\text{23: } \endfunction
+&\text{20:} \quad \quad \quad \PSendif \\\\
+&\text{21:} \quad \quad \PSendfor \\\\
+&\text{22:} \quad \PSendif \\\\
+&\text{23: } \PSendfunction
 \end{aligned}
 $$
 

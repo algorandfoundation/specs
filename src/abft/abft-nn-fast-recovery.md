@@ -1,3 +1,5 @@
+{{#include ../_include/tex-macros/pseudocode.md}}
+
 $$
 \newcommand \Recovery {\mathrm{Recovery}}
 \newcommand \FastRecovery {\mathrm{FastRecovery}}
@@ -12,16 +14,6 @@ $$
 \newcommand \Redo {\mathit{redo}}
 \newcommand \Down {\mathit{down}}
 \newcommand \Next {\mathit{next}}
-\newcommand \function {\textbf{function }}
-\newcommand \endfunction {\textbf{end function}}
-\newcommand \if {\textbf{if }}
-\newcommand \elseif {\textbf{else if }}
-\newcommand \then {\textbf{ then}}
-\newcommand \else {\textbf{else}}
-\newcommand \endif {\textbf{end if}}
-\newcommand \for {\textbf{for }}
-\newcommand \do {\textbf{ do}}
-\newcommand \endfor {\textbf{end for}}
 \newcommand \vt {\mathit{vote}}
 \newcommand \c {\mathit{credentials}}
 \newcommand \s {\mathit{step}}
@@ -62,31 +54,31 @@ conditions were met.
 
 $$
 \begin{aligned}
-&\text{1: } \function \FastRecovery() \\\\
+&\text{1: } \PSfunction \FastRecovery() \\\\
 &\text{2: } \quad \Resync() \\\\
-&\text{3: } \quad \for a \in A \do \\\\
-&\text{4: } \quad \quad \if \IsCommittable(\bar{v}) \then \\\\
+&\text{3: } \quad \PSfor a \in A \PSdo \\\\
+&\text{4: } \quad \quad \PSif \IsCommittable(\bar{v}) \PSthen \\\\
 &\text{5: } \quad \quad \quad \c \gets \Sortition(a_I, r, p, \Late) \\\\
-&\text{6: } \quad \quad \quad \if \c_j > 0 \then \\\\
+&\text{6: } \quad \quad \quad \PSif \c_j > 0 \PSthen \\\\
 &\text{7: } \quad \quad \quad \quad \Broadcast(\Vote(r, p, \Late, \bar{v}, \c)) \\\\
-&\text{8: } \quad \quad \quad \endif \\\\
-&\text{9: } \quad \quad \elseif \nexists s_0 > \Cert \mid \Bundle(r, p - 1, s_0, \bot) \subseteq V \land \\\\
-&\text{   } \quad \quad \quad \quad \quad \quad \exists s_1 > \Cert \mid \Bundle(r, p - 1, s_1, \bar{v}) \subseteq V \then \\\\
+&\text{8: } \quad \quad \quad \PSendif \\\\
+&\text{9: } \quad \quad \PSelseif \nexists s_0 > \Cert \mid \Bundle(r, p - 1, s_0, \bot) \subseteq V \land \\\\
+&\text{   } \quad \quad \quad \quad \quad \quad \exists s_1 > \Cert \mid \Bundle(r, p - 1, s_1, \bar{v}) \subseteq V \PSthen \\\\
 &\text{10:} \quad \quad \quad \c \gets \Sortition(a_I, r, p, \Redo) \\\\
-&\text{11:} \quad \quad \quad \if \c_j > 0 \then \\\\
+&\text{11:} \quad \quad \quad \PSif \c_j > 0 \PSthen \\\\
 &\text{12:} \quad \quad \quad \quad \Broadcast(\Vote(r, p, \Redo, \bar{v}, \c)) \\\\
-&\text{13:} \quad \quad \quad \endif \\\\
-&\text{14:} \quad \quad \else \\\\
+&\text{13:} \quad \quad \quad \PSendif \\\\
+&\text{14:} \quad \quad \PSelse \\\\
 &\text{15:} \quad \quad \quad \c \gets \Sortition(a_I, r, p, \Down) \\\\
-&\text{16:} \quad \quad \quad \if \c_j > 0 \then \\\\
+&\text{16:} \quad \quad \quad \PSif \c_j > 0 \PSthen \\\\
 &\text{17:} \quad \quad \quad \quad \Broadcast(\Vote(r, p, \Down, \bot, \c)) \\\\
-&\text{18:} \quad \quad \quad \endif \\\\
-&\text{19:} \quad \quad \endif \\\\
-&\text{20:} \quad \endfor \\\\
-&\text{21:} \quad \for \vt \in V \text{ such that } \vt_s \geq 253 \do \\\\
+&\text{18:} \quad \quad \quad \PSendif \\\\
+&\text{19:} \quad \quad \PSendif \\\\
+&\text{20:} \quad \PSendfor \\\\
+&\text{21:} \quad \PSfor \vt \in V \text{ such that } \vt_s \geq 253 \PSdo \\\\
 &\text{22:} \quad \quad \Broadcast(\vt) \\\\
-&\text{23:} \quad \endfor \\\\
-&\text{24: } \endfunction
+&\text{23:} \quad \PSendfor \\\\
+&\text{24: } \PSendfunction
 \end{aligned}
 $$
 

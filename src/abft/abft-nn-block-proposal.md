@@ -1,3 +1,5 @@
+{{#include ../_include/tex-macros/pseudocode.md}}
+
 $$
 \newcommand \Resync {\mathrm{ResynchronizationAttempt}}
 \newcommand \BlockProposal {\mathrm{BlockProposal}}
@@ -5,15 +7,6 @@ $$
 \newcommand \Sortition {\mathrm{Sortition}}
 \newcommand \Broadcast {\mathrm{Broadcast}}
 \newcommand \RetrieveProposal {\mathrm{RetrieveProposal}}
-\newcommand \function {\textbf{function }}
-\newcommand \endfunction {\textbf{end function}}
-\newcommand \if {\textbf{if }}
-\newcommand \then {\textbf{ then}}
-\newcommand \else {\textbf{else}}
-\newcommand \endif {\textbf{end if}}
-\newcommand \for {\textbf{for }}
-\newcommand \do {\textbf{ do}}
-\newcommand \endfor {\textbf{end for}}
 \newcommand \c {\mathit{credentials}}
 \newcommand \Proposal {\mathrm{Proposal}}
 \newcommand \Bundle {\mathrm{Bundle}}
@@ -33,28 +26,28 @@ The following is an abstracted pseudocode of the \\( \BlockProposal \\) algorith
 
 $$
 \begin{aligned}
-&\text{1: } \function \BlockProposal() \\\\
-&\text{2: } \quad \if p \ne 0 \then \\\\
+&\text{1: } \PSfunction \BlockProposal() \\\\
+&\text{2: } \quad \PSif p \ne 0 \PSthen \\\\
 &\text{3: } \quad \quad \Resync() \\\\
-&\text{4: } \quad \endif \\\\
-&\text{5: } \quad \for a \in A \do \\\\
+&\text{4: } \quad \PSendif \\\\
+&\text{5: } \quad \PSfor a \in A \PSdo \\\\
 &\text{6: } \quad \quad \c \gets \Sortition(a_I, r, p, \prop) \\\\
-&\text{7: } \quad \quad \if \c_j > 0 \then \\\\
-&\text{8: } \quad \quad \quad \if p = 0 \lor \exists s' \text{ such that } \Bundle(r, p-1, s', \bot) \subset V \then \\\\
+&\text{7: } \quad \quad \PSif \c_j > 0 \PSthen \\\\
+&\text{8: } \quad \quad \quad \PSif p = 0 \lor \exists s' \text{ such that } \Bundle(r, p-1, s', \bot) \subset V \PSthen \\\\
 &\text{9: } \quad \quad \quad \quad (e, y) \gets \BlockAssembly(a_I) \\\\
 &\text{10:} \quad \quad \quad \quad \prop \gets \Proposal(e, y, p, a_I) \\\\
 &\text{11:} \quad \quad \quad \quad v \gets \Proposal_\text{value}(\prop) \\\\
 &\text{12:} \quad \quad \quad \quad \Broadcast(\Vote(a_I, r, p, \prop, v, \c)) \\\\
 &\text{13:} \quad \quad \quad \quad \Broadcast(\prop) \\\\
-&\text{14:} \quad \quad \quad \else \\\\
+&\text{14:} \quad \quad \quad \PSelse \\\\
 &\text{15:} \quad \quad \quad \quad \Broadcast(\Vote(a_I, r, p, \prop, \bar{v}, \c)) \\\\
-&\text{16:} \quad \quad \quad \quad \if \RetrieveProposal(\bar{v}) \ne \bot \then \\\\
+&\text{16:} \quad \quad \quad \quad \PSif \RetrieveProposal(\bar{v}) \ne \bot \PSthen \\\\
 &\text{17:} \quad \quad \quad \quad \quad \Broadcast(\RetrieveProposal(\bar{v})) \\\\
-&\text{18:} \quad \quad \quad \quad \endif \\\\
-&\text{19:} \quad \quad \quad \endif \\\\
-&\text{20:} \quad \quad \endif \\\\
-&\text{21:} \quad \endfor \\\\
-&\text{22: } \endfunction
+&\text{18:} \quad \quad \quad \quad \PSendif \\\\
+&\text{19:} \quad \quad \quad \PSendif \\\\
+&\text{20:} \quad \quad \PSendif \\\\
+&\text{21:} \quad \PSendfor \\\\
+&\text{22: } \PSendfunction
 \end{aligned}
 $$
 

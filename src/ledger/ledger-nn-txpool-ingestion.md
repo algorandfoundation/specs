@@ -1,3 +1,5 @@
+{{#include ../_include/tex-macros/pseudocode.md}}
+
 $$
 \newcommand \TP {\mathrm{TxPool}}
 \newcommand \TG {\mathrm{TxnGroup}}
@@ -6,16 +8,6 @@ $$
 \newcommand \Ledger {\mathrm{Ledger}}
 \newcommand \CheckSufficientFee {\mathrm{CheckSufficientFee}}
 \newcommand \now {\mathrm{now}}
-\newcommand \function {\textbf{function }}
-\newcommand \return {\textbf{return }}
-\newcommand \endfunction {\textbf{end function}}
-\newcommand \if {\textbf{if }}
-\newcommand \then {\textbf{ then}}
-\newcommand \endif {\textbf{end if}}
-\newcommand \while {\textbf{while }}
-\newcommand \do {\textbf{ do}}
-\newcommand \endwhile {\textbf{end while}}
-\newcommand \comment {\qquad \small \textsf}
 \newcommand \Ingest {\mathrm{Ingest}}
 $$
 
@@ -43,24 +35,24 @@ implemented:
 
 $$
 \begin{aligned}
-&\text{1: } \function \Ingest(\TG\ gtx) \\\\
+&\text{1: } \PSfunction \Ingest(\TG\ gtx) \\\\
 &\text{2: } \quad \dots \\\\
-&\text{3: } \quad \if \lnot \BlockEval \then \\\\
-&\text{4: } \quad \quad \return \comment{# No pending Block Evaluator exists} \\\\
-&\text{5: } \quad \endif \\\\
-&\text{6: } \quad \if \lnot \texttt{recompute} \then \\\\
+&\text{3: } \quad \PSif \lnot \BlockEval \PSthen \\\\
+&\text{4: } \quad \quad \PSreturn \PScomment{# No pending Block Evaluator exists} \\\\
+&\text{5: } \quad \PSendif \\\\
+&\text{6: } \quad \PSif \lnot \texttt{recompute} \PSthen \\\\
 &\text{7: } \quad \quad r \gets \Ledger.\mathrm{getLatestRound}() \\\\
 &\text{8: } \quad \quad t^\ast \gets \now() + \delta_{\NB} \\\\
-&\text{9: } \quad \quad \while \BlockEval.\mathrm{round}() \leq r \land \now() < t^\ast \do \\\\
+&\text{9: } \quad \quad \PSwhile \BlockEval.\mathrm{round}() \leq r \land \now() < t^\ast \PSdo \\\\
 &\text{10:} \quad \quad \quad \textsf{# Give time to the } \BlockEval \textsf{ to catch up} \\\\
-&\text{11:} \quad \quad \endwhile \\\\
-&\text{12:} \quad \quad \if \lnot \CheckSufficientFee(gtx) \then \\\\
-&\text{13:} \quad \quad \quad \return gtx \comment{# Discarded for insufficient fees} \\\\
-&\text{14:} \quad \quad \endif \\\\
-&\text{15:} \quad \endif \\\\
+&\text{11:} \quad \quad \PSendwhile \\\\
+&\text{12:} \quad \quad \PSif \lnot \CheckSufficientFee(gtx) \PSthen \\\\
+&\text{13:} \quad \quad \quad \PSreturn gtx \PScomment{# Discarded for insufficient fees} \\\\
+&\text{14:} \quad \quad \PSendif \\\\
+&\text{15:} \quad \PSendif \\\\
 &\text{16:} \quad \TP \gets \BlockEval.\mathrm{add}(gtx) \\\\
 &\text{17:} \quad \dots \\\\
-&\text{18: } \endfunction
+&\text{18: } \PSendfunction
 \end{aligned}
 $$
 

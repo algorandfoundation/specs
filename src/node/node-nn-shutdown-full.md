@@ -1,15 +1,6 @@
+{{#include ../_include/tex-macros/pseudocode.md}}
+
 $$
-\newcommand \function {\textbf{function }}
-\newcommand \return {\textbf{return }}
-\newcommand \endfunction {\textbf{end function}}
-\newcommand \if {\textbf{if }}
-\newcommand \else {\textbf{else}}
-\newcommand \then {\textbf{ then}}
-\newcommand \endif {\textbf{end if}}
-\newcommand \for {\textbf{for }}
-\newcommand \do {\textbf{ do}}
-\newcommand \endfor {\textbf{end for}}
-\newcommand \comment {\qquad \small \textsf}
 \newcommand \Node {\mathrm{node}}
 \newcommand \FullNode {\mathrm{FullNode}}
 \newcommand \Network {\mathrm{Network}}
@@ -44,31 +35,31 @@ the integrity of the system.
 
 $$
 \begin{aligned}
-&\text{1: } \function \FullNode.\Stop() \\\\
-&\text{2: } \comment{# Network Cleanup} \\\\
+&\text{1: } \PSfunction \FullNode.\Stop() \\\\
+&\text{2: } \PScomment{# Network Cleanup} \\\\
 &\text{3: } \quad \Node.\Network.\Stop\Handlers() \\\\
 &\text{4: } \quad \Node.\Network.\Stop\mathrm{Validator}\Handlers() \\\\
-&\text{5: } \quad \if \neg \Node.\Config.\Stop\Network \then \\\\
+&\text{5: } \quad \PSif \neg \Node.\Config.\Stop\Network \PSthen \\\\
 &\text{6: } \quad \quad \Node.\Network.\Stop() \\\\
-&\text{7: } \quad \endif \\\\
-&\text{8: } \comment{# Service Shutdown} \\\\
-&\text{9: } \quad \if \exists \Node.\Catchpoint\Catchup\Service \then \\\\
+&\text{7: } \quad \PSendif \\\\
+&\text{8: } \PScomment{# Service Shutdown} \\\\
+&\text{9: } \quad \PSif \exists \Node.\Catchpoint\Catchup\Service \PSthen \\\\
 &\text{10:} \quad \quad \Node.\Catchpoint\Catchup\Service.\Stop() \\\\
-&\text{11:} \quad \else \\\\
-&\text{12:} \comment{# Full Node Services} \\\\
+&\text{11:} \quad \PSelse \\\\
+&\text{12:} \PScomment{# Full Node Services} \\\\
 &\text{13:} \quad \quad \Node.\Stop\mathrm{AllServices}() \\\\
-&\text{14:} \quad \endif \\\\
-&\text{15:} \comment{# Resource Cleanup} \\\\
+&\text{14:} \quad \PSendif \\\\
+&\text{15:} \PScomment{# Resource Cleanup} \\\\
 &\text{16:} \quad \Node.\TP.\Stop() \\\\
-&\text{17:} \comment{# Final Cleanup} \\\\
+&\text{17:} \PScomment{# Final Cleanup} \\\\
 &\text{18:} \quad \Node.\Ledger.\Close() \\\\
-&\text{19:} \comment{# Post-Shutdown Cleanup} \\\\
+&\text{19:} \PScomment{# Post-Shutdown Cleanup} \\\\
 &\text{20:} \quad \mathrm{WaitMonitoringRoutines}() \\\\
 &\text{21:} \quad \Node.\AccountManager.\Registry.\Close() \\\\
-&\text{22:} \quad \for \Handler \in \Node.\mathrm{Database}\Handlers \do \\\\
+&\text{22:} \quad \PSfor \Handler \in \Node.\mathrm{Database}\Handlers \PSdo \\\\
 &\text{23:} \quad \quad \Handler.\Close() \\\\
-&\text{24:} \quad \endfor \\\\
-&\text{25:} \endfunction
+&\text{24:} \quad \PSendfor \\\\
+&\text{25:} \PSendfunction
 \end{aligned}
 $$
 

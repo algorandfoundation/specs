@@ -1,3 +1,5 @@
+{{#include ../_include/tex-macros/pseudocode.md}}
+
 $$
 \newcommand \EventHandler {\mathrm{EventHandler}}
 \newcommand \BlockProposal {\mathrm{BlockProposal}}
@@ -19,13 +21,6 @@ $$
 \newcommand \Late {\mathit{late}}
 \newcommand \Redo {\mathit{redo}}
 \newcommand \Down {\mathit{down}}
-\newcommand \function {\textbf{function }}
-\newcommand \endfunction {\textbf{end function}}
-\newcommand \if {\textbf{if }}
-\newcommand \then {\textbf{ then}}
-\newcommand \else {\textbf{else}}
-\newcommand \elseif {\textbf{else if }}
-\newcommand \endif {\textbf{end if}}
 \newcommand \ev {\mathit{ev}}
 \newcommand \t {\mathit{time}}
 \newcommand \s {\mathit{step}}
@@ -33,7 +28,6 @@ $$
 \newcommand \TimeoutEvent {\texttt{TimeoutEvent}}
 \newcommand \MessageEvent {\texttt{MessageEvent}}
 \newcommand \DynamicFilterTimeout {\mathrm{DynamicFilterTimeout}}
-\newcommand \comment {\qquad \small \textsf}
 $$
 
 # Agreement Stages
@@ -70,37 +64,36 @@ We may model the state machine’s main algorithm in the following way:
 
 $$
 \begin{aligned}
-&\text{1: } \function \EventHandler(ev) \\\\
-&\text{2: } \qquad \if \ev \text{ is a } \TimeoutEvent \then \\\\
+&\text{1: } \PSfunction \EventHandler(ev) \\\\
+&\text{2: } \qquad \PSif \ev \text{ is a } \TimeoutEvent \PSthen \\\\
 &\text{3: } \qquad \quad \t \gets \ev_\t \\\\
-&\text{4: } \qquad \quad \if \t = 0 \then \comment{# Last round should have left us with s := propose} \\\\
-&\text{5: } \qquad \quad \quad \BlockProposal() \\\\
-&\text{6: } \qquad \quad \quad \if \text{finished a block} \lor \mathrm{CurrentTime}() = \mathrm{AssemblyDeadline}() \then \\\\
+&\text{4: } \qquad \quad \PSif \t = 0 \PSthen \PScomment{# Last round should have left us with s := propose} \\\\
+&\text{5: } \qquad \quad \quad \BlockProposal() \\\\&\text{6: } \qquad \quad \quad \PSif \text{finished a block} \lor \mathrm{CurrentTime}() = \mathrm{AssemblyDeadline}() \PSthen \\\\
 &\text{7: } \qquad \quad \quad \quad \s \gets \Soft \\\\
-&\text{8: } \qquad \quad \quad \endif \\\\
-&\text{9: } \qquad \quad \elseif time = \DynamicFilterTimeout(p) \then \\\\
+&\text{8: } \qquad \quad \quad \PSendif \\\\
+&\text{9: } \qquad \quad \PSelseif time = \DynamicFilterTimeout(p) \PSthen \\\\
 &\text{10:} \qquad \quad \quad \SoftVote() \\\\
 &\text{11:} \qquad \quad \quad \s \gets \Cert \\\\
-&\text{12:} \qquad \quad \elseif \t = \DeadlineTimeout(p) \then \\\\
+&\text{12:} \qquad \quad \PSelseif \t = \DeadlineTimeout(p) \PSthen \\\\
 &\text{13:} \qquad \quad \quad \s \gets \Next_0 \\\\
 &\text{14:} \qquad \quad \quad \Recovery() \\\\
-&\text{15:} \qquad \quad \elseif \t = \DeadlineTimeout(p) + 2^{s_t - 3}\lambda \text{ for } 4 \le s_t \le 252 \then \\\\
+&\text{15:} \qquad \quad \PSelseif \t = \DeadlineTimeout(p) + 2^{s_t - 3}\lambda \text{ for } 4 \le s_t \le 252 \PSthen \\\\
 &\text{16:} \qquad \quad \quad \s \gets \Next_{s_t} \\\\
 &\text{17:} \qquad \quad \quad \Recovery() \\\\
-&\text{18:} \qquad \quad \elseif \t = k\lambda_f + rnd \text{ for } k, rnd \in \mathbb{Z}, k > 0, 0 \le rnd \le \lambda_f \then \\\\
+&\text{18:} \qquad \quad \PSelseif \t = k\lambda_f + rnd \text{ for } k, rnd \in \mathbb{Z}, k > 0, 0 \le rnd \le \lambda_f \PSthen \\\\
 &\text{19:} \qquad \quad \quad \FastRecovery() \\\\
-&\text{20:} \qquad \quad \endif \\\\
-&\text{21:} \qquad \else \comment{# MessageEvent could trigger a commitment and round advancement} \\\\
+&\text{20:} \qquad \quad \PSendif \\\\
+&\text{21:} \qquad \PSelse \PScomment{# MessageEvent could trigger a commitment and round advancement} \\\\
 &\text{22:} \qquad \quad msg \gets ev_{msg} \\\\
-&\text{23:} \qquad \quad \if \data \text{ is of type } \texttt{Proposal } pp \then \\\\
+&\text{23:} \qquad \quad \PSif \data \text{ is of type } \texttt{Proposal } pp \PSthen \\\\
 &\text{24:} \qquad \quad \quad \HandleProposal(pp) \\\\
-&\text{25:} \qquad \quad \elseif \data \text{ is of type } \texttt{Vote } v \then \\\\
+&\text{25:} \qquad \quad \PSelseif \data \text{ is of type } \texttt{Vote } v \PSthen \\\\
 &\text{26:} \qquad \quad \quad \HandleVote(v) \\\\
-&\text{27:} \qquad \quad \elseif \data \text{ is of type } \texttt{Bundle } b \then \\\\
+&\text{27:} \qquad \quad \PSelseif \data \text{ is of type } \texttt{Bundle } b \PSthen \\\\
 &\text{28:} \qquad \quad \quad \HandleBundle(b) \\\\
-&\text{29:} \qquad \quad \endif \\\\
-&\text{30:} \qquad \endif \\\\
-&\text{31: } \endfunction
+&\text{29:} \qquad \quad \PSendif \\\\
+&\text{30:} \qquad \PSendif \\\\
+&\text{31: } \PSendfunction
 \end{aligned}
 $$
 
