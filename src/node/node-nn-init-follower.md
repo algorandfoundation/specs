@@ -103,7 +103,7 @@ $$
 
 ---
 
-{{#include ../.include/styles.md:impl}}
+{{#include ../_include/styles.md:impl}}
 > Follower Node initialization [reference implementation](https://github.com/algorand/go-algorand/blob/df0613a04432494d0f437433dd1efd02481db838/node/follower_node.go#L79-L158).
 
 Compared to a [_Full Node_](./node-nn-init-full.md), a _Follower Node_ is significantly

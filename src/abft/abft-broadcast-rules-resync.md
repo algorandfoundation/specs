@@ -24,7 +24,7 @@ or else
 - \\( \Bundle(r, p-1, s, v) \subset V \\) for some \\( s > \Cert, v \neq \bot \\),
 if it exists.
 
-{{#include ./.include/styles.md:impl}}
+{{#include ../_include/styles.md:impl}}
 > Freshness relation [reference implementation](https://github.com/algorand/go-algorand/blob/b6e5bcadf0ad3861d4805c51cbf3f695c38a93b7/agreement/events.go#L745).
 
 Second, if the player broadcasted a bundle \\( \Bundle(r, p, s, v) \\), and \\( v \neq \bot \\),

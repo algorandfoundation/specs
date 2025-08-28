@@ -58,7 +58,7 @@ are considered and relevant for \\( \CredentialHistory \\). If the round is comp
 in later periods (\\( p > 0 \\)), that round is skipped and \\( \CredentialHistory \\)
 remains unchanged.
 
-{{#include ../.include/styles.md:impl}}
+{{#include ../_include/styles.md:impl}}
 > Update credential arrival history [reference implementation](https://github.com/algorand/go-algorand/blob/df0613a04432494d0f437433dd1efd02481db838/agreement/player.go#L293).
 
 When computing the dynamic filter timeout, if a sufficient history of credentials
@@ -77,7 +77,7 @@ $$
 Note that the filter timeout \\( \lambdaMin \leq \Timeout \leq \lambdaMax \\) is
 clamped on the minimum and maximum bounds defined in the [ABFT normative section](./abft-parameters.md).
 
-{{#include ../.include/styles.md:impl}}
+{{#include ../_include/styles.md:impl}}
 > \\( \CredentialIdx \\)-th element selection [reference implementation](https://github.com/algorand/go-algorand/blob/df0613a04432494d0f437433dd1efd02481db838/agreement/credentialArrivalHistory.go#L69).
 
 ## Parameters

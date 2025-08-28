@@ -16,7 +16,7 @@ _round_, various hashes, rewards, etc.,
 
 > For further details on the _block header_, refer to the Ledger [normative specification](ledger.md#blocks).
 
-{{#include ../.include/styles.md:impl}}
+{{#include ../_include/styles.md:impl}}
 > Block header [reference implementation](https://github.com/algorand/go-algorand/blob/13e66ff9ba5073637f69f9dd4e5572f19b77e38c/data/bookkeeping/block.go#L38).
 
 The Ledger package in the `go-algorand` reference implementation includes functions
@@ -25,7 +25,7 @@ to effectively manage and interact with blocks.
 Blocks are assembled in two steps: first by the `MakeBlock` function and then by
 the `WithSeed`.
 
-{{#include ../.include/styles.md:impl}}
+{{#include ../_include/styles.md:impl}}
 > `MakeBlock` [reference implementation](https://github.com/algorand/go-algorand/blob/13e66ff9ba5073637f69f9dd4e5572f19b77e38c/data/bookkeeping/block.go#L471).
 >
 > `WithSeed` [reference implementation](https://github.com/algorand/go-algorand/blob/13e66ff9ba5073637f69f9dd4e5572f19b77e38c/data/bookkeeping/block.go#L278).

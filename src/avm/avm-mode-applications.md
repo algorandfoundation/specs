@@ -148,7 +148,7 @@ programs) Applications through _group resource sharing_.
 the Holding or Local **MUST** be _available_ in a top-level transaction based on
 pre-Version 9 rules.
 
-{{#include ../.include/styles.md:example}}
+{{#include ../_include/styles.md:example}}
 > If account `A` is made available in one transaction, and asset `X` is made available
 > in another, _group resource sharing_ does _not_ make `A`'s `X` Holding available.
      

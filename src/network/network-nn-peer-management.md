@@ -12,7 +12,7 @@ relay nodes from the Algorand service record (`SRV`),
 
 - A `PeerStore`, for the Peer-to-Peer Network \\( \PtoP \\).
 
-{{#include ../.include/styles.md:example}}
+{{#include ../_include/styles.md:example}}
 > For the Algorand MainNet `Phonebook` bootstrapping, the DNS is `mainnet.algorand.network`
 > and the service record is `algobootstrap`. The MainNet SRV can be queried with:
 >
@@ -54,7 +54,7 @@ including the ability to store, retrieve, update, and delete certified peer entr
 ensuring that signed peer records are handled with appropriate verification and
 lifecycle rules.
 
-{{#include ../.include/styles.md:impl}}
+{{#include ../_include/styles.md:impl}}
 > - `Phonebook` [reference implementation](https://github.com/algorand/go-algorand/blob/df0613a04432494d0f437433dd1efd02481db838/network/phonebook/phonebook.go#L107-L115),
 > - `PeerStore` [reference implementation](https://github.com/algorand/go-algorand/blob/df0613a04432494d0f437433dd1efd02481db838/network/p2p/peerstore/peerstore.go#L41-L71),
 > - `addressData` [reference implementation](https://github.com/algorand/go-algorand/blob/df0613a04432494d0f437433dd1efd02481db838/network/phonebook/phonebook.go#L77-L93).

@@ -25,7 +25,7 @@ consensus version.
 
 ## Contents Hierarchy
 
-![Node](images/node.svg "Node Functional Diagram")
+![Node](./_images/node.svg "Node Functional Diagram")
 
 The _node functional diagram_ above provides an overview of the _functional blocks_
 that define the structure of the Algorand Specification.
@@ -50,10 +50,10 @@ icon (**>**), next to the level name.
 
 > Notes like this are non-normative comments in the normative sections.
 
-{{#include ./.include/styles.md:example}}
+{{#include ./_include/styles.md:example}}
 > Sections like this are examples aiming to clarify the formal specifications.
 
-{{#include ./.include/styles.md:impl}}
+{{#include ./_include/styles.md:impl}}
 > Sections like this contain links to the `go-algorand` reference implementation.
 
 The `code-blocks` may contain pseudocode or real code snippets.

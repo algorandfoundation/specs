@@ -17,7 +17,7 @@ The first line of a TEAL program may contain a special version directive `#pragm
 version X` (where `X` is an unsigned integer), which directs the Assembler to generate
 bytecode targeting a certain AVM Version.
 
-{{#include ../.include/styles.md:example}}
+{{#include ../_include/styles.md:example}}
 > For instance, `#pragma version 2` produces bytecode targeting Version 2. By default,
 > the Assembler targets Version 1.
 
@@ -29,7 +29,7 @@ pertaining to checks the Assembler should perform before agreeing to emit the pr
 bytecode, specific optimizations, etc. Those declarations are **OPTIONAL** and cannot
 alter the semantics as described in this document.
 
-{{#include ../.include/styles.md:impl}}
+{{#include ../_include/styles.md:impl}}
 > Pragma directive [reference implementation](https://github.com/algorand/go-algorand/blob/df0613a04432494d0f437433dd1efd02481db838/data/transactions/logic/assembler.go#L2277).
 
 ### Macro
@@ -38,7 +38,7 @@ A `#define M M_def` directive (where `M` is an identifier and `M_def` is a valid
 TEAL expression) is used to define a _macro_. This is syntactically equivalent to
 replacing each occurence of the `M` identifier for the corresponding definition `M_def`.
 
-{{#include ../.include/styles.md:impl}}
+{{#include ../_include/styles.md:impl}}
 > Macro directive [reference implementation](https://github.com/algorand/go-algorand/blob/df0613a04432494d0f437433dd1efd02481db838/data/transactions/logic/assembler.go#L2252C2-L2252C35).
 
 ## Comments
@@ -124,7 +124,7 @@ A _label_ is defined by any string (that:
 
 A label without the trailing `:` can be an argument to a branching instruction.
 
-{{#include ../.include/styles.md:example}}
+{{#include ../_include/styles.md:example}}
 > Here is an example of TEAL program that uses a `bnz` opcode with the `safe` _label_
 > as an _argument_. Since a `1` is pushed into the Stack, the execution jumps to
 > the `pop` instruction after the `safe:` label:

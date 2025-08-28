@@ -81,7 +81,7 @@ If any of the addresses are the same (e.g., the _sender_ and _receiver_ are the 
 then that account received the sum of the respective reward distributions (i.e.,
 `rs` plus `rr`).
 
-{{#include ../.include/styles.md:impl}}
+{{#include ../_include/styles.md:impl}}
 > In the reference implementation, one of these two fields will be zero in that case.
 
 # Inner Transactions
