@@ -34,7 +34,7 @@ time-cadence, driven by the \\( \s \\) and the local node timer \\( t_N \\).
 The following is a conceptual diagram of the two recovery modes, briefly described
 below.
 
-![Recovery Modes Example](images/recovery-timeline.svg "Recovery Modes Conceptual Timeline")
+![Recovery Modes Example](../_images/recovery-timeline.svg "Recovery Modes Conceptual Timeline")
 
 ### Recovery (Exponential Recovery)
 
