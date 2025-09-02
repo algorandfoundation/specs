@@ -1,5 +1,5 @@
 $$
-\newcommand \tag {\mathrm{tag}}
+\newcommand \Tag {\mathrm{tag}}
 \newcommand \MessageHandler {\mathrm{MH}}
 \newcommand \ForwardingPolicy {\mathrm{ForwardingPolicy}}
 \newcommand \InMsg {\ast\texttt{M}}

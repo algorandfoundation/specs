@@ -3,7 +3,7 @@ $$
 \newcommand \WS {\mathrm{WS}}
 \newcommand \PtoP {\mathrm{P2P}}
 \newcommand \HYB {\mathrm{HYB}}
-\newcommand \tag {\mathrm{tag}}
+\newcommand \Tag {\mathrm{tag}}
 \newcommand \InMsg {\ast\texttt{M}}
 \newcommand \OutMsg {\texttt{M}\ast}
 \newcommand \MessageHandler {\mathrm{MH}}

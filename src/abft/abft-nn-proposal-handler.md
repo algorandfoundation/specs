@@ -110,13 +110,13 @@ $$
 &\text{2: } \quad v \gets \Proposal_v(\pr, \pr_p, \pr_I) \\\\
 &\text{3: } \quad \PSif \exists \Bundle(r+1, 0, \Soft, v) \in B \PSthen \\\\
 &\text{4: } \quad \quad \Relay(\pr) \\\\
-&\text{5: } \quad \quad \PSreturn \PScomment{# Future round, do not observe (node is behind)} \\\\
+&\text{5: } \quad \quad \PSreturn \PScomment{Future round, do not observe (node is behind)} \\\\
 &\text{6: } \quad \PSendif \\\\
 &\text{7: } \quad \PSif \PSnot \VerifyProposal(\pr) \lor \pr \in P \PSthen \\\\
-&\text{8: } \quad \quad \PSreturn \PScomment{# Ignore proposal} \\\\
+&\text{8: } \quad \quad \PSreturn \PScomment{Ignore proposal} \\\\
 &\text{9: } \quad \PSendif \\\\
 &\text{10:} \quad \PSif v \notin \\{\sigma, \bar{v}, \mu\\} \PSthen \\\\
-&\text{11:} \quad \quad \PSreturn \PScomment{# Ignore proposal} \\\\
+&\text{11:} \quad \quad \PSreturn \PScomment{Ignore proposal} \\\\
 &\text{12:} \quad \PSendif \\\\
 &\text{13:} \quad \Relay(\pr) \\\\
 &\text{14:} \quad P \gets P \cup \pr \\\\

@@ -60,7 +60,7 @@ $$
 &\text{1: } \PSfunction \SoftVote() \\\\
 &\text{2: } \quad \loh \gets \infty \\\\
 &\text{3: } \quad v \gets \bot \\\\
-&\text{4: } \quad \PSfor \vt_p \in V^\ast \PSdo \PScomment{# The subset of votes corresponding to proposals} \\\\
+&\text{4: } \quad \PSfor \vt_p \in V^\ast \PSdo \PScomment{The subset of votes corresponding to proposals} \\\\
 &\text{5: } \quad \quad \ph \gets \Priority(\vt_p)  \\\\
 &\text{6: } \quad \quad \PSif \ph < \loh \PSthen \\\\
 &\text{7: } \quad \quad \quad \loh \gets \ph \\\\

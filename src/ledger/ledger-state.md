@@ -1,5 +1,5 @@
 $$
-\newcommand \MaxTxTail {\mathrm{TxTail}_\max}
+\newcommand \MaxTxTail {\mathrm{TxTail}_{\max}}
 \newcommand \App {\mathrm{App}}
 \newcommand \Box {\mathrm{Box}}
 $$

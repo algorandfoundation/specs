@@ -43,15 +43,15 @@ $$
 &\text{9: } \quad \text{Wait until } \AD \lor (\TP.\r = r \land \BlockEval \text{ is done}) \\\\
 &\text{10:} \quad \PSif \lnot \BlockEval.\mathrm{done}() \PSthen \\\\
 &\text{11:} \quad \quad \PSif \TP.\r > r \PSthen \\\\
-&\text{12:} \quad \quad \quad \PSreturn \nil \PScomment{# r is behind } \TP.\r \\\\
+&\text{12:} \quad \quad \quad \PSreturn \nil \PScomment{r is behind } \TP.\r \\\\
 &\text{13:} \quad \quad \PSendif \\\\
 &\text{14:} \quad \quad \AD \gets \AD + \epsilon_{\AW} \\\\
 &\text{15:} \quad \quad \text{Wait until } \AD \lor (\TP.\r = r \land \BlockEval \text{ is done}) \\\\
 &\text{16:} \quad \quad \PSif \lnot \BlockEval.\mathrm{done}() \PSthen \\\\
-&\text{17:} \quad \quad \quad \PSreturn \AssembleBlock.\EB(r) \PScomment{# Ran out of time} \\\\
+&\text{17:} \quad \quad \quad \PSreturn \AssembleBlock.\EB(r) \PScomment{Ran out of time} \\\\
 &\text{18:} \quad \quad \PSendif \\\\
 &\text{19:} \quad \quad \PSif \TP.\r > r \PSthen \\\\
-&\text{20:} \quad \quad \quad \PSreturn \nil \PScomment{# Requested round is behind transaction pool round} \\\\
+&\text{20:} \quad \quad \quad \PSreturn \nil \PScomment{Requested round is behind transaction pool round} \\\\
 &\text{21:} \quad \quad \PSelseif \TP.\r = r - 1 \PSthen \\\\
 &\text{22:} \quad \quad \quad \PSreturn \AssembleBlock.\EB(r) \\\\
 &\text{23:} \quad \quad \PSelseif \TP.\r < r \PSthen \\\\

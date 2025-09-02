@@ -54,31 +54,31 @@ $$
 &\text{1: } \PSfunction \ValidateVote(\vt): \\\\
 &\text{2: } \quad \PSif \PSnot \VerifyVote(\vt) \PSthen \\\\
 &\text{3: } \quad \quad \DisconnectFromPeer(\SenderPeer(\vt)) \\\\
-&\text{4: } \quad \quad \PSreturn \PScomment{# Ignore invalid vote} \\\\
+&\text{4: } \quad \quad \PSreturn \PScomment{Ignore invalid vote} \\\\
 &\text{5: } \quad \PSendif \\\\
 &\text{6: } \quad \PSif \vt_s = 0 \land (\vt \in V \lor \IsEquivocation(\vt)) \PSthen \\\\
-&\text{7: } \quad \quad \PSreturn \PScomment{# Ignore vote, equivocation not allowed in proposal votes} \\\\
+&\text{7: } \quad \quad \PSreturn \PScomment{Ignore vote, equivocation not allowed in proposal votes} \\\\
 &\text{8: } \quad \PSendif \\\\
 &\text{9: } \quad \PSif \vt_s > 0 \land \IsSecondEquivocation(\vt) \PSthen \\\\
-&\text{10:} \quad \quad \PSreturn \PScomment{# Ignore vote if it’s a second equivocation} \\\\
+&\text{10:} \quad \quad \PSreturn \PScomment{Ignore vote if it’s a second equivocation} \\\\
 &\text{11:} \quad \PSendif \\\\
 &\text{12:} \quad \PSif \vt_r < r \PSthen \\\\
-&\text{13:} \quad \quad \PSreturn \PScomment{# Ignore vote of past round}\\\\
+&\text{13:} \quad \quad \PSreturn \PScomment{Ignore vote of past round} \\\\
 &\text{14:} \quad \PSendif \\\\
-&\text{15:} \quad \PSif \vt_r = r + 1 \land (\vt_p > 0 \lor \vt_s \in \\{\Next_0, \dots, \Next_{249}\\}) \PSthen\\\\
-&\text{16:} \quad \quad \PSreturn \PScomment{# Ignore vote of next round if non-zero period or "next_k" step} \\\\
+&\text{15:} \quad \PSif \vt_r = r + 1 \land (\vt_p > 0 \lor \vt_s \in \\{\Next_0, \dots, \Next_{249}\\}) \PSthen \\\\
+&\text{16:} \quad \quad \PSreturn \PScomment{Ignore vote of next round if non-zero period or next-k step} \\\\
 &\text{17:} \quad \PSendif \\\\
 &\text{18:} \quad \PSif \vt_r = r \land (\vt_p \notin \\{p-1, p, p+1\\} \lor \\\\
 &\text{} \quad \quad \quad \quad \quad \quad (\vt_p = p+1 \land \vt_s \in \\{\Next_1, \dots, \Next_{249}\\}) \lor \\\\
 &\text{} \quad \quad \quad \quad \quad \quad (\vt_p = p \land \vt_s \in \\{\Next_1, \dots, \Next_{249}\\} \land \vt_s \notin \\{s-1, s, s+1\\}) \lor \\\\
 &\text{} \quad \quad \quad \quad \quad \quad (\vt_p = p-1 \land \vt_s \in \\{\Next_1, \dots, \Next_{249}\\} \land \vt_s \notin \\{\bar{s}-1, \bar{s}, \bar{s}+1\\})) \PSthen \\\\
-&\text{19:} \quad \quad \PSreturn \PScomment{# Ignore vote} \\\\
+&\text{19:} \quad \quad \PSreturn \PScomment{Ignore vote} \\\\
 &\text{20:} \quad \PSendif \\\\
 &\text{21: } \PSendfunction \\\\
 \\\\
 &\text{22: } \PSfunction \HandleVote(\vt): \\\\
-&\text{23:} \quad \ValidateVote(\vt) \PScomment{# Check the validity of the vote} \\\\
-&\text{24:} \quad V \gets V \cup \vt \PScomment{# Observe the vote}\\\\
+&\text{23:} \quad \ValidateVote(\vt) \PScomment{Check the validity of the vote} \\\\
+&\text{24:} \quad V \gets V \cup \vt \PScomment{Observe the vote} \\\\
 &\text{25:} \quad \Relay(\vt) \\\\
 &\text{26:} \quad \PSif \vt_s = \Prop \PSthen \\\\
 &\text{27:} \quad \quad \PSif \RetrieveProposal(\vt_v) \neq \bot \PSthen \\\\

@@ -1,5 +1,5 @@
 $$
-\newcommand \MaxVersionStringLen {V_\max}
+\newcommand \MaxVersionStringLen {V_{\max}}
 \newcommand \DefaultUpgradeWaitRounds {\delta_x}
 \newcommand \MaxUpgradeWaitRounds {\delta_{x_{\max}}}
 \newcommand \MinUpgradeWaitRounds {\delta_{x_{\min}}}

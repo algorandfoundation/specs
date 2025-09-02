@@ -67,7 +67,7 @@ $$
 &\text{1: } \PSfunction \EventHandler(ev) \\\\
 &\text{2: } \qquad \PSif \ev \text{ is a } \TimeoutEvent \PSthen \\\\
 &\text{3: } \qquad \quad \t \gets \ev_\t \\\\
-&\text{4: } \qquad \quad \PSif \t = 0 \PSthen \PScomment{# Last round should have left us with s := propose} \\\\
+&\text{4: } \qquad \quad \PSif \t = 0 \PSthen \PScomment{Last round should have left us with s := propose} \\\\
 &\text{5: } \qquad \quad \quad \BlockProposal() \\\\&\text{6: } \qquad \quad \quad \PSif \text{finished a block} \lor \mathrm{CurrentTime}() = \mathrm{AssemblyDeadline}() \PSthen \\\\
 &\text{7: } \qquad \quad \quad \quad \s \gets \Soft \\\\
 &\text{8: } \qquad \quad \quad \PSendif \\\\
@@ -83,7 +83,7 @@ $$
 &\text{18:} \qquad \quad \PSelseif \t = k\lambda_f + rnd \text{ for } k, rnd \in \mathbb{Z}, k > 0, 0 \le rnd \le \lambda_f \PSthen \\\\
 &\text{19:} \qquad \quad \quad \FastRecovery() \\\\
 &\text{20:} \qquad \quad \PSendif \\\\
-&\text{21:} \qquad \PSelse \PScomment{# MessageEvent could trigger a commitment and round advancement} \\\\
+&\text{21:} \qquad \PSelse \PScomment{MessageEvent could trigger a commitment and round advancement} \\\\
 &\text{22:} \qquad \quad msg \gets ev_{msg} \\\\
 &\text{23:} \qquad \quad \PSif \data \text{ is of type } \texttt{Proposal } pp \PSthen \\\\
 &\text{24:} \qquad \quad \quad \HandleProposal(pp) \\\\

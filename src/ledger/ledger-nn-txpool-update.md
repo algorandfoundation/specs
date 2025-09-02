@@ -34,7 +34,7 @@ $$
 &\text{4: } \quad \quad \quad \PScase\ 0: \\\\
 &\text{5: } \quad \quad \quad \quad \FeeMul \gets \frac{FeeMul}{FeeExp} \\\\
 &\text{6: } \quad \quad \quad \PScase\ 1: \\\\
-&\text{7: } \quad \quad \quad \quad \PScomment{# Intentionally left blank to maintain the value of } \FeeMul \\\\
+&\text{7: } \quad \quad \quad \quad \PScomment{Intentionally left blank to maintain the value of } \FeeMul \\\\
 &\text{8: } \quad \quad \quad \PScase\ \PSdefault: \\\\
 &\text{9: } \quad \quad \quad \quad \PSif \FeeMul = 0 \PSthen \\\\
 &\text{10:} \quad \quad \quad \quad \quad \FeeMul \gets 1 \\\\

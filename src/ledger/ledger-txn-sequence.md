@@ -13,7 +13,7 @@ $$
 \newcommand \ApplyData {\mathrm{ApplyData}}
 \newcommand {\abs}[1] {\lvert #1 \rvert}
 \newcommand \MaxTxnBytesPerBlock {B_{\max}}
-\newcommand \MaxTxTail {\mathrm{TxTail}_\max}
+\newcommand \MaxTxTail {\mathrm{TxTail}_{\max}}
 $$
 
 # Transaction Sequences, Sets, and Tails

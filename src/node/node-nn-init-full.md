@@ -55,7 +55,7 @@ $$
 &\text{3: } \quad \Node.\mathrm{log} \gets \Logger(\Config) \\\\
 &\text{4: } \quad \Node.\Genesis.\mathrm{ID} \gets \Genesis.\mathrm{ID}() \\\\
 &\text{5: } \quad \Node.\Genesis.\mathrm{ID} \gets \Genesis.\Hash() \\\\
-&\text{6: } \PScomment{# Network Initialization} \\\\
+&\text{6: } \PScomment{Network Initialization} \\\\
 &\text{7: } \quad \PSif \Config.\mathrm{EnableHybridMode} \PSthen \\\\
 &\text{8: } \quad \quad \Node.\Network \gets \Create\HYB\Network(\Phonebook) \\\\
 &\text{9: } \quad \PSelseif \Config.\mathrm{EnableP2P} \PSthen \\\\
@@ -63,21 +63,21 @@ $$
 &\text{11:} \quad \PSelse \\\\
 &\text{12:} \quad \quad \Node.\Network \gets \Create\WS\Network(\Phonebook) \\\\
 &\text{13:} \quad \PSendif \\\\
-&\text{14:} \PScomment{# Crypto Resource Pools Initialization} \\\\
+&\text{14:} \PScomment{Crypto Resource Pools Initialization} \\\\
 &\text{15:} \quad \Node.\CryptoPool \gets \Create\mathrm{ExecutionPool}() \\\\
 &\text{16:} \quad \Node.\CryptoPool.\mathrm{lowPriority} \gets \Create\mathrm{BacklogPool()} \\\\
 &\text{17:} \quad \Node.\CryptoPool.\mathrm{highPriority} \gets \Create\mathrm{BacklogPool()} \\\\
-&\text{18:} \PScomment{# Ledger Initialization} \\\\
+&\text{18:} \PScomment{Ledger Initialization} \\\\
 &\text{19:} \quad \mathrm{ledgerPaths} \gets \mathrm{ResolvePaths}(\RootDir, \Config) \\\\
 &\text{20:} \quad \Node.\Ledger \gets \mathrm{LoadLedger}(\mathrm{ledgerPaths}, \Genesis) \\\\
-&\text{21:} \PScomment{# Account Management} \\\\
+&\text{21:} \PScomment{Account Management} \\\\
 &\text{22:} \quad \Registry \gets \mathrm{ParticipationRegistry}() \\\\
 &\text{23:} \quad \Node.\AccountManager \gets \Create\AccountManager(\Registry) \\\\
 &\text{24:} \quad \mathrm{LoadParticipationKeys}(\Node) \\\\
-&\text{25:} \PScomment{# Transaction Pool Initialization} \\\\
+&\text{25:} \PScomment{Transaction Pool Initialization} \\\\
 &\text{26:} \quad \Node.\TP \gets \Create\TP(\Node.\Ledger) \\\\
 &\text{27:} \quad \mathrm{RegisterBlockListeners}(\Node.\TP) \\\\
-&\text{28:} \PScomment{# Services Initialization} \\\\
+&\text{28:} \PScomment{Services Initialization} \\\\
 &\text{29:} \quad \Node.\Block\Service \gets \Create\Block\Service() \\\\
 &\text{30:} \quad \Node.\Ledger\Service \gets \Create\Ledger\Service() \\\\
 &\text{31:} \quad \Node.\TP\Service \gets \Create\TP\mathrm{Syncer}() \\\\

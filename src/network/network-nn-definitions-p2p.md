@@ -3,7 +3,7 @@ $$
 \newcommand \PtoP {\mathrm{P2P}}
 \newcommand \PtoPNet {\mathcal{N}_P}
 \newcommand \Peer {\mathrm{Peer}}
-\newcommand \tag {\mathrm{tag}}
+\newcommand \Tag {\mathrm{tag}}
 \newcommand \PeerNode {\mathcal{P}}
 $$
 
@@ -22,7 +22,7 @@ A minimal \\( \PtoPNet \\) should have:
 - A `Broadcaster` to send messages to the network,
 
 - A `topicTags` mapping of the form (`protocolTag -> string`), which represents
-which \\( \tag \\) to use with `GossipSub`, mapped to topic names[^1].
+which \\( \Tag \\) to use with `GossipSub`, mapped to topic names[^1].
 
 - A set of primitives taken or adapted from the Relay Network \\( \WS \\) and 
 \\( \Peer \\), to support \\( \WS \\) messages: 
@@ -77,7 +77,7 @@ data about that topic.
 The _topic_ used to subscribe to transaction gossiping is `algotx01`.
 
 The naming convention used for the _topics_ is: the word `algo`, followed by a 2-byte
-protocol \\( \tag \\) (`TX` in this case) followed by the 2-byte version identifier
+protocol \\( \Tag \\) (`TX` in this case) followed by the 2-byte version identifier
 (`01` in this case).
 
 {{#include ../_include/styles.md:impl}}

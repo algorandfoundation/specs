@@ -38,16 +38,16 @@ $$
 &\text{1: } \PSfunction \Ingest(\TG\ gtx) \\\\
 &\text{2: } \quad \dots \\\\
 &\text{3: } \quad \PSif \lnot \BlockEval \PSthen \\\\
-&\text{4: } \quad \quad \PSreturn \PScomment{# No pending Block Evaluator exists} \\\\
+&\text{4: } \quad \quad \PSreturn \PScomment{No pending Block Evaluator exists} \\\\
 &\text{5: } \quad \PSendif \\\\
 &\text{6: } \quad \PSif \lnot \texttt{recompute} \PSthen \\\\
 &\text{7: } \quad \quad r \gets \Ledger.\mathrm{getLatestRound}() \\\\
 &\text{8: } \quad \quad t^\ast \gets \now() + \delta_{\NB} \\\\
 &\text{9: } \quad \quad \PSwhile \BlockEval.\mathrm{round}() \leq r \land \now() < t^\ast \PSdo \\\\
-&\text{10:} \quad \quad \quad \textsf{# Give time to the } \BlockEval \textsf{ to catch up} \\\\
+&\text{10:} \quad \quad \quad \textsf{Give time to the } \BlockEval \textsf{ to catch up} \\\\
 &\text{11:} \quad \quad \PSendwhile \\\\
 &\text{12:} \quad \quad \PSif \lnot \CheckSufficientFee(gtx) \PSthen \\\\
-&\text{13:} \quad \quad \quad \PSreturn gtx \PScomment{# Discarded for insufficient fees} \\\\
+&\text{13:} \quad \quad \quad \PSreturn gtx \PScomment{Discarded for insufficient fees} \\\\
 &\text{14:} \quad \quad \PSendif \\\\
 &\text{15:} \quad \PSendif \\\\
 &\text{16:} \quad \TP \gets \BlockEval.\mathrm{add}(gtx) \\\\

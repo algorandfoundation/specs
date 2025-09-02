@@ -1,6 +1,6 @@
 $$
 \newcommand \LogicSig {\mathrm{LSig}}
-\newcommand \LogicSigMaxSize {\LogicSig_\max}
+\newcommand \LogicSigMaxSize {\LogicSig_{\max}}
 \newcommand \LogicSigMaxCost {\LogicSig_{c,\max}}
 \newcommand \App {\mathrm{App}}
 \newcommand \MaxAppTotalProgramLen {\App_{\mathrm{prog},t,\max}}

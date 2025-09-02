@@ -1,7 +1,7 @@
 $$
 \newcommand \BonusDecayInterval {B_{b,\mathrm{decay}}}
 \newcommand \MaxProposedExpiredOnlineAccounts {B_{N_\mathrm{e},\max}}
-\newcommand \MinBalance {b_\min}
+\newcommand \MinBalance {b_{\min}}
 \newcommand \PayoutsMaxBalance {A_{r,\max}}
 \newcommand \PayoutsMinBalance {A_{r,\min}}
 \newcommand \Heartbeat {\mathrm{hb}}

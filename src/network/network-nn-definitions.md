@@ -1,6 +1,6 @@
 $$
 \newcommand \Peer {\mathrm{Peer}}
-\newcommand \tag {\mathrm{tag}}
+\newcommand \Tag {\mathrm{tag}}
 $$
 
 # Network Definitions
@@ -21,7 +21,7 @@ Computes the address of the caller node, inside the specified network structure,
 according to the network layer addressing (see the [addressing section](network-nn-addressing.md)).
 
 - `Broadcast(tag protocolTag, data []byte, wait bool, except Peer)`\
-Builds a message and sends a packet of data and protocol \\( \tag \\) to all connected
+Builds a message and sends a packet of data and protocol \\( \Tag \\) to all connected
 peers. Conceptually, it only excludes itself, although it could exclude any specific
 \\( \Peer \\) using the `except` parameter. If `wait` is active, the call blocks
 until the send is complete (allowing for synchronous message sending).
