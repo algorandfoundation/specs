@@ -1,5 +1,5 @@
 $$
-\newcommand \MinBalance {b_\min}
+\newcommand \MinBalance {b_{\min}}
 $$
 
 # Asset Transaction Semantics

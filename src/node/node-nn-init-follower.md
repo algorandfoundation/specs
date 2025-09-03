@@ -1,13 +1,6 @@
+{{#include ../_include/tex-macros/pseudocode.md}}
+
 $$
-\newcommand \function {\textbf{function }}
-\newcommand \return {\textbf{return }}
-\newcommand \endfunction {\textbf{end function}}
-\newcommand \if {\textbf{if }}
-\newcommand \elseif {\textbf{elseif }}
-\newcommand \else {\textbf{else}}
-\newcommand \then {\textbf{ then}}
-\newcommand \endif {\textbf{end if}}
-\newcommand \comment {\qquad \small \textsf}
 \newcommand \disable {\textbf{disable }}
 \newcommand \RootDir {\mathrm{rootDir}}
 \newcommand \Config {\mathrm{nodeConfig}}
@@ -66,38 +59,38 @@ _Follower Node_:
 
 $$
 \begin{aligned}
-&\text{1: } \function \FollowerNode.\mathrm{Start}(\RootDir, \Config, \Phonebook, \Genesis) \\\\
+&\text{1: } \PSfunction \FollowerNode.\mathrm{Start}(\RootDir, \Config, \Phonebook, \Genesis) \\\\
 &\text{2: } \quad \Node \gets {\textbf{new }} \FollowerNode \\\\
 &\text{3: } \quad \Node.\mathrm{log} \gets \Logger(\Config) \\\\
 &\text{4: } \quad \Node.\Genesis.\mathrm{ID} \gets \Genesis.\mathrm{ID}() \\\\
 &\text{5: } \quad \Node.\Genesis.\mathrm{ID} \gets \Genesis.\Hash() \\\\
-&\text{6: } \comment{# Network Initialization - WebSocket Only} \\\\
+&\text{6: } \PScomment{Network Initialization - WebSocket Only} \\\\
 &\text{7: } \quad \Node.\Network \gets \Create\WS\Network(\Phonebook) \\\\
 &\text{8: } \quad \Node.\Network.\mathrm{DeregisterMessageInterest}(\texttt{AgreementVoteTag}, \texttt{ProposalPayloadTag}, \texttt{VoteBundleTag}) \\\\
-&\text{9: } \comment{# Crypto Resource Pools Initialization - Minimal} \\\\
+&\text{9: } \PScomment{Crypto Resource Pools Initialization - Minimal} \\\\
 &\text{10:} \quad \Node.\CryptoPool \gets \Create\mathrm{ExecutionPool}() \\\\
 &\text{11:} \quad \Node.\CryptoPool.\mathrm{lowPriority} \gets \Create\mathrm{BacklogPool()} \\\\
-&\text{12:} \comment{# Ledger Initialization} \\\\
+&\text{12:} \PScomment{Ledger Initialization} \\\\
 &\text{13:} \quad \mathrm{ledgerPaths} \gets \mathrm{ResolvePaths}(\RootDir, \Config) \\\\
 &\text{14:} \quad \Node.\Ledger \gets \mathrm{LoadLedger}(\mathrm{ledgerPaths}, \Genesis) \\\\
-&\text{15:} \comment{# Service Components - Limited} \\\\
+&\text{15:} \PScomment{Service Components - Limited} \\\\
 &\text{16:} \quad \Node.\Block\Service \gets \Create\Block\Service() \\\\
 &\text{17:} \quad \Node.\Catchup\Service \gets \Create\Catchup\Service() \\\\
 &\text{18:} \quad \Node.\Catchup\Block\Auth \gets \Create\Block\Auth() \\\\
-&\text{19:} \comment{# Transaction Handling - Simulation Only} \\\\
+&\text{19:} \PScomment{Transaction Handling - Simulation Only} \\\\
 &\text{20:} \quad \disable \mathrm{TxBroadcast}() \\\\
 &\text{21:} \quad \disable \TP() \\\\
-&\text{22:} \comment{# Agreement - All Disabled} \\\\
+&\text{22:} \PScomment{Agreement - All Disabled} \\\\
 &\text{23:} \quad \disable \AccountManager() \\\\
 &\text{24:} \quad \disable \Agreement() \\\\
 &\text{25:} \quad \disable \StateProof() \\\\
 &\text{25:} \quad \disable \Heartbeat() \\\\
 &\text{26:} \quad \mathrm{SetSyncRound}(\Node.\Ledger.\mathrm{LatestTrackerCommittedRound}() + 1) \\\\
-&\text{27:} \quad \if \mathrm{InCatchpointCatchupState}() \then \\\\
+&\text{27:} \quad \PSif \mathrm{InCatchpointCatchupState}() \PSthen \\\\
 &\text{28:} \quad \quad \mathrm{InitializeCatchpointCatchup}() \\\\
-&\text{29:} \quad \endif \\\\
-&\text{30:} \quad \return \Node \\\\
-&\text{31:} \endfunction
+&\text{29:} \quad \PSendif \\\\
+&\text{30:} \quad \PSreturn \Node \\\\
+&\text{31:} \PSendfunction
 \end{aligned}
 $$
 

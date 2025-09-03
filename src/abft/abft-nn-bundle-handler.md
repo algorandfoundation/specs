@@ -1,3 +1,5 @@
+{{#include ../_include/tex-macros/pseudocode.md}}
+
 $$
 \newcommand \Bundle {\mathrm{Bundle}}
 \newcommand \HandleBundle {\mathrm{HandleBundle}}
@@ -5,16 +7,6 @@ $$
 \newcommand \HandleVote {\mathrm{HandleVote}}
 \newcommand \SenderPeer {\mathrm{SenderPeer}}
 \newcommand \DisconnectFromPeer {\mathrm{DisconnectFromPeer}}
-\newcommand \function {\textbf{function }}
-\newcommand \return {\textbf{return }}
-\newcommand \endfunction {\textbf{end function}}
-\newcommand \if {\textbf{if }}
-\newcommand \then {\textbf{ then}}
-\newcommand \endif {\textbf{end if}}
-\newcommand \for {\textbf{for }}
-\newcommand \do {\textbf{ do}}
-\newcommand \endfor {\textbf{end for}}
-\newcommand \not {\textbf{not }}
 \newcommand \vt {\mathit{vote}}
 \newcommand \b {\mathit{bundle}}
 $$
@@ -31,17 +23,17 @@ The node runs a bundle handler when receiving a message with a _full bundle_.
 
 $$
 \begin{aligned}
-&\text{1: } \function \HandleBundle(\b): \\\\
-&\text{2: } \quad \if \not \VerifyBundle(\b) \then \\\\
+&\text{1: } \PSfunction \HandleBundle(\b): \\\\
+&\text{2: } \quad \PSif \PSnot \VerifyBundle(\b) \PSthen \\\\
 &\text{3: } \quad \quad \DisconnectFromPeer(\SenderPeer(\b)) \\\\
-&\text{4: } \quad \quad \return \\\\
-&\text{5: } \quad \endif \\\\
-&\text{6: } \quad \if \b_r = r \land \b_p + 1 \ge p \then \\\\
-&\text{7: } \quad \quad \for \vt \in \b \do \\\\
+&\text{4: } \quad \quad \PSreturn \\\\
+&\text{5: } \quad \PSendif \\\\
+&\text{6: } \quad \PSif \b_r = r \land \b_p + 1 \ge p \PSthen \\\\
+&\text{7: } \quad \quad \PSfor \vt \in \b \PSdo \\\\
 &\text{8: } \quad \quad \quad \HandleVote(\vt) \\\\
-&\text{9: } \quad \quad \endfor \\\\
-&\text{10:} \quad \endif \\\\
-&\text{11: } \endfunction
+&\text{9: } \quad \quad \PSendfor \\\\
+&\text{10:} \quad \PSendif \\\\
+&\text{11: } \PSendfunction
 \end{aligned}
 $$
 

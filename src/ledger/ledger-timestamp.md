@@ -1,5 +1,5 @@
 $$
-\newcommand \MaxTimestampIncrement {\Delta t_\max}
+\newcommand \MaxTimestampIncrement {\Delta t_{\max}}
 $$
 
 # Timestamp

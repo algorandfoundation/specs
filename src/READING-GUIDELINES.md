@@ -72,5 +72,5 @@ Once MathJax rendering is correctly set, you should see a calligraphic “C”.
 
 ## PDF Book
 
-Readers used to classical \\( \LaTeX \\)-styled books can download the full book
-[here](#todo).
+Readers used to classical \\( \text{\LaTeX} \\)-styled books can download the full book
+[here]().

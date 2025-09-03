@@ -1,3 +1,5 @@
+{{#include ../_include/tex-macros/pseudocode.md}}
+
 $$
 \newcommand \TP {\mathrm{TxPool}}
 \newcommand \AD {\mathrm{assemblyDeadline}}
@@ -6,14 +8,6 @@ $$
 \newcommand \BlockEval {\mathrm{BlockEvaluator}}
 \newcommand \EB {\mathrm{emptyBlock}}
 \newcommand \r {\mathrm{round}}
-\newcommand \function {\textbf{function }}
-\newcommand \return {\textbf{return }}
-\newcommand \endfunction {\textbf{end function}}
-\newcommand \if {\textbf{if }}
-\newcommand \elseif {\textbf{else if }}
-\newcommand \then {\textbf{ then}}
-\newcommand \endif {\textbf{end if}}
-\newcommand \comment {\qquad \small \textsf}
 \newcommand \nil {\mathit{nil}}
 $$
 
@@ -38,34 +32,34 @@ The following pseudocode outlines a high-level view of how `BlockAssembly` opera
 
 $$
 \begin{aligned}
-&\text{1: } \function \AssembleBlock(r) \\\\
-&\text{2: } \quad \if \TP.\r < r - 2 \then \\\\
-&\text{3: } \quad \quad \return \AssembleBlock.\EB(r) \\\\
-&\text{4: } \quad \endif \\\\
-&\text{5: } \quad \if r < \TP.\r \then \\\\
-&\text{6: } \quad \quad \return \nil \\\\
-&\text{7: } \quad \endif \\\\
+&\text{1: } \PSfunction \AssembleBlock(r) \\\\
+&\text{2: } \quad \PSif \TP.\r < r - 2 \PSthen \\\\
+&\text{3: } \quad \quad \PSreturn \AssembleBlock.\EB(r) \\\\
+&\text{4: } \quad \PSendif \\\\
+&\text{5: } \quad \PSif r < \TP.\r \PSthen \\\\
+&\text{6: } \quad \quad \PSreturn \nil \\\\
+&\text{7: } \quad \PSendif \\\\
 &\text{8: } \quad \AD \gets \r.\mathrm{startTime}() + \delta_{\AD} \\\\
 &\text{9: } \quad \text{Wait until } \AD \lor (\TP.\r = r \land \BlockEval \text{ is done}) \\\\
-&\text{10:} \quad \if \lnot \BlockEval.\mathrm{done}() \then \\\\
-&\text{11:} \quad \quad \if \TP.\r > r \then \\\\
-&\text{12:} \quad \quad \quad \return \nil \comment{# r is behind } \TP.\r \\\\
-&\text{13:} \quad \quad \endif \\\\
+&\text{10:} \quad \PSif \lnot \BlockEval.\mathrm{done}() \PSthen \\\\
+&\text{11:} \quad \quad \PSif \TP.\r > r \PSthen \\\\
+&\text{12:} \quad \quad \quad \PSreturn \nil \PScomment{r is behind } \TP.\r \\\\
+&\text{13:} \quad \quad \PSendif \\\\
 &\text{14:} \quad \quad \AD \gets \AD + \epsilon_{\AW} \\\\
 &\text{15:} \quad \quad \text{Wait until } \AD \lor (\TP.\r = r \land \BlockEval \text{ is done}) \\\\
-&\text{16:} \quad \quad \if \lnot \BlockEval.\mathrm{done}() \then \\\\
-&\text{17:} \quad \quad \quad \return \AssembleBlock.\EB(r) \comment{# Ran out of time} \\\\
-&\text{18:} \quad \quad \endif \\\\
-&\text{19:} \quad \quad \if \TP.\r > r \then \\\\
-&\text{20:} \quad \quad \quad \return \nil \comment{# Requested round is behind transaction pool round} \\\\
-&\text{21:} \quad \quad \elseif \TP.\r = r - 1 \then \\\\
-&\text{22:} \quad \quad \quad \return \AssembleBlock.\EB(r) \\\\
-&\text{23:} \quad \quad \elseif \TP.\r < r \then \\\\
-&\text{24:} \quad \quad \quad \return \nil \\\\
-&\text{25:} \quad \quad \endif \\\\
-&\text{26:} \quad \endif \\\\
-&\text{27:} \quad \return \BlockEval.\mathrm{block} \\\\
-&\text{28: } \endfunction
+&\text{16:} \quad \quad \PSif \lnot \BlockEval.\mathrm{done}() \PSthen \\\\
+&\text{17:} \quad \quad \quad \PSreturn \AssembleBlock.\EB(r) \PScomment{Ran out of time} \\\\
+&\text{18:} \quad \quad \PSendif \\\\
+&\text{19:} \quad \quad \PSif \TP.\r > r \PSthen \\\\
+&\text{20:} \quad \quad \quad \PSreturn \nil \PScomment{Requested round is behind transaction pool round} \\\\
+&\text{21:} \quad \quad \PSelseif \TP.\r = r - 1 \PSthen \\\\
+&\text{22:} \quad \quad \quad \PSreturn \AssembleBlock.\EB(r) \\\\
+&\text{23:} \quad \quad \PSelseif \TP.\r < r \PSthen \\\\
+&\text{24:} \quad \quad \quad \PSreturn \nil \\\\
+&\text{25:} \quad \quad \PSendif \\\\
+&\text{26:} \quad \PSendif \\\\
+&\text{27:} \quad \PSreturn \BlockEval.\mathrm{block} \\\\
+&\text{28: } \PSendfunction
 \end{aligned}
 $$
 

@@ -1,9 +1,9 @@
 $$
 \newcommand \Hash {\mathrm{Hash}}
-\newcommand \MaxTxGroupSize {GT_\max}
+\newcommand \MaxTxGroupSize {GT_{\max}}
 \newcommand \MinTxnFee {T_{\Fee,\min}}
 \newcommand \BytesPerBoxReference {\Box_{\mathrm{IO}}}
-\newcommand \LogicSigMaxSize {\LogicSig_\max}
+\newcommand \LogicSigMaxSize {\LogicSig_{\max}}
 $$
 
 ## Transaction Groups

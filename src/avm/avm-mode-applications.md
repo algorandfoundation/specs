@@ -1,7 +1,7 @@
 $$
 \newcommand \App {\mathrm{App}}
 \newcommand \MaxAppProgramCost {\App_{c,\max}}
-\newcommand \MaxTxGroupSize {GT_\max}
+\newcommand \MaxTxGroupSize {GT_{\max}}
 \newcommand \MaxInnerTransactions {\App_\mathrm{itxn}}
 \newcommand \MaxAppTotalProgramLen {\App_{\mathrm{prog},t,\max}}
 \newcommand \MaxExtraAppProgramPages {\App_{\mathrm{page},\max}}

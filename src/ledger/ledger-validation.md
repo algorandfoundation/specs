@@ -11,7 +11,7 @@ $$
 \newcommand \LastValidRound {r_\mathrm{lv}}
 \newcommand \sppk {\mathrm{sppk}}
 \newcommand \nonpart {\mathrm{nonpart}}
-\newcommand \MaxTxTail {\mathrm{TxTail}_\max}
+\newcommand \MaxTxTail {\mathrm{TxTail}_{\max}}
 \newcommand \abs[1] {\lvert #1 \rvert}
 \newcommand \floor[1] {\left \lfloor #1 \right \rfloor }
 $$
@@ -24,6 +24,7 @@ $$
 \newcommand \PayoutsGoOnlineFee {B_{p,\Fee}}
 \newcommand \Eligibility {\mathrm{A_e}}
 \newcommand \Units {\mathrm{Units}}
+\newcommand \MinBalance {b_{\min}}
 $$
 
 # Validity and State Changes
@@ -155,7 +156,7 @@ An account state in the intermediate state \\( \rho+1 \\) and at round \\( r \\)
 is valid if all following conditions hold:
 
 - For all addresses \\( I \notin \\{I_\mathrm{pool}, I_f\\} \\), either \\( \Stake(\rho+1, I) = 0 \\)
-or \\( \Stake(\rho+1, I) \geq b_\min \times (1 + N_A) \\), where \\( N_A \\) is the
-number of assets held by that account.
+or \\( \Stake(\rho+1, I) \geq \MinBalance \times (1 + N_A) \\), where \\( N_A \\)
+is the number of assets held by that account.
 
 - \\( \sum_I \Stake(\rho+1, I) = \sum_I \Stake(\rho, I) \\).

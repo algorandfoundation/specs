@@ -2,9 +2,9 @@ $$
 \newcommand \BonusBaseAmount {B_{b,\mathrm{base}}}
 \newcommand \BonusBaseRound {B_{b,\mathrm{start}}}
 \newcommand \BonusDecayInterval {B_{b,\mathrm{decay}}}
-\newcommand \MaxTimestampIncrement {\Delta t_\max}
+\newcommand \MaxTimestampIncrement {\Delta t_{\max}}
 \newcommand \MaxTxnBytesPerBlock {B_{\max}}
-\newcommand \MaxVersionStringLen {V_\max}
+\newcommand \MaxVersionStringLen {V_{\max}}
 \newcommand \Heartbeat {\mathrm{hb}}
 \newcommand \Fee {\mathrm{fee}}
 \newcommand \PayoutsChallengeBits {\Heartbeat_\mathrm{bits}}
@@ -29,13 +29,13 @@ $$
 \newcommand \MinTxnFee {T_{\Fee,\min}}
 \newcommand \MaxTxnLife {T_{\Delta r,\max}}
 \newcommand \MaxTxnNoteBytes {T_{m,\max}}
-\newcommand \MaxTxGroupSize {GT_\max}
+\newcommand \MaxTxGroupSize {GT_{\max}}
 \newcommand \MaxKeyregValidPeriod {K_{\Delta r,\max}}
-\newcommand \MaxTxTail {\mathrm{TxTail}_\max}
+\newcommand \MaxTxTail {\mathrm{TxTail}_{\max}}
 $$
 
 $$
-\newcommand \MinBalance {b_\min}
+\newcommand \MinBalance {b_{\min}}
 \newcommand \Asset {\mathrm{Asa}}
 \newcommand \MaxAssetDecimals {\Asset_{d,\max}}
 \newcommand \MaxAssetNameBytes {\Asset_{n,\max}}
@@ -43,7 +43,7 @@ $$
 \newcommand \MaxAssetURLBytes {\Asset_{r,\max}}
 \newcommand \LogicSig {\mathrm{LSig}}
 \newcommand \LogicSigMaxCost {\LogicSig_{c,\max}}
-\newcommand \LogicSigMaxSize {\LogicSig_\max}
+\newcommand \LogicSigMaxSize {\LogicSig_{\max}}
 \newcommand \LogicSigVersion {\LogicSig_{V}}
 \newcommand \MaxProposedExpiredOnlineAccounts {B_{N_\mathrm{e},\max}}
 \newcommand \PayoutMaxMarkAbsent {B_{N_\mathrm{a},\max}}
@@ -57,7 +57,7 @@ $$
 \newcommand \BoxByteMinBalance {\Box_{\mathrm{byte},\MinBalance}}
 \newcommand \BoxFlatMinBalance {\Box_{\mathrm{flat},\MinBalance}}
 \newcommand \BytesPerBoxReference {\Box_{\mathrm{IO}}}
-\newcommand \MaxBoxSize {\Box_\max}
+\newcommand \MaxBoxSize {\Box_{\max}}
 \newcommand \MaxAppArgs {\App_{\mathrm{arg},\max}}
 \newcommand \MaxAppBoxReferences {\App_{\Box,\max}}
 \newcommand \MaxAppBytesValueLen {\App_{\mathrm{v},\max}}
@@ -86,7 +86,7 @@ $$
 \newcommand \MaxAssetsPerAccount {\Account_{\Asset,\max}}
 \newcommand \MaxAppsCreated {\Account_{\App,\max}}
 \newcommand \MaxAppsOptedIn {\Account_{\App,optin,\max}}
-\newcommand \MaximumMinimumBalance {\mathrm{MBR}_\max}
+\newcommand \MaximumMinimumBalance {\mathrm{MBR}_{\max}}
 \newcommand \DefaultKeyDilution {\mathrm{KeyDilution}}
 $$
 

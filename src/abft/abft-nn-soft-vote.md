@@ -1,3 +1,5 @@
+{{#include ../_include/tex-macros/pseudocode.md}}
+
 $$
 \newcommand \Priority {\mathrm{Priority}}
 \newcommand \VRF {\mathrm{VRF}}
@@ -11,15 +13,6 @@ $$
 \newcommand \Soft {\mathit{soft}}
 \newcommand \Prop {\mathit{propose}}
 \newcommand \Vote {\mathrm{Vote}}
-\newcommand \function {\textbf{function }}
-\newcommand \endfunction {\textbf{end function}}
-\newcommand \if {\textbf{if }}
-\newcommand \then {\textbf{ then}}
-\newcommand \endif {\textbf{end if}}
-\newcommand \for {\textbf{for }}
-\newcommand \do {\textbf{ do}}
-\newcommand \endfor {\textbf{end for}}
-\newcommand \comment {\qquad \small \textsf}
 \newcommand \loh {\mathit{lowestObservedHash}}
 \newcommand \vt {\mathit{vote}}
 \newcommand \ph {\mathit{priorityHash}}
@@ -64,28 +57,28 @@ for this round.
 
 $$
 \begin{aligned}
-&\text{1: } \function \SoftVote() \\\\
+&\text{1: } \PSfunction \SoftVote() \\\\
 &\text{2: } \quad \loh \gets \infty \\\\
 &\text{3: } \quad v \gets \bot \\\\
-&\text{4: } \quad \for \vt_p \in V^\ast \do \comment{# The subset of votes corresponding to proposals} \\\\
+&\text{4: } \quad \PSfor \vt_p \in V^\ast \PSdo \PScomment{The subset of votes corresponding to proposals} \\\\
 &\text{5: } \quad \quad \ph \gets \Priority(\vt_p)  \\\\
-&\text{6: } \quad \quad \if \ph < \loh \then \\\\
+&\text{6: } \quad \quad \PSif \ph < \loh \PSthen \\\\
 &\text{7: } \quad \quad \quad \loh \gets \ph \\\\
 &\text{8: } \quad \quad \quad v \gets \vt_p \\\\
-&\text{9: } \quad \quad \endif \\\\
-&\text{10:} \quad \endfor \\\\
-&\text{11:} \quad \if \loh < \infty \then \\\\
-&\text{12:} \quad \quad \for a \in A \do \\\\
+&\text{9: } \quad \quad \PSendif \\\\
+&\text{10:} \quad \PSendfor \\\\
+&\text{11:} \quad \PSif \loh < \infty \PSthen \\\\
+&\text{12:} \quad \quad \PSfor a \in A \PSdo \\\\
 &\text{13:} \quad \quad \quad \c \gets \Sortition(a_I, r, p, \Soft) \\\\
-&\text{14:} \quad \quad \quad \if \c_j > 0 \then \\\\
+&\text{14:} \quad \quad \quad \PSif \c_j > 0 \PSthen \\\\
 &\text{15:} \quad \quad \quad \quad \Broadcast(\Vote(a_I, r, p, \Soft, v, \c)) \\\\
-&\text{16:} \quad \quad \quad \quad \if \RetrieveProposal(v) \then \\\\
+&\text{16:} \quad \quad \quad \quad \PSif \RetrieveProposal(v) \PSthen \\\\
 &\text{17:} \quad \quad \quad \quad \quad \\Broadcast(\RetrieveProposal(v)) \\\\
-&\text{18:} \quad \quad \quad \quad \endif \\\\
-&\text{19:} \quad \quad \quad \endif \\\\
-&\text{20:} \quad \quad \endfor \\\\
-&\text{21:} \quad \endif \\\\
-&\text{22: } \endfunction
+&\text{18:} \quad \quad \quad \quad \PSendif \\\\
+&\text{19:} \quad \quad \quad \PSendif \\\\
+&\text{20:} \quad \quad \PSendfor \\\\
+&\text{21:} \quad \PSendif \\\\
+&\text{22: } \PSendfunction
 \end{aligned}
 $$
 

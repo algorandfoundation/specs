@@ -4,8 +4,8 @@ $$
 \newcommand \ApplyDeltas {\mathrm{ApplyDeltas}}
 \newcommand \TP {\mathrm{TransactionPool}}
 \newcommand \Update {\mathrm{Update}}
-\newcommand \function {\textbf{function }}
-\newcommand \endfunction {\textbf{end function}}
+\newcommand \PSfunction {\textbf{function }}
+\newcommand \PSendfunction {\textbf{end function}}
 \newcommand \pset {\mathit{payset}}
 $$
 
@@ -26,12 +26,12 @@ proposal (a.k.a. the _payset_).
 
 $$
 \begin{aligned}
-&\text{1: } \function \Commit(v) \\\\
+&\text{1: } \PSfunction \Commit(v) \\\\
 &\text{2: } \quad e \gets \RetrieveProposal(v)_e \\\\
 &\text{3: } \quad L \gets L || e \\\\
 &\text{4: } \quad \ApplyDeltas(e) \\\\
 &\text{5: } \quad \TP.\Update(e_t) \\\\
-&\text{6:  } \endfunction
+&\text{6:  } \PSendfunction
 \end{aligned}
 $$
 

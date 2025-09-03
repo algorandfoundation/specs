@@ -4,7 +4,7 @@ $$
 \newcommand \Peer {\mathrm{Peer}}
 \newcommand \InMsg {\ast\texttt{M}}
 \newcommand \OutMsg {\texttt{M}\ast}
-\newcommand \tag {\mathrm{tag}}
+\newcommand \Tag {\mathrm{tag}}
 \newcommand \MessageHandler {\mathrm{MH}}
 \newcommand \MessageValidatorHandler {\mathrm{MV}_h}
 \newcommand \RelayNode {\mathcal{R}}
@@ -151,7 +151,7 @@ The following is a list performance monitor fields in `go-algorand`:
 | FIELD                    | DESCRIPTION                                                                                                       |
 |--------------------------|-------------------------------------------------------------------------------------------------------------------|
 | `monitoredConnections`   | Maps connections being monitored. Messages from unmonitored connections are ignored                               |
-| `monitoredMessageTags`   | Maps message \\( \tag \\) of interest. Typically, non-broadcast-type messages are monitored                       |
+| `monitoredMessageTags`   | Maps message \\( \Tag \\) of interest. Typically, non-broadcast-type messages are monitored                       |
 | `stage`                  | The current performance monitoring stage                                                                          |
 | `peerLastMsgTime`        | Maps the timestamp of the last received message from each \\( \Peer \\)                                           |
 | `lastIncomingMsgTime`    | Timestamp of the last received message from any \\( \Peer \\)                                                     |
@@ -187,7 +187,7 @@ resolving the challenge.
 ## Multiplexer
 
 A _multiplexer_ is employed to route messages to their respective handlers according
-to protocol \\( \tag \\).
+to protocol \\( \Tag \\).
 
 A multiplexer contains both message handlers \\( \MessageHandler \\) and message
 validator handlers \\( \MessageValidatorHandler \\) (see [network notation](network-nn-notation.mdessage-handlers)).
@@ -199,7 +199,7 @@ validator handlers \\( \MessageValidatorHandler \\) (see [network notation](netw
 > collection or irreversible node stoppage.
 
 Through the use of atomic getters, the multiplexer may atomically retrieve a given
-message handler from the mappings given a protocol \\( \tag \\).
+message handler from the mappings given a protocol \\( \Tag \\).
 
 {{#include ../_include/styles.md:impl}}
 > Multiplexer [reference implementation](https://github.com/algorand/go-algorand/blob/df0613a04432494d0f437433dd1efd02481db838/network/multiplexer.go#L26).

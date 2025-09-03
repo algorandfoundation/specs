@@ -1,13 +1,6 @@
+{{#include ../_include/tex-macros/pseudocode.md}}
+
 $$
-\newcommand \function {\textbf{function }}
-\newcommand \return {\textbf{return }}
-\newcommand \endfunction {\textbf{end function}}
-\newcommand \if {\textbf{if }}
-\newcommand \elseif {\textbf{elseif }}
-\newcommand \else {\textbf{else}}
-\newcommand \then {\textbf{ then}}
-\newcommand \endif {\textbf{end if}}
-\newcommand \comment {\qquad \small \textsf}
 \newcommand \RootDir {\mathrm{rootDir}}
 \newcommand \Config {\mathrm{nodeConfig}}
 \newcommand \Phonebook {\mathrm{phonebookAddrs}}
@@ -57,34 +50,34 @@ _Full Node_:
 
 $$
 \begin{aligned}
-&\text{1: } \function \FullNode.\mathrm{Start}(\RootDir, \Config, \Phonebook, \Genesis) \\\\
+&\text{1: } \PSfunction \FullNode.\mathrm{Start}(\RootDir, \Config, \Phonebook, \Genesis) \\\\
 &\text{2: } \quad \Node \gets {\textbf{new }} \FullNode \\\\
 &\text{3: } \quad \Node.\mathrm{log} \gets \Logger(\Config) \\\\
 &\text{4: } \quad \Node.\Genesis.\mathrm{ID} \gets \Genesis.\mathrm{ID}() \\\\
 &\text{5: } \quad \Node.\Genesis.\mathrm{ID} \gets \Genesis.\Hash() \\\\
-&\text{6: } \comment{# Network Initialization} \\\\
-&\text{7: } \quad \if \Config.\mathrm{EnableHybridMode} \then \\\\
+&\text{6: } \PScomment{Network Initialization} \\\\
+&\text{7: } \quad \PSif \Config.\mathrm{EnableHybridMode} \PSthen \\\\
 &\text{8: } \quad \quad \Node.\Network \gets \Create\HYB\Network(\Phonebook) \\\\
-&\text{9: } \quad \elseif \Config.\mathrm{EnableP2P} \then \\\\
+&\text{9: } \quad \PSelseif \Config.\mathrm{EnableP2P} \PSthen \\\\
 &\text{10:} \quad \quad \Node.\Network \gets \Create\PtoP\Network(\Phonebook) \\\\
-&\text{11:} \quad \else \\\\
+&\text{11:} \quad \PSelse \\\\
 &\text{12:} \quad \quad \Node.\Network \gets \Create\WS\Network(\Phonebook) \\\\
-&\text{13:} \quad \endif \\\\
-&\text{14:} \comment{# Crypto Resource Pools Initialization} \\\\
+&\text{13:} \quad \PSendif \\\\
+&\text{14:} \PScomment{Crypto Resource Pools Initialization} \\\\
 &\text{15:} \quad \Node.\CryptoPool \gets \Create\mathrm{ExecutionPool}() \\\\
 &\text{16:} \quad \Node.\CryptoPool.\mathrm{lowPriority} \gets \Create\mathrm{BacklogPool()} \\\\
 &\text{17:} \quad \Node.\CryptoPool.\mathrm{highPriority} \gets \Create\mathrm{BacklogPool()} \\\\
-&\text{18:} \comment{# Ledger Initialization} \\\\
+&\text{18:} \PScomment{Ledger Initialization} \\\\
 &\text{19:} \quad \mathrm{ledgerPaths} \gets \mathrm{ResolvePaths}(\RootDir, \Config) \\\\
 &\text{20:} \quad \Node.\Ledger \gets \mathrm{LoadLedger}(\mathrm{ledgerPaths}, \Genesis) \\\\
-&\text{21:} \comment{# Account Management} \\\\
+&\text{21:} \PScomment{Account Management} \\\\
 &\text{22:} \quad \Registry \gets \mathrm{ParticipationRegistry}() \\\\
 &\text{23:} \quad \Node.\AccountManager \gets \Create\AccountManager(\Registry) \\\\
 &\text{24:} \quad \mathrm{LoadParticipationKeys}(\Node) \\\\
-&\text{25:} \comment{# Transaction Pool Initialization} \\\\
+&\text{25:} \PScomment{Transaction Pool Initialization} \\\\
 &\text{26:} \quad \Node.\TP \gets \Create\TP(\Node.\Ledger) \\\\
 &\text{27:} \quad \mathrm{RegisterBlockListeners}(\Node.\TP) \\\\
-&\text{28:} \comment{# Services Initialization} \\\\
+&\text{28:} \PScomment{Services Initialization} \\\\
 &\text{29:} \quad \Node.\Block\Service \gets \Create\Block\Service() \\\\
 &\text{30:} \quad \Node.\Ledger\Service \gets \Create\Ledger\Service() \\\\
 &\text{31:} \quad \Node.\TP\Service \gets \Create\TP\mathrm{Syncer}() \\\\
@@ -92,8 +85,8 @@ $$
 &\text{33:} \quad \Node.\Catchup\Service \gets \Create\Catchup\Service() \\\\
 &\text{34:} \quad \Node.\StateProof\Service \gets \Create\StateProof\Service() \\\\
 &\text{35:} \quad \Node.\Heartbeat\Service \gets \Create\Heartbeat\Service() \\\\
-&\text{36:} \quad \return \Node \\\\
-&\text{37: } \endfunction
+&\text{36:} \quad \PSreturn \Node \\\\
+&\text{37: } \PSendfunction
 \end{aligned}
 $$
 

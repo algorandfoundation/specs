@@ -2,7 +2,7 @@ $$
 \newcommand \Stake {\mathrm{Stake}}
 \newcommand \Units {\mathrm{Units}}
 \newcommand \floor [1]{\left \lfloor #1 \right \rfloor }
-\newcommand \MinBalance {b_\min}
+\newcommand \MinBalance {b_{\min}}
 $$
 
 # Reward State

@@ -48,7 +48,7 @@ Now \\( I \\) computes the seed \\( Q \\) as follows:
 $$
 Q = \left\\{
 \begin{array}{rl}
-  H(\alpha, \DigestLookup(L, r-\delta_s\delta_r)) & : (r \bmod \delta_s\delta_r) < \delta_s \\
+  H(\alpha, \DigestLookup(L, r-\delta_s\delta_r)) & : (r \bmod \delta_s\delta_r) < \delta_s \\\\
   H(\alpha) & : \text{otherwise}
 \end{array}
 \right.

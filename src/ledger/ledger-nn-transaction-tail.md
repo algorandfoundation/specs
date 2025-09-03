@@ -1,15 +1,7 @@
+{{#include ../_include/tex-macros/pseudocode.md}}
+
 $$
 \newcommand \TxTail {\mathrm{TxTail}}
-\newcommand \function {\textbf{function }}
-\newcommand \return {\textbf{return }}
-\newcommand \endfunction {\textbf{end function}}
-\newcommand \if {\textbf{if }}
-\newcommand \then {\textbf{ then}}
-\newcommand \endif {\textbf{end if}}
-\newcommand \for {\textbf{for }}
-\newcommand \do {\textbf{ do}}
-\newcommand \endfor {\textbf{end for}}
-\newcommand \comment {\qquad \small \textsf}
 \newcommand \CheckDuplicate {\mathrm{CheckDuplicate}}
 \newcommand \Tx {\mathrm{Tx}}
 \newcommand \ID {\mathrm{ID}}
@@ -65,24 +57,24 @@ A duplication check is the core functionality of \\( \TxTail \\).
 
 $$
 \begin{aligned}
-&\text{1: } \function \CheckDuplicate(\Tx_r, \FirstValid, \LastValid, \Tx_{\ID}, \Tx_{\Lease}) \\\\
-&\text{2: } \quad \if \LastValid < \TxTail.\LowWaterMark \then \\\\
-&\text{3: } \quad \quad \return \Tx_{\ID} \text{ is not in } \TxTail \\\\
-&\text{4: } \quad \endif \\\\
-&\text{5: } \quad \if \Tx_{\Lease} \neq \emptyset \then \\\\
+&\text{1: } \PSfunction \CheckDuplicate(\Tx_r, \FirstValid, \LastValid, \Tx_{\ID}, \Tx_{\Lease}) \\\\
+&\text{2: } \quad \PSif \LastValid < \TxTail.\LowWaterMark \PSthen \\\\
+&\text{3: } \quad \quad \PSreturn \Tx_{\ID} \text{ is not in } \TxTail \\\\
+&\text{4: } \quad \PSendif \\\\
+&\text{5: } \quad \PSif \Tx_{\Lease} \neq \emptyset \PSthen \\\\
 &\text{6: } \quad \quad \FirstChecked \gets \FirstValid \\\\
 &\text{7: } \quad \quad \LastChecked \gets \LastValid \\\\
-&\text{8: } \quad \quad \for r \in [\FirstChecked, \LastChecked] \do \\\\
-&\text{9: } \quad \quad \quad \if \Tx_{\Lease} \in \RecentLeaseMap(\Tx_r).\Lease \land r \leq \Tx_{\Lease}.\mathrm{Expiration} \then \\\\
-&\text{10:} \quad \quad \quad \quad \return \Lease \text{ is a duplicate} \\\\
-&\text{11:} \quad \quad \quad \endif \\\\
-&\text{12:} \quad \quad \endfor \\\\
-&\text{13:} \quad \endif \\\\
-&\text{14:} \quad \if \Tx_{\ID} \in \TxTail.\LastValidMap(\LastValid).\Tx_{\ID} \then \\\\
-&\text{15:} \quad \quad \return \Tx_{\ID} \text{ is a duplicate transaction} \\\\
-&\text{16:} \quad \endif \\\\
-&\text{17:} \quad \return \\\\
-&\text{18: } \endfunction
+&\text{8: } \quad \quad \PSfor r \in [\FirstChecked, \LastChecked] \PSdo \\\\
+&\text{9: } \quad \quad \quad \PSif \Tx_{\Lease} \in \RecentLeaseMap(\Tx_r).\Lease \land r \leq \Tx_{\Lease}.\mathrm{Expiration} \PSthen \\\\
+&\text{10:} \quad \quad \quad \quad \PSreturn \Lease \text{ is a duplicate} \\\\
+&\text{11:} \quad \quad \quad \PSendif \\\\
+&\text{12:} \quad \quad \PSendfor \\\\
+&\text{13:} \quad \PSendif \\\\
+&\text{14:} \quad \PSif \Tx_{\ID} \in \TxTail.\LastValidMap(\LastValid).\Tx_{\ID} \PSthen \\\\
+&\text{15:} \quad \quad \PSreturn \Tx_{\ID} \text{ is a duplicate transaction} \\\\
+&\text{16:} \quad \PSendif \\\\
+&\text{17:} \quad \PSreturn \\\\
+&\text{18: } \PSendfunction
 \end{aligned}
 $$
 
