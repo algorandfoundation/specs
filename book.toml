@@ -25,6 +25,7 @@ site-url = "https://algorand-specs.pages.dev/"
 enable = true
 level = 3  # Navigation sidebar unfolded up to the 4th 0-based level. Tune it according to the max SUMMARY.md level depth.
 
+# TODO: Renable mdbook-pandoc once the CI/CD is properly updated
 #[output.pandoc]
 #optional = true
 #
