@@ -21,7 +21,7 @@ Relevant changes:
 
 - Tests and benchmark over additions.
 
-> Further details about the fork can be found [here](https://github.com/gorilla/websocket/compare/main...algorand:websocket:master).
+> Further details refer to the [fork](https://github.com/gorilla/websocket/compare/main...algorand:websocket:master).
 
 ## `libp2p`
 

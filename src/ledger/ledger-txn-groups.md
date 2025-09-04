@@ -71,7 +71,7 @@ exceptions to this fee requirement:
 
 1. Heartbeat transactions require no fee if they have a zero _group_ field, and
 the _heartbeat address_ was challenged between \\( 100 \\) and \\( 200 \\) rounds
-ago, and has not proposed or heartbeat since that challenge. 
+ago, and has not proposed or heartbeat since that challenge.
 
 > Further explanation of this rule is found in [Heartbeat transaction semantics]()
 > section.

@@ -19,7 +19,7 @@ An inner transaction's _sender_ **MUST** be the [SHA512/256 hash](../crypto/cryp
 of the Application ID (prefixed by `appID`), or an account that has been rekeyed
 to that hash.
 
-In Version 5, inner transactions may perform `pay`, `axfer`, `acfg`, and `afrz` effects. 
+In Version 5, inner transactions may perform `pay`, `axfer`, `acfg`, and `afrz` effects.
 
 After executing an inner transaction with `itxn_submit`, the effects of the transaction
 are visible beginning with the next instruction with, for example, `balance` and
@@ -29,7 +29,7 @@ In Version 6, inner transactions may also perform `keyreg` and `appl` effects. I
 `appl` calls fail if they attempt to invoke a program with a Version less than Version
 4, or if they attempt to opt-in to an app with a Clear State Program less than Version 4.
 
-In Version 5, only a subset of the transaction's header fields may be set: `Type` / 
+In Version 5, only a subset of the transaction's header fields may be set: `Type` /
 `TypeEnum`, `Sender`, and `Fee`.
 
 In Version 6, header fields `Note` and `RekeyTo` may also be set.

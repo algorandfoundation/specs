@@ -24,6 +24,7 @@ The following is an abstracted pseudocode of the \\( \BlockProposal \\) algorith
 
 \\( \textbf{Algorithm 3} \text{: Block Proposal} \\)
 
+<!-- markdownlint-disable MD013 -->
 $$
 \begin{aligned}
 &\text{1: } \PSfunction \BlockProposal() \\\\
@@ -50,6 +51,7 @@ $$
 &\text{22: } \PSendfunction
 \end{aligned}
 $$
+<!-- markdownlint-enable MD013 -->
 
 ---
 
@@ -92,7 +94,7 @@ the node:
 1. Otherwise, a value \\( \bar{v} \\) has been pinned, supported by a bundle observed
 in period \\( p - 1 \\), and on **Algorithm 3** - Line 15 the node:
 
-   - Gets the pinned value, 
+   - Gets the pinned value,
    - Assembles a vote \\( \Vote(a_I, r, p, \prop, \bar{v}, \c) \\),
    - Broadcasts this vote,
    - Broadcast the proposal for the pinned vote if it has already been observed.

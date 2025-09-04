@@ -3,7 +3,7 @@
 The Ledger [module](https://github.com/algorand/go-algorand/tree/18990e06116efa0ad29008d5879c8e4dcfa51653/ledger)
 includes a collection of auxiliary components known as _Trackers_.
 
-Trackers are state machines that evolve by consuming blocks from the blockchain. 
+Trackers are state machines that evolve by consuming blocks from the blockchain.
 
 Although logically stateless, meaning Trackers can rebuild their state from scratch
 by replaying all blocks since the _genesis block_ every time, the reference implementation

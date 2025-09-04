@@ -34,7 +34,7 @@ connections to the address in a given time window,
 - `persistent`, set to `true` for peers whose record should not be removed from
 the peer container.
 
-The `Phonebook` tracks rate-limiting info and the `addressData` for each address. 
+The `Phonebook` tracks rate-limiting info and the `addressData` for each address.
 
 The `PeerStore` serves as a unified interface that combines functionality from both
 the standard `peerstore` and the `CertifiedAddrBook` components in `libp2p`.
@@ -55,6 +55,7 @@ ensuring that signed peer records are handled with appropriate verification and
 lifecycle rules.
 
 {{#include ../_include/styles.md:impl}}
+>
 > - `Phonebook` [reference implementation](https://github.com/algorand/go-algorand/blob/df0613a04432494d0f437433dd1efd02481db838/network/phonebook/phonebook.go#L107-L115),
 > - `PeerStore` [reference implementation](https://github.com/algorand/go-algorand/blob/df0613a04432494d0f437433dd1efd02481db838/network/p2p/peerstore/peerstore.go#L41-L71),
 > - `addressData` [reference implementation](https://github.com/algorand/go-algorand/blob/df0613a04432494d0f437433dd1efd02481db838/network/phonebook/phonebook.go#L77-L93).

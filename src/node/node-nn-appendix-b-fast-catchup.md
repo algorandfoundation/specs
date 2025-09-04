@@ -160,20 +160,20 @@ the LSB and `bit 3` is the MSB).
 The value of each bit is interpreted as follows:
 
 - `bit 0`:
-    - `0`: Verify the block certificate.
-    - `1`: Skip this validation.
+  - `0`: Verify the block certificate.
+  - `1`: Skip this validation.
 
 - `bit 1`:
-    - `0`: Verify payset committed hash in [block header](ledger.md#blocks) matches payset hash.
-    - `1`: Skip this validation.
+  - `0`: Verify payset committed hash in [block header](ledger.md#blocks) matches payset hash.
+  - `1`: Skip this validation.
 
 - `bit 2`:
-    - `0`: Skip verifying the transaction signatures on the block are valid.
-    - `1`: Verify transaction signatures in the block.
+  - `0`: Skip verifying the transaction signatures on the block are valid.
+  - `1`: Verify transaction signatures in the block.
 
 - `bit 3`:
-    - `0`: Skip verifying that the recomputed payset hash matches the payset committed hash in the block header.
-    - `1`: Perform verification as described above.
+  - `0`: Skip verifying that the recomputed payset hash matches the payset committed hash in the block header.
+  - `1`: Perform verification as described above.
 
 > Not all permutations of the above bitmask are currently functional. In particular,
 > the functional ones are:

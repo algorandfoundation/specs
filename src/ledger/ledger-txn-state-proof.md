@@ -57,7 +57,7 @@ Primitive Specification](./crypto.md#domain-separation)) with the string constan
 
 - The _lease_ **MUST** be omitted.
 
-- The _group_ **MUST** be omitted. 
+- The _group_ **MUST** be omitted.
 
 - The _rekey to_ **MUST** be omitted.
 

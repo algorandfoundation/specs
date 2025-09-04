@@ -35,7 +35,7 @@ key of an account’s participation keys (\\( \PartKey \\)).
 ### Selection Public Key
 
 The _selection public key_ \\( \SelectionKey \\) is the public [VRF]() key of an
-account's participation keys (\\( \PartKey \\)). 
+account's participation keys (\\( \PartKey \\)).
 
 ### State Proof Public Key
 
@@ -100,12 +100,12 @@ _not clear_, the following **MUST** apply:
 
 <!-- TODO: Verify the correctness of the following with respect to the implementation -->
 
-  - \\( \VoteFirstValid \leq r + 1 \\) and \\( \VoteLastValid > r \\), where \\( r \\)
+- \\( \VoteFirstValid \leq r + 1 \\) and \\( \VoteLastValid > r \\), where \\( r \\)
   is the current network round (the round of the last block committed).
 
-  - \\( \VoteFirstValid \leq \LastValidRound + 1 \\).
+- \\( \VoteFirstValid \leq \LastValidRound + 1 \\).
 
-  - \\( \VoteLastValid - \VoteFirstValid < \MaxKeyregValidPeriod \\).
+- \\( \VoteLastValid - \VoteFirstValid < \MaxKeyregValidPeriod \\).
 
 > It is **RECOMMENDED** that \\( \VoteLastValid - \VoteFirstValid \leq 3{,}000{,}000 \\)
 > rounds for security reasons, to ensure safe rotation of participation keys.

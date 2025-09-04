@@ -108,7 +108,7 @@ Informally, these conditions check the following:
 - The vote is not too far in the future for \\( L \\) to be able to validate.
 
 - "Propose"-step votes can either propose a new _proposal-value_ for this period
-(\\( p_{orig} = p \\)) or claim to "re-propose" a value originally proposed in an 
+(\\( p_{orig} = p \\)) or claim to "re-propose" a value originally proposed in an
 earlier period (\\( p_{orig} < p \\)). But they can't claim to "re-propose" a value
 from a future period. And if the proposal-value is new (\\( p_{orig} = p \\)) then
 the "original proposer" must be the voter.

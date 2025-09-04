@@ -133,10 +133,17 @@ uses.
 
 The supported options are:
 
-- `0`: SQLite continues without syncing as soon as it has handed data off to the operating system.
-- `1`: SQLite database engine will still sync at the most critical moments, but less often than in FULL mode.
-- `2`: SQLite database engine will use the VFS’s xSync method to ensure all content is safely written to the disk surface before continuing.
-- `3`: In addition to what is being done in `2`, it provides some guarantee of durability if the commit is followed closely by a power loss.
+- `0`: SQLite continues without syncing as soon as it has handed data off to the
+operating system.
+
+- `1`: SQLite database engine will still sync at the most critical moments, but
+less often than in FULL mode.
+
+- `2`: SQLite database engine will use the VFS’s xSync method to ensure all content
+is safely written to the disk surface before continuing.
+
+- `3`: In addition to what is being done in `2`, it provides some guarantee of durability
+if the commit is followed closely by a power loss.
 
 > For further information, see the description of [`SynchronousMode`](https://github.com/algorand/go-algorand/blob/b6e5bcadf0ad3861d4805c51cbf3f695c38a93b7/util/db/dbutil.go#L435).
 

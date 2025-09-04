@@ -15,7 +15,6 @@ with the following difference: on round \\( r = i \\), when \\( s = 2 \\), befor
 block commitment, the network experiences a _network partitioning_. The voting stake
 is fragmented, and no network partition has enough voting power to certify a block.
 
-
 ```mermaid
 timeline
     title Jalapeño Run

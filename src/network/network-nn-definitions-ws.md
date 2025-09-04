@@ -25,17 +25,17 @@ graph TD
     A[Create WS Network] --> B[Create Phonebook]
     B --> C[Create IdentityTracker]
     end
-    
+
     subgraph Startup
     C --> D[Initialize]
-    D --> E[Listener] 
-    D --> F[Identity Scheme] 
+    D --> E[Listener]
+    D --> F[Identity Scheme]
     D --> G[Priority Handler]
     G --> H[Serve & Listen]
     F --> H
     E --> H
     end
-    
+
     subgraph Message Handler thread
     H --Message--> I[Message Handler]
     I --> L[Check connection to peers]
@@ -45,7 +45,7 @@ graph TD
 
 A minimal \\( \WSNet \\) should have:
 
-- A `GenesisID` identifying which network it is a part of (see [here](ledger.md#genesis-identifier)),
+- A `GenesisID` identifying which network it is a part of (see [Ledger specifications](ledger.md#genesis-identifier)),
 
 - A `Phonebook` to bootstrap the peer discovery,
 
@@ -105,7 +105,7 @@ communication was established with the \\( \Peer \\) (either inbound or outbound
 - Identity challenges metadata:
   - \\( \Peer \\) public key,
   - Challenge value
-  - A flag indicating whether it has already been verified (see [here](./network-nn-network-identity.md#websocket-network-identity-challenge)).
+  - A flag indicating whether it has already been verified (see [Network identity challenge](./network-nn-network-identity.md#websocket-network-identity-challenge)).
 
 - Some connection metadata:
   - A flag indicating if it is inbound or outbound,
@@ -173,7 +173,7 @@ This structure is used in the Relay Network and defines a weighted priority for
 connection to peers.
 
 When a \\( \Peer \\) is added, it’s pushed on the `PeersHeap` with its weight, evicting
-the previous one. 
+the previous one.
 
 {{#include ../_include/styles.md:impl}}
 > Peers heap [reference implementation](https://github.com/algorand/go-algorand/blob/df0613a04432494d0f437433dd1efd02481db838/network/peersheap.go#L19).

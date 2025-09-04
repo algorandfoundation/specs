@@ -55,6 +55,7 @@ A duplication check is the core functionality of \\( \TxTail \\).
 
 \\( \textbf{Algorithm 1} \text{: Check Duplicate} \\)
 
+<!-- markdownlint-disable MD013 -->
 $$
 \begin{aligned}
 &\text{1: } \PSfunction \CheckDuplicate(\Tx_r, \FirstValid, \LastValid, \Tx_{\ID}, \Tx_{\Lease}) \\\\
@@ -77,6 +78,7 @@ $$
 &\text{18: } \PSendfunction
 \end{aligned}
 $$
+<!-- markdownlint-enable MD013 -->
 
 ---
 
@@ -96,7 +98,7 @@ discard transactions too far back in history and already purged from the \\( \ T
 In case a \\( \Tx_{\Lease} \\) is set, the \\( \RecentLeaseMap \\) field is used
 to deduplicate by \\( \Lease \\).
 
-After checking for the \\( \Lease \\), the \\( \LastValidMap \\) is used and the 
+After checking for the \\( \Lease \\), the \\( \LastValidMap \\) is used and the
 transaction is deduplicated through a lookup of \\( \Tx_{\ID} \\) by its \\( \LastValid \\)
 round.
 

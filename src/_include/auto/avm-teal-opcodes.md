@@ -52,7 +52,6 @@ Curves
 | 0 | Secp256k1 |      | secp256k1 curve, used in Bitcoin |
 | 1 | Secp256r1 | v7  | secp256r1 curve, NIST standard |
 
-
 The 32 byte Y-component of a public key is the last element on the stack, preceded by X-component of a pubkey, preceded by S and R components of a signature, preceded by the data that is fifth element on the stack. All values are big-endian encoded. The signed data must be 32 bytes long, and signatures in lower-S form are only accepted.
 
 ## ecdsa_pk_decompress
@@ -155,7 +154,7 @@ Overflow is an error condition which halts execution and fails the transaction. 
 - Stack: ..., A, B &rarr; ..., bool
 - A is not equal to B => {0 or 1}
 
-## !
+##
 
 - Bytecode: 0x14
 - Stack: ..., A: uint64 &rarr; ..., uint64
@@ -426,7 +425,6 @@ Fields (see [transaction reference](https://developer.algorand.org/docs/referenc
 | 67 | NumClearStateProgramPages | uint64 | v7  | Number of ClearState Program pages |
 | 68 | RejectVersion | uint64 | v12  | Application version for which the txn must reject |
 
-
 ## global
 
 - Syntax: `global F` where F: [global](#field-group-global)
@@ -463,7 +461,6 @@ Fields
 | 20 | PayoutsPercent | uint64 | v11  | The percentage of transaction fees in a block that can be paid to the block proposer. |
 | 21 | PayoutsMinBalance | uint64 | v11  | The minimum balance an account must have in the agreement round to receive block payouts in the proposal round. |
 | 22 | PayoutsMaxBalance | uint64 | v11  | The maximum balance an account can have in the agreement round to receive block payouts in the proposal round. |
-
 
 ## gtxn
 
@@ -509,7 +506,6 @@ Fields (see [transaction reference](https://developer.algorand.org/docs/referenc
 | 58 | Logs | []byte | v5  | Log messages emitted by an application call (only with `itxn` in v5). Application mode only |
 | 64 | ApprovalProgramPages | []byte | v7  | Approval Program as an array of pages |
 | 66 | ClearStateProgramPages | []byte | v7  | ClearState Program as an array of pages |
-
 
 ## gtxna
 
@@ -845,8 +841,7 @@ Encodings
 | 0 | URLEncoding |  |
 | 1 | StdEncoding |  |
 
-
-*Warning*: Usage should be restricted to very rare use cases. In almost all cases, smart contracts should directly handle non-encoded byte-strings.	This opcode should only be used in cases where base64 is the only available option, e.g. interoperability with a third-party that only signs base64 strings.
+_Warning_: Usage should be restricted to very rare use cases. In almost all cases, smart contracts should directly handle non-encoded byte-strings. This opcode should only be used in cases where base64 is the only available option, e.g. interoperability with a third-party that only signs base64 strings.
 
  Decodes A using the base64 encoding E. Specify the encoding with an immediate arg either as URL and Filename Safe (`URLEncoding`) or Standard (`StdEncoding`). See [RFC 4648 sections 4 and 5](https://rfc-editor.org/rfc/rfc4648.html#section-4). It is assumed that the encoding ends with the exact number of `=` padding characters as required by the RFC. When padding occurs, any unused pad bits in the encoding must be set to zero or the decoding will fail. The special cases of `\n` and `\r` are allowed but completely ignored. An error will result when attempting to decode a string with a character that is not in the encoding alphabet or not one of `=`, `\r`, or `\n`.
 
@@ -869,8 +864,7 @@ Types
 | 1 | JSONUint64 | uint64 |  |
 | 2 | JSONObject | []byte |  |
 
-
-*Warning*: Usage should be restricted to very rare use cases, as JSON decoding is expensive and quite limited. In addition, JSON objects are large and not optimized for size.
+_Warning_: Usage should be restricted to very rare use cases, as JSON decoding is expensive and quite limited. In addition, JSON objects are large and not optimized for size.
 
 Almost all smart contracts should use simpler and smaller methods (such as the [ABI](https://arc.algorand.foundation/ARCs/arc-0004). This opcode should only be used in cases where JSON is only available option, e.g. when a third-party only signs JSON.
 
@@ -994,7 +988,6 @@ Fields
 | 0 | AssetBalance | uint64 | Amount of the asset unit held by this account |
 | 1 | AssetFrozen | bool | Is the asset frozen or not |
 
-
 params: Txn.Accounts offset (or, since v4, an _available_ address), asset id (or, since v4, a Txn.ForeignAssets offset). Return: did_exist flag (1 if the asset existed and 0 otherwise), value.
 
 ## asset_params_get
@@ -1025,7 +1018,6 @@ Fields
 | 10 | AssetClawback | address |      | Clawback address |
 | 11 | AssetCreator | address | v5  | Creator address |
 
-
 params: Txn.ForeignAssets offset (or, since v4, an _available_ asset id. Return: did_exist flag (1 if the asset existed and 0 otherwise), value.
 
 ## app_params_get
@@ -1053,7 +1045,6 @@ Fields
 | 7 | AppCreator | address |      | Creator address |
 | 8 | AppAddress | address |      | Address for which this application has authority |
 | 9 | AppVersion | uint64 | v12  | Version of the app, incremented each time the approval or clear program changes |
-
 
 params: Txn.ForeignApps offset or an _available_ app id. Return: did_exist flag (1 if the application existed and 0 otherwise), value.
 
@@ -1088,7 +1079,6 @@ Fields
 | 13 | AcctLastProposed | uint64 | v11  | The round number of the last block this account proposed. |
 | 14 | AcctLastHeartbeat | uint64 | v11  | The round number of the last block this account sent a heartbeat. |
 
-
 ## voter_params_get
 
 - Syntax: `voter_params_get F` where F: [voter_params](#field-group-voter_params)
@@ -1106,7 +1096,6 @@ Fields
 | - | ------ | -- | --------- |
 | 0 | VoterBalance | uint64 | Online stake in microalgos |
 | 1 | VoterIncentiveEligible | bool | Had this account opted into block payouts |
-
 
 ## online_stake
 
@@ -1661,7 +1650,6 @@ Standards
 | - | ------ | --------- |
 | 0 | VrfAlgorand |  |
 
-
 `VrfAlgorand` is the VRF used in Algorand. It is ECVRF-ED25519-SHA512-Elligator2, specified in the IETF internet draft [draft-irtf-cfrg-vrf-03](https://datatracker.ietf.org/doc/draft-irtf-cfrg-vrf/03/).
 
 ## block
@@ -1688,7 +1676,6 @@ Fields
 | 7 | BlkProtocol | []byte | v11  |  |
 | 8 | BlkTxnCounter | uint64 | v11  |  |
 | 9 | BlkProposerPayout | uint64 | v11  |  |
-
 
 ## box_splice
 
@@ -1727,7 +1714,6 @@ Groups
 | 1 | BN254g2 | G2 of the BN254 curve. Points encoded as 64 byte X following by 64 byte Y |
 | 2 | BLS12_381g1 | G1 of the BLS 12-381 curve. Points encoded as 48 byte X following by 48 byte Y |
 | 3 | BLS12_381g2 | G2 of the BLS 12-381 curve. Points encoded as 96 byte X following by 96 byte Y |
-
 
 A and B are curve points in affine representation: field element X concatenated with field element Y. Field element `Z` is encoded as follows.
 For the base field elements (Fp), `Z` is encoded as a big-endian number and must be lower than the field modulus.
@@ -1812,7 +1798,6 @@ Parameters
 | - | ------ | --------- |
 | 0 | BN254Mp110 | MiMC configuration for the BN254 curve with Miyaguchi-Preneel mode, 110 rounds, exponent 5, seed "seed" |
 | 1 | BLS12_381Mp111 | MiMC configuration for the BLS12-381 curve with Miyaguchi-Preneel mode, 111 rounds, exponent 5, seed "seed" |
-
 
 A is a list of concatenated 32 byte big-endian unsigned integer scalars.  Fail if A's length is not a multiple of 32 or any element exceeds the curve modulus.
 

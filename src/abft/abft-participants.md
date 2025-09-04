@@ -49,7 +49,7 @@ if and only if \\( y \\) was produced by signing by \\( \sk_k \\) (up to cryptog
 security). \\( w \\) is uniquely determined given fixed values of \\( m', \pk_k, B_k,
 \bar{B}, Q, \tau, \bar{\tau} \\).
 
-- _Comparing_: Fixing the inputs \\( m', \bar{B}, Q, \tau, \bar{\tau} \\) to a signing 
+- _Comparing_: Fixing the inputs \\( m', \bar{B}, Q, \tau, \bar{\tau} \\) to a signing
 operation, there exists a total ordering on the outputs \\( y \\). In other words,
 if \\( f(\sk, B) = \Sign(m, m', \sk, B, \bar{B}, Q, \tau, \bar{\tau}) = y \\), and
 \\( S = \\{(\sk_0, B_0), (\sk_1, B_1), \ldots, (\sk_n, B_n)\\} \\), then

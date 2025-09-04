@@ -33,7 +33,7 @@ The `algod` REST API is used to **POST**:
 
 - Other ancillary dev commands.
 
-> Tasks involving the management and the usage of private keys are handled by a 
+> Tasks involving the management and the usage of private keys are handled by a
 > separate daemon, called _Key Management Daemon_ (`kmd`).
 
 ## Authorization

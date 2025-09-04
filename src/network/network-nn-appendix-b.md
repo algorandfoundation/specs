@@ -11,7 +11,7 @@ Packets are decoded from `msgpakc` to `JSON`, with:
 
 - Transaction notes decoded in `UTF-8`.
 
-> Original `msgpack` network packets can be [here](https://github.com/algorandfoundation/specs/tree/mastre/src/.include/msgs).
+> Examples of `msgpack` [network packets](https://github.com/algorandfoundation/specs/tree/develop/src/_include/msgs).
 > For further details about Algorand canonical encoding, refer to the `msgpack`
 > [normative section](../crypto/crypto.md#canonical-msgpack).
 

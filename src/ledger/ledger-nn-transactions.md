@@ -30,11 +30,11 @@ The transaction type is identified with a short string of at most [7 characters]
 |  `pay`   | Payment (ALGO transfer)                                        |
 | `keyreg` | Consensus participation keys registration and deregistration   |
 |  `acfg`  | Algorand Standard Asset transfer                               |
-| `axfer`  | Algorand Strandard Asset creation and reconfiguraiton          |
-|  `afrz`  | Algorand Standard Asset freeze (withelisting and blacklisting) |
-|  `appl`  | Application (Smart Contract) call
+| `axfer`  | Algorand Standard Asset creation and reconfiguration           |
+|  `afrz`  | Algorand Standard Asset freeze (whitelisting and blacklisting) |
+|  `appl`  | Application (Smart Contract) call                              |
 |  `stpf`  | Algorand State Proof                                           |
-|   `hb`   | Consensus heartbeat challange                                  |
+|   `hb`   | Consensus heartbeat challenge                                  |
 
 > For a formal definition of all transaction fields, refer to the [normative section](ledger.md#transactions).
 
@@ -54,13 +54,14 @@ The _transaction header_, equal for all transaction types, consists of:
 Identifies the transaction type and the related _body_ required fields.
 
 - `Sender`\
-That [signs](https://github.com/algorand/go-algorand/blob/b6e5bcadf0ad3861d4805c51cbf3f695c38a93b7/data/transactions/transaction.go#L266-L278) the transaction.
+That [signs](https://github.com/algorand/go-algorand/blob/b6e5bcadf0ad3861d4805c51cbf3f695c38a93b7/data/transactions/transaction.go#L266-L278)
+the transaction.
 
 - `Fee`\
 The amount paid by the sender to execute the transaction. Fees can be delegated (set
 to \\( 0 \\)) within a transaction `Group` (see group transaction [non-normative section](./ledger-nn-gorup-transaction.md)).
 
-- `FirstValidRound` \\( \r_F \\) and `LastValidRound` \\( \r_L \\)\ 
+- `FirstValidRound` \\( \r_F \\) and `LastValidRound` \\( \r_L \\)\
 The difference \\( (r_L - r_F) \\) cannot be greater than \\( 1000 \\) [rounds](https://github.com/algorand/go-algorand/blob/b6e5bcadf0ad3861d4805c51cbf3f695c38a93b7/config/consensus.go#L938).
 
 - `Note` (Optional)\

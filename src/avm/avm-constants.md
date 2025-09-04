@@ -12,7 +12,7 @@ pushed onto the Stack by referring to the type and index using `intc`, `intc_[01
 used multiple times.
 
 The opcodes `intcblock` and `bytecblock` use [proto-buf style variable length unsigned int](https://developers.google.com/protocol-buffers/docs/encoding#varint),
-reproduced [in the `varuint` section](#varuint).
+reproduced [in the `varuint` section]().
 
 The `intcblock` opcode is followed by a `varuint` specifying the number of integer
 constants, and then that number of `varuint`.

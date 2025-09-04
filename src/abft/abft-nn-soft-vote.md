@@ -21,7 +21,7 @@ $$
 
 # Soft Vote
 
-The soft vote stage (also known as _"filtering"_) filters the proposal-value candidates 
+The soft vote stage (also known as _"filtering"_) filters the proposal-value candidates
 available for the round, selecting the one with the highest priority to vote for.
 
 ## Priority Function

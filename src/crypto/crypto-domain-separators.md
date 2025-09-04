@@ -47,6 +47,7 @@ The list below specifies each `prefix`:
   - `ProgData`: Data that is signed within TEAL bytecode programs.
 
 > Auctions are deprecated; however, their prefixes are still reserved in code:
+>
 > - `aB`: A _Bid_.
 > - `aD`: A _Deposit_.
 > - `aO`: An _Outcome_.

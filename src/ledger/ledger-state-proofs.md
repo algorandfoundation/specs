@@ -14,25 +14,29 @@ $$
 
 ## Message
 
-A State Proof _message_ for rounds \\( (X \cdot \StateProofInterval, \ldots, (X+1) \cdot \StateProofInterval] \\)
+A State Proof _message_ for rounds
+\\( (X \cdot \StateProofInterval, \ldots, (X+1) \cdot \StateProofInterval] \\)
 for some number \\( X \\), contains the following components:
 
-- Light block headers commitment for rounds \\( (X \cdot \StateProofInterval, \ldots, (X+1) \cdot \StateProofInterval] \\),
+- Light block headers commitment for rounds
+\\( (X \cdot \StateProofInterval, \ldots, (X+1) \cdot \StateProofInterval] \\),
 under msgpack key `b`.
 
 - First attested round which would be equal to \\( X \cdot \StateProofInterval + 1 \\),
-under msgpack key `f`. 
+under msgpack key `f`.
 
 - Last attested round which would be equal to \\( (X+1) \cdot \StateProofInterval \\),
-under msgpack key `l`. 
+under msgpack key `l`.
 
-- Participant commitment used to verify state proof for rounds \\( ((X+1) \cdot \StateProofInterval, \ldots, (X+2) \cdot \StateProofInterval] \\),
-under msgpack key `v`. 
+- Participant commitment used to verify state proof for rounds
+\\( ((X+1) \cdot \StateProofInterval, \ldots, (X+2) \cdot \StateProofInterval] \\),
+under msgpack key `v`.
 
 - The value \\( \ln(Proven\W) \\) with \\( 16 \\) bits of precision that would be
-used to verify State Proof for rounds \\( ((X+1) \cdot \StateProofInterval, \ldots, (X+2) \cdot \StateProofInterval] \\),
+used to verify State Proof for rounds
+\\( ((X+1) \cdot \StateProofInterval, \ldots, (X+2) \cdot \StateProofInterval] \\),
 under msgpack key `P`. This field is calculated based on the total weight of the
-participants [see state-proof-transaction](#state-proof-transaction) 
+participants [see state-proof-transaction]()
 
 ## Tracking
 
@@ -46,7 +50,7 @@ is supported. In the future, other types of state proofs might be added.
 For type \\( 0 \\):
 
 - \\( \StateProofStrengthTarget = 256 \\),
-- \\( \StateProofWeightThreshold = 2^{32} \times \frac{30}{100} \\) (as the numerator of a fraction out of \\( 2^{32} \\)),
+- \\( \StateProofWeightThreshold = 2^{32} \times \frac{30}{100} \\) (as the fraction numerator out of \\( 2^{32} \\)),
 - \\( \StateProofTopVoters = 1024 \\),
 - \\( \StateProofInterval = 256 \\),
 - \\( \StateProofVotersLookback = 16 \\).
@@ -86,7 +90,7 @@ contains just the top \\( \StateProofTopVoters \\) participants. Efficiently com
 the top \\( \StateProofTopVoters \\) accounts by their μALGO balance is difficult
 in the presence of pending rewards. Thus, to make this top-\\( \StateProofTopVoters \\)
 calculation more efficient, we choose the top accounts based on a normalized balance,
-denoted below by \\( n_I \\). 
+denoted below by \\( n_I \\).
 
 The normalized balance is a _hypothetical balance_: consider an account \\( I \\)
 with current balance \\( a_I \\). If an account had a balance \\( n_I \\) in the
@@ -97,7 +101,7 @@ due to rounding effects.
 In more detail, let \\( r^\ast_I \\) be the last round in which a transaction touched
 account \\( I \\) (and therefore all pending rewards were added to it). Consider
 the following quantities, as defined in the [Account State](./ledger-account-state.md):
-  
+
 - The raw balance \\( a_I \\) of the account \\( I \\) at round \\( r^\ast_I \\)
 is its total balance on that round.
 

@@ -34,7 +34,9 @@ each time a block is added to the blockchain.
 
 ## Bytecode Size
 
-The size of an Application is defined as the length of its approval program bytecode plus its clearstate program bytecode. The sum of these two programs **MUST NOT** exceed \\( \MaxAppTotalProgramLen \times \MaxExtraAppProgramPages \\).
+The size of an Application is defined as the length of its approval program bytecode
+plus its clearstate program bytecode. The sum of these two programs **MUST NOT**
+exceed \\( \MaxAppTotalProgramLen \times \MaxExtraAppProgramPages \\).
 
 ## Opcode Budget
 
@@ -151,7 +153,7 @@ pre-Version 9 rules.
 {{#include ../_include/styles.md:example}}
 > If account `A` is made available in one transaction, and asset `X` is made available
 > in another, _group resource sharing_ does _not_ make `A`'s `X` Holding available.
-     
+
 - Top-level transactions that are not Application Calls also make resources _available_
 to group-level resource sharing. The following resources are made _available_ by
 other transaction types:
@@ -184,7 +186,7 @@ an ID less than \\( 256 \\) from within an Application will fail immediately. Th
 avoids any ambiguity in opcodes that interpret their integer arguments as resource
 IDs _or_ indexes into the _foreign assets_ or _foreign applications_ arrays.
 
-It is **RECOMMENDED** that Application authors avoid supplying array indexes to these 
+It is **RECOMMENDED** that Application authors avoid supplying array indexes to these
 opcodes, and always use explicit resource IDs. By using explicit IDs, contracts will
 better take advantage of group resource sharing.
 

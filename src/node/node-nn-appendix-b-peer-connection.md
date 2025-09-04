@@ -55,8 +55,8 @@ to peers in the following order:
        by their [participation key](../partkey.md#voting-keys-).
 
 - Special values:
-    - `0`: Disables all outgoing broadcast messages, including transaction broadcasts to peers.
-    - `-1`: No limit on the number of connections receiving broadcasts (default setting).
+  - `0`: Disables all outgoing broadcast messages, including transaction broadcasts to peers.
+  - `-1`: No limit on the number of connections receiving broadcasts (default setting).
 
 > For further details, refer to the Algorand Network [non-normative specification](../network/network-overview.md).
 

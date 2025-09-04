@@ -127,9 +127,11 @@ When opting in to an application, there is a base minimum balance increase of
 in μALGO, based on the `LocalStateSchema` for that application, described by the
 following formula:
 
+<!-- markdownlint-disable MD013 -->
 $$
 (\SchemaMinBalancePerEntry + \SchemaUintMinBalance) \times \mathrm{NumUint} + (\SchemaMinBalancePerEntry + \SchemaBytesMinBalance) \times \mathrm{NumByteSlice}
 $$
+<!-- markdownlint-enable MD013 -->
 
 When creating an application, there is a base minimum balance increase of
 \\( \AppFlatParamsMinBalance \\) μALGO. There is an additional minimum balance increase
@@ -137,9 +139,11 @@ of \\( \AppFlatParamsMinBalance \times \ExtraProgramPages \\) μALGO. Finally,
 there is an additional minimum balance increase, in μALGO, based on the `GlobalStateSchema`
 for that application, described by the following formula:
 
+<!-- markdownlint-disable MD013 -->
 $$
 (\SchemaMinBalancePerEntry + \SchemaUintMinBalance) \times \mathrm{NumUint} + (\SchemaMinBalancePerEntry + \SchemaBytesMinBalance) \times \mathrm{NumByteSlice}
 $$
+<!-- markdownlint-enable MD013 -->
 
 ## Boxes
 

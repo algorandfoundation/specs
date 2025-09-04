@@ -23,7 +23,7 @@ the state belongs.
 
 - A _timestamp_, which is informational and identifies when the state was first proposed.
 
-- A _seed_, which is a source of randomness used to [establish consensus on the next state][abft-spec].
+- A _seed_, which is a source of randomness used to [establish consensus on the next state]().
 
 - The current _reward state_, which describes the policy at which incentives are
 distributed to participants.

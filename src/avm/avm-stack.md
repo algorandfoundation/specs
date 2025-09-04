@@ -38,7 +38,7 @@ access above the current Stack.
 
 ## Stack Types
 
-While every element of the Stack is restricted to the types `uint64` and `bytes`, 
+While every element of the Stack is restricted to the types `uint64` and `bytes`,
 the values of these types may be known to be bounded.
 
 The most common bounded types are named to provide more semantic information in the

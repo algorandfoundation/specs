@@ -4,7 +4,7 @@
 
 To preserve existing semantics for previously written programs, AVM code is versioned.
 
-When new opcodes are added or existing behavior is changed, a new _Version_ is introduced. 
+When new opcodes are added or existing behavior is changed, a new _Version_ is introduced.
 Programs carrying old versions are executed with their original semantics.
 
 In the AVM bytecode, the Version is an incrementing integer, denoted in the program
@@ -44,7 +44,7 @@ This requirement is enforced as follows:
 
 1. For every transaction in the group, compute the earliest Version that supports
 _all_ the fields and values in this transaction.
-  
+
 2. Compute `maxVerNo`, the largest Version number across all the transactions in
 a group (of size 1 or more).
 

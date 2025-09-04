@@ -71,7 +71,7 @@ of that asset), until that asset is destroyed.
 
 An account’s asset holding is simply a map from asset IDs to an integer value indicating
 how many units of that asset are held by the account, and a boolean flag indicating
-if the holding is frozen or unfrozen. 
+if the holding is frozen or unfrozen.
 
 An account that holds any asset cannot be closed.
 

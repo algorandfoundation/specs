@@ -9,7 +9,7 @@ $$
 # Account State
 
 The _balances_ are a set of mappings from _addresses_, 256-bit integers, to _balance
-records_. 
+records_.
 
 A _balance record_ contains the following fields:
 
@@ -49,7 +49,7 @@ $$
 $$
 
 \\( \Units(r) \\) is a function that computes the total number of whole _earning
-units_ present in a system at round \\( r \\). 
+units_ present in a system at round \\( r \\).
 
 A user owns \\( \left\lfloor \frac{a_I}{A} \right\rfloor \\) whole earning units,
 so the total number of earning units in the system is:
@@ -97,6 +97,6 @@ There exist two special addresses:
 
 - \\( I_\mathrm{pool} \\), the address of the _incentive pool_,
 
-- \\( I_f \\), the address of the _fee sink_. 
+- \\( I_f \\), the address of the _fee sink_.
 
 For both of these accounts, \\( p_I = 2 \\).

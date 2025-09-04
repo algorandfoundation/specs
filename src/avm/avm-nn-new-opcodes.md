@@ -15,7 +15,7 @@ The AVM OpCodes are versioned (`langspec_v`) and can be categorized as:
 
 ## OpCode Definition
 
-Most OpCodes logic lives in `data/transactions/logic/eval.go` ([link](https://github.com/algorand/go-algorand/blob/34deef26be34aebbdd7221dd2c55181e6f584bd2/data/transactions/logic/eval.go)).
+Most OpCodes logic lives in `data/transactions/logic/eval.go` [folder](https://github.com/algorand/go-algorand/blob/34deef26be34aebbdd7221dd2c55181e6f584bd2/data/transactions/logic/eval.go).
 Some exceptions are larger families of OpCodes with their own files (e.g., `box.go`).
 
 For the dummy `double` OpCode example, let's define the _operator_ function in

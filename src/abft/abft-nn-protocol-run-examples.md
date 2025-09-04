@@ -15,7 +15,7 @@ recovery stages.
 The run examples are named from “best” to “worst” respectively:
 
 - Vanilla Run: agreement is achieved at the first attempt,
- 
+
 - Jalapeño Run: agreement is achieved with a \\( \Next \\) recovery procedure,
 
 - Habanero Run: agreement is achieved with \\( \Late, \Redo, \Down \\) fast recovery

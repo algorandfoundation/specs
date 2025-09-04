@@ -30,7 +30,7 @@ The _heartbeat seed_ is a block seed.
 
 The _heartbeat vote id_ is a public key.
 
-- It **MUST** be the current public key of the root voting key of the _heartbeat 
+- It **MUST** be the current public key of the root voting key of the _heartbeat
 address_’s account state.
 
 ### Heartbeat Key Dilution

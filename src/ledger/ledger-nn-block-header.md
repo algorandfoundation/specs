@@ -23,10 +23,12 @@ information about the chain’s state.
 
 {{#include ../_include/styles.md:example}}
 > For the MainNet:
+>
 > - Genesis ID: `mainnet-v1.0`
 > - Genesis Hash: `wGHE2Pwdvd7S12BL5FaOP20EGYesN73ktiC1qzkkit8=` (`base64` encoding of the 32-byte array).
 >
 > For the TestNet:
+>
 > - Genesis ID: `testnet-v1.0`
 > - Genesis Hash: `SGO1GKSzyE7IEPItTxCByw9x8FmnrCDexi9/cOUJOiI=` (`base64` encoding of the 32-byte array).
 
@@ -37,7 +39,7 @@ a chain. The _genesis block_ has this field set to \\( 0 \\).
 
 ## Round
 
-A 64-bit unsigned integer value that identifies the block’s _round_. The _genesis 
+A 64-bit unsigned integer value that identifies the block’s _round_. The _genesis
 block_ has round \\( 0 \\). For all other cases, it must be equal to the round of
 the previous block plus one (that is, they must be sequential and monotonically
 increasing).
@@ -63,7 +65,7 @@ assembled, and on the \\( \VRF \\) value obtained by the block proposer.
 
 A 64-bit unsigned integer.
 
-The timestamp is purely informational and states when a block was proposed, expressed 
+The timestamp is purely informational and states when a block was proposed, expressed
 in seconds since [UNIX Epoch](https://en.wikipedia.org/wiki/Unix_time) (00:00:00
 Thursday, 1 January 1970, at UTC).
 

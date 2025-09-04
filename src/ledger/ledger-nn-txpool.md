@@ -88,7 +88,7 @@ next block.
 > computational cost when updating the queue (for insertions and deletions), but
 > it enables fast, constant-time \\( \mathcal{O}(1) \\) lookup of any enqueued transaction
 > by its ID.
-> 
+>
 > Additionally, \\( \TP_{pq} \\) serves as another layer of optimization. It stores
 > transaction groups that are prepared in advance for the next _block assembly_
 > process. In a multithreaded system with strict timing constraints, this setup
@@ -120,7 +120,7 @@ function), or
 - Their `LastValid` [field]((./ledger.md#transactions)) has expired. Specifically,
 if the current round \\( r > \Tx_{\LastValid}\\).
 
-In addition to pruning outdated or committed transactions, this step also updates 
+In addition to pruning outdated or committed transactions, this step also updates
 the internal variables used for the _prioritization_.
 
 ## Ingestion

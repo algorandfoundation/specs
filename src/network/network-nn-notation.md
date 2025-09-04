@@ -171,7 +171,7 @@ where \\( t \\) denotes a \\( tag \\)-specific handler function (according to th
 input inbound message `protocolTag`).
 
 We define a _message validator handler_ \\( \MessageValidatorHandler(\InMsg) \\)
-as a function that performs synchronous validation of a message _before_ processing 
+as a function that performs synchronous validation of a message _before_ processing
 it with the \\( \MessageHandler_t(\InMsg) \\) functions.
 
 The prototype of message validator handlers is similar to regular handlers.
@@ -184,7 +184,7 @@ The prototype of message validator handlers is similar to regular handlers.
 >
 > ```go
 > func Propagate(msg IncomingMessage) OutgoingMessage {
-> 	return OutgoingMessage{Action: Broadcast, Tag: msg.Tag, Payload: msg.Data, Topics: nil}
+>  return OutgoingMessage{Action: Broadcast, Tag: msg.Tag, Payload: msg.Data, Topics: nil}
 > }
 > ```
 

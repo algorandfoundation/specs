@@ -292,7 +292,7 @@ Since \\( \target_C > 0 \\) and \\( \target_{PQ} > 0 \\), we just need to prove
 that:
 
 $$
-\NRev_{PQ} >= \target_{PQ} \times T \times \frac{Y}{D}. 
+\NRev_{PQ} >= \target_{PQ} \times T \times \frac{Y}{D}.
 $$
 
 This last inequality holds since the State Proof satisfies Equation (5).

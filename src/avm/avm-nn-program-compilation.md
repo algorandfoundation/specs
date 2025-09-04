@@ -44,7 +44,7 @@ The assembly process begins with two initial checks:
 
 - Ensuring the TEAL source is _not empty_ (empty programs are invalid).
 
-> For a complete list of all available `opcodes` by versions, refer to the TEAL [normative section](./TEAL_opcodes.md) 
+> For a complete list of all available `opcodes` by versions, refer to the TEAL [normative section](./TEAL_opcodes.md)
 
 If no version is declared, the assembler uses a placeholder (`assemblerNoVersion`)
 that is later replaced with the default compiler version or one specified by a `#pragma`
@@ -66,7 +66,7 @@ Comments are stripped, and valid instructions are identified. Lines may end with
 
 - **Statement Handling**
   - _Opcodes_ are processed based on the official opcode table.
-  - _Pseudo-Opcodes_ are translated into real opcodes and then assembled. 
+  - _Pseudo-Opcodes_ are translated into real opcodes and then assembled.
   - _Labels_ (used as jump targets) are recorded for later resolution. The `callsub`
   instruction also defines a label.
 

@@ -62,6 +62,7 @@ We may model the state machine’s main algorithm in the following way:
 
 \\( \textbf{Algorithm 2} \text{: Main State Machine} \\)
 
+<!-- markdownlint-disable MD013 -->
 $$
 \begin{aligned}
 &\text{1: } \PSfunction \EventHandler(ev) \\\\
@@ -96,6 +97,7 @@ $$
 &\text{31: } \PSendfunction
 \end{aligned}
 $$
+<!-- markdownlint-enable MD013 -->
 
 ---
 
@@ -114,7 +116,7 @@ to the next step.
 The \\( \Next_{s-3} \\) with \\( s \in [3, 252] \\) are _recovery_ steps, while
 the last three (\\( \Late, \Redo, \Down \\)) are special _fast recovery_ steps.
 
-A _period_ is an execution of a subset of steps, executed in order until one of 
+A _period_ is an execution of a subset of steps, executed in order until one of
 them achieves a _bundle_ for a specific _value_.
 
 A round always starts with a \\( \Propose \\) step and finishes with a \\( \Cert \\)

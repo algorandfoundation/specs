@@ -75,9 +75,9 @@ respectively to:
   - The _receiver_ address,
   - The _cose-to_ addresses.
 
-The fields have integer values representing μALGO. 
+The fields have integer values representing μALGO.
 
-If any of the addresses are the same (e.g., the _sender_ and _receiver_ are the same), 
+If any of the addresses are the same (e.g., the _sender_ and _receiver_ are the same),
 then that account received the sum of the respective reward distributions (i.e.,
 `rs` plus `rr`).
 

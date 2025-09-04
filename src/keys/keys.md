@@ -10,7 +10,7 @@ in the Algorand Byzantine Fault Tolerant protocol (see [ABFT section](../abft/ab
 Algorand uses a hierarchical (two-level) signature scheme that ensures [forward security](https://en.wikipedia.org/wiki/Forward_secrecy),
 which will be detailed in the next section. These key pairs are also known as _Participation Keys_.
 
-- _VRF Selection keys_, keys used for proving membership of selection (see [Cryptography primitives specification](./crypto/crypto-overview.md)). 
+- _VRF Selection keys_, keys used for proving membership of selection (see [Cryptography primitives specification](./crypto/crypto-overview.md)).
 
 An _agreement vote message_ (see [Networking section](../network/network-overview.md))
 is valid only when it contains a proper VRF proof (\\( y \\)) and is signed with

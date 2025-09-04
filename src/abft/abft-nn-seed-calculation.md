@@ -136,7 +136,7 @@ for the round \\( r \\).
 > $$
 > \Rerand(r_b) = 48182881 \bmod 160 = 1 < \delta_s
 > $$
-> 
+>
 > - For the round \\( r_c = 48182882 \\), since
 >
 > $$

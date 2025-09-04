@@ -31,14 +31,14 @@ much more succinct and therefore quickly gossiped _proposal-value_.
 A proposal-value contains four fields:
 
 1. The original _period_ in which this block was proposed.
- 
+
 1. The original proposer’s address.
- 
+
 1. The block digest, equal to the block header’s hash (including a domain separator).
 This field expands to \\( \Hash(\texttt{"BH"} || \Encode(\bh)) \\), where \\( \texttt{"BH"} \\)
 is the domain separator for a “block header”, and the encoding function is the msgpack
 of the block header (\\( \bh \\)).
- 
+
 1. A hash of the proposal, \\( \Hash(\Proposal) \\). This field expands to
 \\( \Hash(\texttt{"PL"} || \Encode(\Proposal)) \\), where \\( \Proposal \\)
 represents the unauthenticated proposal, \\( \texttt{"PL"} \\) is the domain separator
@@ -54,11 +54,11 @@ On the other hand, an _unauthenticated proposal_ contains a full block and all e
 data for the block validation:
 
 1. The original period in which this block was proposed.
- 
+
 1. The original proposer’s address.
- 
+
 1. A full block (header and payset).
- 
+
 1. A seed proof \\( \pi_{seed} \\).
 
 Note that the _original period_ and proposer’s address are the same as the associated
