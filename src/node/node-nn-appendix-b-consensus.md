@@ -8,7 +8,7 @@
 
 **Description:**
 
-Controls [Agreement](../abft/abft-overview.md) events reporting. When enabled,
+Controls [Agreement](../abft/abft.md) events reporting. When enabled,
 it prints additional events related to the agreement periods within the consensus
 process. This is useful for tracking and debugging the stages of agreement reached
 by the node during the consensus rounds.
@@ -22,7 +22,7 @@ by the node during the consensus rounds.
 **Description:**
 
 Controls whether the node collects and reports metrics related to the timing of
-the agreement process within the [Agreement](../abft/abft-overview.md) protocol.
+the agreement process within the [Agreement](../abft/abft.md) protocol.
 When enabled, it provides detailed data on the time taken for agreement events during
 consensus rounds.
 
@@ -45,7 +45,7 @@ nanoseconds.
 
 **Description:**
 
-Sets the buffer size holding incoming [votes](abft.md#votes).
+Sets the buffer size holding incoming [votes](../abft/abft-messages-votes.md).
 
 ---
 
@@ -55,7 +55,7 @@ Sets the buffer size holding incoming [votes](abft.md#votes).
 
 **Description:**
 
-Sets the buffer size holding incoming [proposals](abft.md#proposals).
+Sets the buffer size holding incoming [proposals](../abft/abft-messages-proposals.md).
 
 ---
 
@@ -65,6 +65,6 @@ Sets the buffer size holding incoming [proposals](abft.md#proposals).
 
 **Description:**
 
-Sets the buffer size holding incoming [bundles](abft.md#bundles).
+Sets the buffer size holding incoming [bundles](../abft/abft-messages-bundles.md).
 
 ---

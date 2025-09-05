@@ -22,8 +22,8 @@ some contract as an argument.
 Be aware that Logic Signature arguments are recorded on the blockchain and publicly
 visible when the transaction is submitted to the network, even before the transaction
 has been included in a block. These arguments are _not_ part of the transaction ID
-nor of the [transaction group]() hash (`grp`). They also cannot be read from other
-programs in the group of transactions.
+nor of the [transaction group](../ledger/ledger-txn-groups.md) hash (`grp`). They
+also cannot be read from other programs in the group of transactions.
 
 ## Bytecode Size
 
@@ -74,4 +74,4 @@ for the program to approve it.
 
 ---
 
-[^1]: See the [Ledger parameters section]().
+[^1]: See the [Ledger parameters section](../ledger/ledger-parameters.md).

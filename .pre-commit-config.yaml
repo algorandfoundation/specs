@@ -44,7 +44,7 @@ repos:
         minimum_pre_commit_version: 3.2.0
         types: [ markdown ]
         additional_dependencies: [ ]
-        files: '^(src/.*\.md)'
+        files: '^(src/.*\.md|README\.md)'
 
   - repo: https://github.com/lycheeverse/lychee
     rev: lychee-v0.19.1
@@ -58,3 +58,4 @@ repos:
       types: [text]
       pass_filenames: true
       require_serial: true
+      files: '^(src/.*\.md|README\.md)'

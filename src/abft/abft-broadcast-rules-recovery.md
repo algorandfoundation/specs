@@ -38,7 +38,7 @@ such that \\( \Bundle(r, p-1, s_1, \bar{v} )\\) was observed,
 > Step increase in recovery step timeouts [reference implementation](https://github.com/algorand/go-algorand/blob/b6e5bcadf0ad3861d4805c51cbf3f695c38a93b7/agreement/player.go#L131).
 
 > For a detailed overview of how the recovery routine may be implemented, refer
-> to the Algorand ABFT [non-normative section](./abft-overview.md).
+> to the Algorand ABFT [non-normative section](./abft-nn.md).
 
 In other words, if a proposal-value \\( v \\) is committable in the current
 period,

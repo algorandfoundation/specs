@@ -16,7 +16,7 @@ Let’s define \\( \PtoPNet \\) as an object that models a working Peer-to-Peer 
 A minimal \\( \PtoPNet \\) should have:
 
 - A `GenesisID` identifying which network it is a part of (see
-[Ledger specifications](ledger.md#genesis-identifier)),
+[Ledger specifications](../ledger/ledger-genesis.md#genesis-identifier)),
 
 - A `PeerStore` container to keep peer data and expose relevant connection metadata
 (see [Peer management section](network-nn-peer-management.md)),
@@ -34,10 +34,11 @@ which \\( \Tag \\) to use with `GossipSub`, mapped to topic names[^1].
   - A mapping of `PeerID` to \\( \WS \\) peers, and a mapping of \\( \WS \\) peers
   to `PeerID` (this is to get \\( \mathcal{O}(1) \\) lookup in both ways),
 
-- A flag indicating if the node wants to receive `TX` tagged messages ([transactions](ledger.md#transactions)) or not,
+- A flag indicating if the node wants to receive `TX` tagged messages
+([transactions](../ledger/ledger-transactions.md)) or not,
 
 - A `capabilitiesDiscovery` structure abstracting all functionalities to advertise
-nd discover peers for specific capabilities (see [section below](#capabilities)).
+nd discover peers for specific capabilities (see [section below](#node-capabilities)).
 
 A \\( \PtoP \\) network implements the `GossipNode` interface to manage peer-to-peer communication.
 

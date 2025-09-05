@@ -46,21 +46,21 @@ the overarching protocol.
 
 Possible values for the \\( tag \\) type are:
 
-|  TAG   | DESCRIPTION                                                                                                                                                                                                              |
-|:------:|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `"AV"` | Agreement Vote (a protocol vote, see [normative section](../abft/abft.md#votes)).                                                                                                                                              |
-| `"MI"` | Message of Interest.                                                                                                                                                                                                     |
-| `"MS"` | Message Digest Skip. A request by a \\( \Peer \\) to avoid sending messages with a specific hash.                                                                                                                        |
-| `"NP"` | Network Priority Response.                                                                                                                                                                                               |
-| `"NI"` | Network ID Verification.                                                                                                                                                                                                 |
-| `"PP"` | Proposal Payload (see [normative section](../abft/abft.md#proposals)).                                                                                                                                                         |
-| `"SP"` | State Proof Signature (see [normative section](../crypto/crypto.md#signature-format)).                                                                                                                                           |
-| `"TS"` | Topic Message Response.                                                                                                                                                                                                  |
-| `"TX"` | Transaction (see [normative section](../ledger/ledger.md#transactions)).                                                                                                                                                         |
-| `"UE"` | Unicast Catchup Request. Messages used to request blocks by a \\( \Peer \\) when serving blocks for the catchup service (see Algorand Infrastructure [non-normative section](./infrastructure-overview.md#node-catchup). |
-| `"VB"` | Vote Bundle (a protocol bundle, see [normative section](../abft/abft.md#bundles)).                                                                                                                                             |
-| `"pi"` | Ping[^1].                                                                                                                                                                                                                |
-| `"pj"` | Ping Reply[^1].                                                                                                                                                                                                          |
+|  TAG   | DESCRIPTION                                                                                                             |
+|:------:|-------------------------------------------------------------------------------------------------------------------------|
+| `"AV"` | Agreement Vote (a protocol vote, see [normative section](../abft/abft-messages-votes.md)).                              |
+| `"MI"` | Message of Interest.                                                                                                    |
+| `"MS"` | Message Digest Skip. A request by a \\( \Peer \\) to avoid sending messages with a specific hash.                       |
+| `"NP"` | Network Priority Response.                                                                                              |
+| `"NI"` | Network ID Verification.                                                                                                |
+| `"PP"` | Proposal Payload (see [normative section](../abft/abft-messages-proposals.md)).                                         |
+| `"SP"` | State Proof Signature (see [normative section](../crypto/crypto-state-proofs.md)).                                      |
+| `"TS"` | Topic Message Response.                                                                                                 |
+| `"TX"` | Transaction (see [normative section](../ledger/ledger-transactions.md)).                                                |
+| `"UE"` | Unicast Catchup Request. Messages used to request blocks by a \\( \Peer \\) when serving blocks for the catchup service |
+| `"VB"` | Vote Bundle (a protocol bundle, see [normative section](../abft/abft-messages-bundles.md)).                             |
+| `"pi"` | Ping[^1].                                                                                                               |
+| `"pj"` | Ping Reply[^1].                                                                                                         |
 
 Agreement Vote (`"AV"`) and Proposal Payload (`"PP"`) are the only ones considered
 of _“high priority”_. This means they impact internal ordering in the broadcast
@@ -99,7 +99,7 @@ message,
 [parameters section](network-nn-parameters.md) for details on size constraints,
 
 - `network`, the type of network from which the message originated
-([Relay Network](#websocket-network-definition) or [P2P Network](#p2p-network-definition)),
+([Relay Network](./network-nn-definitions-ws.md) or [P2P Network](./network-nn-definitions-p2p.md)),
 
 - `received`, a 64-bit integer representing the reception time of this message
 (expressed in nanoseconds since the `epoch`).
@@ -117,7 +117,7 @@ it marks how the receiving \\( \Peer \\) should interpret and handle the produce
 message,
 
 - `payload`, an array of bytes representing the content of the message. See the
-[parameters section](network-nn-parameters.md) for details on size constraints,
+[parameters section](./network-nn-parameters.md) for details on size constraints,
 
 - `topics`, a list of key-value pairs (of the form `string -> bytes[]`) for topics
 this message serves, used in certain specific scenarios (mainly for the catch-up

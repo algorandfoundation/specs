@@ -8,7 +8,7 @@
 
 **Description:**
 
-Specifies the logging level for [`algod`](API-overview.md#algorand-daemon) (`node.log`).
+Specifies the logging level for [`algod`](./node-nn-algod.md) (`node.log`).
 
 The levels are:
 

@@ -42,7 +42,7 @@ $$
 
 > An implementation may _buffer_ a proposal in this case. Specifically, an implementation
 > which relays a proposal without checking that it is valid, may optionally choose
-> to replay this event when it observes that a new round has begun (see [State Transition section](#internal-transitions)).
+> to replay this event when it observes that a new round has begun (see [State Transition section](./abft-state-transitions.md)).
 > In this case, at the conclusion of a new round, this proposal is processed once
 > again as input.
 

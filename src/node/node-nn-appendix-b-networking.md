@@ -121,7 +121,7 @@ is specified.
 
 **Description:**
 
-Instructs [`algod`](API-overview.md#algorand-daemon) validating DNS responses.
+Instructs [`algod`](./node-nn-algod.md) validating DNS responses.
 
 Possible flag values are:
 
@@ -183,7 +183,7 @@ the [Fast Catchup](./node-nn-sync.md#fast-catchup).
 
 **Description:**
 
-Controls whether to enable the [block](../ledger/ledger.md#blocks) serving service.
+Controls whether to enable the [block](../ledger/ledger-block.md) serving service.
 This functionality depends on `NetAddress`, which must also be provided. This service
 is required for the [Fast Catchup](./node-nn-sync.md#fast-catchup).
 
@@ -258,7 +258,8 @@ is set.
 Enables the _Distributed Hash Table_ (DHT). This feature allows the node to participate
 in a DHT-based network that advertises its available capabilities to other nodes.
 
-> For further details, refer to the Algorand P2P Network capabilities [non-normative specification](../network/network-nn-definitions-p2p.md).
+> For further details, refer to the Algorand P2P Network capabilities
+> [non-normative specification](../network/network-nn-definitions-p2p.md).
 
 ---
 
@@ -281,8 +282,8 @@ it uses the default location.
 **Description:**
 
 Allows the user to specify a custom path to the _private key_ used for the node’s
-PeerID. The private key provided must be an [Ed25519](../crypto.md#ed25519) private
-key. This is only used when `EnableP2P` is set to `true`. If this parameter is not
-set, it uses the default location.
+PeerID. The private key provided must be an [Ed25519](../crypto/crypto-ed25519.md)
+private key. This is only used when `EnableP2P` is set to `true`. If this parameter
+is not set, it uses the default location.
 
 ---

@@ -27,7 +27,7 @@ the consensus protocol. Non-Archival nodes use significantly less storage space.
 **Description:**
 
 An optional directory to store data frequently accessed by the node. For isolation,
-the node will create a subdirectory in this location, named by the network [`genesisID`](../ledger/ledger.md#genesis-identifier)
+the node will create a subdirectory in this location, named by the network [`genesisID`](../ledger/ledger-genesis.md#genesis-identifier)
 The node uses the default data directory provided at runtime if not specified. Individual
 resources may override this setting. Setting `HotDataDir` to a dedicated high-performance
 disk allows for basic disk tuning.
@@ -41,7 +41,7 @@ disk allows for basic disk tuning.
 **Description:**
 
 An optional directory for storing infrequently accessed data. The node creates a
-subdirectory within this location, named after the network [`genesisID`](../ledger/ledger.md#genesis-identifier)
+subdirectory within this location, named after the network [`genesisID`](../ledger/ledger-genesis.md#genesis-identifier)
 The node uses the default data directory provided at runtime if not specified. Individual
 resources may have their own override settings, which take precedence over this value.
 A slower disk for `ColdDataDir` can optimize storage costs and resource allocation.
@@ -55,7 +55,7 @@ A slower disk for `ColdDataDir` can optimize storage costs and resource allocati
 **Description:**
 
 An optional directory to store the tracker database. For isolation, the node will
-create a subdirectory in this location, named by the network [`genesisID`](../ledger/ledger.md#genesis-identifier).
+create a subdirectory in this location, named by the network [`genesisID`](../ledger/ledger-genesis.md#genesis-identifier).
 If not specified, the node will use the `HotDataDir`.
 
 ---
@@ -66,9 +66,9 @@ If not specified, the node will use the `HotDataDir`.
 
 **Description:**
 
-An optional directory to store the [block](../ledger/ledger.md#blocks) database.
+An optional directory to store the [block](../ledger/ledger-block.md) database.
 For isolation, the node will create a subdirectory in this location, named by the
-network [`genesisID`](../ledger/ledger.md#genesis-identifier). If not specified,
+network [`genesisID`](../ledger/ledger-genesis.md#genesis-identifier). If not specified,
 the node will use the `ColdDataDir`.
 
 ---
@@ -81,7 +81,7 @@ the node will use the `ColdDataDir`.
 
 An optional directory to store _Catchpoint Files_, except for the in-progress temporary
 file, which will use the `HotDataDir` and is not separately configurable. For isolation,
-the node will create a subdirectory in this location, named by the network [`genesisID`](../ledger/ledger.md#genesis-identifier).
+the node will create a subdirectory in this location, named by the network [`genesisID`](../ledger/ledger-genesis.md#genesis-identifier).
 If not specified, the node will use the `ColdDataDir`.
 
 ---
@@ -92,9 +92,10 @@ If not specified, the node will use the `ColdDataDir`.
 
 **Description:**
 
-An optional directory to persist state about observed and issued [state proof messages](../ledger/ledger.md#state-proof-message).
-For isolation, the node will create a subdirectory in this location, named by the network [`genesisID`](../ledger/ledger.md#genesis-identifier).
-If not specified, the node will use the `HotDataDir`.
+An optional directory to persist state about observed and issued [state proof messages](../ledger/ledger-state-proofs.md#message).
+For isolation, the node will create a subdirectory in this location, named by the
+network [`genesisID`](../ledger/ledger-genesis.md#genesis-identifier). If not specified,
+the node will use the `HotDataDir`.
 
 ---
 
@@ -104,10 +105,10 @@ If not specified, the node will use the `HotDataDir`.
 
 **Description:**
 
-An optional directory to persist [Agreement participation](../abft/abft-overview.md)
+An optional directory to persist [Agreement participation](../abft/abft.md)
 state. For isolation, the node will create a subdirectory in this location, named
-by the network [`genesisID`](../ledger/ledger.md#genesis-identifier). If not specified,
-the node will use the `HotDataDir`
+by the network [`genesisID`](../ledger/ledger-genesis.md#genesis-identifier). If
+not specified, the node will use the `HotDataDir`
 
 ---
 
@@ -117,7 +118,7 @@ the node will use the `HotDataDir`
 
 **Description:**
 
-Controls whether the Account database would be optimized on [`algod`](API-overview.md#algorand-daemon)
+Controls whether the Account database would be optimized on [`algod`](./node-nn-algod.md)
 startup.
 
 ---

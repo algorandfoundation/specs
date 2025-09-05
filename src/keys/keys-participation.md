@@ -1,6 +1,6 @@
 # Voting and Participation Keys
 
-A protocol _player_ (as defined in the [ABFT specification](../abft/abft-overview.md))
+A protocol _player_ (as defined in the [ABFT specification](../abft/abft.md))
 is any actor that participates in the Algorand agreement protocol.
 
 This section specifies the key infrastructure required for an active _player_ to

@@ -73,7 +73,7 @@ Enables the filtering of incoming messages.
 
 **Description:**
 
-Instructs [`algod`](API-overview.md#algorand-daemon) filtering of incoming transaction
+Instructs [`algod`](./node-nn-algod.md) filtering of incoming transaction
 messages.
 
 Flag values:

@@ -74,7 +74,7 @@ We say that this vote is _valid with respect to_ \\( L \\) (or simply _valid_ if
 > routines: one for [regular unauthenticated votes](https://github.com/algorand/go-algorand/blob/b6e5bcadf0ad3861d4805c51cbf3f695c38a93b7/agreement/vote.go#L97),
 > and one for [unauthenticated equivocation votes](https://github.com/algorand/go-algorand/blob/b6e5bcadf0ad3861d4805c51cbf3f695c38a93b7/agreement/vote.go#L193).
 
-> See the non-normative [Algorand ABFT Overview](./abft-overview.md) for further
+> See the non-normative [Algorand ABFT Overview](./abft-nn.md) for further
 > details.
 
 - \\( r \leq |L| + 2 \\)

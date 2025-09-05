@@ -44,7 +44,7 @@ Moreover, the node \\( \bar{N} \\) has:
 
 - Validated them according to Ledger and node context,
 
-- Added them to its \\( \TP \\) (see [normative section](./ledger.md#transaction-pool)),
+- Added them to its \\( \TP \\),
 
 - Relayed them to other nodes.
 

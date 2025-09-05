@@ -34,7 +34,7 @@ Configures whether to run the Algorand node in Hosted mode.
 
 Launches the node in [Follower Mode](./node-nn-init-follower.md), which significantly
 alters its behavior in terms of participation and API accessibility. When enabled,
-this mode disables the [Agreement Service](../abft/abft-overview.md) (meaning the
+this mode disables the [Agreement Service](../abft/abft.md) (meaning the
 node does not participate in consensus), and it disables APIs related to broadcasting
 transactions, effectively making the node passive in terms of network operations.
 Instead, Follower Mode enables APIs that allow the node to retrieve detailed information

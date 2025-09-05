@@ -43,7 +43,7 @@ targeting a specific AVM version,
    - TEAL supports the _Reverse Polish notation_ ([RPN](https://en.wikipedia.org/wiki/Reverse_Polish_notation)),
    - TEAL lines may end with a newline `\n` or `;`.
 
-> For a complete description of the AVM instruction set, refer to the TEAL [normative specification](./TEAL_opcodes.md).
+> For a complete description of the AVM instruction set, refer to the TEAL [normative specification](./avm-appendix-a.md).
 
 ## A Simple TEAL Execution
 

@@ -8,7 +8,7 @@
 
 **Description:**
 
-Configures the address where the node listens for [REST API](API-overview.md) calls.
+Configures the address where the node listens for [REST API](./node-nn-api.md) calls.
 It may hold an `IP:port` pair or just a `port`. The value `127.0.0.1:0` and `:0`
 will attempt to bind to port `8080` if possible; otherwise, it will bind to a random
 port. Any other address ending in `:0` will bind directly to a random port.
@@ -32,7 +32,7 @@ a public website is trying to access a node hosted on a Local Network.
 
 **Description:**
 
-Defines the maximum duration (in seconds) the node’s [API server](API-overview.md)
+Defines the maximum duration (in seconds) the node’s [API server](./node-nn-algod.md#endpoints)
 will wait to read the request body for an incoming HTTP request. The request will
 be aborted if the body is not fully received within this time frame.
 
@@ -44,7 +44,7 @@ be aborted if the body is not fully received within this time frame.
 
 **Description:**
 
-Defines the maximum duration (in seconds) the node’s [API server](API-overview.md)
+Defines the maximum duration (in seconds) the node’s [API server](./node-nn-algod.md#endpoints)
 allows writing the response body back to the client. The connection is closed if
 the response is not sent within this time frame.
 
@@ -56,9 +56,9 @@ the response is not sent within this time frame.
 
 **Description:**
 
-The comma-delimited list of endpoints that the [block](ledger.md#blocks) service
-uses to redirect the HTTP requests if it does not have the round. The block service
-will return `404` (StatusNotFound) if empty.
+The comma-delimited list of endpoints that the [block](../ledger/ledger-block.md)
+service uses to redirect the HTTP requests if it does not have the round. The block
+service will return `404` (StatusNotFound) if empty.
 
 ---
 
@@ -69,8 +69,8 @@ will return `404` (StatusNotFound) if empty.
 **Description:**
 
 Defines the maximum number of active requests the API server can handle. When the
-number of HTTP connections to the [REST API](API-overview.md) exceeds this soft limit,
-the server returns HTTP status code `429` (Too Many Requests).
+number of HTTP connections to the [REST API](./node-nn-algod.md#endpoints) exceeds
+this soft limit, the server returns HTTP status code `429` (Too Many Requests).
 
 ---
 
@@ -104,7 +104,7 @@ responses before returning a `400` (Bad Request). If set to `0`, there is no lim
 **Description:**
 
 Defines the maximum number of boxes per application that will be returned in `GetApplicationBoxes`
-[REST API](API-overview.md) responses.
+[REST API](./node-nn-algod.md#endpoints) responses.
 
 ---
 
@@ -114,7 +114,7 @@ Defines the maximum number of boxes per application that will be returned in `Ge
 
 **Description:**
 
-Enables [experimental API endpoint](API-overview.md#experimental).
+Enables [experimental API endpoint](./node-nn-algod.md#endpoints).
 
 > These endpoints have no guarantees in terms of functionality or future support.
 
@@ -126,6 +126,6 @@ Enables [experimental API endpoint](API-overview.md#experimental).
 
 **Description:**
 
-Disables authentication for public (non-admin) [API endpoints](API-overview.md#public-endpoints).
+Disables authentication for public (non-admin) [API endpoints](./node-nn-algod.md#endpoints).
 
 ---

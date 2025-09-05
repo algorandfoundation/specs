@@ -136,7 +136,7 @@ or \\( a \neq 0 \\):
 - For all other \\( I^\ast \neq I \\), the account state is identical to that in view \\( \rho \\).
 
 For transaction types other than `pay` and `keyreg`, account state is updated based
-on the reference logic described in the [Transaction section]().
+on the reference logic described in the [Transaction section](./ledger-transactions.md).
 
 Additionally, for all types of transactions, if the [_rekey to_](./ledger-transactions.md#rekey-to)
 address of the transaction is nonzero and does not match the transaction sender address,

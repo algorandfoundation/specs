@@ -13,7 +13,7 @@ An _ephemeral sub-key_ is a key pair that produces one-time signature
 for messages. It **MUST** be deleted after use to ensure forward security.
 Algorand's ephemeral subkeys use [Ed25519 public-key signature system](https://ed25519.cr.yp.to/).
 
-> For further details, refer to the Cryptography primitives [specification](../crypto/crypto-overview.md).
+> For further details, refer to the Cryptography primitives [specification](../crypto/crypto.md).
 
 Algorand uses a two-level ephemeral signature scheme.
 Instead of signing voting messages directly, Algorand accounts use their

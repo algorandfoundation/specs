@@ -4,7 +4,7 @@ In the `go-algorand` reference implementation, all data structures that are exch
 between components of the Algorand node are annotated to specify how they should
 be encoded.
 
-The Algorand Cryptographic [specification](../crypto.md#canonical-msgpack) defines
+The Algorand Cryptographic [specification](../crypto/crypto-representation.md) defines
 the encoding rules for each type using a canonical variant of _MessagePack_.
 
 Additional details about how encoding works in the Algorand Node can be found in

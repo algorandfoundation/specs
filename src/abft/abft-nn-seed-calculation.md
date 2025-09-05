@@ -20,7 +20,7 @@ the seed computation, to ease its understanding.
 
 > The following algorithm makes heavy use of \\( \VRF \\) specific functions. For
 > more information on their definition and internal work, refer to the
-> [Algorand Cryptographic Primitive Specification](crypto.md#verifiable-random-function).
+> [Algorand Cryptographic Primitive Specification](../crypto/crypto.md).
 
 ## Notation
 
@@ -83,7 +83,7 @@ the seed, so as for the \\( \Secrets(I) \\) call (**Algorithm 1**, line 3) to re
 available \\( \VRF \\) secrets generated during that registration process.
 
 > For more information on the types of keys a player has to use, refer to the
-> [Algorand Participation Key Specification](./partkey.md#vrf-selection-keys).
+> [Algorand Participation Key Specification](../keys/keys-vrf.md#vrf-selection-keys).
 
 The function computes the cryptographic seed appended to the _block candidate_
 for round \\( r \\), which will be used (if said block candidate is committed) as

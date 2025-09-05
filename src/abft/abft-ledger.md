@@ -18,7 +18,7 @@ $$
 An _entry_ is a pair \\( e = (o, Q) \\) where \\( o \\) is some opaque object, and
 \\( Q \\) is a 256-bit integer called a _seed_.
 
-For a detailed definition of this object, see the [Algorand Ledger Specification](./ledger.md).
+For a detailed definition of this object, see the [Algorand Ledger Specification](../ledger/ledger.md).
 
 The following functions are defined on \\( e \\):
 
@@ -61,4 +61,4 @@ $$
 which produces an object \\( o \\) for which \\( \ValidEntry(L, o) = 1 \\).
 
 > For implementation details on this procedure, see the _block assembly_ section
-> in the [Algorand Ledger Overview](./ledger-overview.md).
+> in the [Algorand Ledger non-normative specification](../ledger/ledger-nn-txpool-block-assembly.md).

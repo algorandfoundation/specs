@@ -36,7 +36,7 @@ under msgpack key `v`.
 used to verify State Proof for rounds
 \\( ((X+1) \cdot \StateProofInterval, \ldots, (X+2) \cdot \StateProofInterval] \\),
 under msgpack key `P`. This field is calculated based on the total weight of the
-participants [see state-proof-transaction]()
+participants [see state-proof-transaction](./ledger-txn-state-proof.md)
 
 ## Tracking
 

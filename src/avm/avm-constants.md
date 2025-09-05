@@ -12,7 +12,7 @@ pushed onto the Stack by referring to the type and index using `intc`, `intc_[01
 used multiple times.
 
 The opcodes `intcblock` and `bytecblock` use [proto-buf style variable length unsigned int](https://developers.google.com/protocol-buffers/docs/encoding#varint),
-reproduced [in the `varuint` section]().
+reproduced [in the `varuint` section](./avm-versioning.md#encoding).
 
 The `intcblock` opcode is followed by a `varuint` specifying the number of integer
 constants, and then that number of `varuint`.
@@ -23,10 +23,10 @@ strings.
 
 ## Assembly
 
-The [Assembler]() will hide most of this, for example, allowing simple use of `int 1234`
-and `byte 0xcafed00d`. Constants introduced via `int` and `byte` will be assembled
-into appropriate uses of `pushint|pushbytes` and `{int|byte}c, {int|byte}c_[0123]`
-to minimize program bytecode size.
+The [Assembler](./avm-assembler.md) will hide most of this, for example, allowing
+simple use of `int 1234` and `byte 0xcafed00d`. Constants introduced via `int` and
+`byte` will be assembled into appropriate uses of `pushint|pushbytes` and `{int|byte}c,
+{int|byte}c_[0123]` to minimize program bytecode size.
 
 ## Named Integer Constants
 

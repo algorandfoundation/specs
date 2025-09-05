@@ -20,7 +20,7 @@ Sets the specific address for publishing metrics.
 
 Determines whether the metrics collection service is enabled for the node. When
 enabled, the node will collect performance and usage metrics from the specific instance
-of [`algod`](API-overview.md#algorand-daemon). Additionally, machine-wide metrics
+of [`algod`](./node-nn-algod.md). Additionally, machine-wide metrics
 are also collected. This enables monitoring across all instances on the same machine,
 helping with performance analysis and troubleshooting.
 

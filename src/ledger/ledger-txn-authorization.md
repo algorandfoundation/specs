@@ -58,7 +58,7 @@ section:
 
 - A valid _logic signature_ (`lsig`) is an object containing the following fields:
 
-  - The logic `l` which is versioned bytecode (see [AVM specifications]()).
+  - The logic `l` which is versioned bytecode (see [AVM specifications](../avm/avm.md)).
 
   - An **OPTIONAL** single signature `sig` of 64-bytes valid from the authorizer
   address of the transaction which has signed the bytes in `l`.
@@ -74,7 +74,8 @@ of the program by the authorizer address of the transaction, or if neither `sig`
 nor `msig` is set and the hash of the program is equal to the authorizer address.
 
 Also the program **MUST** execute and finish with a single non-zero value on the
-AVM stack (see [AVM specifications]() for details on program execution semantics).
+AVM stack (see [AVM specifications](../avm/avm.md) for details on program execution
+semantics).
 
 ## Multisignature
 

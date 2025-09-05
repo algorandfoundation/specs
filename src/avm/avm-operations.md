@@ -6,9 +6,11 @@ fail if the wrong type value is on the Stack.
 Many instructions accept values to designate Accounts, Assets, or Applications.
 
 Beginning with Version 4, these values may be given as an _offset_ in the corresponding
-transaction fields ([foreign accounts](), [foreign assets](), [foreign applications]())
-_or_ as the value itself (`bytes` address for foreign accounts, or a `uint64` ID
-for foreign assets and applications). The values, however, **MUST** still be present
+transaction fields ([foreign accounts](../ledger/ledger-txn-application-call.md#foreign-accounts),
+[foreign assets](../ledger/ledger-txn-application-call.md#foreign-assets), [foreign
+applications](../ledger/ledger-txn-application-call.md#foreign-applications)) _or_
+as the value itself (`bytes` address for foreign accounts, or a `uint64` ID for
+foreign assets and applications). The values, however, **MUST** still be present
 in the transaction fields.
 
 Before Version 4, most opcodes required using an _offset_, except for reading account
@@ -19,11 +21,12 @@ require the ID to be present in the corresponding _foreign_ array.
 > _foreign_ array. See individual opcodes for details.
 
 In the case of account offsets or application offsets, \\( 0 \\) is specially defined
-to the [transaction sender]() or the ID of the _current_ application, respectively.
+to the [transaction sender](../ledger/ledger-transactions.md#sender) or the ID of
+the _current_ application, respectively.
 
 This section provides a summary of the AVM opcodes, divided by categories. A short
 description and a link to the reference implementation are provided for each opcode.
-This summary is supplemented by more detail in the [opcodes specification](TEAL_opcodes.md).
+This summary is supplemented by more detail in the [opcodes specification](./avm-appendix-a.md).
 
 Some operations immediately fail the program. A transaction checked by a program
 that fails is not valid.

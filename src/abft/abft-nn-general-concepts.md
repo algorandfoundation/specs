@@ -26,12 +26,12 @@ is treated as an opaque data packet with two mandatory fields:
 - A _randomness seed_.
 
 For details on the remaining fields and the structure of a block, please refer to
-the Ledger's [normative specification](./ledger.md) and [non-normative overview](./ledger-overiew.md).
+the Ledger's [normative specification](../ledger/ledger.md) and [non-normative overview](../ledger/ledger-nn.md).
 
 The Algorand Agreement Protocol is executed between _nodes_.
 
 Functionally, an Algorand node "plays" on behalf of every actively participating
-account whose [participation keys](./partkey.md#votingparticipation-keys) are registered
+account whose [participation keys](../keys/keys-participation.md) are registered
 for voting.
 
 Each of these accounts can be viewed as an independent _player_ in the protocol,
@@ -59,7 +59,7 @@ which includes:
 cryptographic operations such as signing messages[^1].
 
 - \\( \VRF \\) proof (\\( y \\)): A cryptographic proof generated using the
-[Verifiable Random Function](./crypto.md#verifiable-random-function) (\\( \VRF \\))[^2].
+Verifiable Random Function (\\( \VRF \\))[^2]. <!-- TODO: link to VRF -->
 
 The sets of observed votes \\( V \\) and proposals \\( P \\), observed in a given
 round, are utilized here with the same definition as in the [normative specification](./abft.md).
@@ -71,7 +71,7 @@ valid bundle specified in the [normative specification](./abft-messages-bundles.
 ---
 
 [^1]: The secret key \\( \sk \\) is round-dependent because it makes use of a
-[two-level ephemeral key scheme](./partkey.md#algorands-two-level-ephemeral-signature-scheme-for-authentication)
+[two-level ephemeral key scheme](../keys/keys-ephemeral.md#algorands-two-level-ephemeral-signature-scheme-for-authentication)
 under the hood. In the context of this document, this procedure is replaced by an
 opaque structure that produces the key needed for the round and abstracts away both
 a signature and verification procedure.

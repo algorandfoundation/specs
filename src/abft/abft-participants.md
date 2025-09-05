@@ -17,7 +17,7 @@ Each player owns exactly one _participation keypair_. A participation
 keypair consists of a _public key_ \\( \pk \\) and a _secret key_ \\( \sk \\).
 
 A keypair is defined in the [specification
-of participation keys in Algorand](partkey-spec). Each participation
+of participation keys in Algorand](../keys/keys-participation.md). Each participation
 keypair is valid for a range of protocol rounds \\( [r_\fv, r_\lv] \\).
 
 Let \\( m \\), \\( m' \\) be arbitrary sequences of bits.

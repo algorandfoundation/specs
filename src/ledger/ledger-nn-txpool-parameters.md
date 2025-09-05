@@ -23,10 +23,9 @@ saves them for the next block assembly.
 
 ## \\( \TP.\mathrm{Size} \\)
 
-A [consensus parameter](./infrastructure.md#node-configuration-values) that defines
-the maximum number of transactions the transaction pool queue can hold. When this
-limit is reached, any new incoming transactions, even if valid, are not enqueued
-and are instead dropped.
+A [consensus parameter](../node/node-nn-appendix-b.md) that defines the maximum
+number of transactions the transaction pool queue can hold. When this limit is reached,
+any new incoming transactions, even if valid, are not enqueued and are instead dropped.
 
 {{#include ../_include/styles.md:impl}}
 > In the `go-algorand` reference implementation, this limit is set to \\( 75{,}000 \\)
@@ -44,7 +43,7 @@ the _minimum fee_ threshold required for transactions to be accepted into \\( \T
 
 ## \\( \FeeExp \\)
 
-A [consensus parameter](./infrastructure.md#node-configuration-values), denoted as
+A [consensus parameter](../node/node-nn-appendix-b.md), denoted as
 `TxPoolExponentialIncreaseFactor`, which determines how sharply the required transaction
 fee increases based on the number of full blocks pending (an indicator of \\( \TP \\)
 congestion). This factor amplifies the fee threshold in congested conditions. The
@@ -60,7 +59,7 @@ conditions (no congestion), this value is set to \\( 0 \\).
 
 ## \\( \delta_{\AD}\\)
 
-A [consensus parameter](./infrastructure.md#node-configuration-values) that sets
+A [consensus parameter](../node/node-nn-appendix-b.md) that sets
 a strict deadline for the `BlockAssembly` process to stop constructing a `payset`.
 This ensures block assembly completes within the required time frame.
 

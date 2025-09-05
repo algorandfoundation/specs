@@ -60,7 +60,7 @@ Deprecated and unused.
 
 Deprecated and unused.
 
-> Represents the duration between two consecutive checks to see if new [participation keys](partkey.md#votingparticipation-keys)
+> Represents the duration between two consecutive checks to see if new [participation keys](../keys/keys-participation.md)
 > have been placed in the genesis directory.
 
 ---

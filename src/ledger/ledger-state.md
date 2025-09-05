@@ -23,13 +23,15 @@ the state belongs.
 
 - A _timestamp_, which is informational and identifies when the state was first proposed.
 
-- A _seed_, which is a source of randomness used to [establish consensus on the next state]().
+- A _seed_, which is a source of randomness used to [establish consensus on the
+next state](../abft/abft-messages-seed.md).
 
 - The current _reward state_, which describes the policy at which incentives are
 distributed to participants.
 
-- The current _account state_, which holds account balances and [participation keys](partkey.md#votingparticipation-keys)
+- The current _account state_, which holds account balances and [participation keys](../keys/keys-participation.md)
 for all stakeholding addresses.
+
   - One component of this state is the _transaction tail_, which caches the _transaction
   sets_ (see below) in the last \\( \MaxTxTail \\) blocks.
 

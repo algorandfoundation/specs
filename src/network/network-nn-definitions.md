@@ -18,7 +18,7 @@ Shuts down the network, closing all connections and performing garbage collectio
 
 - `Address() -> string`\
 Computes the address of the caller node, inside the specified network structure,
-according to the network layer addressing (see the [addressing section](network-nn-addressing.md)).
+according to the network layer addressing (see the [addressing section](./network-nn-addressing.md)).
 
 - `Broadcast(tag protocolTag, data []byte, wait bool, except Peer)`\
 Builds a message and sends a packet of data and protocol \\( \Tag \\) to all connected
@@ -59,5 +59,5 @@ infer that the network is not partitioned.
 
 - `GetGenesisID() -> string`\
 Returns the network-specific `genesisID`, a string indicating the kind of network
-this node is connected to (see the Ledger [normative section](ledger.md#genesis-identifier)
+this node is connected to (see the Ledger [normative section](../ledger/ledger-genesis.md#genesis-identifier)
 for further details on this field).

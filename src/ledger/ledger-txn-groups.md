@@ -73,7 +73,7 @@ exceptions to this fee requirement:
 the _heartbeat address_ was challenged between \\( 100 \\) and \\( 200 \\) rounds
 ago, and has not proposed or heartbeat since that challenge.
 
-> Further explanation of this rule is found in [Heartbeat transaction semantics]()
+> Further explanation of this rule is found in [Heartbeat transaction semantics](./ledger-txn-semantics-heartbeat.md)
 > section.
 
 If the sum of the lengths of the boxes denoted by the box references in a transaction
@@ -84,7 +84,8 @@ of references, but add nothing to the sum of lengths.
 
 If the sum of the lengths of the boxes modified (by creation or modification) in
 a transaction group exceeds the I/O Budget of the group at any time during evaluation
-(see [Application Call transaction semantics]()), then the block is invalid.
+(see [Application Call transaction semantics](./ledger-txn-semantics-application.md)),
+then the block is invalid.
 
 If the sum of the lengths of all the logic signatures and their arguments in a transaction
 group exceeds the number of transactions in the group times \\( \LogicSigMaxSize \\),
@@ -92,7 +93,8 @@ then the block in invalid.
 
 Beyond the _group_ field, group minimum fee, group I/O Budget, and group logic sig
 size checks, each transaction in a group is evaluated separately and **MUST** be
-valid on its own, as described in the [Validity and State Changes]() section.
+valid on its own, as described in the [Validity and State Changes](./ledger-validation.md)
+section.
 
 {{#include ../_include/styles.md:example}}
 > An account with balance \\( 50 \\) ALGO could not spend \\( 100 \\) ALGO in transaction

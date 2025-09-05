@@ -111,7 +111,8 @@ Note that in the case of \\( \Propose \\), if a block is not assembled and final
 in time for the \\( \BlockAssembly() \\) timeout, this might trigger advancement
 to the next step.
 
-> For more information on this process, refer to the Algorand Ledger [non-normative section](ledger/ledger-overview.md#block-assembly).
+> For more information on this process, refer to the Algorand Ledger
+> [non-normative section](../ledger/ledger-nn-txpool-block-assembly.md).
 
 The \\( \Next_{s-3} \\) with \\( s \in [3, 252] \\) are _recovery_ steps, while
 the last three (\\( \Late, \Redo, \Down \\)) are special _fast recovery_ steps.
@@ -196,7 +197,7 @@ and \\( k \\) a positive integer, the fast recovery algorithm is executed. It wo
 very similarly to \\( \Next_k \\) timeouts, with some subtle differences (besides
 trigger time).
 
-> For a detailed description, refer to its [subsection](#late-redo-and-down-votes).
+> For a detailed description, refer to its [subsection](./abft-nn-fast-recovery.md).
 
 ### Message Events
 

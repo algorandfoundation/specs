@@ -29,13 +29,13 @@ A _key registration_ transaction additionally has the following fields:
 
 ### Vote Public Key
 
-The _vote public key_ \\( \VoteKey \\) is the (root) [Ed25519]() public authentication
-key of an account’s participation keys (\\( \PartKey \\)).
+The _vote public key_ \\( \VoteKey \\) is the (root) [Ed25519](../crypto/crypto-ed25519.md)
+public authentication key of an account’s participation keys (\\( \PartKey \\)).
 
 ### Selection Public Key
 
-The _selection public key_ \\( \SelectionKey \\) is the public [VRF]() key of an
-account's participation keys (\\( \PartKey \\)).
+The _selection public key_ \\( \SelectionKey \\) is the public [VRF](../keys/keys-vrf.md)
+key of an account's participation keys (\\( \PartKey \\)).
 
 ### State Proof Public Key
 
@@ -63,7 +63,7 @@ ephemeral participation key. The higher the number, the more “dilution” is a
 to the authentication key’s security.
 
 > For further details on the two-level ephemeral key scheme used for consensus participation
-> authentication, refer to the Algorand [Participation Key Specification]().
+> authentication, refer to the Algorand [Participation Key Specification](../keys/keys-participation.md).
 
 ### Non-Participation
 

@@ -52,8 +52,8 @@ and appends it to the Ledger \\( L \\) (Line 3).
 Then, the node updates the Ledger state (and trackers) with all state changes (deltas)
 produced by the new committed block.
 
-> For further details, refer to the Ledger [normative section](./ledger.md#state-deltas).
+> For further details, refer to the Ledger [normative section](../ledger/ledger-apply-data.md#state-deltas).
 
 The \\( \TP \\) is then purged of all transactions in the committed block.
 
-> For further details on this process, see the Ledger [non-normative section](./ledger-overview.md#transaction-pool).
+> For further details on this process, see the Ledger [non-normative section](../ledger/ledger-nn.md).

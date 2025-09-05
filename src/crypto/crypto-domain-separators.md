@@ -8,15 +8,15 @@ All domain separators must be “prefix-free” (that is, they must not be conca
 The list below specifies each `prefix`:
 
 - For cryptographic primitives:
-  - `OT1` and `OT2`: The first and second layers of keys used for [ephemeral signatures](#ephemeral-key-signature).
-  - `MA`: An internal node in a [Merkle tree](#merkle-tree).
-  - `MB`: A bottom leaf in a [vector commitment](#vector-commitment).
-  - `KP`: Is a public key used by the [Merkle Signature Scheme](merklesignaturescheme)
+  - `OT1` and `OT2`: The first and second layers of keys used for [ephemeral signatures](../keys/keys-ephemeral.md).
+  - `MA`: An internal node in a [Merkle tree](./crypto-merkle-tree.md).
+  - `MB`: A bottom leaf in a [vector commitment](./crypto-vector-commitment.md).
+  - `KP`: Is a public key used by the [Merkle Signature Scheme](../keys/keys.md)
   - `spc`: A coin used as part of the state proofs construction.
   - `spp`: Participant’s information (state proof public key and weight) used for state proofs.
   - `sps`: A signature from a specific participant used for state proofs.
 
-- In the [Algorand Ledger](ledger-spec):
+- In the [Algorand Ledger](../ledger/ledger.md):
   - `BH`: A _Block Header_.
   - `BR`: A _Balance Record_.
   - `GE`: A _Genesis_ configuration.
@@ -28,8 +28,8 @@ The list below specifies each `prefix`:
   - `SpecialAddr`: A prefix used to generate designated addresses for specific functions,
   such as sending state proof transactions.
 
-- In the [Algorand Byzantine Fault Tolerance protocol](abft-spec):
-  - `AS`: An _Agreement Selector_, which is also a [VRF](VRF) input.
+- In the [Algorand Byzantine Fault Tolerance protocol](../abft/abft.md):
+  - `AS`: An _Agreement Selector_, which is also a VRF input.
   - `CR`: A _Credential_.
   - `SD`: A _Seed_.
   - `PL`: A _Payload_.

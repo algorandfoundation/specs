@@ -11,7 +11,7 @@ $$
 # State Proof Transaction
 
 The _state proof_ is a special transaction used to disseminate and store [State
-Proofs]().
+Proofs](./ledger-state-proofs.md).
 
 ## Fields
 
@@ -32,7 +32,7 @@ The _state proof type_ identifies the type of the State Proof.
 
 ### State Proof
 
-The _state proof_ structure as defined in the [State Proof specification](../crypto.md#state-proof-format).
+The _state proof_ structure as defined in the [State Proof specification](../crypto/crypto-state-proofs.md#state-proof-format).
 
 ### Message
 
@@ -50,8 +50,8 @@ be meet:
 
 - The _sender_ **MUST** be equal to a special address, which is the hash of the domain-separation
 prefix `SpecialAddr` (see the corresponding section in the [Algorand Cryptographic
-Primitive Specification](./crypto.md#domain-separation)) with the string constant
-`StateProofSender`.
+Primitive Specification](../crypto/crypto-domain-separators.md)) with the string
+constant `StateProofSender`.
 
 - The _fee_ **MUST** be \\( 0 \\).
 
@@ -69,7 +69,7 @@ Primitive Specification](./crypto.md#domain-separation)) with the string constan
 equal to the next expected State Proof round in the _block header_, as described in
 the [State Proof tracking section](./ledger-state-proofs.md#tracking).
 
-- The state proof verification code **MUST** return `true` (see [State Proof validity](../crypto/stateproofvalidty.md)),
+- The state proof verification code **MUST** return `true` (see [State Proof validity](../crypto/crypto-state-proofs.md#state-proof-validity)),
 given the State Proof _message_ and the State Proof _transaction fields_.
 
 In addition, the verifier should also be given a trusted commitment to the _participant

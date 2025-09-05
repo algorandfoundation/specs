@@ -18,10 +18,10 @@ present itself to and address other peers.
 
 This schema is defined in the `NetAddress` parameter of the _node configuration_.
 
-> See details in the node configuration [non-normative section](./infrastructure-overview.md#node-configuration-values).
+> See details in the node configuration [non-normative section](../node/node-nn-appendix-b.md).
 
 The `PublicAddress` also can be set in the _node configuration_ to let a \\( \Peer \\)
-differentiate itself from other peers, and to be used in the [identity challenges](#network-identity).
+differentiate itself from other peers, and to be used in the [identity challenges](./network-nn-identity.md).
 
 {{#include ../_include/styles.md:impl}}
 > The reference implementation checks the scheme of network addresses against this
@@ -41,13 +41,13 @@ library primitives for \\( \Peer \\) addressing, identification and connection.
 > and [developer documentation](https://docs.libp2p.io/concepts/fundamentals/).
 
 In this addressing scheme, each node participating in the \\( \PtoP \\) network
-holds a public and private [Ed25519](../crypto/crypto.md#ed25519) key pair. The private
+holds a public and private [Ed25519](../crypto/crypto-ed25519.md) key pair. The private
 key is kept secret, and the public key is shared to all participants.
 
 The _peer identity_ (`PeerID`) is a _unique_ reference to a specific \\( \Peer \\)
 within the \\( \PtoP \\) network, serving as a unique identifier for each \\( \Peer \\).
-It is linked to the public key of the participant, as it is derived as [hash](../crypto/crypto.md#hash-functions)
-of said key, encoded in `base58`.
+It is linked to the public key of the participant, as it is derived as hash of said
+key, encoded in `base58`.
 
 > See `libp2p` [PeerID specification](https://github.com/libp2p/specs/blob/master/peer-ids/peer-ids.md)
 > for details on how these are constructed and encoded.
@@ -75,7 +75,7 @@ by the node.
 > If a new private key is generated, and should be persisted, its default path is
 > `"peerIDPrivKey.key"` (inside the root directory). The behavior of this lookup
 > is governed by _node configuration_ values `P2PPersistPeerID` and `P2PPrivateKeyLocation`
-> (see the Algorand Infrastructure [non-normative section](./infrastructure-overview.md#node-configuration-values)).
+> (see the Algorand Infrastructure [non-normative section](../node/node-nn-appendix-b.md)).
 
 ### Multiaddress
 
@@ -119,5 +119,5 @@ For _peer identity_ deduplication, a signing schema involving both the \\( \PtoP
 private key and the \\( \WS \\) identity challenge is put in place. This is to correlate
 both \\( \Peer \\) definitions and prevent it from existing in both \\( \Peer \\) lists.
 
-> See the hybrid network [identity challenge](#hybrid-network-identity-challenge)
+> See the hybrid network [identity challenge](./network-nn-identity.md#hybrid-network-identity-challenge)
 > for further details on this process.

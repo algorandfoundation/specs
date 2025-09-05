@@ -60,7 +60,7 @@ $$
 
 Note that _observing_ a message is distinct from _receiving_ a
 message. A message which has been received might not be observed (for
-instance, the message may be from an old round). Refer to the [relay rules](#relay-rules)
+instance, the message may be from an old round). Refer to the [relay rules](./abft-relay-rules.md)
 for details.
 
 ## Special Values

@@ -115,10 +115,9 @@ of \\( \ProofToHash(y) \\), the proposer address \\( I_j \\) and the index \\( i
 as \\( \Hash(\VRF.\ProofToHash(y) || I_j || i) \\) (where \\( \Hash \\) is the
 node’s general cryptographic hashing function.
 
-> See the cryptography [normative section](./crypto.md#verifiable-random-function)
-> for details on \\( VRF \\).
+<!-- TODO: VRF normative: See the cryptography [normative section]() for details on \\( VRF \\). -->
 
-> See the cryptography [normative section](./crypto.md#hash-functions) for details
+> See the cryptography [normative section](../crypto/crypto.md) for details
 > on the \\( \Hash \\) function.
 
 Then, the node keeps track of the proposal-value \\( v \\) that minimizes the concatenation

@@ -45,25 +45,29 @@ graph TD
 
 A minimal \\( \WSNet \\) should have:
 
-- A `GenesisID` identifying which network it is a part of (see [Ledger specifications](ledger.md#genesis-identifier)),
+- A `GenesisID` identifying which network it is a part of (see
+[Ledger specifications](../ledger/ledger-genesis.md#genesis-identifier)),
 
 - A `Phonebook` to bootstrap the peer discovery,
 
-- A `PeerContainer` data structure to manage and iterate over peer connections (inbound and outbound),
+- A `PeerContainer` data structure to manage and iterate over peer connections
+(inbound and outbound),
 
 - A `Broadcaster` to send messages to the network,
 
 - A `MessageHandler` structure to route messages into the correct handlers,
 
-- An `IdentityChallengeScheme` to execute the peer [identity challenge](./network-nn-network-identity.md#websocket-network-identity-challenge),
+- An `IdentityChallengeScheme` to execute the peer [identity challenge](./network-nn-identity.md#websocket-network-identity-challenge),
 
 - An `IdentityTracker`, for connection deduplication (e.g., to avoid self-gossip),
 
 - Similarly to the identity challenge, a `priorityChallengeScheme` and `priorityTracker`,
 
-- A flag indicating if the node wants to receive `TX` tagged messages ([transactions](ledger.md#transactions)) or not,
+- A flag indicating if the node wants to receive `TX` tagged messages ([transactions](../ledger/ledger-transactions.md))
+or not,
 
-- `lastNetworkAdvance`, the latest timestamp on which the Agreement protocol made notable progress.
+- `lastNetworkAdvance`, the latest timestamp on which the Agreement protocol made
+notable progress.
 
 ## Relay Network Topology
 
@@ -105,7 +109,7 @@ communication was established with the \\( \Peer \\) (either inbound or outbound
 - Identity challenges metadata:
   - \\( \Peer \\) public key,
   - Challenge value
-  - A flag indicating whether it has already been verified (see [Network identity challenge](./network-nn-network-identity.md#websocket-network-identity-challenge)).
+  - A flag indicating whether it has already been verified (see [Network identity challenge](./network-nn-identity.md#websocket-network-identity-challenge)).
 
 - Some connection metadata:
   - A flag indicating if it is inbound or outbound,
@@ -190,7 +194,7 @@ A _multiplexer_ is employed to route messages to their respective handlers accor
 to protocol \\( \Tag \\).
 
 A multiplexer contains both message handlers \\( \MessageHandler \\) and message
-validator handlers \\( \MessageValidatorHandler \\) (see [network notation](network-nn-notation.mdessage-handlers)).
+validator handlers \\( \MessageValidatorHandler \\) (see [network notation](./network-nn-notation.md#message-handlers)).
 
 {{#include ../_include/styles.md:impl}}
 > Message handlers and message validator handlers are implemented using _atomic

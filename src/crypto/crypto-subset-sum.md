@@ -8,7 +8,7 @@ This algorithm is used:
 - To create Merkle Trees for State Proofs,
 
 - To commit on ephemeral public keys in the Merkle Keystore structure used in the
-two-level [Ephemeral Signature Scheme](#ephemeral-key-signature).
+two-level [Ephemeral Signature Scheme](../keys/keys-ephemeral.md).
 
 > For further details on the Ephemeral Signature Scheme, refer to Algorand Keys
 > [normative specification](../keys/keys-ephemeral.md).

@@ -67,7 +67,7 @@ Now, after connections are reestablished, a \\( \Next \\)-Bundle for a new perio
 is observed, and a _fast recovery_ is about to take place (when the node’s clock
 is equal to \\( \lambda_f \\)).
 
-In this scenario, however, differently from the [Jalapeño run](./abft-nn-jalapeno-rund.md),
+In this scenario, however, differently from the [Jalapeño run](./abft-nn-jalapeno-run.md),
 most players have lost the previously observed _pinned value_, or have since seen
 \\( \Soft \\)-Bundle for different values. Therefore, no consensus on a bundle going
 into the period \\( p = 2 \\) certification is possible.

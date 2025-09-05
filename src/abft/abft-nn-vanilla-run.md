@@ -97,12 +97,12 @@ Then, the \\( \EventHandler \\) runs the proposal handling subroutine
 This algorithm receives the proposal \\( e^\prime \\) and unpacks its contents,
 including the execution state \\( (r^\prime, p^\prime, s^\prime) \\).
 
-Given the [vanilla context assumptions](#context), both nodes have the same
-context, therefore \\( r = r^\prime \\) and \\( p = p^\prime = 0 \\).
+Given the [vanilla context assumptions](./abft-nn-protocol-run-examples.md#initial-context),
+both nodes have the same context, therefore \\( r = r^\prime \\) and \\( p = p^\prime = 0 \\).
 
 The algorithm checks if the proposal is valid, calling \\( \VerifyProposal(v^\prime) \\)
 on \\( v^\prime = \Proposal_v(e^\prime) \\), and if periods are equal (\\( p = p^\prime \\)).
-Both checks pass given the [vanilla context assumptions](#context).
+Both checks pass given the [vanilla context assumptions](./abft-nn-protocol-run-examples.md#initial-context).
 
 Next, if \\( e^\prime \in P \\), it returns; else the proposal handler re-broadcasts
 \\( e^\prime \\), adds \\( e^\prime \\) to the set \\( P \\) of stored proposals,
@@ -114,7 +114,7 @@ Let us now assume that the node received a broadcasted \\( \vt \\), and that
 \\( 0 < t < \DynamicFilterTimeout(p) \\) still holds.
 
 The \\( \EventHandler \\) for the main algorithm thus calls \\( HandleVote(\vt) \\).
-The algorithm exits on failing checks (all passed with the [vanilla context assumptions](#context)),
+The algorithm exits on failing checks (all passed with the [vanilla context assumptions](./abft-nn-protocol-run-examples.md#initial-context)),
 or if the vote received has already been recorded in the votes set \\( V \\). If
 it is a new vote, the node adds it to the votes set \\( V \\) and broadcasts it
 to other nodes.

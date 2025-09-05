@@ -20,7 +20,7 @@ after which peer connections are replaced.
 **Description:**
 
 Is the maximum number of blocks that the [Fast Catchup](./node-nn-sync.md#fast-catchup)
-will fetch in parallel. If less than [`Protocol.SeedLookback`](abft.md#parameters),
+will fetch in parallel. If less than [`Protocol.SeedLookback`](../abft/abft-parameters.md),
 then `Protocol.SeedLookback` will be used to limit the catchup. Setting this to `0`
 would disable the catchup.
 
@@ -164,7 +164,7 @@ The value of each bit is interpreted as follows:
   - `1`: Skip this validation.
 
 - `bit 1`:
-  - `0`: Verify payset committed hash in [block header](ledger.md#blocks) matches payset hash.
+  - `0`: Verify payset committed hash in [block header](../ledger/ledger-block.md) matches payset hash.
   - `1`: Skip this validation.
 
 - `bit 2`:

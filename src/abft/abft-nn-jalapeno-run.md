@@ -68,8 +68,7 @@ Suppose now that after a given time, connections are restored and \\( K \\) is s
 For any two accounts in the certification committee, the nodes in which they are
 registered are part of the same (unique) network. In other words, this time
 \\( K_t = K_l \\) for all nodes whose managed accounts are chosen by \\( \Sortition \\)
-[procedure](./crypto.md#cryptographic-sortition) to vote in a step \\( s = \Next_h \\),
-with \\( 3 \leq h < 248 \\).
+procedure to vote in a step \\( s = \Next_h \\), with \\( 3 \leq h < 248 \\).  <!-- TODO: link to Sortition -->
 
 Since during \\( \Soft \\) step (\\( s = 1 \\)), before the network partitioning
 occurred, a \\( \Soft \\)-Bundle had been observed, causing a _pinned-value_ \\( \bar{v} \\)

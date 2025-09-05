@@ -147,7 +147,7 @@ vote sender node (Line 3), retrieving the network ID of the original message sen
 with the \\( SenderPeer \\ helper network module function.
 
 > For more details on disconnection actions and the definition of a _peer_, refer
-> to the Algorand Network Layer [non-normative section](network/network-overview.md).
+> to the Algorand Network Layer [non-normative section](../network/network-overview.md).
 
 Equivocation votes on a proposal step are not allowed, so a check for this condition
 is performed (Line 6).
@@ -193,7 +193,7 @@ _step_:
 performs a re-proposal payload broadcast).
 
 - If the vote’s step is \\( Soft \\), and a \\( \Soft \Bundle \\) has been
-observed with the addition of the vote, the \\( \Sortition \\) [sub-procedure](./crypto.md#cryptographic-sortition)
+observed with the addition of the vote, the \\( \Sortition \\) sub-procedure
 is run for every _online_ account managed by the node. Then, a \\( Cert \\) vote
 is cast for each account the lottery selects.
 

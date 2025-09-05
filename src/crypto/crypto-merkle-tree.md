@@ -11,7 +11,7 @@ Ledger [normative specification](../ledger/ledger-overview.md)),
 - For the tree structure in the two-level Ephemeral Signature Scheme (see Algorand
 Keys [normative specification](../keys/keys-ephemeral.md)),
 
-- To build [State Proofs](#state-proofs).
+- To build [State Proofs](../ledger/ledger-state-proofs.md).
 
 The Merkle Tree algorithm is defined for a dense array of `N` elements numbered
 `0` through `N-1`.
@@ -28,7 +28,7 @@ A reasonable strategy for generating a proof is to follow the logic of the proof
 verifier and fill in the expected left- and right-sibling values in the proof based
 on the internal nodes of the Merkle Tree built up during commitment.
 
-The Merkle Tree can be created using one of the supported [hash functions](./crypto-hash.md).
+The Merkle Tree can be created using one of the supported hash functions.
 
 ## Commitment
 

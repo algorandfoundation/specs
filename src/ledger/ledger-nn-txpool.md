@@ -14,9 +14,6 @@ This section presents an implementor-oriented definition of \\( \TP \\) and is b
 on the [reference implementation](https://github.com/algorand/go-algorand/blob/b6e5bcadf0ad3861d4805c51cbf3f695c38a93b7/data/pools/transactionPool.go#L52)
 to clarify how it is constructed and operated by a node.
 
-> For a succinct formal definition of the _Transaction Pool_, refer to the Ledger
-> [normative specification](ledger.md#transaction-pool).
-
 The \\( \TP \\) implementation makes use of two distinct queues to aid the processes
 of pruning already observed transactions and block commitment:
 
@@ -83,7 +80,7 @@ next block.
 > array holds a list of _well-formed_, _signed_ transactions.
 >
 > To improve efficiency, the node also uses a key-value mapping where the keys are
-> [transaction IDs](ledger.mdransaction) and the values are the corresponding
+> [transaction IDs](../ledger/ledger-transactions.md) and the values are the corresponding
 > signed transactions. This map duplicates the data in the queue, which adds a small
 > computational cost when updating the queue (for insertions and deletions), but
 > it enables fast, constant-time \\( \mathcal{O}(1) \\) lookup of any enqueued transaction
@@ -117,8 +114,8 @@ transactions are pruned if they meet either of the following conditions:
 
 - They have already been included in a committed block (as determined by the `OnNewBlock`
 function), or
-- Their `LastValid` [field]((./ledger.md#transactions)) has expired. Specifically,
-if the current round \\( r > \Tx_{\LastValid}\\).
+- Their `LastValid` [field](../ledger/ledger-transactions.md#first-and-last-valid-round)
+has expired. Specifically, if the current round \\( r > \Tx_{\LastValid}\\).
 
 In addition to pruning outdated or committed transactions, this step also updates
 the internal variables used for the _prioritization_.
@@ -134,8 +131,8 @@ inclusion in blocks currently being assembled.
 
 ## BlockAssembly
 
-This process builds a new block’s [`payset`](ledger.mdlocks) (the body with block’s
-transactions) by selecting valid transaction groups \\( gtx \\) dequeued from the
-\\( \TP \\), all within a deadline. A (pending) _Block Evaluator_ is responsible
+This process builds a new block’s [`payset`](../ledger/ledger-block.md) (the body
+with block’s transactions) by selecting valid transaction groups \\( gtx \\) dequeued
+from the \\( \TP \\), all within a deadline. A (pending) _Block Evaluator_ is responsible
 for processing the transactions, while the `BlockAssembly` function coordinates
 with it. The assembly process halts as soon as the time constraints are reached.

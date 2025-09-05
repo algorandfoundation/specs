@@ -22,7 +22,7 @@ To check the validity of a voting message, its _VRF Selection key_
 needs to be verified. Algorand uses _Verifiable Random Function_ (VRF) to
 generate selection keys.
 
-> For further details on the VRF, refer to the Cryptography primitives [specification](../crypto/crypto-vrf.md).
+<!-- TODO: VRF normative: For further details on the VRF, refer to the Cryptography primitives [specification](). -->
 
 More specifically, an unverified vote (\\( \UnauthenticatedVote \\)) has the
 following fields:

@@ -48,9 +48,10 @@ The components of the _context tuple_ are:
    - If \\( p \neq 0 \\), the network is recovering from a failed attempt to commit
    a block within the current round. In such cases, all or some Agreement stages
    may be re-executed.
-   - During recovery, [specific routines](#recovery-stages) monitor the network’s
-   ability to reach consensus again. These routines may reuse information from previous
-   failed attempts to speed up the block commitment once normal operation resumes.
+   - During recovery, [specific routines](./abft-nn-recovery-stages.md) monitor the
+   network’s ability to reach consensus again. These routines may reuse information
+   from previous failed attempts to speed up the block commitment once normal operation
+   resumes.
    - Periods’ progression is driven by _threshold events_.
 
 1. **Step (\\( s \\))**:

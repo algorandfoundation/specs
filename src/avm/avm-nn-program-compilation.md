@@ -3,8 +3,8 @@
 A TEAL program is compiled using the `POST /v2/teal/compile` endpoint of `algod`
 node (`go-algorand` reference implementation).
 
-> See the `algod` node API [non-normative section](./api-overview.md) for further
-> details.
+> See the `algod` node API [non-normative section](../node/node-nn-algod.md) for
+> further details.
 
 The node begins by decoding the TEAL source code and converting it into AVM bytecode
 using the internal `assemble` function.
@@ -44,7 +44,8 @@ The assembly process begins with two initial checks:
 
 - Ensuring the TEAL source is _not empty_ (empty programs are invalid).
 
-> For a complete list of all available `opcodes` by versions, refer to the TEAL [normative section](./TEAL_opcodes.md)
+> For a complete list of all available `opcodes` by versions, refer to the TEAL
+> [normative section](./avm-appendix-a.md)
 
 If no version is declared, the assembler uses a placeholder (`assemblerNoVersion`)
 that is later replaced with the default compiler version or one specified by a `#pragma`
