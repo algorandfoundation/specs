@@ -148,8 +148,8 @@ arrays_ is no longer provided, in particular:
   of their corresponding Applications.
 
 However, the _transaction access list_ allows for the listing of more resources
-than the _foreign arrays_. Listed resources become _available_ to other (post-Version 8
-programs) Applications through _group resource sharing_.
+than the _foreign arrays_. Listed resources become _available_ to other (post-Version
+8 programs) Applications through _group resource sharing_.
 
 - When considering whether a Holding or Local is _available_ by _group resource sharing_,
 the Holding or Local **MUST** be _available_ in a top-level transaction based on

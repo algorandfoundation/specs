@@ -81,8 +81,8 @@ before giving up and trying another Relay Node.
 
 **Description:**
 
-Controls the number of attempts the _Ledger fetcher_ would perform before giving up
-the [Fast Catchup](./node-nn-sync.md#fast-catchup) to the provided Catchpoint.
+Controls the number of attempts the _Ledger fetcher_ would perform before giving
+up the [Fast Catchup](./node-nn-sync.md#fast-catchup) to the provided Catchpoint.
 
 ---
 

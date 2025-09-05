@@ -63,7 +63,8 @@ if provided.
 
 **Description:**
 
-The key file used for the [Relay network](../network/network-nn-definitions-ws.md) if provided.
+The key file used for the [Relay network](../network/network-nn-definitions-ws.md)
+if provided.
 
 ---
 
@@ -73,8 +74,8 @@ The key file used for the [Relay network](../network/network-nn-definitions-ws.m
 
 **Description:**
 
-Specifies the names of a set of DNS `SRV` records that identify the set of nodes available
-to connect to.
+Specifies the names of a set of DNS `SRV` records that identify the set of nodes
+available to connect to.
 
 > For further information on the specifics of this value’s syntax, refer to DNS
 > bootstrap [reference implementation](https://github.com/algorand/go-algorand/blob/b6e5bcadf0ad3861d4805c51cbf3f695c38a93b7/config/dnsbootstrap.go).

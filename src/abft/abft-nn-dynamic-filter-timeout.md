@@ -21,7 +21,8 @@ In regular conditions, the _filtering timeout_ \\( \Timeout \\) tends to the min
 Whenever network conditions force the round advancement to stall, \\( \Timeout \\)
 will diverge towards the maximum of \\( \lambdaMax \\).
 
-> See the formal definition of the filtering timeout parameters in the [ABFT normative section](./abft-parameters.md).
+> See the formal definition of the filtering timeout parameters in the [ABFT
+> normative section](./abft-parameters.md).
 
 > ⚙️ **IMPLEMENTATION**
 >

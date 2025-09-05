@@ -40,7 +40,8 @@ which \\( \Tag \\) to use with `GossipSub`, mapped to topic names[^1].
 - A `capabilitiesDiscovery` structure abstracting all functionalities to advertise
 nd discover peers for specific capabilities (see [section below](#node-capabilities)).
 
-A \\( \PtoP \\) network implements the `GossipNode` interface to manage peer-to-peer communication.
+A \\( \PtoP \\) network implements the `GossipNode` interface to manage peer-to-peer
+communication.
 
 {{#include ../_include/styles.md:impl}}
 > \\( \PtoP \\) network [reference implementation](https://github.com/algorand/go-algorand/blob/8c5fd6301ff57b69c5e2709aa1bf76e48def7566/network/p2pNetwork.go#L52).

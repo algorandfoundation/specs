@@ -105,8 +105,9 @@ open port), the conversion scheme is `/ip4/[a]/tcp/[b]`.
 > for a multiaddress composed of a network address `192.168.1.1:8180`, joined together
 > with the `PeerID` equal to `Qmewz5ZHN1AAGTarRbMupNPbZRfg3p5jUGoJ3JYEatJVVk`.
 >
-> - `/ip4/192.255.2.8/tcp/8180/ws`, for a multiaddress composed only of a network address
-> `192.255.2.8:8180` indicating that the connection is through websockets `ws`.
+> - `/ip4/192.255.2.8/tcp/8180/ws`, for a multiaddress composed only of a network
+> address `192.255.2.8:8180` indicating that the connection is through websockets
+> `ws`.
 
 ## Hybrid Network Addressing Scheme
 
@@ -117,7 +118,8 @@ Note that a `PublicAddress` must be set for hybrid nodes to operate properly.
 
 For _peer identity_ deduplication, a signing schema involving both the \\( \PtoP \\)
 private key and the \\( \WS \\) identity challenge is put in place. This is to correlate
-both \\( \Peer \\) definitions and prevent it from existing in both \\( \Peer \\) lists.
+both \\( \Peer \\) definitions and prevent it from existing in both \\( \Peer \\)
+lists.
 
 > See the hybrid network [identity challenge](./network-nn-identity.md#hybrid-network-identity-challenge)
 > for further details on this process.

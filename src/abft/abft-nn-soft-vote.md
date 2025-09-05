@@ -55,6 +55,7 @@ for this round.
 
 \\( \textbf{Algorithm 4} \text{: Soft Vote} \\)
 
+<!-- markdownlint-disable MD013 -->
 $$
 \begin{aligned}
 &\text{1: } \PSfunction \SoftVote() \\\\
@@ -81,6 +82,7 @@ $$
 &\text{22: } \PSendfunction
 \end{aligned}
 $$
+<!-- markdownlint-enable MD013 -->
 
 ---
 

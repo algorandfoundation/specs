@@ -17,7 +17,8 @@ The \\( \TP \\) is responsible for populating the `payset` of a block, a process
 referred to as `BlockAssembly`.
 
 The `BlockAssembly` is a time-bound algorithm that manages the flow of transactions
-into the pending \\( \BlockEval \\) and stops ingestion once timing constraints are reached.
+into the pending \\( \BlockEval \\) and stops ingestion once timing constraints are
+reached.
 
 It also handles possible desynchronizations between the \\( \TP.\r \\) (the current
 round as perceived by the \\( \TP \\)) and the actual round being assembled by the

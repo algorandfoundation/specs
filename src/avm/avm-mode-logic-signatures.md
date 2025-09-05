@@ -12,8 +12,8 @@ and finishes with a single non-zero `uint64` value on the Stack, then that progr
 has validated the transaction it is attached to.
 
 The program has access to data from the transaction it is attached to (`txn` opcode),
-any transactions in a transaction group it is part of (`gtxn` opcode), and a few global
-values like consensus parameters (`global` opcode).
+any transactions in a transaction group it is part of (`gtxn` opcode), and a few
+global values like consensus parameters (`global` opcode).
 
 Some _arguments_ may be attached to a transaction being validated by a program. Arguments
 are an array of byte strings. A common pattern would be to have the key to unlock
@@ -43,8 +43,8 @@ opcode costs in the program (whether they were actually executed or not).
 Beginning with Version 4, the program's cost is tracked dynamically while being
 evaluated. If the program exceeds its opcode budget, it fails.
 
-The total program cost of all Logic Signatures in a group **MUST NOT** exceed \\( \LogicSigMaxCost \\)
-times the number of transactions in the group[^1].
+The total program cost of all Logic Signatures in a group **MUST NOT** exceed
+\\( \LogicSigMaxCost \\) times the number of transactions in the group[^1].
 
 {{#include ../_include/styles.md:impl}}
 > Opcode budget tracker [reference implementation](https://github.com/algorand/go-algorand/blob/7e562c35b02289ca95114b4b3a20a7dc2df79018/data/transactions/logic/eval.go#L1491).
@@ -66,11 +66,11 @@ signed.
 
 ### Contract Account Mode
 
-If the [SHA-512/256](../crypto/crypto-sha512-256.md) hash of the program (prefixed by
-`Program`) is equal to the authorizer address of the transaction sender, then this
-is a contract account wholly controlled by the program. No other signature is necessary
-or possible. The only way to execute a transaction against the contract account is
-for the program to approve it.
+If the [SHA-512/256](../crypto/crypto-sha512-256.md) hash of the program (prefixed
+by `Program`) is equal to the authorizer address of the transaction sender, then
+this is a contract account wholly controlled by the program. No other signature is
+necessary or possible. The only way to execute a transaction against the contract
+account is for the program to approve it.
 
 ---
 

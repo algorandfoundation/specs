@@ -70,7 +70,8 @@ Where:
 the key \\( P_{k_{i}} \\) is valid. The key would be valid for all rounds in
 \\( [r, \ldots, r + \KLT - 1] \\).
 
-- \\( P_{k_{i}} \\) is a 14,344-bit string representing the FALCON ephemeral public key.
+- \\( P_{k_{i}} \\) is a 14,344-bit string representing the FALCON ephemeral public
+key.
 
 - \\( \Hash \\) is the SUBSET-SUM hash function as defined in the [Cryptographic
 Primitives Specification](../crypto/crypto.md).

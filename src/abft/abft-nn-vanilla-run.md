@@ -68,8 +68,8 @@ event (node’s clock reset \\( t = 0 \\)) and calls the \\( \BlockProposal \\) 
 
 The \\( \BlockProposal \\) algorithm runs a loop in which it iterates over all the
 accounts registered _online_ in the node. When at least one account gets selected
-by the \\( \Sortition \\), the node participates in the proposal voting on behalf of
-the selected accounts, and starts the \\( \BlockAssembly \\) procedure.
+by the \\( \Sortition \\), the node participates in the proposal voting on behalf
+of the selected accounts, and starts the \\( \BlockAssembly \\) procedure.
 
 This procedure will traverse the \\( \TP \\), calling the Algorand Virtual Machine,
 and execute one transaction at a time, obtaining a new block \\( e \\).
@@ -132,9 +132,9 @@ Eventually, the node clock reaches \\( t = \DynamicFilterTimeout(p) \\) (that is
 the node observes a \\( \EventTimeout \\) event for filtering), and the main algorithm
 calls \\( \SoftVote \\).
 
-The soft vote procedure selects the highest priority block proposal and votes on it.
-The node goes through all the votes \\( \vt^\prime \in V \\) in its votes set which
-are in the \\( \Propose \\) step (\\( \vt^\prime_s = 0 \\)).
+The soft vote procedure selects the highest priority block proposal and votes on
+it. The node goes through all the votes \\( \vt^\prime \in V \\) in its votes set
+which are in the \\( \Propose \\) step (\\( \vt^\prime_s = 0 \\)).
 
 Given the \\( \c_j \\) of player \\( I_j \\) for the vote \\( \vt^\prime_{\c_j} = (w_j, y, \VRF.\ProofToHash(y)) \\),
 the procedure runs a \\( \Priority\\) function on the vote, as described in the

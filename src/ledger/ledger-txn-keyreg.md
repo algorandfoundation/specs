@@ -81,7 +81,8 @@ TODO
 
 ## Validation
 
-For a _key registration_ transaction to be valid, the following conditions **MUST** apply:
+For a _key registration_ transaction to be valid, the following conditions **MUST**
+apply:
 
 - The elements of the set \\( (\VoteKey, \SelectionKey, \StateProofKey, \KeyDilution) \\)
 are **REQUIRED** to be _all present_, or _all omitted_ (clear).

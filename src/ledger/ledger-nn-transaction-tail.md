@@ -33,14 +33,16 @@ observation round, and the mapping uses `TXLease` as keys to store the `Lease` e
 round.
 
 - `blockHeaderData`\
-Contains recent block header data. The expected availability range is `[Latest - MaxTxnLife, Latest]`,
-allowing `MaxTxnLife + 1` rounds of lookback ( \\( 1001 \\) with current parameters).
+Contains recent block header data. The expected availability range is `[Latest -
+MaxTxnLife, Latest]`, allowing `MaxTxnLife + 1` rounds of lookback ( \\( 1001 \\)
+with current parameters).
 
 - `lastValidMap`\
 A mapping of `round -> (txid -> uint16)` that enables the lookup of all transactions
 expiring in a given round. For each round, the inner map stores `txid`s mapped to
 16-bit unsigned integers representing the difference between the transaction’s `lastValid`
-field and the round it was confirmed (`lastValid > confirmationRound` for all confirmed transactions).
+field and the round it was confirmed (`lastValid > confirmationRound` for all confirmed
+transactions).
 
 - `lowWaterMark`\
 An unsigned 64-bit integer representing a round number such that for any transactions

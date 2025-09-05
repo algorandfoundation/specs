@@ -33,8 +33,9 @@ protocol version;
 version would take effect, if passed.
 
 An upgrade vote \\( (v_r, x_r, b) \\) is _valid_ given the upgrade state
-\\( (v_r^{\ast}, v_r^{\prime}, s_r, d_r, x_r^{\prime}) \\) if \\( v_r \\) is the _empty_ string
-or \\( v_r^{\prime} \\) is the _empty_ string, \\( \MinUpgradeWaitRounds \leq x_r \leq \MaxUpgradeWaitRounds \\), and either:
+\\( (v_r^{\ast}, v_r^{\prime}, s_r, d_r, x_r^{\prime}) \\) if \\( v_r \\) is the
+_empty_ string or \\( v_r^{\prime} \\) is the _empty_ string,
+\\( \MinUpgradeWaitRounds \leq x_r \leq \MaxUpgradeWaitRounds \\), and either:
 
 - \\( b = 0 \\) or
 - \\( b = 1 \\) with \\( r < d_r \\) and either

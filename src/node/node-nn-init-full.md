@@ -34,8 +34,8 @@ The `algod` Full Node is responsible for:
 
 - **Validating and propagating** transactions and blocks,
 
-- **Maintaining the blockchain state**, either fully (_Archival_) or partially (_Non Archival_),
-as defined in the [Ledger](../ledger/ledger-overview.md),
+- **Maintaining the blockchain state**, either fully (_Archival_) or partially (_Non
+Archival_), as defined in the [Ledger](../ledger/ledger-overview.md),
 
 - **Participating in the consensus protocol**, as outlined in the [ABFT specification](../abft/abft.md).
 
@@ -48,6 +48,7 @@ _Full Node_:
 
 \\( \textbf{Algorithm 1} \text{: Full Node Initialization} \\)
 
+<!-- markdownlint-disable MD013 -->
 $$
 \begin{aligned}
 &\text{1: } \PSfunction \FullNode.\mathrm{Start}(\RootDir, \Config, \Phonebook, \Genesis) \\\\
@@ -89,6 +90,7 @@ $$
 &\text{37: } \PSendfunction
 \end{aligned}
 $$
+<!-- markdownlint-enable MD013 -->
 
 ---
 

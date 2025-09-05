@@ -20,13 +20,15 @@ We define a \\( \Peer \\) as a generic network actor.
 This construct provides a way to refer to nodes indistinctly and keep track of all
 neighbors with inbound or outbound connections that may relay or broadcast messages.
 
-Each of \\( \Peer \\) represents a fully operational Algorand node with a working _network layer_.
+Each of \\( \Peer \\) represents a fully operational Algorand node with a working
+_network layer_.
 
 A specific \\( \Peer_t \\), with \\( t \in \\{\WS, \PtoP, \HYB\\} \\) is a \\( \Peer \\)
 whose _network layer_ implements a specific type of network.
 
 A \\( \Peer \\) has all the necessary contents to communicate with the node it represents
-(the HTTP client, the URL representing the node, and extra metadata necessary to maintain an active connection).
+(the HTTP client, the URL representing the node, and extra metadata necessary to
+maintain an active connection).
 
 {{#include ../_include/styles.md:impl}}
 > Peer struct [reference implementation](https://github.com/algorand/go-algorand/blob/df0613a04432494d0f437433dd1efd02481db838/network/wsPeer.go#L177).
@@ -104,8 +106,8 @@ message,
 - `received`, a 64-bit integer representing the reception time of this message
 (expressed in nanoseconds since the `epoch`).
 
-When an incoming message \\( \InMsg \\) is received, and the appropriate message handler
-has processed it, an outgoing message is produced.
+When an incoming message \\( \InMsg \\) is received, and the appropriate message
+handler has processed it, an outgoing message is produced.
 
 We define a deserializable object _outgoing message_ \\( \OutMsg \\), as an object
 representing a message from some \\( \Peer \\) in the network.
@@ -139,8 +141,8 @@ service). The possible topic keys are:
 (see below). An enumeration of the reasons to disconnect from a given \\( \Peer \\)
 (message sender) may be found right below.
 
-A \\( \ForwardingPolicy \\) is an enumeration, indicating what action should be taken for
-a given outgoing message \\( \OutMsg \\). It may take any of the following values:
+A \\( \ForwardingPolicy \\) is an enumeration, indicating what action should be taken
+for a given outgoing message \\( \OutMsg \\). It may take any of the following values:
 
 - `Ignore`, to discard the message (don’t forward),
 
