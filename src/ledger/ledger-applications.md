@@ -35,11 +35,11 @@ case the `ClearStateProgram` is executed instead. This program may modify the lo
 or global state associated with this application. This field is encoded with msgpack
 field `approv`.
 
-  - For AVM Version 3 or lower, the program’s cost as determined by the Stateful `Check`
-  function **MUST NOT** exceed \\( \MaxAppProgramCost \\).
+  - For AVM Version 3 or lower, the program’s cost as determined by the Stateful
+  `Check` function **MUST NOT** exceed \\( \MaxAppProgramCost \\).
 
-  - For AVM Version 4 or higher programs, the program’s cost during execution **MUST NOT**
-  exceed \\( \MaxAppProgramCost \\).
+  - For AVM Version 4 or higher programs, the program’s cost during execution **MUST
+  NOT** exceed \\( \MaxAppProgramCost \\).
 
 - A mutable stateful “Clear State” program (`ClearStateProgram`), executed when an
 opted-in user forcibly removes the local application state associated with this
@@ -49,11 +49,11 @@ This program, when executed, is not permitted to cause the transaction to fail.
 This program may modify the local or global state associated with this application.
 This field is encoded with msgpack field `clearp`.
 
-  - For AVM Version 3 or lower, the program’s cost as determined by the Stateful `Check`
-  function **MUST NOT** exceed \\( \MaxAppProgramCost \\).
+  - For AVM Version 3 or lower, the program’s cost as determined by the Stateful
+  `Check` function **MUST NOT** exceed \\( \MaxAppProgramCost \\).
 
-  - For AVM Version 4 or higher programs, the program’s cost during execution **MUST NOT**
-  exceed \\( \MaxAppProgramCost \\).
+  - For AVM Version 4 or higher programs, the program’s cost during execution **MUST
+  NOT** exceed \\( \MaxAppProgramCost \\).
 
 - An immutable “global state schema” (`GlobalStateSchema`), which sets a limit on
 the size of the global [Key/Value Store](#keyvalue-stores) that may be associated
@@ -127,9 +127,11 @@ When opting in to an application, there is a base minimum balance increase of
 in μALGO, based on the `LocalStateSchema` for that application, described by the
 following formula:
 
+<!-- markdownlint-disable MD013 -->
 $$
 (\SchemaMinBalancePerEntry + \SchemaUintMinBalance) \times \mathrm{NumUint} + (\SchemaMinBalancePerEntry + \SchemaBytesMinBalance) \times \mathrm{NumByteSlice}
 $$
+<!-- markdownlint-enable MD013 -->
 
 When creating an application, there is a base minimum balance increase of
 \\( \AppFlatParamsMinBalance \\) μALGO. There is an additional minimum balance increase
@@ -137,9 +139,11 @@ of \\( \AppFlatParamsMinBalance \times \ExtraProgramPages \\) μALGO. Finally,
 there is an additional minimum balance increase, in μALGO, based on the `GlobalStateSchema`
 for that application, described by the following formula:
 
+<!-- markdownlint-disable MD013 -->
 $$
 (\SchemaMinBalancePerEntry + \SchemaUintMinBalance) \times \mathrm{NumUint} + (\SchemaMinBalancePerEntry + \SchemaBytesMinBalance) \times \mathrm{NumByteSlice}
 $$
+<!-- markdownlint-enable MD013 -->
 
 ## Boxes
 

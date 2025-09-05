@@ -19,10 +19,11 @@ $$
 # VRF Selection Keys
 
 To check the validity of a voting message, its _VRF Selection key_
-needs to be verified. Algorand uses _Verifiable Random Function_ (VRF) to 
+needs to be verified. Algorand uses _Verifiable Random Function_ (VRF) to
 generate selection keys.
 
-> For further details on the VRF, refer to the Cryptography primitives [specification](../crypto/crypto-vrf.md).
+<!-- TODO: VRF normative: For further details on the VRF, refer to the Cryptography
+primitives [specification](). -->
 
 More specifically, an unverified vote (\\( \UnauthenticatedVote \\)) has the
 following fields:
@@ -38,15 +39,15 @@ which is a VRF proof.
 {{#include ../_include/styles.md:impl}}
 > Unauthenticated vote [reference implementation](https://github.com/algorand/go-algorand/blob/b6e5bcadf0ad3861d4805c51cbf3f695c38a93b7/agreement/vote.go#L42).
 
-Once receiving an unverified vote (\\( \UnauthenticatedVote \\)) from the network, 
+Once receiving an unverified vote (\\( \UnauthenticatedVote \\)) from the network,
 an Algorand node verifies its VRF selection key by checking the validity
 of the VRF Proof (in \\( \Cred \\)), the committee membership parameters that
 it is conditioned on, and the voter’s voting stake.
 
-If verified, the result of this verification is 
+If verified, the result of this verification is
 wrapped in a \\( \Credential \\) struct, containing the following fields:
 
-- _Unverifed Credential_ (\\( \UnauthenticatedCredential \\)), the unverified 
+- _Unverifed Credential_ (\\( \UnauthenticatedCredential \\)), the unverified
 selection key from the VRF proof.
 
 - _Weight_ (\\( \Weight \\)), the weight of the vote.
@@ -58,7 +59,7 @@ flag, now must be true by the protocol.
 
 - _Hashable_ (\\( \Hashable \\)), the original credential.
 
-And this verified credential is wrapped in a \\( \Vote \\) struct with _Raw Vote_ 
+And this verified credential is wrapped in a \\( \Vote \\) struct with _Raw Vote_
 (\\( \mathrm{R} \\)), _Verified Credential_ (\\( \Credential \\)), and _Signature_
 (\\( \Sig \\)).
 

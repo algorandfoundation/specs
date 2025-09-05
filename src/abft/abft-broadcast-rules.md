@@ -46,6 +46,6 @@ prevent accidental equivocation after a power failure, nodes **SHOULD**
 checkpoint their state to crash-safe storage before sending these
 messages.
 
-> For further details on these checkpoint strategies, refer to the non-normative
-> [Algorand Ledger Overview](../md/ledger-overview.md). For an in-depth review of
-> broadcasting functionalities, refer to the non-normative [Algorand Network Overview](../md/network-overview.md).
+> For further details on these checkpoint strategies, refer to the
+> [non-normative Ledger specification](../ledger/ledger-nn.md). For an in-depth
+> review of broadcasting functionalities, refer to the [non-normative Network specification](../network/network-overview.md).

@@ -30,13 +30,13 @@ The transaction type is identified with a short string of at most [7 characters]
 |  `pay`   | Payment (ALGO transfer)                                        |
 | `keyreg` | Consensus participation keys registration and deregistration   |
 |  `acfg`  | Algorand Standard Asset transfer                               |
-| `axfer`  | Algorand Strandard Asset creation and reconfiguraiton          |
-|  `afrz`  | Algorand Standard Asset freeze (withelisting and blacklisting) |
-|  `appl`  | Application (Smart Contract) call
+| `axfer`  | Algorand Standard Asset creation and reconfiguration           |
+|  `afrz`  | Algorand Standard Asset freeze (whitelisting and blacklisting) |
+|  `appl`  | Application (Smart Contract) call                              |
 |  `stpf`  | Algorand State Proof                                           |
-|   `hb`   | Consensus heartbeat challange                                  |
+|   `hb`   | Consensus heartbeat challenge                                  |
 
-> For a formal definition of all transaction fields, refer to the [normative section](ledger.md#transactions).
+> For a formal definition of all transaction fields, refer to the [normative section](./ledger-transactions.md).
 
 {{#include ../_include/styles.md:impl}}
 > The reference implementation also defines the `unknown` transaction type.
@@ -54,13 +54,14 @@ The _transaction header_, equal for all transaction types, consists of:
 Identifies the transaction type and the related _body_ required fields.
 
 - `Sender`\
-That [signs](https://github.com/algorand/go-algorand/blob/b6e5bcadf0ad3861d4805c51cbf3f695c38a93b7/data/transactions/transaction.go#L266-L278) the transaction.
+That [signs](https://github.com/algorand/go-algorand/blob/b6e5bcadf0ad3861d4805c51cbf3f695c38a93b7/data/transactions/transaction.go#L266-L278)
+the transaction.
 
 - `Fee`\
 The amount paid by the sender to execute the transaction. Fees can be delegated (set
-to \\( 0 \\)) within a transaction `Group` (see group transaction [non-normative section](./ledger-nn-gorup-transaction.md)).
+to \\( 0 \\)) within a transaction `Group`.
 
-- `FirstValidRound` \\( \r_F \\) and `LastValidRound` \\( \r_L \\)\ 
+- `FirstValidRound` \\( \r_F \\) and `LastValidRound` \\( \r_L \\)\
 The difference \\( (r_L - r_F) \\) cannot be greater than \\( 1000 \\) [rounds](https://github.com/algorand/go-algorand/blob/b6e5bcadf0ad3861d4805c51cbf3f695c38a93b7/config/consensus.go#L938).
 
 - `Note` (Optional)\
@@ -74,8 +75,7 @@ Like the _Genesis Hash_, it [ensures](https://github.com/algorand/go-algorand/bl
 that the transaction targets a specific Ledger (e.g., `mainnet-v1.0` for MainNet).
 
 - `Group` (Optional)\
-A cryptographic commitment to the _group_ this transaction is part of (see group
-transaction [non-normative section](./ledger-nn-gorup-transaction.md)).
+A cryptographic commitment to the _group_ this transaction is part of.
 
 - `Lease` (Optional)\
 32-byte array that enforces [mutual exclusion of transactions](https://github.com/algorand/go-algorand/blob/fcad0bbcc035a8d253cac08e4f90c9c813c40668/ledger/store/trackerdb/data.go#L844-L868).
@@ -88,9 +88,9 @@ no other transaction with the same `Lease` can be committed.
 
 - `RekeyTo`\
 An Algorand _address_ (32-byte). If non-zero, the transaction will set the `Sender`
-account’s [spending key](../partkey.md#root-keys) to this address as last transaction effect. Therefore,
-future transactions sent by the `Sender` account must now be signed with the secret
-key of the _address_.
+account’s [spending key](../keys/keys-root.md) to this address as last transaction
+effect. Therefore, future transactions sent by the `Sender` account must now be signed
+with the secret key of the _address_.
 
 The _transaction header_ verification ensures that a transaction:
 

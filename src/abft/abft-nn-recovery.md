@@ -28,6 +28,7 @@ has not been observed before \\( \DeadlineTimeout(p) \\) for a given period \\( 
 
 \\( \textbf{Algorithm 9} \text{: Recovery} \\)
 
+<!-- markdownlint-disable MD013 -->
 $$
 \begin{aligned}
 &\text{1: } \PSfunction \Recovery() \\\\
@@ -50,6 +51,7 @@ $$
 &\text{16: } \PSendfunction
 \end{aligned}
 $$
+<!-- markdownlint-enable MD013 -->
 
 ---
 

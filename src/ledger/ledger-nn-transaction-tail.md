@@ -33,14 +33,16 @@ observation round, and the mapping uses `TXLease` as keys to store the `Lease` e
 round.
 
 - `blockHeaderData`\
-Contains recent block header data. The expected availability range is `[Latest - MaxTxnLife, Latest]`,
-allowing `MaxTxnLife + 1` rounds of lookback ( \\( 1001 \\) with current parameters).
+Contains recent block header data. The expected availability range is `[Latest -
+MaxTxnLife, Latest]`, allowing `MaxTxnLife + 1` rounds of lookback ( \\( 1001 \\)
+with current parameters).
 
 - `lastValidMap`\
 A mapping of `round -> (txid -> uint16)` that enables the lookup of all transactions
 expiring in a given round. For each round, the inner map stores `txid`s mapped to
 16-bit unsigned integers representing the difference between the transaction’s `lastValid`
-field and the round it was confirmed (`lastValid > confirmationRound` for all confirmed transactions).
+field and the round it was confirmed (`lastValid > confirmationRound` for all confirmed
+transactions).
 
 - `lowWaterMark`\
 An unsigned 64-bit integer representing a round number such that for any transactions
@@ -55,6 +57,7 @@ A duplication check is the core functionality of \\( \TxTail \\).
 
 \\( \textbf{Algorithm 1} \text{: Check Duplicate} \\)
 
+<!-- markdownlint-disable MD013 -->
 $$
 \begin{aligned}
 &\text{1: } \PSfunction \CheckDuplicate(\Tx_r, \FirstValid, \LastValid, \Tx_{\ID}, \Tx_{\Lease}) \\\\
@@ -77,6 +80,7 @@ $$
 &\text{18: } \PSendfunction
 \end{aligned}
 $$
+<!-- markdownlint-enable MD013 -->
 
 ---
 
@@ -96,7 +100,7 @@ discard transactions too far back in history and already purged from the \\( \ T
 In case a \\( \Tx_{\Lease} \\) is set, the \\( \RecentLeaseMap \\) field is used
 to deduplicate by \\( \Lease \\).
 
-After checking for the \\( \Lease \\), the \\( \LastValidMap \\) is used and the 
+After checking for the \\( \Lease \\), the \\( \LastValidMap \\) is used and the
 transaction is deduplicated through a lookup of \\( \Tx_{\ID} \\) by its \\( \LastValid \\)
 round.
 

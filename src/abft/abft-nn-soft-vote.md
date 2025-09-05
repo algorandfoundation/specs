@@ -21,7 +21,7 @@ $$
 
 # Soft Vote
 
-The soft vote stage (also known as _"filtering"_) filters the proposal-value candidates 
+The soft vote stage (also known as _"filtering"_) filters the proposal-value candidates
 available for the round, selecting the one with the highest priority to vote for.
 
 ## Priority Function
@@ -55,6 +55,7 @@ for this round.
 
 \\( \textbf{Algorithm 4} \text{: Soft Vote} \\)
 
+<!-- markdownlint-disable MD013 -->
 $$
 \begin{aligned}
 &\text{1: } \PSfunction \SoftVote() \\\\
@@ -81,6 +82,7 @@ $$
 &\text{22: } \PSendfunction
 \end{aligned}
 $$
+<!-- markdownlint-enable MD013 -->
 
 ---
 
@@ -115,10 +117,9 @@ of \\( \ProofToHash(y) \\), the proposer address \\( I_j \\) and the index \\( i
 as \\( \Hash(\VRF.\ProofToHash(y) || I_j || i) \\) (where \\( \Hash \\) is the
 node’s general cryptographic hashing function.
 
-> See the cryptography [normative section](./crypto.md#verifiable-random-function)
-> for details on \\( VRF \\).
+<!-- TODO: VRF normative: See the cryptography [normative section]() for details on \\( VRF \\). -->
 
-> See the cryptography [normative section](./crypto.md#hash-functions) for details
+> See the cryptography [normative section](../crypto/crypto.md) for details
 > on the \\( \Hash \\) function.
 
 Then, the node keeps track of the proposal-value \\( v \\) that minimizes the concatenation

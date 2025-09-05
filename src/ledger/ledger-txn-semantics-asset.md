@@ -61,7 +61,7 @@ asset IDs that have never been created, or that have been destroyed, at the time
 of space allocation. Space can remain allocated, however, after the asset is destroyed.
 
 - The transaction moves the specified number of units of the asset from the [_asset
-sender_](./ledger-txn-asset-transfer.md#asset-sender) to the [_asset receiver_](./ledger-txn-asset-transfer.md#asset-receiver). 
+sender_](./ledger-txn-asset-transfer.md#asset-sender) to the [_asset receiver_](./ledger-txn-asset-transfer.md#asset-receiver).
 
   - If either account is frozen, and freezes are not bypassed, the transaction fails
   to execute.
@@ -84,9 +84,9 @@ the [_close-to address_](./ledger-txn-asset-transfer.md#asset-close-to-address).
   - Closing to the _asset creator_ is always allowed, even if the source and/or creator
   account’s holdings are frozen.
 
-  - If the [_asset sender_](./ledger-txn-asset-transfer.md#asset-sender) or [_close-to address_](./ledger-txn-asset-transfer.md#asset-close-to-address)
-  does not have allocated space for the asset in question, the transaction fails
-  to execute.
+  - If the [_asset sender_](./ledger-txn-asset-transfer.md#asset-sender) or [_close-to
+  address_](./ledger-txn-asset-transfer.md#asset-close-to-address) does not have
+  allocated space for the asset in question, the transaction fails to execute.
 
   - After transferring all outstanding units of the asset, space for the asset is
   deallocated from the sender account.

@@ -17,7 +17,7 @@ Each player owns exactly one _participation keypair_. A participation
 keypair consists of a _public key_ \\( \pk \\) and a _secret key_ \\( \sk \\).
 
 A keypair is defined in the [specification
-of participation keys in Algorand](partkey-spec). Each participation
+of participation keys in Algorand](../keys/keys-participation.md). Each participation
 keypair is valid for a range of protocol rounds \\( [r_\fv, r_\lv] \\).
 
 Let \\( m \\), \\( m' \\) be arbitrary sequences of bits.
@@ -49,7 +49,7 @@ if and only if \\( y \\) was produced by signing by \\( \sk_k \\) (up to cryptog
 security). \\( w \\) is uniquely determined given fixed values of \\( m', \pk_k, B_k,
 \bar{B}, Q, \tau, \bar{\tau} \\).
 
-- _Comparing_: Fixing the inputs \\( m', \bar{B}, Q, \tau, \bar{\tau} \\) to a signing 
+- _Comparing_: Fixing the inputs \\( m', \bar{B}, Q, \tau, \bar{\tau} \\) to a signing
 operation, there exists a total ordering on the outputs \\( y \\). In other words,
 if \\( f(\sk, B) = \Sign(m, m', \sk, B, \bar{B}, Q, \tau, \bar{\tau}) = y \\), and
 \\( S = \\{(\sk_0, B_0), (\sk_1, B_1), \ldots, (\sk_n, B_n)\\} \\), then

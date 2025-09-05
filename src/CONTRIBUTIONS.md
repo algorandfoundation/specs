@@ -41,6 +41,7 @@ The CI pipeline enforces Markdown linting, formatting, and style checking with
 Numbered lists **MUST** be defined with `1`-only style.
 
 {{#include ./_include/styles.md:example}}
+>
 > ```text
 > 1. First item
 > 1. Second item
@@ -48,6 +49,7 @@ Numbered lists **MUST** be defined with `1`-only style.
 > ```
 >
 > Result:
+>
 > 1. First item
 > 1. Second item
 > 1. Third item
@@ -58,6 +60,7 @@ Table rows **MUST** use the same column widths.
 
 {{#include ./_include/styles.md:example}}
 > ✅ Correct table format
+>
 > ```text
 > | Month    | Savings |
 > |----------|---------|
@@ -67,6 +70,7 @@ Table rows **MUST** use the same column widths.
 > ```
 >
 > ❌ Wrong table format
+>
 > ```text
 > | Month | Savings |
 > |----------|---------|
@@ -76,6 +80,7 @@ Table rows **MUST** use the same column widths.
 > ```
 >
 > Result:
+>
 > | Month    | Savings |
 > |----------|---------|
 > | January  | €250    |
@@ -87,6 +92,7 @@ colon `:` to the left, right, or on both sides of the dashes `---` within the he
 row.
 
 {{#include ./_include/styles.md:example}}
+>
 > ```text
 > | Name   | Quantity | Size |
 > |:-------|:--------:|-----:|
@@ -96,6 +102,7 @@ row.
 > ```
 >
 > Result:
+>
 > | Name   | Quantity | Size |
 > |:-------|:--------:|-----:|
 > | Item A |    1     |    S |
@@ -114,13 +121,15 @@ Inline equations **MUST** include extra spaces in the MathJax delimiters.
 
 {{#include ./_include/styles.md:example}}
 > Equation: \\( \int x dx = \frac{x^2}{2} + C \\)
-> 
+>
 > ✅ Correct inline delimiter
+>
 > ```text
 > \\( \int x dx = \frac{x^2}{2} + C \\)
 > ```
 >
 > ❌ Wrong inline delimiter
+>
 > ```text
 > \\(\int x dx = \frac{x^2}{2} + C\\)
 > ```
@@ -137,6 +146,7 @@ Block equations **MUST** use the `$$` delimiter (instead of `\\[ ... \\]`).
 > $$
 >
 > ✅ Correct block delimiter
+>
 > ```text
 > $$
 > \mu = \frac{1}{N} \sum_{i=0} x_i
@@ -144,6 +154,7 @@ Block equations **MUST** use the `$$` delimiter (instead of `\\[ ... \\]`).
 > ```
 >
 > ❌ Wrong inline delimiter
+>
 > ```text
 > \\[
 > \mu = \frac{1}{N} \sum_{i=0} x_i
@@ -163,11 +174,13 @@ TeX macros can be imported entirely or partially (e.g., just a functional block)
 
 {{#include ./_include/styles.md:example}}
 > Import all TeX-macros:
+>
 > ```text
 > \{{#include ./.include/tex-macros.md:all}}
 > ```
 >
 > Import just a block of TeX-macros (e.g., pseudocode commands):
+>
 > ```text
 > \{{#include ./.include/tex-macros.md:pseudocode}}
 > ```
@@ -182,6 +195,7 @@ included in the book.
 
 {{#include ./_include/styles.md:example}}
 > This example block has been included with the following syntax:
+>
 > ```text
 > \{{#include ./_include/styles.md:example}}
 > > This example block has been included with the following syntax:

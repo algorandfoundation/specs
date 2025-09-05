@@ -8,7 +8,7 @@
 
 **Description:**
 
-Enables `teal/compile` and `teal/dryrun` [API endpoints](API-overview.md).
+Enables `teal/compile` and `teal/dryrun` [API endpoints](./node-nn-api.md).
 
 ---
 
@@ -73,7 +73,7 @@ A `host:port` address to report graph propagation trace info to.
 **Description:**
 
 Turns on features in the `BlockEvaluator`, which collect data on transactions, exposing
-them via [`algod` APIs](API-overview.md#algorand-daemon). It will store [state deltas](../ledger/ledger-nn-state-delta.md)
+them via [`algod` APIs](./node-nn-algod.md). It will store [state deltas](../ledger/ledger-nn-state-delta.md)
 created during block evaluation, potentially consuming much larger amounts of memory.
 
 ---

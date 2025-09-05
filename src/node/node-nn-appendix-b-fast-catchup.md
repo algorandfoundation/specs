@@ -20,7 +20,7 @@ after which peer connections are replaced.
 **Description:**
 
 Is the maximum number of blocks that the [Fast Catchup](./node-nn-sync.md#fast-catchup)
-will fetch in parallel. If less than [`Protocol.SeedLookback`](abft.md#parameters),
+will fetch in parallel. If less than [`Protocol.SeedLookback`](../abft/abft-parameters.md),
 then `Protocol.SeedLookback` will be used to limit the catchup. Setting this to `0`
 would disable the catchup.
 
@@ -81,8 +81,8 @@ before giving up and trying another Relay Node.
 
 **Description:**
 
-Controls the number of attempts the _Ledger fetcher_ would perform before giving up
-the [Fast Catchup](./node-nn-sync.md#fast-catchup) to the provided Catchpoint.
+Controls the number of attempts the _Ledger fetcher_ would perform before giving
+up the [Fast Catchup](./node-nn-sync.md#fast-catchup) to the provided Catchpoint.
 
 ---
 
@@ -160,20 +160,20 @@ the LSB and `bit 3` is the MSB).
 The value of each bit is interpreted as follows:
 
 - `bit 0`:
-    - `0`: Verify the block certificate.
-    - `1`: Skip this validation.
+  - `0`: Verify the block certificate.
+  - `1`: Skip this validation.
 
 - `bit 1`:
-    - `0`: Verify payset committed hash in [block header](ledger.md#blocks) matches payset hash.
-    - `1`: Skip this validation.
+  - `0`: Verify payset committed hash in [block header](../ledger/ledger-block.md) matches payset hash.
+  - `1`: Skip this validation.
 
 - `bit 2`:
-    - `0`: Skip verifying the transaction signatures on the block are valid.
-    - `1`: Verify transaction signatures in the block.
+  - `0`: Skip verifying the transaction signatures on the block are valid.
+  - `1`: Verify transaction signatures in the block.
 
 - `bit 3`:
-    - `0`: Skip verifying that the recomputed payset hash matches the payset committed hash in the block header.
-    - `1`: Perform verification as described above.
+  - `0`: Skip verifying that the recomputed payset hash matches the payset committed hash in the block header.
+  - `1`: Perform verification as described above.
 
 > Not all permutations of the above bitmask are currently functional. In particular,
 > the functional ones are:

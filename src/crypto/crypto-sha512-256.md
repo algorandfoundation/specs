@@ -5,6 +5,6 @@ as its primary cryptographic hash function.
 
 In Algorand, the SHA-512/256 algorithm is used to:
 
-- Commit to data for signing and for the [Byzantine Fault Tolerance protocol](../abft/abft-overview.md),
+- Commit to data for signing and for the [Byzantine Fault Tolerance protocol](../abft/abft.md),
 
-- Rerandomize its [random seed](../abft-messages-seed.md).
+- Rerandomize its [random seed](../abft/abft-messages-seed.md).

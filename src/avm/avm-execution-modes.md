@@ -29,9 +29,10 @@ Differences between modes include:
   - \\( \LogicSigMaxCost \\)
   - \\( \MaxAppProgramCost \\)
 
-- Opcode availability (refer to the [Opcodes Specifications]() for details).
+- Opcode availability (refer to the [Opcodes Specifications](./avm-appendix-a.md)
+for details).
 
-- Some [Global Fields]() are only available in Application mode.
+- Some [Global Fields](./avm-ops-fields.md) are only available in Application mode.
 
 - Only Applications can observe transaction effects, such as Logs or IDs allocated
 to ASAs or new Applications.

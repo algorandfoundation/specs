@@ -20,10 +20,10 @@ This value **MUST** be between \\( 0 \\) and \\( 2^{64}-1 \\).
 
 - The number of digits after the decimal place to be used when displaying the asset,
 encoded with msgpack field `dc`. The divisibility of the asset is given by \\( 10^{-\mathrm{dc}} \\).
-A `dc` value of \\( 0 \\) represents an asset that is not divisible, while a value of \\( 1 \\)
-represents an asset divisible into tenths, \\( 2 \\) into hundredths, etc. This value
-**MUST** be between \\( 0 \\) and \\( \MaxAssetDecimals \\) (inclusive) (because
-\\( 2^{64}-1 \\) is \\( 20 \\) decimal digits integer).
+A `dc` value of \\( 0 \\) represents an asset that is not divisible, while a value
+of \\( 1 \\) represents an asset divisible into tenths, \\( 2 \\) into hundredths,
+etc. This value **MUST** be between \\( 0 \\) and \\( \MaxAssetDecimals \\) (inclusive)
+(because \\( 2^{64}-1 \\) is \\( 20 \\) decimal digits integer).
 
 - Whether holdings of that asset are _frozen by default_, a boolean flag encoded
 with msgpack field `df`.
@@ -71,7 +71,7 @@ of that asset), until that asset is destroyed.
 
 An account’s asset holding is simply a map from asset IDs to an integer value indicating
 how many units of that asset are held by the account, and a boolean flag indicating
-if the holding is frozen or unfrozen. 
+if the holding is frozen or unfrozen.
 
 An account that holds any asset cannot be closed.
 

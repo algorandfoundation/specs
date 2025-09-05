@@ -23,10 +23,12 @@ information about the chain’s state.
 
 {{#include ../_include/styles.md:example}}
 > For the MainNet:
+>
 > - Genesis ID: `mainnet-v1.0`
 > - Genesis Hash: `wGHE2Pwdvd7S12BL5FaOP20EGYesN73ktiC1qzkkit8=` (`base64` encoding of the 32-byte array).
 >
 > For the TestNet:
+>
 > - Genesis ID: `testnet-v1.0`
 > - Genesis Hash: `SGO1GKSzyE7IEPItTxCByw9x8FmnrCDexi9/cOUJOiI=` (`base64` encoding of the 32-byte array).
 
@@ -37,7 +39,7 @@ a chain. The _genesis block_ has this field set to \\( 0 \\).
 
 ## Round
 
-A 64-bit unsigned integer value that identifies the block’s _round_. The _genesis 
+A 64-bit unsigned integer value that identifies the block’s _round_. The _genesis
 block_ has round \\( 0 \\). For all other cases, it must be equal to the round of
 the previous block plus one (that is, they must be sequential and monotonically
 increasing).
@@ -57,20 +59,20 @@ refresh interval \\( \delta_r \\), the period \\( p \\) during which the block w
 assembled, and on the \\( \VRF \\) value obtained by the block proposer.
 
 {{#include ../_include/styles.md:example}}
-> Example a valid [seed chain computation](../abft-nn-seed-calculation.md).
+> Example a valid [seed chain computation](../abft/abft-nn-seed-calculation.md#example).
 
 ## Timestamp
 
 A 64-bit unsigned integer.
 
-The timestamp is purely informational and states when a block was proposed, expressed 
+The timestamp is purely informational and states when a block was proposed, expressed
 in seconds since [UNIX Epoch](https://en.wikipedia.org/wiki/Unix_time) (00:00:00
 Thursday, 1 January 1970, at UTC).
 
 The difference between consecutive timestamps cannot be greater than \\( t_{\delta} = 25 \\)
 seconds
 
-> See the formal definition in the Ledger [normative specification](ledger.md#parameters).
+> See the formal definition in the Ledger [normative specification](../ledger/ledger-parameters.md).
 
 {{#include ../_include/styles.md:example}}
 > In the reference implementation, checks on the timestamp are performed during
@@ -82,12 +84,12 @@ seconds
 ## Transaction Commitment
 
 Cryptographic commitments (hash) to the block’s transaction sequence. Internally,
-it uses a [Merkle Tree](../crypto/crypto.md#merkle-tree) and commits to the tree’s root.
+it uses a [Merkle Tree](../crypto/crypto-merkle-tree.md) and commits to the tree’s root.
 
 Two different hashes are provided:
 
-- [SHA512/256](../crypto/crypto.md#sha512256),
-- [SHA256](../crypto/crypto.md#sha256).
+- [SHA512/256](../crypto/crypto-sha512-256.md),
+- [SHA256](../crypto/crypto-sha256.md).
 
 {{#include ../_include/styles.md:impl}}
 > Transactions (`payset`) commit [reference implementation](https://github.com/algorand/go-algorand/blob/b6e5bcadf0ad3861d4805c51cbf3f695c38a93b7/data/bookkeeping/block.go#L591).
@@ -97,7 +99,7 @@ Two different hashes are provided:
 The amount in μALGO paid to the proposer is the sum of a fee component and a bonus
 component. The payout is subject to eligibility criteria and protocol limits.
 
-> For further details, refer to the rewards [non-normative specification](./ledger-nn-rewards.md).
+> For further details, refer to the rewards [non-normative specification](../ledger/ledger-nn-staking-rewards.md).
 
 - `FeeCollected`\
 Total transaction fees collected in the block expressed in μALGO.
@@ -122,8 +124,9 @@ and pays block rewards.
 {{#include ../_include/styles.md:example}}
 > MainNet `FeeSink` address: `Y76M3MSY6DKBRHBL7C3NNDXGS5IIMQVQVUAB6MP4XEMMGVF2QWNPL226CA`.
 
-> This legacy rewards distribution mechanism is currently inactive. See the [non-normative section](./ledger-nn-rewards.md)
-> for further details on the active reward mechanism.
+> This legacy rewards distribution mechanism is currently inactive. See the [non-normative
+> section](./ledger-nn-protocol-rewards.md) for further details on the active reward
+> mechanism.
 
 - `RewardsPool` (**legacy**)\
 A 32-byte array holding a constant address. This address pays distribution rewards

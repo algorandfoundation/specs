@@ -24,8 +24,7 @@ We say that this bundle is _valid with respect to_ \\( L \\) (or simply _valid_ 
 {{#include ../_include/styles.md:impl}}
 > The reference implementation makes use of an asynchronous [Bundle verifying function](https://github.com/algorand/go-algorand/blob/b6e5bcadf0ad3861d4805c51cbf3f695c38a93b7/agreement/bundle.go#L147).
 
-> See the non-normative [Algorand ABFT Overview](./abft-overview.md) for further
-> details.
+> See the non-normative [Algorand ABFT Overview](./abft-nn.md) for further details.
 
 - Every element \\( a_i \in V \\) is valid with respect to \\( L \\).
 

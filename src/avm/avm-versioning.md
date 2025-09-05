@@ -4,7 +4,7 @@
 
 To preserve existing semantics for previously written programs, AVM code is versioned.
 
-When new opcodes are added or existing behavior is changed, a new _Version_ is introduced. 
+When new opcodes are added or existing behavior is changed, a new _Version_ is introduced.
 Programs carrying old versions are executed with their original semantics.
 
 In the AVM bytecode, the Version is an incrementing integer, denoted in the program
@@ -12,8 +12,8 @@ as `vX` (where `X` is the version number, see [Pragma directive section](./avm-a
 
 The AVM current Version is: \\( {{#include ../_include/auto/avm-version}} \\).
 
-> For further details about the available opcodes per version, refer to the [AVM Opcodes
-> Specification]().
+> For further details about the available opcodes per version, refer to the
+> [AVM Opcodes Specification](./avm-appendix-a.md).
 
 A compiled program starts with a [varuint](#encoding) declaring the Version of the
 compiled code.
@@ -36,15 +36,16 @@ transaction type or field that can violate expectations, that transaction type o
 field **MUST NOT** be used anywhere in the transaction group.
 
 {{#include ../_include/styles.md:example}}
-> A Version \\( 1 \\) program included in a transaction group that includes an [application
-> call transaction]() or a non-zero [rekey-to field]() will fail regardless of the
-> program itself.
+> A Version \\( 1 \\) program included in a transaction group that includes an
+> [application call transaction](../ledger/ledger-txn-application-call.md) or a
+> non-zero [rekey-to field](../ledger/ledger-transactions.md#rekey-to) will fail
+> regardless of the program itself.
 
 This requirement is enforced as follows:
 
 1. For every transaction in the group, compute the earliest Version that supports
 _all_ the fields and values in this transaction.
-  
+
 2. Compute `maxVerNo`, the largest Version number across all the transactions in
 a group (of size 1 or more).
 

@@ -29,13 +29,13 @@ A _key registration_ transaction additionally has the following fields:
 
 ### Vote Public Key
 
-The _vote public key_ \\( \VoteKey \\) is the (root) [Ed25519]() public authentication
-key of an account’s participation keys (\\( \PartKey \\)).
+The _vote public key_ \\( \VoteKey \\) is the (root) [Ed25519](../crypto/crypto-ed25519.md)
+public authentication key of an account’s participation keys (\\( \PartKey \\)).
 
 ### Selection Public Key
 
-The _selection public key_ \\( \SelectionKey \\) is the public [VRF]() key of an
-account's participation keys (\\( \PartKey \\)). 
+The _selection public key_ \\( \SelectionKey \\) is the public [VRF](../keys/keys-vrf.md)
+key of an account's participation keys (\\( \PartKey \\)).
 
 ### State Proof Public Key
 
@@ -63,7 +63,7 @@ ephemeral participation key. The higher the number, the more “dilution” is a
 to the authentication key’s security.
 
 > For further details on the two-level ephemeral key scheme used for consensus participation
-> authentication, refer to the Algorand [Participation Key Specification]().
+> authentication, refer to the Algorand [Participation Key Specification](../keys/keys-participation.md).
 
 ### Non-Participation
 
@@ -81,7 +81,8 @@ TODO
 
 ## Validation
 
-For a _key registration_ transaction to be valid, the following conditions **MUST** apply:
+For a _key registration_ transaction to be valid, the following conditions **MUST**
+apply:
 
 - The elements of the set \\( (\VoteKey, \SelectionKey, \StateProofKey, \KeyDilution) \\)
 are **REQUIRED** to be _all present_, or _all omitted_ (clear).
@@ -100,12 +101,12 @@ _not clear_, the following **MUST** apply:
 
 <!-- TODO: Verify the correctness of the following with respect to the implementation -->
 
-  - \\( \VoteFirstValid \leq r + 1 \\) and \\( \VoteLastValid > r \\), where \\( r \\)
+- \\( \VoteFirstValid \leq r + 1 \\) and \\( \VoteLastValid > r \\), where \\( r \\)
   is the current network round (the round of the last block committed).
 
-  - \\( \VoteFirstValid \leq \LastValidRound + 1 \\).
+- \\( \VoteFirstValid \leq \LastValidRound + 1 \\).
 
-  - \\( \VoteLastValid - \VoteFirstValid < \MaxKeyregValidPeriod \\).
+- \\( \VoteLastValid - \VoteFirstValid < \MaxKeyregValidPeriod \\).
 
 > It is **RECOMMENDED** that \\( \VoteLastValid - \VoteFirstValid \leq 3{,}000{,}000 \\)
 > rounds for security reasons, to ensure safe rotation of participation keys.

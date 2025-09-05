@@ -34,10 +34,10 @@ The `algod` Full Node is responsible for:
 
 - **Validating and propagating** transactions and blocks,
 
-- **Maintaining the blockchain state**, either fully (_Archival_) or partially (_Non Archival_),
-as defined in the [Ledger](../ledger/ledger-overview.md),
+- **Maintaining the blockchain state**, either fully (_Archival_) or partially (_Non
+Archival_), as defined in the [Ledger](../ledger/ledger-overview.md),
 
-- **Participating in the consensus protocol**, as outlined in the [ABFT specification](../abft/abft-overview.md).
+- **Participating in the consensus protocol**, as outlined in the [ABFT specification](../abft/abft.md).
 
 ## Initialization
 
@@ -48,6 +48,7 @@ _Full Node_:
 
 \\( \textbf{Algorithm 1} \text{: Full Node Initialization} \\)
 
+<!-- markdownlint-disable MD013 -->
 $$
 \begin{aligned}
 &\text{1: } \PSfunction \FullNode.\mathrm{Start}(\RootDir, \Config, \Phonebook, \Genesis) \\\\
@@ -89,6 +90,7 @@ $$
 &\text{37: } \PSendfunction
 \end{aligned}
 $$
+<!-- markdownlint-enable MD013 -->
 
 ---
 
@@ -128,7 +130,7 @@ handle transaction verification, grouped by priority.
 
 > For further details on the transaction validation, see the Ledger [specification](../ledger/ledger-overview.md).
 
-> For further details on the cryptographic primitives and algorithms, see the Crypto [specification](../crypto/crypto-overview.md).
+> For further details on the cryptographic primitives and algorithms, see the Crypto [specification](../crypto/crypto.md).
 
 ### Ledger
 
@@ -180,18 +182,18 @@ Finally, the node launches all essential background services:
 
 <!-- TODO: Fix links once all chapters are finalized -->
 
-- [Catchup](#node-catchup) Service,
+- [Catchup](./node-nn-sync.md) Service,
 
-- [Agreement](abft.md) Service,
+- [Agreement](../abft/abft.md) Service,
 
-- [Transaction Pool](ledger-overview.md#transaction-pool) Syncer Service,
+- [Transaction Pool](../ledger/ledger-nn-txpool.md) Syncer Service,
 
-- [Block](ledger.md#blocks) Service,
+- [Block](../ledger/ledger-block.md) Service,
 
-- [Ledger](ledger.md) Service,
+- [Ledger](../ledger/ledger.md) Service,
 
-- [Transaction](ledger.md#transactions) Handler,
+- [Transaction](../ledger/ledger-transactions.md) Handler,
 
-- [State Proof](crypto.md#state-proofs) Worker.
+- [State Proof](../crypto/crypto-state-proofs.md) Worker.
 
-- [Heartbeat](ledger.md#heartbeat-transaction) Service.
+- [Heartbeat](../ledger/ledger-txn-heartbeat.md) Service.

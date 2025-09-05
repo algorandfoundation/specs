@@ -52,6 +52,7 @@ conditions were met.
 
 \\( \textbf{Algorithm 10} \text{: Fast Recovery} \\)
 
+<!-- markdownlint-disable MD013 -->
 $$
 \begin{aligned}
 &\text{1: } \PSfunction \FastRecovery() \\\\
@@ -81,6 +82,7 @@ $$
 &\text{24: } \PSendfunction
 \end{aligned}
 $$
+<!-- markdownlint-enable MD013 -->
 
 ---
 

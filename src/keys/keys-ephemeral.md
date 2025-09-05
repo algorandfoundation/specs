@@ -9,17 +9,17 @@ $$
 For a _player_ with their _participation keys_ registered on the Ledger (and hosted
 on an Algorand node), a set of _ephemeral sub-keys_ is created.
 
-An _ephemeral sub-key_ is a key pair that produces one-time signature 
+An _ephemeral sub-key_ is a key pair that produces one-time signature
 for messages. It **MUST** be deleted after use to ensure forward security.
 Algorand's ephemeral subkeys use [Ed25519 public-key signature system](https://ed25519.cr.yp.to/).
 
-> For further details, refer to the Cryptography primitives [specification](../crypto/crypto-overview.md).
+> For further details, refer to the Cryptography primitives [specification](../crypto/crypto.md).
 
 Algorand uses a two-level ephemeral signature scheme.
 Instead of signing voting messages directly, Algorand accounts use their
 registered _voting keys_ to sign an intermediate ephemeral sub-key.
 
-This intermediate ephemeral sub-key signs a batch of leaf-level ephemeral 
+This intermediate ephemeral sub-key signs a batch of leaf-level ephemeral
 sub-keys. Hence, each intermediate ephemeral sub-key is associated with a
 batch number (\\( \Batch \\)), and each leaf ephemeral sub-key is associated with
 both a batch number (of its parent key) and an offset (\\( \Offset \\), denotes its offset

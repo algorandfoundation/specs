@@ -1,0 +1,13 @@
+{
+  "default": true,
+  "MD013": {
+    "code_blocks": false,
+    "line_length": 120,
+    "tables": false
+  },
+  "MD028": false,
+  "MD033": {
+    "allowed_elements": ["a", "img"]
+  },
+  "MD041": false,
+}

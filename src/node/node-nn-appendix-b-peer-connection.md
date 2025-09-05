@@ -52,11 +52,11 @@ Succinctly, it works in the following way:
 to peers in the following order:
     1. Outgoing connections: Peers a node actively connects to.
     2. Peers with higher stake: Determined by the amount of ALGO held, as indicated
-       by their [participation key](../partkey.md#voting-keys-).
+       by their [participation key](../keys/keys-participation.md#voting-and-participation-keys).
 
 - Special values:
-    - `0`: Disables all outgoing broadcast messages, including transaction broadcasts to peers.
-    - `-1`: No limit on the number of connections receiving broadcasts (default setting).
+  - `0`: Disables all outgoing broadcast messages, including transaction broadcasts to peers.
+  - `-1`: No limit on the number of connections receiving broadcasts (default setting).
 
 > For further details, refer to the Algorand Network [non-normative specification](../network/network-overview.md).
 
@@ -68,7 +68,7 @@ to peers in the following order:
 
 **Description:**
 
-Indicates if this node should announce its [participation key](../partkey.md#voting-keys-)
+Indicates if this node should announce its [participation key](../keys/keys-participation.md#voting-and-participation-keys)
 with the largest stake to its peers. In case of a _DoS_ attack, this allows peers
 to prioritize connections.
 

@@ -8,15 +8,22 @@
 
 **Description:**
 
-Specifies the logging level for [`algod`](API-overview.md#algorand-daemon) (`node.log`).
+Specifies the logging level for [`algod`](./node-nn-algod.md) (`node.log`).
 
 The levels are:
 
 - `0`: _Panic_: Highest level of severity. Logs and then calls `panic()`.
-- `1`: _Fatal_: Logs and then calls `os.Exit(1)`. It will exit even if the logging level is set to _Panic_.
-- `2`: _Error_: Used for errors that should definitely be noted. Commonly used for hooks to send errors to an error tracking service.
+
+- `1`: _Fatal_: Logs and then calls `os.Exit(1)`. It will exit even if the logging
+level is set to _Panic_.
+
+- `2`: _Error_: Used for errors that should definitely be noted. Commonly used for
+hooks to send errors to an error tracking service.
+
 - `3`: _Warn_: Non-critical entries that deserve attention.
+
 - `4`: _Info_: General operational entries.
+
 - `5`: _Debug_: Verbose logging, usually only enabled when debugging.
 
 ---
@@ -87,20 +94,20 @@ or `.bz2` it will be compressed.
 Available template variables:
 
 - Time at the start of log:
-    - {{.Year}}
-    - {{.Month}}
-    - {{.Day}}
-    - {{.Hour}}
-    - {{.Minute}}
-    - {{.Second}}
+  - {{.Year}}
+  - {{.Month}}
+  - {{.Day}}
+  - {{.Hour}}
+  - {{.Minute}}
+  - {{.Second}}
 
 - Time at the end of log:
-    - {{.EndYear}}
-    - {{.EndMonth}}
-    - {{.EndDay}}
-    - {{.EndHour}}
-    - {{.EndMinute}}
-    - {{.EndSecond}}
+  - {{.EndYear}}
+  - {{.EndMonth}}
+  - {{.EndDay}}
+  - {{.EndHour}}
+  - {{.EndMinute}}
+  - {{.EndSecond}}
 
 ---
 

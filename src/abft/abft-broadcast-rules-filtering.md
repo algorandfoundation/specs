@@ -12,8 +12,8 @@ On observing a timeout event of \\( \FilterTimeout(p) \\) (where
 \\( \mu = (H, H', l, p_\mu) = \mu(S, r, p) \\)),
 
 - if \\( \mu \neq \bot \\) and if
-   - \\( p_\mu = p \\) or
-   - there exists some \\( s > \Cert \\) such that \\( \Bundle(r, p-1, s, \mu) \\)
+  - \\( p_\mu = p \\) or
+  - there exists some \\( s > \Cert \\) such that \\( \Bundle(r, p-1, s, \mu) \\)
 was observed then the player broadcasts \\( \Vote(I, r, p, \Soft, \mu) \\).
 
 - if there exists some \\( s_0 > \Cert \\) such that \\( \Bundle(r, p-1, s_0, \bar{v}) \\)
@@ -23,7 +23,7 @@ was observed, then the player broadcasts* \\( \Vote(I, r, p, \Soft, \bar{v}) \\)
 - otherwise, the player does nothing.
 
 > For a detailed overview of how the filtering step may be implemented, refer to
-> the Algorand ABFT [non-normative section](./abft-overview.md).
+> the Algorand ABFT [non-normative section](./abft-nn.md).
 
 In other words, in the first case above,
 

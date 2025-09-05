@@ -9,7 +9,7 @@ $$
 # Account State
 
 The _balances_ are a set of mappings from _addresses_, 256-bit integers, to _balance
-records_. 
+records_.
 
 A _balance record_ contains the following fields:
 
@@ -20,7 +20,7 @@ A _balance record_ contains the following fields:
 - The account _last_heartbeat_ round,
 - The account _rewards base_ and _total awarded amount_ in μALGO,
 - The account _spending key_,
-- The account [participation keys]().
+- The account [participation keys](../keys/keys-participation.md).
 
 > In the rest of this section, all references to _Reward calculation_ are with respect
 > to the legacy distribution rewards system. They are kept here for completeness
@@ -49,7 +49,7 @@ $$
 $$
 
 \\( \Units(r) \\) is a function that computes the total number of whole _earning
-units_ present in a system at round \\( r \\). 
+units_ present in a system at round \\( r \\).
 
 A user owns \\( \left\lfloor \frac{a_I}{A} \right\rfloor \\) whole earning units,
 so the total number of earning units in the system is:
@@ -81,22 +81,22 @@ authorized (e.g., what public key to verify transaction signatures against).
 
 Transactions from this account must have this value (or, if this value zero, the
 account's address) as their _authorization address_. This is described in the
-[Authorization and Signatures]() section.
+[Authorization and Signatures](./ledger-txn-authorization.md) section.
 
 The account's _participation keys_ \\( \PartKey \\) are defined in Algorand's [specification
-of participation keys]().
+of participation keys](../keys/keys-participation.md).
 
 The account's eligibility \\( \Eligibility \\) is a flag that determines whether
 the account has elected to receive payouts for proposing blocks (assuming it meets
 balance requirements at the time of block proposal).
 
 An account's participation keys and voting stake from a recent round is returned
-by the \\( \Record \\) procedure in the [Byzantine Agreement Protocol]().
+by the \\( \Record \\) procedure in the [Byzantine Agreement Protocol](../abft/abft.md).
 
 There exist two special addresses:
 
 - \\( I_\mathrm{pool} \\), the address of the _incentive pool_,
 
-- \\( I_f \\), the address of the _fee sink_. 
+- \\( I_f \\), the address of the _fee sink_.
 
 For both of these accounts, \\( p_I = 2 \\).

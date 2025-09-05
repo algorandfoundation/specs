@@ -20,7 +20,7 @@ the seed computation, to ease its understanding.
 
 > The following algorithm makes heavy use of \\( \VRF \\) specific functions. For
 > more information on their definition and internal work, refer to the
-> [Algorand Cryptographic Primitive Specification](crypto.md#verifiable-random-function).
+> [Algorand Cryptographic Primitive Specification](../crypto/crypto.md).
 
 ## Notation
 
@@ -50,6 +50,7 @@ For the seed calculation algorithm, consider the following pseudocode:
 
 \\( \textbf{Algorithm 1} \text{: Compute Seed and Proof} \\)
 
+<!-- markdownlint-disable MD013 -->
 $$
 \begin{aligned}
 &\text{1: } \PSfunction \mathrm{ComputeSeedAndProof}(I) \\\\
@@ -69,6 +70,7 @@ $$
 &\text{15: } \PSendfunction
 \end{aligned}
 $$
+<!-- markdownlint-enable MD013 -->
 
 ---
 
@@ -83,7 +85,7 @@ the seed, so as for the \\( \Secrets(I) \\) call (**Algorithm 1**, line 3) to re
 available \\( \VRF \\) secrets generated during that registration process.
 
 > For more information on the types of keys a player has to use, refer to the
-> [Algorand Participation Key Specification](./partkey.md#vrf-selection-keys).
+> [Algorand Participation Key Specification](../keys/keys-vrf.md#vrf-selection-keys).
 
 The function computes the cryptographic seed appended to the _block candidate_
 for round \\( r \\), which will be used (if said block candidate is committed) as
@@ -136,7 +138,7 @@ for the round \\( r \\).
 > $$
 > \Rerand(r_b) = 48182881 \bmod 160 = 1 < \delta_s
 > $$
-> 
+>
 > - For the round \\( r_c = 48182882 \\), since
 >
 > $$

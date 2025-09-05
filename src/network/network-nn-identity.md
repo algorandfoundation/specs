@@ -70,6 +70,7 @@ other one to its \\( \IdT \\), referencing the \\( \Peer \\) with their \\( \Ide
 
 {{#include ../_include/styles.md:impl}}
 > Identity challenge reference implementation in:
+>
 > - `tryConnect` [function](https://github.com/algorand/go-algorand/blob/df0613a04432494d0f437433dd1efd02481db838/network/wsNetwork.go#L2021-L2206),
 > - `ServeHTTP` [function](https://github.com/algorand/go-algorand/blob/df0613a04432494d0f437433dd1efd02481db838/network/wsNetwork.go#L992-L1091).
 

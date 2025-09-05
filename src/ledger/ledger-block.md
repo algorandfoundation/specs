@@ -23,11 +23,11 @@ The block header contains the following components:
 
 ### Round
 
-The block’s _round_, which matches the round of the state it is transitioning 
+The block’s _round_, which matches the round of the state it is transitioning
 into. (The block with round \\( 0 \\) is special in that this block specifies not
 a transition but rather the entire initial state, which is called the _genesis state_.
-This block is correspondingly called the [_genesis block_](#genesis)). The round
-is stored under msgpack key `rnd`.
+This block is correspondingly called the [_genesis block_](./ledger-genesis.md)).
+The round is stored under msgpack key `rnd`.
 
 ### Genesis Identifier
 
@@ -49,8 +49,8 @@ into. The timestamp is stored under msgpack key `ts`.
 
 ### Seed
 
-The block's [_seed_](abft.md#seed), which matches the seed of the state it transitions
-into. The seed is stored under msgpack key `seed`.
+The block's [_seed_](../abft/abft-messages-seed.md), which matches the seed of the
+state it transitions into. The seed is stored under msgpack key `seed`.
 
 ### Reward Updates
 
@@ -115,13 +115,13 @@ the proposer, and is stored in msgpack field `pp`. If the proposer is not eligib
 as described below, the _proposer payout_ **MUST** be \\( 0 \\). The proposer payout
 **MUST NOT** exceed
 
-  - The sum of the _bonus incentive_ and half of the _fees collected_.
-  - The fee sink balance minus \\( \MinBalance \\).
+- The sum of the _bonus incentive_ and half of the _fees collected_.
+- The fee sink balance minus \\( \MinBalance \\).
 
 ### Expired Participation Accounts
 
 The block’s _expired participation accounts_, which contains an _optional_ list of
-account addresses. These accounts’ [participation key](../crypto/paricipation.md)
+account addresses. These accounts’ [participation key](../keys/keys-participation.md)
 expire by the end of the _current_ round, with exact rules below. The list is stored
 in msgpack key `partupdrmv`.
 

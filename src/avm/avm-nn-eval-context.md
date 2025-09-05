@@ -4,8 +4,7 @@ $$
 
 # Evaluation Context
 
-As defined in the AVM [normative specification](./avm.md#evaluation-context),
-an _Evaluation Context_ \\( \EC \\) is a core runtime structure used during AVM
+An _Evaluation Context_ \\( \EC \\) is a core runtime structure used during AVM
 program execution. It maintains all the state and metadata required to evaluate
 a program within a transaction (group) scope.
 
@@ -37,7 +36,7 @@ Additional program-related accessors:
 
 - `ProgramVersion() -> uint64` — AVM version for the executing program.
 
-- `GetOpSpec() -> OpSpec` — Returns the [Opcode Specification](./TEAL_opcodes.md)
+- `GetOpSpec() -> OpSpec` — Returns the [Opcode Specification](./avm-appendix-a.md)
 for the current opcode.
 
 - `begin(program []byte) -> bool` — Verifies whether the given program version is
@@ -77,18 +76,16 @@ The core _transition function_ that advances execution one `opcode` at a time. S
 the dedicated [non-normative section](./avm-nn-transition-function.md) for further
 details.
 
-> For a formal definition of the step function, refer to the [normative specification](./avm.md#step-function).
-
 ## Ledger Interaction
 
 These functions expose the current Ledger context to the AVM:
 
 - `getRound() -> uint64`
-Returns the current [round](./ledger.md#round) from the Ledger.
+Returns the current [round](../ledger/ledger-round.md) from the Ledger.
 
 - `getLatestTimestamp() -> uint64`
-Returns the [latest timestamp](./ledger.md#timestamp) of the most recently committed
-block.
+Returns the [latest timestamp](../ledger/ledger-timestamp.md) of the most recently
+committed block.
 
 ### Prefetched Ledger Accessors
 

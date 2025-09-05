@@ -64,7 +64,6 @@ The `apan` field values are enumerated as follows:
 | `UpdateApplicationOC` |  `4`  | _After_ executing the Approval Program, _replace_ the Approval Program and Clear State Program associated with this _application ID_ with the programs specified in this transaction.                                                                |
 | `DeleteApplicationOC` |  `5`  | _After_ executing the Approval Program, _delete_ the parameters of with this _application ID_ from the account data of the application’s creator.                                                                                                    |
 
-
 ### Approval Program
 
 The _approval program_ (**OPTIONAL**) contains the approval program bytecode.
@@ -93,7 +92,7 @@ Version.
 ### Extra Program Pages
 
 A _program page_ (**OPTIONAL**) is a chunk of application program bytecode. The
-_extra program pages_ define the number of _program pages_ besides the first one. 
+_extra program pages_ define the number of _program pages_ besides the first one.
 
 > This field is only used during _application creation_, and requests an increased
 > maximum size for the Approval Program or Clear State Program.
@@ -165,7 +164,7 @@ or the Clear State Program. These accounts are referred to by their 32-byte addr
 The _foreign applications_ (**OPTIONAL**) list specifies the _application IDs_,
 besides the application whose Approval Program or Clear State Program is executing,
 that the executing program **MAY** read _global state_ from. These applications
-are referred to by their 64-bit unsigned integer IDs. 
+are referred to by their 64-bit unsigned integer IDs.
 
 - There **MUST NOT** be more than \\( \MaxAppTxnForeignApps \\) entries in this list.
 
@@ -193,7 +192,7 @@ Each element of the _box reference_ encodes a structure containing:
 |:------|:-----:|:--------:|:---------------------------------------------------------------------|
 | Index |  `i`  | `uint64` | A \\( 1 \\)-based index in the _foreign applications_ (`apfa`) list. |
 | Name  |  `n`  | `[]byte` | The box identifier.                                                  |
- 
+
 An omitted index (`i`) is interpreted as the _application ID_ of this transaction
 (`apid`, or the ID allocated for the created application when `apid` is \\( 0 \\)).
 

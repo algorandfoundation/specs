@@ -23,7 +23,7 @@ $$
 Algorand achieves [forward security](https://en.wikipedia.org/wiki/Forward_secrecy)
 using a _Merkle Signature Scheme_. This scheme consists of using a different _ephemeral
 key_ for each round in which it will be used. The scheme uses _vector commitment_
-to generate commitment to those keys. 
+to generate commitment to those keys.
 
 The private key **MUST** be deleted after the round passes to achieve complete forward
 secrecy.
@@ -70,13 +70,15 @@ Where:
 the key \\( P_{k_{i}} \\) is valid. The key would be valid for all rounds in
 \\( [r, \ldots, r + \KLT - 1] \\).
 
-- \\( P_{k_{i}} \\) is a 14,344-bit string representing the FALCON ephemeral public key.
+- \\( P_{k_{i}} \\) is a 14,344-bit string representing the FALCON ephemeral public
+key.
 
-- \\( \Hash \\) is the SUBSET-SUM hash function as defined in the [Cryptographic Primitives Specification](../crypto/crypto-overview.md).
+- \\( \Hash \\) is the SUBSET-SUM hash function as defined in the [Cryptographic
+Primitives Specification](../crypto/crypto.md).
 
 ### Signatures
 
-A _signature_ in the scheme consists of the following elements: 
+A _signature_ in the scheme consists of the following elements:
 
 - \\( \Sig \\) is a signature generated with the FALCON scheme.
 
@@ -87,7 +89,7 @@ commitment.
 
 - \\( \Proof \\) is an array of size \\( n \\) (\\( n \leq 16 \\) since the number
 of keys is bounded) which contains hash results (\\( \Digest_{0}, \ldots, \Digest_n \\)).
-\\( \Proof \\) is used as a Merkle verification path on the ephemeral public key. 
+\\( \Proof \\) is used as a Merkle verification path on the ephemeral public key.
 
 When the _committer_ gives a \\( n \\)-depth authentication path for index \\( \VectorIdx \\),
 the _verifier_ must write \\( \VectorIdx \\) as \\( n \\)-bit number and read it

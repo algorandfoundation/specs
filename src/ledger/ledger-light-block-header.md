@@ -23,9 +23,11 @@ key `tc`.
 
 ## Commitment
 
-The light block header _commitment_ for rounds \\( (X \cdot \StateProofInterval, \ldots, (X+1) \cdot \StateProofInterval] \\)
+The light block header _commitment_ for rounds
+\\( (X \cdot \StateProofInterval, \ldots, (X+1) \cdot \StateProofInterval] \\)
 for some number \\( X \\), defined as the root of a [vector commitment](../crypto/crypto-vector-commitment.md)
-whose leaves are light block headers for rounds \\( X \cdot \StateProofInterval, \ldots, (X+1) \cdot \StateProofInterval \\)
+whose leaves are light block headers for rounds
+\\( X \cdot \StateProofInterval, \ldots, (X+1) \cdot \StateProofInterval \\)
 respectively.
 
 The hash function [SHA-256](../crypto/crypto-sha256.md) is used to create this vector commitment.

@@ -41,7 +41,7 @@ is equal to  `ClearStateOC`, then:
   If not, **FAIL**.
 
   - Check if the application parameters still exist in the creator's account data.
-  
+
     - If the application does not exist, delete the sender’s local state for this
     application (marking them as no longer opted in), and **SUCCEED**.
 

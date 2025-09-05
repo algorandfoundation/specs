@@ -12,8 +12,8 @@ expressed in the number of seconds since the Unix epoch (00:00:00 UTC on Thursda
 
 The timestamp \\( t_{r+1} \\) of a block in round \\( r \\) is valid if:
 
- - \\( t_{r} = 0 \\) or
- - \\( t_{r+1} > t_{r} \\) and \\( t_{r+1} < t_{r} + \MaxTimestampIncrement \\).
+- \\( t_{r} = 0 \\) or
+- \\( t_{r+1} > t_{r} \\) and \\( t_{r+1} < t_{r} + \MaxTimestampIncrement \\).
 
 {{#include ../_include/styles.md:example}}
 > Suppose the block production stalls on round \\( r \\) for a prolonged time. When

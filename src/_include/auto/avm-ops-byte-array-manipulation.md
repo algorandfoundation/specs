@@ -16,4 +16,4 @@
 |   `replace2 s`    | Copy of A with the bytes starting at S replaced by the bytes of B. Fails if S+len(B) exceeds len(A) `replace2` can be called using `replace` with 1 immediate.                            |
 |    `replace3`     | Copy of A with the bytes starting at B replaced by the bytes of C. Fails if B+len(C) exceeds len(A) `replace3` can be called using `replace` with no immediates.                          |
 | `base64_decode e` | decode A which was base64-encoded using _encoding_ E. Fail if A is not base64 encoded with encoding E                                                                                     |
-|   `json_ref r`    | key B's value, of type R, from a [valid](jsonspec.md) UTF-8 encoded json object A                                                                                                         |
+|   `json_ref r`    | key B's value, of type R, from a valid UTF-8 encoded json object A                                                                                                                        |

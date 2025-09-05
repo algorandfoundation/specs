@@ -14,7 +14,7 @@ player appends \\( e \\) to the sequence of entries on its ledger \\( L \\).
 bundle is received.)
 
 > For further details on how entry commitment may be implemented, refer to the
-> Algorand Ledger [non-normative section](./ledger-overview.md).
+> Algorand Ledger [non-normative section](../ledger/ledger-nn.md).
 
 In other words, if observing a cert-vote causes the player to commit
 \\( e \\),
@@ -23,7 +23,7 @@ $$
 N(S, L, \Vote(I, r, p, \Cert, v)) = (S', L || e, \ldots));
 $$
 
-while if observing a bundle causes the player to commit $e$,
+while if observing a bundle causes the player to commit \\( e \\),
 
 $$
 N(S, L, \Bundle(r, p, \Cert, v)) = (S', L || e, \ldots)).

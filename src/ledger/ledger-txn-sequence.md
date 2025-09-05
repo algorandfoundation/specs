@@ -43,7 +43,7 @@ hash function;
 
 - The \\( \TxID \\) is the 32-byte transaction identifier;
 
-- The \\( \Hash(\STIB) \\) is a 32-byte hash of the _signed transaction_ and [ApplyData]()
+- The \\( \Hash(\STIB) \\) is a 32-byte hash of the _signed transaction_ and [ApplyData](./ledger-apply-data.md)
 for the transaction, hashed with the [domain-separation prefix](../crypto/crypto-domain-separators.md)
 `STIB` (_signed transaction in block_).
 
@@ -69,8 +69,8 @@ as encoded in a block.
 - Signed transactions in a block are also augmented with the \\( \ApplyData \\)
 that reflect how that transaction was applied to the [Account State](./ledger-account-state.md).
 
-The _transaction commitment_ (\\( \TxCommit \\)) for a block covers the transaction encodings
-with the changes described above.
+The _transaction commitment_ (\\( \TxCommit \\)) for a block covers the transaction
+encodings with the changes described above.
 
 Individual _transaction signatures_ cover the original encoding of transactions as
 standalone transactions (\\( \Tx \\)).

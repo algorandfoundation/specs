@@ -87,7 +87,7 @@ The _sender_ \\( I \\) identifies the account that authorized the transaction.
 The _fee_ \\( f \\) specifies the processing fee the _sender_ pays to execute the
 transaction, expressed in μALGO.
 
-The _fee_ **MAY** be set to \\( 0 \\) if the transaction is part of a [group](./ledger-txn-group.md).
+The _fee_ **MAY** be set to \\( 0 \\) if the transaction is part of a [group](./ledger-txn-groups.md).
 
 ### First and Last Valid Round
 
@@ -116,7 +116,7 @@ same _lease_ from being confirmed until \\( \LastValidRound \\) is confirmed.
 ### Group
 
 The _group_ \\( \Group \\) (**OPTIONAL**) is a commitment whose meaning is described
-in the [Transaction Groups]() section.
+in the [Transaction Groups](./ledger-txn-groups.md) section.
 
 ### Rekey-to
 
@@ -124,11 +124,11 @@ The _rekey to_ \\( \RekeyTo \\) (**OPTIONAL**) is an address. If nonzero, the tr
 will set the _sender_ account’s _authorization address_ field to this value. If the
 \\( \RekeyTo \\) address matches the _sender_ address, then the _authorization address_
 is instead set to zero, and the original _spending keys_ are re-established.
- 
-> The _rekey_ functionally works as if the _account_ replaces its private [_spending
-> keys_](partkey.md#root-keys), while its address remains the same. The account is
-> now controlled by the _authorization address_ (i.e., transaction signatures are
-> checked against this address).
+
+> The _rekey_ functionally works as if the _account_ replaces its private
+> [_spending keys_](../keys/keys-root.md), while its address remains the same. The
+> account is now controlled by the _authorization address_ (i.e., transaction signatures
+> are checked against this address).
 
 ### Note
 

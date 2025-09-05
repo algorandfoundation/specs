@@ -16,7 +16,7 @@ The first reward system grants ALGO rewards to all the accounts, unless opted ou
 of rewards, through a passive distribution of ALGO from the Rewards Pool, regardless
 of their participation in the consensus. The reward amount is proportional to the
 accounts’ ALGO balance.
- 
+
 Rewards distributed through this system are claimed and added to the account’s balance
 on each account state change (e.g., sending or receiving a transaction).
 

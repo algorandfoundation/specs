@@ -17,7 +17,7 @@ $$
 
 \\( \OTSSBatchID \\) identifies an intermediate level ephemeral sub-key of a batch
 and is signed by the _voting key_’s _root key_. It has the following fields:
- 
+
 - _Sub-Key Public key_ (\\( \SubKeyPK \\)), the public key of this sub-key.
 
 - _Batch_ (\\( \Batch \\)), batch number of this sub-key.
@@ -37,13 +37,13 @@ messages between Algorand players. It contains the following fields:
 - _Signature_ (\\( \Sig \\)), a signature of message under \\( \PK \\)
 
 - _Public Key_ (\\( \PK \\)), the public key of the message signer, is part of a
-leaf-level ephemeral sub-key. 
+leaf-level ephemeral sub-key.
 
-- _Public Key 2_ (\\( \PKTwo \\)), the public key of the current batch. 
+- _Public Key 2_ (\\( \PKTwo \\)), the public key of the current batch.
 
 - _Public Key 1 Signature_ (\\( \PKOneSig \\)), a signature of \\( \OTSSOffsetID \\)
 under \\( \PKTwo \\).
- 
+
 - _Public Key 2 Signature_ (\\( \PKTwoSig \\)), a signature of \\( \OTSSBatchID \\)
 under the _voting keys_.
 

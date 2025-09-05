@@ -26,7 +26,7 @@ then broadcasts \\( (\Vote(I, r, p, 0, v'), \Proposal(v')) \\).
 was observed, while there exists no \\( s_1 > \Cert \\) where \\( \Bundle(r, p-1, s_1, \bot) \\)
 was observed, then the player broadcasts \\( \Vote(I, r, p, 0, v) \\). Moreover, if
 \\( \Proposal(v) \in P \\), the player then broadcasts \\( \Proposal(v) \\).
-   
+
 A player generates a new proposal by executing the entry-generation
 procedure and by setting the fields of the proposal
 accordingly. Specifically, the player creates a proposal payload
@@ -39,12 +39,12 @@ accordingly. Specifically, the player creates a proposal payload
 - \\( y := \Sign(Q, Q, 0, 0, 0, 0, 0, 0) \\),
 
 - and \\( s := \Rand(y, \pk)\\) if \\( p = 0 \\) or \\( s := \Hash(\Seed(L, r-1)) \\)
-otherwise. 
+otherwise.
 
 This consequently defines the matching proposal-value \\( v = (I, p, \Digest(e), \Hash(\Encoding(e))) \\).
 
 > For an in-depth overview of how proposal generation may be implemented, refer
-> to the Algorand Ledger [non-normative section](./ledger-overview.md).
+> to the Algorand Ledger [non-normative section](../ledger/ledger-nn.md).
 
 In other words, if the player generates a new proposal,
 

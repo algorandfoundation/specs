@@ -57,7 +57,7 @@ A few _pseudo-opcodes_ simplify writing code. The following pseudo-opcodes:
 - `method`
 - `int`
 - `byte`
- 
+
 Followed by a constant record the constant to a `intcblock` or `bytecblock` at the
 beginning of code and insert an `intc` or `bytec` reference where the instruction
 appears to load that value.

@@ -31,14 +31,14 @@ much more succinct and therefore quickly gossiped _proposal-value_.
 A proposal-value contains four fields:
 
 1. The original _period_ in which this block was proposed.
- 
+
 1. The original proposer’s address.
- 
+
 1. The block digest, equal to the block header’s hash (including a domain separator).
 This field expands to \\( \Hash(\texttt{"BH"} || \Encode(\bh)) \\), where \\( \texttt{"BH"} \\)
 is the domain separator for a “block header”, and the encoding function is the msgpack
 of the block header (\\( \bh \\)).
- 
+
 1. A hash of the proposal, \\( \Hash(\Proposal) \\). This field expands to
 \\( \Hash(\texttt{"PL"} || \Encode(\Proposal)) \\), where \\( \Proposal \\)
 represents the unauthenticated proposal, \\( \texttt{"PL"} \\) is the domain separator
@@ -54,18 +54,18 @@ On the other hand, an _unauthenticated proposal_ contains a full block and all e
 data for the block validation:
 
 1. The original period in which this block was proposed.
- 
+
 1. The original proposer’s address.
- 
+
 1. A full block (header and payset).
- 
+
 1. A seed proof \\( \pi_{seed} \\).
 
 Note that the _original period_ and proposer’s address are the same as the associated
 _proposal-value_. The seed proof \\( \pi_{seed} \\) is used to verify the seed computation.
 
 {{#include ../_include/styles.md:impl}}
-> Unauthenticated proposal [structure]((https://github.com/algorand/go-algorand/blob/8341e41c3a4b9c7819cb3f89f319626f5d7b68d5/agreement/proposal.go#L55)).
+> Unauthenticated proposal [structure](https://github.com/algorand/go-algorand/blob/8341e41c3a4b9c7819cb3f89f319626f5d7b68d5/agreement/proposal.go#L55).
 
 {{#include ../_include/styles.md:impl}}
 > In the reference implementation, the _unauthenticated proposal_ is sent to
@@ -87,13 +87,13 @@ _proposal-value_. The seed proof \\( \pi_{seed} \\) is used to verify the seed c
 In the following pseudocode the _frozen value_ \\( \mu \\) is either:
 
 - The highest priority observed proposal-value in the current \\((r, p)\\) context
-(i.e., the lowest hashed according to the [priority function](./abft.md#special-values)), or
+(i.e., the lowest hashed according to the [priority function](../abft/abft-player-state.md#special-values)), or
 - \\( \bot \\) if the node has observed no valid proposal vote.
 
 The _staged value_ \\( \sigma \\) is either:
 
 - The sole proposal-value for which a \\( \Bundle_\Soft \\) has been observed in
-the current \\((r, p)\\) context (see [normative section](abft.md#special-values)), or
+the current \\((r, p)\\) context (see [normative section](../abft/abft-player-state.md#special-values)), or
 - \\( \bot \\) if the node has observed no valid \\( \Bundle_\Soft \\).
 
 The _pinned value_ \\( \bar{v} \\) is a proposal-value that was a _staged value_
@@ -159,7 +159,7 @@ _special proposal-value_ for the current round and period (\\( \sigma \\), \\( \
 or the _pinned proposal-value_ (\\( \bar{v} \\)). Any _full proposal_ whose _proposal-value_
 does not match one of these is ignored.
 
-> For formal details on special values, refer to the [normative section](./abft.md#special-values).
+> For formal details on special values, refer to the [normative section](../abft/abft-player-state.md#special-values).
 
 Once the checks have been passed, the node relays and observes the proposal (Lines
 13 and 14), by adding it to the observed proposals set \\( P \\).

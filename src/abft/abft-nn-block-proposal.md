@@ -24,6 +24,7 @@ The following is an abstracted pseudocode of the \\( \BlockProposal \\) algorith
 
 \\( \textbf{Algorithm 3} \text{: Block Proposal} \\)
 
+<!-- markdownlint-disable MD013 -->
 $$
 \begin{aligned}
 &\text{1: } \PSfunction \BlockProposal() \\\\
@@ -50,6 +51,7 @@ $$
 &\text{22: } \PSendfunction
 \end{aligned}
 $$
+<!-- markdownlint-enable MD013 -->
 
 ---
 
@@ -60,7 +62,7 @@ This algorithm is the first procedure executed when entering a new _round_, and 
 _reproposal_ is not possible.
 
 Starting on **Algorithm 3** - Line 2, the node attempts a resynchronization (described
-in the [corresponding section](#resynchronization-attempt)), which has only effect
+in the [corresponding section](./abft-nn-resync-attempt.md)), which has only effect
 on periods \\( p > 0 \\).
 
 {{#include ../_include/styles.md:impl}}
@@ -73,7 +75,7 @@ The algorithm loops over all the _participating accounts_ (\\( a \in A \\)) regi
 on the node. This is a typical pattern in every main algorithm subroutine performing
 committee voting.
 
-For each participating account, the [sortition algorithm](crypto.md#cryptographic-sortition)
+For each participating account, the sortition algorithm
 runs to check if said account is allowed to participate in the proposal.
 
 If an account \\( a \\) is selected by sortition (because \\( \c_j = \Sortition(a_I, r, p, \prop)_j > 0 \\))
@@ -83,7 +85,7 @@ there are two options:
 \\( \Bundle(r, p-1, s', \bot) \\) (meaning there is no valid _pinned value_), then
 the node:
 
-   - Assembles a block (see the [Ledger non-normative section](ledger/ledger-overview.md#block-assembly)
+   - Assembles a block (see the [Ledger non-normative section](../ledger/ledger-nn-txpool-block-assembly.md)
    for details on this process),
    - Computes the proposal value for this block,
    - Broadcast a proposal vote by the account \\( a \\),
@@ -92,7 +94,7 @@ the node:
 1. Otherwise, a value \\( \bar{v} \\) has been pinned, supported by a bundle observed
 in period \\( p - 1 \\), and on **Algorithm 3** - Line 15 the node:
 
-   - Gets the pinned value, 
+   - Gets the pinned value,
    - Assembles a vote \\( \Vote(a_I, r, p, \prop, \bar{v}, \c) \\),
    - Broadcasts this vote,
    - Broadcast the proposal for the pinned vote if it has already been observed.

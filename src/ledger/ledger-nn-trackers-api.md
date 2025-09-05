@@ -21,10 +21,11 @@ argument to:
 
 - `newBlock(rnd, delta)`\
 Notifies the Tracker of a newly added block at round `rnd`. The accompanying `delta`
-parameter contains the state changes introduced by this block (see [block evaluation section](./ledger-nn-block-commitment-and-evaluation.md)).
+parameter contains the state changes introduced by this block (see [block evaluation
+section](./ledger-nn-block-commitment.md)).
 
 - `committedUpTo(rnd)`\
-Informs the Tracker that all blocks up to and including `rnd` are written to persistent 
+Informs the Tracker that all blocks up to and including `rnd` are written to persistent
 storage. This call is crucial for stateful trackers, as it ensures correct state
 recovery and enables responses to queries about older blocks if recent uncommitted
 ones are lost after a crash.

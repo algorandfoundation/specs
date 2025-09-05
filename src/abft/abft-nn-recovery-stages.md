@@ -18,7 +18,7 @@ The protocol employs a series of recovery routines to provide a quick response o
 normal network conditions are reestablished.
 
 In the “best case scenario” the protocol tries to “preserve and carry over” some
-information from the failed consensus attempt to speed up the recovery process. 
+information from the failed consensus attempt to speed up the recovery process.
 
 In the “worst case scenario” the protocol tries to reach an “agreement to disagree”,
 that is a bundle of votes to start the _next period_ without any previous assumptions,

@@ -68,8 +68,8 @@ event (node’s clock reset \\( t = 0 \\)) and calls the \\( \BlockProposal \\) 
 
 The \\( \BlockProposal \\) algorithm runs a loop in which it iterates over all the
 accounts registered _online_ in the node. When at least one account gets selected
-by the \\( \Sortition \\), the node participates in the proposal voting on behalf of
-the selected accounts, and starts the \\( \BlockAssembly \\) procedure.
+by the \\( \Sortition \\), the node participates in the proposal voting on behalf
+of the selected accounts, and starts the \\( \BlockAssembly \\) procedure.
 
 This procedure will traverse the \\( \TP \\), calling the Algorand Virtual Machine,
 and execute one transaction at a time, obtaining a new block \\( e \\).
@@ -97,12 +97,12 @@ Then, the \\( \EventHandler \\) runs the proposal handling subroutine
 This algorithm receives the proposal \\( e^\prime \\) and unpacks its contents,
 including the execution state \\( (r^\prime, p^\prime, s^\prime) \\).
 
-Given the [vanilla context assumptions](#context), both nodes have the same
-context, therefore \\( r = r^\prime \\) and \\( p = p^\prime = 0 \\).
+Given the [vanilla context assumptions](./abft-nn-protocol-run-examples.md#initial-context),
+both nodes have the same context, therefore \\( r = r^\prime \\) and \\( p = p^\prime = 0 \\).
 
 The algorithm checks if the proposal is valid, calling \\( \VerifyProposal(v^\prime) \\)
 on \\( v^\prime = \Proposal_v(e^\prime) \\), and if periods are equal (\\( p = p^\prime \\)).
-Both checks pass given the [vanilla context assumptions](#context).
+Both checks pass given the [vanilla context assumptions](./abft-nn-protocol-run-examples.md#initial-context).
 
 Next, if \\( e^\prime \in P \\), it returns; else the proposal handler re-broadcasts
 \\( e^\prime \\), adds \\( e^\prime \\) to the set \\( P \\) of stored proposals,
@@ -114,7 +114,7 @@ Let us now assume that the node received a broadcasted \\( \vt \\), and that
 \\( 0 < t < \DynamicFilterTimeout(p) \\) still holds.
 
 The \\( \EventHandler \\) for the main algorithm thus calls \\( HandleVote(\vt) \\).
-The algorithm exits on failing checks (all passed with the [vanilla context assumptions](#context)),
+The algorithm exits on failing checks (all passed with the [vanilla context assumptions](./abft-nn-protocol-run-examples.md#initial-context)),
 or if the vote received has already been recorded in the votes set \\( V \\). If
 it is a new vote, the node adds it to the votes set \\( V \\) and broadcasts it
 to other nodes.
@@ -132,9 +132,9 @@ Eventually, the node clock reaches \\( t = \DynamicFilterTimeout(p) \\) (that is
 the node observes a \\( \EventTimeout \\) event for filtering), and the main algorithm
 calls \\( \SoftVote \\).
 
-The soft vote procedure selects the highest priority block proposal and votes on it.
-The node goes through all the votes \\( \vt^\prime \in V \\) in its votes set which
-are in the \\( \Propose \\) step (\\( \vt^\prime_s = 0 \\)).
+The soft vote procedure selects the highest priority block proposal and votes on
+it. The node goes through all the votes \\( \vt^\prime \in V \\) in its votes set
+which are in the \\( \Propose \\) step (\\( \vt^\prime_s = 0 \\)).
 
 Given the \\( \c_j \\) of player \\( I_j \\) for the vote \\( \vt^\prime_{\c_j} = (w_j, y, \VRF.\ProofToHash(y)) \\),
 the procedure runs a \\( \Priority\\) function on the vote, as described in the

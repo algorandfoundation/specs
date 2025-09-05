@@ -74,7 +74,7 @@ We say that this vote is _valid with respect to_ \\( L \\) (or simply _valid_ if
 > routines: one for [regular unauthenticated votes](https://github.com/algorand/go-algorand/blob/b6e5bcadf0ad3861d4805c51cbf3f695c38a93b7/agreement/vote.go#L97),
 > and one for [unauthenticated equivocation votes](https://github.com/algorand/go-algorand/blob/b6e5bcadf0ad3861d4805c51cbf3f695c38a93b7/agreement/vote.go#L193).
 
-> See the non-normative [Algorand ABFT Overview](./abft-overview.md) for further
+> See the non-normative [Algorand ABFT Overview](./abft-nn.md) for further
 > details.
 
 - \\( r \leq |L| + 2 \\)
@@ -108,7 +108,7 @@ Informally, these conditions check the following:
 - The vote is not too far in the future for \\( L \\) to be able to validate.
 
 - "Propose"-step votes can either propose a new _proposal-value_ for this period
-(\\( p_{orig} = p \\)) or claim to "re-propose" a value originally proposed in an 
+(\\( p_{orig} = p \\)) or claim to "re-propose" a value originally proposed in an
 earlier period (\\( p_{orig} < p \\)). But they can't claim to "re-propose" a value
 from a future period. And if the proposal-value is new (\\( p_{orig} = p \\)) then
 the "original proposer" must be the voter.

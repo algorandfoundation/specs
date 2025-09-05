@@ -15,29 +15,33 @@ Let’s define \\( \PtoPNet \\) as an object that models a working Peer-to-Peer 
 
 A minimal \\( \PtoPNet \\) should have:
 
-- A `GenesisID` identifying which network it is a part of (see [here](ledger.md#genesis-identifier)),
+- A `GenesisID` identifying which network it is a part of (see
+[Ledger specifications](../ledger/ledger-genesis.md#genesis-identifier)),
 
-- A `PeerStore` container to keep peer data and expose relevant connection metadata (see [here](network-nn-peer-management.md)),
+- A `PeerStore` container to keep peer data and expose relevant connection metadata
+(see [Peer management section](network-nn-peer-management.md)),
 
 - A `Broadcaster` to send messages to the network,
 
 - A `topicTags` mapping of the form (`protocolTag -> string`), which represents
 which \\( \Tag \\) to use with `GossipSub`, mapped to topic names[^1].
 
-- A set of primitives taken or adapted from the Relay Network \\( \WS \\) and 
-\\( \Peer \\), to support \\( \WS \\) messages: 
+- A set of primitives taken or adapted from the Relay Network \\( \WS \\) and
+\\( \Peer \\), to support \\( \WS \\) messages:
   - The generic `MessageHandler` to route \\( \WS \\) messages to the appropriate
     message handler,
   - \\( \Peer \\) connectivity monitoring utilities,
   - A mapping of `PeerID` to \\( \WS \\) peers, and a mapping of \\( \WS \\) peers
   to `PeerID` (this is to get \\( \mathcal{O}(1) \\) lookup in both ways),
 
-- A flag indicating if the node wants to receive `TX` tagged messages ([transactions](ledger.md#transactions)) or not,
+- A flag indicating if the node wants to receive `TX` tagged messages
+([transactions](../ledger/ledger-transactions.md)) or not,
 
-- A `capabilitiesDiscovery` structure abstracting all functionalities to advertise 
-nd discover peers for specific capabilities (see [section below](#capabilities)).
+- A `capabilitiesDiscovery` structure abstracting all functionalities to advertise
+nd discover peers for specific capabilities (see [section below](#node-capabilities)).
 
-A \\( \PtoP \\) network implements the `GossipNode` interface to manage peer-to-peer communication.
+A \\( \PtoP \\) network implements the `GossipNode` interface to manage peer-to-peer
+communication.
 
 {{#include ../_include/styles.md:impl}}
 > \\( \PtoP \\) network [reference implementation](https://github.com/algorand/go-algorand/blob/8c5fd6301ff57b69c5e2709aa1bf76e48def7566/network/p2pNetwork.go#L52).
