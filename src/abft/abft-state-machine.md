@@ -39,7 +39,7 @@ The state machine _receives_ two types of events as inputs.
    \\( t(\lambda, p) \\).
 
 > For more details on the way these events may be constructed from an implementation
-> point of view, refer to the non-normative [Algorand ABFT Overview](./abft-nn.md).
+> point of view, refer to the non-normative [Algorand ABFT Overview](./non-normative/abft-nn.md).
 
 ## Outputs
 

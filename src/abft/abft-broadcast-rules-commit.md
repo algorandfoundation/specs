@@ -14,7 +14,7 @@ player appends \\( e \\) to the sequence of entries on its ledger \\( L \\).
 bundle is received.)
 
 > For further details on how entry commitment may be implemented, refer to the
-> Algorand Ledger [non-normative section](../ledger/ledger-nn.md).
+> Algorand Ledger [non-normative section](../ledger/non-normative/ledger-nn.md).
 
 In other words, if observing a cert-vote causes the player to commit
 \\( e \\),

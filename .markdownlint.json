@@ -9,5 +9,7 @@
   "MD033": {
     "allowed_elements": ["a", "img"]
   },
-  "MD041": false,
+  "MD041": {
+    "allow_preamble": true
+  }
 }

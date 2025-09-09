@@ -17,16 +17,17 @@ The Algorand Specifications book is built with [mdBook](https://rust-lang.github
 The source code is structured as follows:
 
 ```text
-.github/            -> GitHub actions and CI/CD workflows
-.archive/           -> Legacy specification archive
-src/                -> mdBook source code
-└── _include/       -> Code snippets, templates, TeX-macros, and examples
-└── _excalidraw/    -> Excalidraw diagrams source code
-└── _images/        -> SVG files
-└── Part_A/         -> Part A files
-└── Part_B/         -> Part B files
-└── Part.../        -> ...
-└── SUMMARY.md, ... -> mdBook SUMMARY.md, cover, prefix/suffix-chapters, etc.
+.github/                  -> GitHub actions and CI/CD workflows
+.archive/                 -> Legacy specification archive
+src/                      -> mdBook source code
+└── _include/             -> Code snippets, templates, TeX-macros, and examples
+└── _excalidraw/          -> Excalidraw diagrams source code
+└── _images/              -> SVG files
+└── Part_A/               -> Part A normative files
+    └── non-normative/    -> Part A non-normative files
+└── Part_B/               -> Part B files
+└── Part.../              -> ...
+└── SUMMARY.md, ...       -> mdBook SUMMARY.md, cover, prefix/suffix-chapters, etc.
 ```
 
 ## Markdown

@@ -79,4 +79,4 @@ check \\( Q = q_1 \\).
 > period, not the reproposal period.
 
 > For a detailed overview of the seed computation algorithm and some explanatory
-> examples, refer to the Algorand ABFT [non-normative specification](./abft-nn.md).
+> examples, refer to the Algorand ABFT [non-normative specification](./non-normative/abft-nn.md).
