@@ -30,4 +30,4 @@ that it has observed.
 > Fast recovery [reference implementation](https://github.com/algorand/go-algorand/blob/b6e5bcadf0ad3861d4805c51cbf3f695c38a93b7/agreement/player.go#L150).
 
 > For a detailed pseudocode overview of the fast recovery routine, along with protocol
-> recovery run examples, refer to the Algorand ABFT [non-normative section](./abft-nn.md).
+> recovery run examples, refer to the Algorand ABFT [non-normative section](./non-normative/abft-nn.md).

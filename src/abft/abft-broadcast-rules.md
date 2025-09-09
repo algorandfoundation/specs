@@ -47,5 +47,5 @@ checkpoint their state to crash-safe storage before sending these
 messages.
 
 > For further details on these checkpoint strategies, refer to the
-> [non-normative Ledger specification](../ledger/ledger-nn.md). For an in-depth
+> [non-normative Ledger specification](../ledger/non-normative/ledger-nn.md). For an in-depth
 > review of broadcasting functionalities, refer to the [non-normative Network specification](../network/network-overview.md).

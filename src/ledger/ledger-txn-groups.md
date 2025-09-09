@@ -6,7 +6,7 @@ $$
 \newcommand \LogicSigMaxSize {\LogicSig_{\max}}
 $$
 
-## Transaction Groups
+# Transaction Groups
 
 A transaction **MAY** include a _group_ field (msgpack codec `grp`), a 32-byte hash
 that specifies what _transaction group_ the transaction belongs to.

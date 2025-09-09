@@ -16,7 +16,7 @@ after a proposal is received or a soft-vote, which can be part of a
 bundle, is received.)
 
 > For a detailed overview of how the certification step may be implemented, refer
-> to the Algorand ABFT [non-normative section](./abft-nn.md).
+> to the Algorand ABFT [non-normative section](./non-normative/abft-nn.md).
 
 In other words, if observing a soft-vote causes a proposal-value to
 become committable,
