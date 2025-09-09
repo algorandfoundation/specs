@@ -259,5 +259,6 @@
 
 ---
 
-[Contribution Guidelines](CONTRIBUTIONS.md)
+[Protocol Updates](./PROTOCOL-UPDATES.md)
+[Contribution Guidelines](./CONTRIBUTIONS.md)
 [License](./LICENSE.md)
