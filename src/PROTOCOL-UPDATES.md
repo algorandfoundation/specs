@@ -6,28 +6,38 @@ $$
 
 # Protocol Updates
 
-The Algorand Foundation governs the development of the Algorand protocol. 
+The Algorand Foundation governs the development and maintenance of the Algorand protocol.
 
-Updates to the Algorand protocol are executed through the following process: 
+Protocol updates **SHALL** be executed through the following process:
 
-1. The Algorand Foundation announces and posts an official protocol specification
-in the [public specifications repository](https://github.com/algorandfoundation/specs).
+## 1. Specification Publication
+The Algorand Foundation **SHALL** publish the _official_ protocol specification in
+the [public specifications' repository](https://github.com/algorandfoundation/specs).
 
-1. The URL of the repository `git` release commit is used as a _protocol version
-identifier_. This URL must contain a hash corresponding to the `git` release commit.
+## 2. Protocol Version Identification
+Each _protocol version_ **SHALL** be uniquely identified by the URL of the corresponding
+`git` release commit. This URL MUST include the cryptographic hash of the commit.
 
-1. To become effective, any protocol update must be approved _on-chain_ by a super
-majority of block proposers. Each block proposer "supports" a protocol update proposal
-by including its identifier as the next protocol version.
+## 3. On-Chain Approval
+A protocol update **SHALL** become effective only if it is approved on-chain by a
+supermajority of block proposers. Each block proposer signals support for a protocol
+update by including the _identifier_ of the proposed protocol version as the next
+protocol version.
 
-1. A protocol update is _accepted_ if for an interval of \\( \UpgradeVoteRounds \\)
-rounds, at least \\( \UpgradeThreshold \\) of the finalized blocks support the same
-next protocol version.
+## 4. Acceptance Criteria
+A protocol update **SHALL** be accepted if, for an interval of \\( \UpgradeVoteRounds \\)
+consecutive rounds, at least \\( \UpgradeThreshold \\) of the finalized blocks reference
+the same next protocol version.
 
-1. After the end of the \\( \UpgradeThreshold \\) rounds voting interval, node runners
-are given another \\( \DefaultUpgradeWaitRounds \\) rounds to update their node software.
+## 5. Upgrade Grace Period
+Upon acceptance, node operators **SHALL** be granted an additional \\( \DefaultUpgradeWaitRounds \\)
+rounds to update their node software in accordance with the new specification.
 
-1. The new specification then takes effect and, from that point on, blocks are produced
-based on the updated protocol rules.
+## 6. Activation
+Upon completion of the grace period, the updated protocol specification **SHALL**
+take effect. From that point forward, blocks **MUST** be produced exclusively under
+the updated protocol rules.
 
-> For the values of the upgrade parameters, refer to the [Ledger parameters specification](./ledger/ledger-parameters.md#protocol-upgrade).
+---
+
+> The values of the upgrade parameters are defined in the [Ledger Parameters Specification](./ledger/ledger-parameters.md#protocol-upgrade).
