@@ -27,6 +27,9 @@ jobs:
           key: precommit-${{ runner.os }}-${{ hashFiles('.pre-commit-config.yaml') }}
           restore-keys: precommit-${{ runner.os }}-
 
+      - name: Build Docker image
+        run: docker compose build
+
       - name: Run pre-commit hooks
         uses: pre-commit/action@v3.0.1
         with:
@@ -34,12 +37,6 @@ jobs:
 
       - name: Setup Build Folder
         run: mkdir book
-
-      - name: Build Docker image
-        run: docker compose build
-
-      - name: Run mdBook test
-        run: docker compose run mdbook test
 
       - name: Run mdBook build
         run: docker compose run -u $UID mdbook build
