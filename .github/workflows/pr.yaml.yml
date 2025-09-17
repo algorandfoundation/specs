@@ -29,5 +29,4 @@ jobs:
           accountId: ${{ secrets.CF_ACCOUNT_ID }}
           gitHubToken: ${{ secrets.GITHUB_TOKEN }}
           command: |
-            pages deploy . --project-name algorand-specs
-
+            pages deploy ./book --project-name algorand-specs
