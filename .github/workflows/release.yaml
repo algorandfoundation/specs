@@ -5,7 +5,7 @@ on:
     types: [ created ]
 
 jobs:
-  run-checks:
+  ci:
     if: ${{ github.event.release.prerelease == true }}
     uses: ./.github/workflows/ci.yaml
     with:
@@ -13,7 +13,7 @@ jobs:
 
   release-artifacts:
     if: ${{ github.event.release.prerelease == true }}
-    needs: run-checks
+    needs: ci
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -22,10 +22,6 @@ jobs:
           fetch-depth: 0
 
       - name: Get latest master commit short SHA
-        id: sha
-        run: echo "sha=$(git rev-parse --short origin/master)" >> $GITHUB_OUTPUT
-
-      - name: Get latest master commit (short)
         id: sha
         run: echo "sha=$(git rev-parse --short origin/master)" >> $GITHUB_OUTPUT
 
