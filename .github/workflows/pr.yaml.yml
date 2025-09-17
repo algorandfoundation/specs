@@ -2,9 +2,11 @@ name: PR CI + Deployment preview
 
 on:
   pull_request:
+    types: [ opened, reopened, synchronize, ready_for_review ]
 
 jobs:
   ci:
+    if: (github.event.pull_request == null || !github.event.pull_request.draft)
     uses: ./.github/workflows/ci.yaml
     with:
       artifact-name: mdbook-site-pr-${{ github.event.pull_request.number }}
