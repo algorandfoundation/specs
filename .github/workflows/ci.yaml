@@ -1,0 +1,86 @@
+name: CI (pre-commit hooks, mdBook checks)
+
+on:
+  workflow_call:
+    inputs:
+      artifact-name:
+        description: "Name for the mdBook build artifact"
+        required: true
+        type: string
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Rust
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          override: true
+
+      - name: Cache Cargo registry + binaries
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/bin
+            ~/.cargo/registry
+            ~/.cargo/git
+            target
+          key: cargo-${{ runner.os }}-${{ hashFiles('**/Cargo.lock') }}
+          restore-keys: |
+            cargo-${{ runner.os }}-
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install Markdownlint CLI
+        run: npm install -g markdownlint-cli
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+          cache: "pip"
+
+      - name: Cache pre-commit envs
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pre-commit
+          key: precommit-${{ runner.os }}-${{ hashFiles('.pre-commit-config.yaml') }}
+          restore-keys: |
+            precommit-${{ runner.os }}-
+
+      - name: Install pre-commit
+        run: pip install pre-commit
+
+      - name: Run pre-commit (use .pre-commit-config.yaml)
+        uses: pre-commit/action@v3.0.1
+        with:
+          extra_args: "--all-files --verbose"
+
+      - name: Setup Build Folder
+        run: mkdir book
+
+      - name: Build Docker image
+        run: docker compose build
+
+      - name: Run mdBook test
+        run: docker compose run mdbook test
+
+      - name: Run mdBook build
+        run: docker compose run -u $UID mdbook build
+
+      - name: Upload built site
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ inputs.artifact-name }}
+          path: book/
+          retention-days: 1
