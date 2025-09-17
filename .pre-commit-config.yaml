@@ -19,7 +19,7 @@ repos:
         description: "Checks the style of Markdown/Commonmark files."
         entry: markdownlint
         language: node
-        minimum_pre_commit_version: 0.15.0
+        minimum_pre_commit_version: 3.2.0
         types: [ markdown ]
         additional_dependencies: [ ]
         files: '^(src/(?!_)[^/]+/.*\.md|README\.md)$'
