@@ -1,0 +1,46 @@
+name: CI (pre-commit hooks, mdBook checks)
+
+on:
+  workflow_call:
+    inputs:
+      artifact-name:
+        description: "Name for the mdBook build artifact"
+        required: true
+        type: string
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install pre-commit
+        run: pip install --upgrade pip pre-commit
+
+      - name: Cache pre-commit hooks
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pre-commit
+          key: precommit-${{ runner.os }}-${{ hashFiles('.pre-commit-config.yaml') }}
+          restore-keys: precommit-${{ runner.os }}-
+
+      - name: Build Docker image
+        run: docker compose build
+
+      - name: Run pre-commit hooks
+        uses: pre-commit/action@v3.0.1
+        with:
+          extra_args: "--all-files --verbose"
+
+      - name: Run mdBook build
+        run: docker compose run mdbook build
+
+      - name: Upload built site
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ inputs.artifact-name }}
+          path: book/
+          retention-days: 1

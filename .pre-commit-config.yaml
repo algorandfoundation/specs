@@ -3,20 +3,11 @@ repos:
     hooks:
       - id: mdbook-test
         name: mdbook test
-        description: "Checks mdBook pass tests."
-        entry: mdbook test
-        language: rust
+        description: "Runs mdBook tests inside the project's Docker container."
+        entry: docker compose run -T mdbook test
+        language: system
         minimum_pre_commit_version: 3.2.0
         types: [ markdown ]
-        additional_dependencies: [ ]
-        pass_filenames: false
-
-      - id: mdbook-build
-        name: mdbook build
-        description: "Builds mdBook."
-        entry: mdbook build
-        language: rust
-        minimum_pre_commit_version: 3.2.0
         additional_dependencies: [ ]
         pass_filenames: false
 
@@ -28,7 +19,7 @@ repos:
         description: "Checks the style of Markdown/Commonmark files."
         entry: markdownlint
         language: node
-        minimum_pre_commit_version: 0.15.0
+        minimum_pre_commit_version: 3.2.0
         types: [ markdown ]
         additional_dependencies: [ ]
         files: '^(src/(?!_)[^/]+/.*\.md|README\.md)$'
@@ -47,15 +38,14 @@ repos:
         files: '^(src/.*\.md|README\.md)'
 
   - repo: https://github.com/lycheeverse/lychee
-    rev: lychee-v0.19.1
+    rev: lychee-v0.20.1
     hooks:
-    - id: lychee-docker
+    - id: lychee
       name: lychee
       description: "Run 'lychee' docker image for fast, async, stream-based link checking"
-      entry: lycheeverse/lychee:0.14
+      entry: lycheeverse/lychee:latest
       language: docker_image
       args: ["--no-progress"]
-      types: [text]
-      pass_filenames: true
+      types: [ markdown ]
       require_serial: true
       files: '^(src/.*\.md|README\.md)'
