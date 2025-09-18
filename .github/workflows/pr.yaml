@@ -9,7 +9,7 @@ jobs:
     if: (github.event.pull_request == null || !github.event.pull_request.draft)
     uses: ./.github/workflows/ci.yaml
     with:
-      artifact-name: mdbook-site-pr-${{ github.event.pull_request.number }}
+      artifact-name: specs-site-pr-${{ github.event.pull_request.number }}
 
   deploy-preview:
     needs: ci
@@ -19,7 +19,7 @@ jobs:
       - name: Download built site
         uses: actions/download-artifact@v5
         with:
-          name: mdbook-site-pr-${{ github.event.pull_request.number }}
+          name: specs-site-pr-${{ github.event.pull_request.number }}
           path: book/
 
       - name: Publish to Cloudflare Pages
