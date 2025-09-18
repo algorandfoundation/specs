@@ -9,7 +9,7 @@ jobs:
     if: ${{ github.event.release.prerelease == true }}
     uses: ./.github/workflows/ci.yaml
     with:
-      artifact-name: mdbook-site-release
+      artifact-name: specs-site-release
 
   release-artifacts:
     if: ${{ github.event.release.prerelease == true }}
@@ -52,7 +52,7 @@ jobs:
       - name: Download built site
         uses: actions/download-artifact@v5
         with:
-          name: mdbook-site-release
+          name: specs-site-release
           path: book/
 
       - name: Package HTML artifacts as tar.gz
