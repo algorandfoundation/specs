@@ -1,12 +1,12 @@
-name: Release
+name: Release (Draft Updater)
 
 on:
   release:
-    types: [ created ]
+    types: [ created, edited ]
 
 jobs:
-  release-artifacts:
-    if: ${{ github.event.release.prerelease == true }}
+  update-draft:
+    if: ${{ github.event.release.draft == true }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -18,14 +18,7 @@ jobs:
         id: sha
         run: echo "sha=$(git rev-parse --short origin/develop)" >> $GITHUB_OUTPUT  # TODO: change to master
 
-      - name: Delete old release tag
-        if: ${{ github.event.release.tag_name != '' }}
-        run: |
-          OLD_TAG=${{ github.event.release.tag_name }}
-          echo "Deleting old tag: $OLD_TAG"
-          git push origin --delete refs/tags/$OLD_TAG || echo "Old tag not found, skipping"
-
-      - name: Update release tag to short SHA
+      - name: Update draft release to short SHA tag
         uses: actions/github-script@v7
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
@@ -37,10 +30,11 @@ jobs:
               owner: context.repo.owner,
               repo: context.repo.repo,
               release_id: releaseId,
-              tag_name: sha
+              tag_name: sha,
+              draft: true
             });
 
-            core.info("Release tag updated to short SHA: " + sha);
+            core.info("Draft release tag updated to short SHA: " + sha);
 
       - name: Build Docker image
         run: docker compose build
@@ -48,7 +42,7 @@ jobs:
       - name: Run mdBook build
         run: docker compose run mdbook build
 
-      - name: Package HTML artifacts as tar.gz
+      - name: Package HTML artifacts
         run: |
           mkdir -p release-artifacts
           tar -czf release-artifacts/specs-html.tar.gz -C book .
