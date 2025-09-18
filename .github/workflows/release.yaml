@@ -1,69 +1,54 @@
-name: Release
+name: Create Release Draft
 
 on:
-  release:
-    types: [ created ]
+  workflow_dispatch:
+
+permissions:
+  contents: write
 
 jobs:
-  ci:
-    if: ${{ github.event.release.prerelease == true }}
-    uses: ./.github/workflows/ci.yaml
-    with:
-      artifact-name: specs-site-release
-
-  release-artifacts:
-    if: ${{ github.event.release.prerelease == true }}
-    needs: ci
+  release-drafter:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v5
+      - name: Check user permissions
+        uses: actions/github-script@v7
         with:
-          fetch-depth: 0
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const requiredPermissions = ['admin', 'maintain'];
+            const actor = context.actor;
+            const { data: { permission } } = await github.rest.repos.getCollaboratorPermissionLevel({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              username: actor
+            });
+            if (!requiredPermissions.includes(permission)) {
+              core.setFailed(`User @${actor} has '${permission}' permission and does not meet the required level (admin or maintain).`);
+            }
+            core.info(`User @${actor} has '${permission}' permission. Proceeding with release.`);
+
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Build Docker image
+        run: docker compose build
+
+      - name: Run mdBook build
+        run: docker compose run mdbook build
 
       - name: Get latest master commit short SHA
         id: sha
         run: echo "sha=$(git rev-parse --short origin/develop)" >> $GITHUB_OUTPUT  # TODO: change to master
 
-      - name: Delete old release tag
-        if: ${{ github.event.release.tag_name != '' }}
-        run: |
-          OLD_TAG=${{ github.event.release.tag_name }}
-          echo "Deleting old tag: $OLD_TAG"
-          git push origin --delete refs/tags/$OLD_TAG || echo "Old tag not found, skipping"
-
-      - name: Update release tag to short SHA
-        uses: actions/github-script@v7
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          script: |
-            const releaseId = context.payload.release.id;
-            const sha = "${{ steps.sha.outputs.sha }}";
-
-            await github.rest.repos.updateRelease({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              release_id: releaseId,
-              tag_name: sha
-            });
-
-            core.info("Release tag updated to short SHA: " + sha);
-
-      - name: Download built site
-        uses: actions/download-artifact@v5
-        with:
-          name: specs-site-release
-          path: book/
-
-      - name: Package HTML artifacts as tar.gz
+      - name: Package HTML artifacts
         run: |
           mkdir -p release-artifacts
-          tar -czf release-artifacts/mdbook-html.tar.gz -C book .
+          tar -czf release-artifacts/specs-html-${{ steps.sha.outputs.sha }}.tar.gz -C book .
 
-      - name: Upload release artifacts
+      - name: Create Draft Release and Upload Artifacts
         uses: softprops/action-gh-release@v2
         with:
-          files: |
-            release-artifacts/mdbook-html.tar.gz
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          tag_name: ${{ steps.sha.outputs.sha }}
+          name: ${{ steps.sha.outputs.sha }}
+          draft: true
+          files: release-artifacts/specs-html-${{ steps.sha.outputs.sha }}.tar.gz
