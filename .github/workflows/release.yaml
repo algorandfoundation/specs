@@ -1,4 +1,4 @@
-name: Release Draft
+name: Create Release Draft
 
 on:
   workflow_dispatch:
@@ -36,14 +36,14 @@ jobs:
       - name: Run mdBook build
         run: docker compose run mdbook build
 
-      - name: Package HTML artifacts
-        run: |
-          mkdir -p release-artifacts
-          tar -czf release-artifacts/specs-html.tar.gz -C book .
-
       - name: Get latest master commit short SHA
         id: sha
         run: echo "sha=$(git rev-parse --short origin/develop)" >> $GITHUB_OUTPUT  # TODO: change to master
+
+      - name: Package HTML artifacts
+        run: |
+          mkdir -p release-artifacts
+          tar -czf release-artifacts/specs-html-${{ steps.sha.outputs.sha }}.tar.gz -C book .
 
       - name: Create Draft Release and Upload Artifacts
         uses: softprops/action-gh-release@v2
@@ -51,4 +51,4 @@ jobs:
           tag_name: ${{ steps.sha.outputs.sha }}
           name: ${{ steps.sha.outputs.sha }}
           draft: true
-          files: release-artifacts/specs-html.tar.gz
+          files: release-artifacts/specs-html-${{ steps.sha.outputs.sha }}.tar.gz
