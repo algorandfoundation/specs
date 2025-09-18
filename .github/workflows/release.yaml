@@ -6,7 +6,7 @@ on:
 
 jobs:
   update-draft:
-    if: ${{ github.event.release.draft == true }}
+    if: ${{ github.event.release.prerelease == true }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
