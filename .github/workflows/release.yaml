@@ -17,7 +17,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           fetch-depth: 0
 
@@ -50,7 +50,7 @@ jobs:
             core.info("Release tag updated to short SHA: " + sha);
 
       - name: Download built site
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           name: mdbook-site-release
           path: book/
@@ -61,7 +61,7 @@ jobs:
           tar -czf release-artifacts/mdbook-html.tar.gz -C book .
 
       - name: Upload release artifacts
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         with:
           files: |
             release-artifacts/mdbook-html.tar.gz
