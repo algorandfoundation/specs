@@ -5,15 +5,8 @@ on:
     types: [ created ]
 
 jobs:
-  ci:
-    if: ${{ github.event.release.prerelease == true }}
-    uses: ./.github/workflows/ci.yaml
-    with:
-      artifact-name: specs-site-release
-
   release-artifacts:
     if: ${{ github.event.release.prerelease == true }}
-    needs: ci
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -49,21 +42,21 @@ jobs:
 
             core.info("Release tag updated to short SHA: " + sha);
 
-      - name: Download built site
-        uses: actions/download-artifact@v5
-        with:
-          name: specs-site-release
-          path: book/
+      - name: Build Docker image
+        run: docker compose build
+
+      - name: Run mdBook build
+        run: docker compose run mdbook build
 
       - name: Package HTML artifacts as tar.gz
         run: |
           mkdir -p release-artifacts
-          tar -czf release-artifacts/mdbook-html.tar.gz -C book .
+          tar -czf release-artifacts/specs-html.tar.gz -C book .
 
       - name: Upload release artifacts
         uses: softprops/action-gh-release@v2
         with:
           files: |
-            release-artifacts/mdbook-html.tar.gz
+            release-artifacts/specs-html.tar.gz
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
