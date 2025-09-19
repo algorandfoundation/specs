@@ -21,9 +21,9 @@ repos:
         entry: trailing-whitespace-fixer
         language: python
         minimum_pre_commit_version: 3.2.0
-        types: [ markdown ]
+        types: [ text ]
         additional_dependencies: [ ]
-        files: '^(src/.*\.md|README\.md)'
+        exclude: '(^|/)(dev|overview)/'
 
   - repo: https://github.com/lycheeverse/lychee
     rev: lychee-v0.20.1
