@@ -18,8 +18,8 @@ mathjax-support = true
 additional-js = ["mermaid.min.js", "mermaid-init.js"]
 git-repository-url = "https://github.com/algorandfoundation/specs"
 git-repository-icon = "fa-github"
-edit-url-template = "https://github.com/algorandfoundation/specs/edit/develop/{path}"
-site-url = "https://algorand-specs.pages.dev/"
+edit-url-template = "https://github.com/algorandfoundation/specs/edit/master/{path}"
+site-url = "https://specs.algorand.co/"
 
 [output.html.fold]
 enable = true
