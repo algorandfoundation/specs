@@ -70,5 +70,5 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: ${{ inputs.artifact-name }}
-          path: book/
+          path: book/html/*
           retention-days: 1
