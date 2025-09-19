@@ -3,8 +3,9 @@ repos:
     hooks:
       - id: mdbook-test
         name: mdbook test
-        description: "Runs mdBook tests inside the project's Docker container."
-        entry: docker compose run -T mdbook test
+        description: "Runs mdBook tests inside the latest GHCR Docker image."
+        entry: >
+          sh -c "docker run --rm -v $(pwd):/workspace -w /workspace ghcr.io/algorandfoundation/specs/mdbook:latest test"
         language: system
         minimum_pre_commit_version: 3.2.0
         types: [ markdown ]
