@@ -25,21 +25,16 @@ site-url = "https://algorand-specs.pages.dev/"
 enable = true
 level = 3  # Navigation sidebar unfolded up to the 4th 0-based level. Tune it according to the max SUMMARY.md level depth.
 
-# TODO: Renable mdbook-pandoc once the CI/CD is properly updated
-#[output.pandoc]
-#optional = true
-#
-#[output.pandoc.profile.pdf]
-#output-file = "book.pdf"
-#pdf-engine = "lualatex"
-#
-#[output.pandoc.profile.pdf.variables]
-#mainfont = "Noto Serif"
-#sansfont = "Noto Sans"
-#monofont = "Noto Sans Mono"
-#mainfontfallback = [
-#  "NotoColorEmoji:mode=harf",
-#]
-#monofontfallback = [
-#  "NotoColorEmoji:mode=harf",
-#]
+[output.pandoc]
+optional = true
+
+[output.pandoc.profile.pdf]
+output-file = "algorand-specs.pdf"
+pdf-engine = "lualatex"
+
+[output.pandoc.profile.pdf.variables]
+mainfont = "Noto Serif"
+sansfont = "Noto Sans"
+monofont = "Noto Sans Mono"
+mainfontfallback = ["NotoColorEmoji:mode=harf"]
+monofontfallback = ["NotoColorEmoji:mode=harf"]
