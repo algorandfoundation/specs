@@ -358,7 +358,7 @@ The notation J,K indicates that two uint64 values J and K are interpreted as a u
 
 ### txn
 
-Fields (see [transaction reference](https://developer.algorand.org/docs/reference/transactions/))
+Fields (see [transaction reference](https://dev.algorand.co/concepts/transactions/reference/))
 
 | Index | Name | Type | In | Notes |
 | - | ------ | -- | - | --------- |
@@ -495,7 +495,7 @@ for notes on transaction fields available, see `txn`. If this transaction is _i_
 
 ### txna
 
-Fields (see [transaction reference](https://developer.algorand.org/docs/reference/transactions/))
+Fields (see [transaction reference](https://dev.algorand.co/concepts/transactions/reference/))
 
 | Index | Name | Type | In | Notes |
 | - | ------ | -- | - | --------- |
