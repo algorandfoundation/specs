@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1
 
-FROM peaceiris/mdbook:latest-rust
+FROM rust:1.90-slim-bookworm
 
 # Set the working directory
 WORKDIR /book
@@ -9,6 +9,7 @@ WORKDIR /book
 COPY src src
 COPY book.toml .
 
+RUN cargo install mdbook mdbook-mermaid
 RUN mdbook-mermaid install
 
 HEALTHCHECK CMD curl --fail http://localhost:3000 || exit 1
