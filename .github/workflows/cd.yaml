@@ -23,12 +23,12 @@ jobs:
         uses: actions/download-artifact@v5
         with:
           name: specs-site-master
-          path: book/
+          path: book/html
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v4
         with:
-          path: book/
+          path: book/html
 
       - name: Deploy to GitHub Pages
         uses: actions/deploy-pages@v4
