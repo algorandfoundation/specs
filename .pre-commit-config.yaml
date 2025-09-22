@@ -25,16 +25,15 @@ repos:
         additional_dependencies: [ ]
         exclude: '(^|/)(dev|overview)/'
 
-# TODO: Temporary disable
-#  - repo: https://github.com/lycheeverse/lychee
-#    rev: lychee-v0.20.1
-#    hooks:
-#    - id: lychee
-#      name: lychee
-#      description: "Run 'lychee' docker image for fast, async, stream-based link checking"
-#      entry: lycheeverse/lychee:latest
-#      language: docker_image
-#      args: ["--no-progress"]
-#      types: [ markdown ]
-#      require_serial: true
-#      files: '^(src/.*\.md|README\.md)'
+  - repo: https://github.com/lycheeverse/lychee
+    rev: lychee-v0.20.1
+    hooks:
+    - id: lychee
+      name: lychee
+      description: "Run 'lychee' docker image for fast, async, stream-based link checking"
+      entry: lycheeverse/lychee:latest
+      language: docker_image
+      args: ["--no-progress"]
+      types: [ markdown ]
+      require_serial: true
+      files: '^(src/.*\.md|README\.md)'
