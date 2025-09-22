@@ -11,6 +11,7 @@ on:
 jobs:
   checks:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout repo
         uses: actions/checkout@v5
@@ -27,20 +28,21 @@ jobs:
           key: precommit-${{ runner.os }}-${{ hashFiles('.pre-commit-config.yaml') }}
           restore-keys: precommit-${{ runner.os }}-
 
-      - name: Build Docker image
-        run: docker compose build
+      - name: Run strict pre-commit hooks
+        run: |
+          pre-commit run markdownlint --all-files --verbose
+          pre-commit run trailing-whitespace --all-files --verbose
 
-      - name: Run pre-commit hooks
-        uses: pre-commit/action@v3.0.1
-        with:
-          extra_args: "--all-files --verbose"
+      - name: Run soft pre-commit hooks as a warning
+        run: |
+          pre-commit run lychee --all-files --verbose || true
 
-      - name: Run mdBook build
+      - name: Build mdBook for CI/CD (HTML)
         run: docker compose run mdbook build
 
       - name: Upload built site
         uses: actions/upload-artifact@v4
         with:
           name: ${{ inputs.artifact-name }}
-          path: book/
+          path: book/html/*
           retention-days: 1

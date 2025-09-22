@@ -20,6 +20,6 @@ dev/pdf
 .*.lb
 
 # mdBook
-book
+book/
 mermaid.min.js
 mermaid-init.js

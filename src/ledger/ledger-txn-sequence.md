@@ -5,8 +5,8 @@ $$
 \newcommand \TxCommit {\Tx\mathrm{Commit}}
 \newcommand \TxTail {\Tx\mathrm{Tail}}
 \newcommand \Hash {\mathrm{Hash}}
-\newcommand \SHA256 {\mathrm{SHA256}}
-\newcommand \SHA512 {\mathrm{SHA512}}
+\newcommand \SHATFS {\mathrm{SHA256}}
+\newcommand \SHAFOT {\mathrm{SHA512}}
 \newcommand \Sig {\mathrm{Sig}}
 \newcommand \STIB {\mathrm{STIB}}
 \newcommand \Genesis {\mathrm{Genesis}}
@@ -85,30 +85,30 @@ To construct these commitments, we use a [Vector Commitment](../crypto/crypto-ve
 The leaves in the Vector Commitment tree are hashed respectively as:
 
 $$
-\SHA256(\texttt{TL}, \SHA256(\TxID), \SHA256(\STIB))
+\SHATFS(\texttt{TL}, \SHATFS(\TxID), \SHATFS(\STIB))
 $$
 
 and
 
 $$
-\SHA512(\texttt{TL}, \SHA512(\TxID), \SHA512(\STIB))
+\SHAFOT(\texttt{TL}, \SHAFOT(\TxID), \SHAFOT(\STIB))
 $$
 
 Where:
 
-- \\( \SHA256 \\) is the cryptographic [SHA-256](../crypto/crypto-sha256.md) hash
+- \\( \SHATFS \\) is the cryptographic [SHA-256](../crypto/crypto-sha256.md) hash
 function;
 
-- \\( \SHA256(\TxID) = \SHA256(\texttt{TX} || \Tx) \\)
+- \\( \SHATFS(\TxID) = \SHATFS(\texttt{TX} || \Tx) \\)
 
-- \\( \SHA256(\STIB) = \SHA256(\texttt{STIB} || \Sig(\Tx) || \ApplyData) \\)
+- \\( \SHATFS(\STIB) = \SHATFS(\texttt{STIB} || \Sig(\Tx) || \ApplyData) \\)
 
-- \\( \SHA512 \\) is the cryptographic [SHA-512](../crypto/crypto-sha512.md) hash
+- \\( \SHAFOT \\) is the cryptographic [SHA-512](../crypto/crypto-sha512.md) hash
 function;
 
-- \\( \SHA512(\TxID) = \SHA512(\texttt{TX} || \Tx) \\)
+- \\( \SHAFOT(\TxID) = \SHAFOT(\texttt{TX} || \Tx) \\)
 
-- \\( \SHA512(\STIB) = \SHA512(\texttt{STIB} || \Sig(\Tx) || \ApplyData) \\)
+- \\( \SHAFOT(\STIB) = \SHAFOT(\texttt{STIB} || \Sig(\Tx) || \ApplyData) \\)
 
 These Vector Commitments use [SHA-256](../crypto/crypto-sha256.md) and [SHA-512](../crypto/crypto-sha512.md)
 for internal nodes as well.

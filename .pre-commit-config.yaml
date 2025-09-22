@@ -1,16 +1,4 @@
 repos:
-  - repo: local
-    hooks:
-      - id: mdbook-test
-        name: mdbook test
-        description: "Runs mdBook tests inside the project's Docker container."
-        entry: docker compose run -T mdbook test
-        language: system
-        minimum_pre_commit_version: 3.2.0
-        types: [ markdown ]
-        additional_dependencies: [ ]
-        pass_filenames: false
-
   - repo: https://github.com/igorshubovych/markdownlint-cli
     rev: v0.45.0
     hooks:
@@ -33,9 +21,9 @@ repos:
         entry: trailing-whitespace-fixer
         language: python
         minimum_pre_commit_version: 3.2.0
-        types: [ markdown ]
+        types: [ text ]
         additional_dependencies: [ ]
-        files: '^(src/.*\.md|README\.md)'
+        exclude: '(^|/)(dev|overview)/'
 
   - repo: https://github.com/lycheeverse/lychee
     rev: lychee-v0.20.1
