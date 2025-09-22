@@ -21,6 +21,8 @@ services:
       - 3000:3000
       - 3001:3001
     command: ["serve", "--hostname", "0.0.0.0"]
+    profiles:
+      - release
     volumes:
       - ./src:/book/src
       - ./book:/book/book
