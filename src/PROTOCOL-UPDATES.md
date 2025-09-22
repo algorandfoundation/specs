@@ -18,7 +18,7 @@ the [public specifications' repository](https://github.com/algorandfoundation/sp
 ## 2. Protocol Version Identification
 
 Each _protocol version_ **SHALL** be uniquely identified by the URL of the corresponding
-`git` release commit. This URL MUST include the cryptographic hash of the commit.
+`git` release commit. This URL **MUST** include the cryptographic hash of the commit.
 
 ## 3. On-Chain Approval
 
