@@ -48,4 +48,4 @@ jobs:
           tag_name: ${{ steps.sha.outputs.sha }}
           name: ${{ steps.sha.outputs.sha }}
           draft: true
-          files: release-artifacts/specs-pdf-${{ steps.sha.outputs.sha }}.pdf
+          files: release-artifacts/algorand-specs-${{ steps.sha.outputs.sha }}.pdf
