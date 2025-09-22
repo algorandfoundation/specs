@@ -40,8 +40,7 @@ jobs:
       - name: Prepare artifacts
         run: |
           mkdir -p release-artifacts
-          tar -czf release-artifacts/specs-html-${{ steps.sha.outputs.sha }}.tar.gz -C book/html .
-          cp book/pandoc/pdf/algorand-specs.pdf release-artifacts/specs-pdf-${{ steps.sha.outputs.sha }}.pdf
+          cp book/pandoc/pdf/algorand-specs.pdf release-artifacts/algorand-specs-${{ steps.sha.outputs.sha }}.pdf
 
       - name: Create Draft Release and Upload Artifacts
         uses: softprops/action-gh-release@v2
@@ -49,6 +48,4 @@ jobs:
           tag_name: ${{ steps.sha.outputs.sha }}
           name: ${{ steps.sha.outputs.sha }}
           draft: true
-          files: |
-            release-artifacts/specs-html-${{ steps.sha.outputs.sha }}.tar.gz
-            release-artifacts/specs-pdf-${{ steps.sha.outputs.sha }}.pdf
+          files: release-artifacts/specs-pdf-${{ steps.sha.outputs.sha }}.pdf
