@@ -9,7 +9,8 @@ services:
       - 3001:3001
     command: ["serve", "--hostname", "0.0.0.0"]
     volumes:
-      - ./:/book
+      - ./book:/book/book
+      - ./theme:/book/theme
 
   mdbook-release:
     container_name: mdbook-release
