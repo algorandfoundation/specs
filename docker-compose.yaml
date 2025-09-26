@@ -9,7 +9,6 @@ services:
       - 3001:3001
     command: ["serve", "--hostname", "0.0.0.0"]
     volumes:
-      - ./src:/book/src
       - ./:/book
 
   mdbook-release:
@@ -24,5 +23,4 @@ services:
     profiles:
       - release
     volumes:
-      - ./src:/book/src
       - ./:/book
