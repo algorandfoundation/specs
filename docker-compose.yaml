@@ -24,4 +24,5 @@ services:
     profiles:
       - release
     volumes:
-      - ./:/book
+      - ./book:/book/book
+      - ./theme:/book/theme
