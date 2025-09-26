@@ -10,7 +10,7 @@ services:
     command: ["serve", "--hostname", "0.0.0.0"]
     volumes:
       - ./src:/book/src
-      - ./book:/book
+      - ./:/book
 
   mdbook-release:
     container_name: mdbook-release
@@ -25,4 +25,4 @@ services:
       - release
     volumes:
       - ./src:/book/src
-      - ./book:/book
+      - ./:/book
