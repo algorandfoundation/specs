@@ -11,7 +11,7 @@ text-direction = "ltr"
 command = "mdbook-mermaid"
 
 [output.html]
-default-theme = "light"
+default-theme = "dark"
 preferred-dark-theme = "dark"
 smart-punctuation = true
 mathjax-support = true
