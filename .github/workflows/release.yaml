@@ -1,0 +1,51 @@
+name: Create Release Draft
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  release-drafter:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check user permissions
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const requiredPermissions = ['admin', 'maintain'];
+            const actor = context.actor;
+            const { data: { permission } } = await github.rest.repos.getCollaboratorPermissionLevel({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              username: actor
+            });
+            if (!requiredPermissions.includes(permission)) {
+              core.setFailed(`User @${actor} has '${permission}' permission and does not meet the required level (admin or maintain).`);
+            }
+            core.info(`User @${actor} has '${permission}' permission. Proceeding with release.`);
+
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Build mdBook for release (HTML + PDF)
+        run: docker compose run mdbook-release build
+
+      - name: Get latest master commit short SHA
+        id: sha
+        run: echo "sha=$(git rev-parse --short origin/develop)" >> $GITHUB_OUTPUT  # TODO: change to master
+
+      - name: Prepare artifacts
+        run: |
+          mkdir -p release-artifacts
+          cp book/pandoc/pdf/algorand-specs.pdf release-artifacts/algorand-specs-${{ steps.sha.outputs.sha }}.pdf
+
+      - name: Create Draft Release and Upload Artifacts
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.sha.outputs.sha }}
+          name: ${{ steps.sha.outputs.sha }}
+          draft: true
+          files: release-artifacts/algorand-specs-${{ steps.sha.outputs.sha }}.pdf

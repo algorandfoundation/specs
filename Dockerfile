@@ -1,22 +1,38 @@
 # syntax=docker/dockerfile:1
 
-FROM peaceiris/mdbook:latest-rust
+FROM rust:1.90-slim-bookworm AS base
 
-# Create a non-root user
-RUN adduser --disabled-password --gecos "" mdbookuser
-
-# Set the working directory
 WORKDIR /book
 
-# Copy all necessary files
-COPY src src
 COPY book.toml .
 
-# Change ownership of the working directory to the non-root user
-RUN chown -R mdbookuser:mdbookuser /book
+RUN cargo install mdbook mdbook-mermaid \
+    && mdbook-mermaid install
 
-USER mdbookuser
-
-RUN mdbook-mermaid install
+# CI/CD image
+FROM base AS ci-cd
 
 HEALTHCHECK CMD curl --fail http://localhost:3000 || exit 1
+ENTRYPOINT ["mdbook"]
+
+# Release image ----
+FROM base AS release
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    pandoc \
+    texlive \
+    texlive-luatex \
+    texlive-xetex \
+    texlive-fonts-recommended \
+    texlive-fonts-extra \
+    fonts-noto \
+    fonts-noto-color-emoji \
+    librsvg2-bin \
+    && rm -rf /var/lib/apt/lists/* \
+    && fc-cache -fv
+
+RUN cargo install mdbook-pandoc
+
+HEALTHCHECK CMD curl --fail http://localhost:3000 || exit 1
+
+ENTRYPOINT ["mdbook"]

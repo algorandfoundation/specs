@@ -5,11 +5,15 @@
 dev/
 overview/
 
+# SPECS
+src/
+
 # DOCKER
-Dockerfile
 docker-compose.yaml
+Dockerfile
 
 # README
+LICENSE
 README.md
 
 # MDBOOK

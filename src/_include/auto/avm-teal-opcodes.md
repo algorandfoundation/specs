@@ -1,3 +1,5 @@
+<!-- markdownlint-disable MD013 MD041-->
+
 ## err
 
 - Bytecode: 0x00
@@ -36,14 +38,14 @@ The 32 byte public key is the last element on the stack, preceded by the 64 byte
 
 ## ecdsa_verify
 
-- Syntax: `ecdsa_verify V` where V: [ECDSA](#field-group-ecdsa)
+- Syntax: `ecdsa_verify V` where V: [ECDSA](#field-ecdsa)
 - Bytecode: 0x05 {uint8}
 - Stack: ..., A: [32]byte, B: [32]byte, C: [32]byte, D: [32]byte, E: [32]byte &rarr; ..., bool
 - for (data A, signature B, C and pubkey D, E) verify the signature of the data against the pubkey => {0 or 1}
 - **Cost**: Secp256k1=1700; Secp256r1=2500
 - Availability: v5
 
-### ECDSA
+### Field ECDSA
 
 Curves
 
@@ -56,7 +58,7 @@ The 32 byte Y-component of a public key is the last element on the stack, preced
 
 ## ecdsa_pk_decompress
 
-- Syntax: `ecdsa_pk_decompress V` where V: [ECDSA](#field-group-ecdsa)
+- Syntax: `ecdsa_pk_decompress V` where V: [ECDSA](#field-ecdsa)
 - Bytecode: 0x06 {uint8}
 - Stack: ..., A: [33]byte &rarr; ..., X: [32]byte, Y: [32]byte
 - decompress pubkey A into components X, Y
@@ -67,7 +69,7 @@ The 33 byte public key in a compressed form to be decompressed into X and Y (top
 
 ## ecdsa_pk_recover
 
-- Syntax: `ecdsa_pk_recover V` where V: [ECDSA](#field-group-ecdsa)
+- Syntax: `ecdsa_pk_recover V` where V: [ECDSA](#field-ecdsa)
 - Bytecode: 0x07 {uint8}
 - Stack: ..., A: [32]byte, B: uint64, C: [32]byte, D: [32]byte &rarr; ..., X: [32]byte, Y: [32]byte
 - for (data A, recovery id B, signature C, D) recover a public key
@@ -351,14 +353,14 @@ The notation J,K indicates that two uint64 values J and K are interpreted as a u
 
 ## txn
 
-- Syntax: `txn F` where F: [txn](#field-group-txn)
+- Syntax: `txn F` where F: [txn](#field-txn)
 - Bytecode: 0x31 {uint8}
 - Stack: ... &rarr; ..., any
 - field F of current transaction
 
-### txn
+### Field txn
 
-Fields (see [transaction reference](https://developer.algorand.org/docs/reference/transactions/))
+Fields (see [transaction reference](https://dev.algorand.co/concepts/transactions/reference/))
 
 | Index | Name | Type | In | Notes |
 | - | ------ | -- | - | --------- |
@@ -427,12 +429,12 @@ Fields (see [transaction reference](https://developer.algorand.org/docs/referenc
 
 ## global
 
-- Syntax: `global F` where F: [global](#field-group-global)
+- Syntax: `global F` where F: [global](#field-global)
 - Bytecode: 0x32 {uint8}
 - Stack: ... &rarr; ..., any
 - global field F
 
-### global
+### Field global
 
 Fields
 
@@ -464,7 +466,7 @@ Fields
 
 ## gtxn
 
-- Syntax: `gtxn T F` where T: transaction group index, F: [txn](#field-group-txn)
+- Syntax: `gtxn T F` where T: transaction group index, F: [txn](#field-txn)
 - Bytecode: 0x33 {uint8}, {uint8}
 - Stack: ... &rarr; ..., any
 - field F of the Tth transaction in the current group
@@ -487,15 +489,15 @@ for notes on transaction fields available, see `txn`. If this transaction is _i_
 
 ## txna
 
-- Syntax: `txna F I` where F: [txna](#field-group-txna), I: transaction field array index
+- Syntax: `txna F I` where F: [txna](#field-txna), I: transaction field array index
 - Bytecode: 0x36 {uint8}, {uint8}
 - Stack: ... &rarr; ..., any
-- Ith value of the array field F of the current transaction<br />`txna` can be called using `txn` with 2 immediates.
+- Ith value of the array field F of the current transaction `txna` can be called using `txn` with 2 immediates.
 - Availability: v2
 
-### txna
+### Field txna
 
-Fields (see [transaction reference](https://developer.algorand.org/docs/reference/transactions/))
+Fields (see [transaction reference](https://dev.algorand.co/concepts/transactions/reference/))
 
 | Index | Name | Type | In | Notes |
 | - | ------ | -- | - | --------- |
@@ -509,15 +511,15 @@ Fields (see [transaction reference](https://developer.algorand.org/docs/referenc
 
 ## gtxna
 
-- Syntax: `gtxna T F I` where T: transaction group index, F: [txna](#field-group-txna), I: transaction field array index
+- Syntax: `gtxna T F I` where T: transaction group index, F: [txna](#field-txna), I: transaction field array index
 - Bytecode: 0x37 {uint8}, {uint8}, {uint8}
 - Stack: ... &rarr; ..., any
-- Ith value of the array field F from the Tth transaction in the current group<br />`gtxna` can be called using `gtxn` with 3 immediates.
+- Ith value of the array field F from the Tth transaction in the current group `gtxna` can be called using `gtxn` with 3 immediates.
 - Availability: v2
 
 ## gtxns
 
-- Syntax: `gtxns F` where F: [txn](#field-group-txn)
+- Syntax: `gtxns F` where F: [txn](#field-txn)
 - Bytecode: 0x38 {uint8}
 - Stack: ..., A: uint64 &rarr; ..., any
 - field F of the Ath transaction in the current group
@@ -527,10 +529,10 @@ for notes on transaction fields available, see `txn`. If top of stack is _i_, `g
 
 ## gtxnsa
 
-- Syntax: `gtxnsa F I` where F: [txna](#field-group-txna), I: transaction field array index
+- Syntax: `gtxnsa F I` where F: [txna](#field-txna), I: transaction field array index
 - Bytecode: 0x39 {uint8}, {uint8}
 - Stack: ..., A: uint64 &rarr; ..., any
-- Ith value of the array field F from the Ath transaction in the current group<br />`gtxnsa` can be called using `gtxns` with 2 immediates.
+- Ith value of the array field F from the Ath transaction in the current group `gtxnsa` can be called using `gtxns` with 2 immediates.
 - Availability: v3
 
 ## gload
@@ -784,7 +786,7 @@ When A is a uint64, index 0 is the least significant bit. Setting bit 3 to 1 on 
 
 - Bytecode: 0x58
 - Stack: ..., A: []byte, B: uint64, C: uint64 &rarr; ..., []byte
-- A range of bytes from A starting at B up to but not including B+C. If B+C is larger than the array length, the program fails<br />`extract3` can be called using `extract` with no immediates.
+- A range of bytes from A starting at B up to but not including B+C. If B+C is larger than the array length, the program fails `extract3` can be called using `extract` with no immediates.
 - Availability: v5
 
 ## extract_uint16
@@ -813,26 +815,26 @@ When A is a uint64, index 0 is the least significant bit. Setting bit 3 to 1 on 
 - Syntax: `replace2 S` where S: start position
 - Bytecode: 0x5c {uint8}
 - Stack: ..., A: []byte, B: []byte &rarr; ..., []byte
-- Copy of A with the bytes starting at S replaced by the bytes of B. Fails if S+len(B) exceeds len(A)<br />`replace2` can be called using `replace` with 1 immediate.
+- Copy of A with the bytes starting at S replaced by the bytes of B. Fails if S+len(B) exceeds len(A) `replace2` can be called using `replace` with 1 immediate.
 - Availability: v7
 
 ## replace3
 
 - Bytecode: 0x5d
 - Stack: ..., A: []byte, B: uint64, C: []byte &rarr; ..., []byte
-- Copy of A with the bytes starting at B replaced by the bytes of C. Fails if B+len(C) exceeds len(A)<br />`replace3` can be called using `replace` with no immediates.
+- Copy of A with the bytes starting at B replaced by the bytes of C. Fails if B+len(C) exceeds len(A) `replace3` can be called using `replace` with no immediates.
 - Availability: v7
 
 ## base64_decode
 
-- Syntax: `base64_decode E` where E: [base64](#field-group-base64)
+- Syntax: `base64_decode E` where E: [base64](#field-base64)
 - Bytecode: 0x5e {uint8}
 - Stack: ..., A: []byte &rarr; ..., []byte
 - decode A which was base64-encoded using _encoding_ E. Fail if A is not base64 encoded with encoding E
 - **Cost**: 1 + 1 per 16 bytes of A
 - Availability: v7
 
-### base64
+### Field base64
 
 Encodings
 
@@ -847,14 +849,14 @@ _Warning_: Usage should be restricted to very rare use cases. In almost all case
 
 ## json_ref
 
-- Syntax: `json_ref R` where R: [json_ref](#field-group-json_ref)
+- Syntax: `json_ref R` where R: [json_ref](#field-json_ref)
 - Bytecode: 0x5f {uint8}
 - Stack: ..., A: []byte, B: []byte &rarr; ..., any
 - key B's value, of type R, from a valid UTF-8 encoded JSON object A
 - **Cost**: 25 + 2 per 7 bytes of A
 - Availability: v7
 
-### json_ref
+### Field json_ref
 
 Types
 
@@ -972,14 +974,14 @@ Deleting a key which is already absent has no effect on the application global s
 
 ## asset_holding_get
 
-- Syntax: `asset_holding_get F` where F: [asset_holding](#field-group-asset_holding)
+- Syntax: `asset_holding_get F` where F: [asset_holding](#field-asset_holding)
 - Bytecode: 0x70 {uint8}
 - Stack: ..., A, B: uint64 &rarr; ..., X: any, Y: bool
 - X is field F from account A's holding of asset B. Y is 1 if A is opted into B, else 0
 - Availability: v2
 - Mode: Application
 
-### asset_holding
+### Field asset_holding
 
 Fields
 
@@ -992,14 +994,14 @@ params: Txn.Accounts offset (or, since v4, an _available_ address), asset id (or
 
 ## asset_params_get
 
-- Syntax: `asset_params_get F` where F: [asset_params](#field-group-asset_params)
+- Syntax: `asset_params_get F` where F: [asset_params](#field-asset_params)
 - Bytecode: 0x71 {uint8}
 - Stack: ..., A: uint64 &rarr; ..., X: any, Y: bool
 - X is field F from asset A. Y is 1 if A exists, else 0
 - Availability: v2
 - Mode: Application
 
-### asset_params
+### Field asset_params
 
 Fields
 
@@ -1022,14 +1024,14 @@ params: Txn.ForeignAssets offset (or, since v4, an _available_ asset id. Return:
 
 ## app_params_get
 
-- Syntax: `app_params_get F` where F: [app_params](#field-group-app_params)
+- Syntax: `app_params_get F` where F: [app_params](#field-app_params)
 - Bytecode: 0x72 {uint8}
 - Stack: ..., A: uint64 &rarr; ..., X: any, Y: bool
 - X is field F from app A. Y is 1 if A exists, else 0
 - Availability: v5
 - Mode: Application
 
-### app_params
+### Field app_params
 
 Fields
 
@@ -1050,14 +1052,14 @@ params: Txn.ForeignApps offset or an _available_ app id. Return: did_exist flag 
 
 ## acct_params_get
 
-- Syntax: `acct_params_get F` where F: [acct_params](#field-group-acct_params)
+- Syntax: `acct_params_get F` where F: [acct_params](#field-acct_params)
 - Bytecode: 0x73 {uint8}
 - Stack: ..., A &rarr; ..., X: any, Y: bool
 - X is field F from account A. Y is 1 if A owns positive algos, else 0
 - Availability: v6
 - Mode: Application
 
-### acct_params
+### Field acct_params
 
 Fields
 
@@ -1081,14 +1083,14 @@ Fields
 
 ## voter_params_get
 
-- Syntax: `voter_params_get F` where F: [voter_params](#field-group-voter_params)
+- Syntax: `voter_params_get F` where F: [voter_params](#field-voter_params)
 - Bytecode: 0x74 {uint8}
 - Stack: ..., A &rarr; ..., X: any, Y: bool
 - X is field F from online account A as of the balance round: 320 rounds before the current round. Y is 1 if A had positive algos online in the agreement round, else Y is 0 and X is a type specific zero-value
 - Availability: v11
 - Mode: Application
 
-### voter_params
+### Field voter_params
 
 Fields
 
@@ -1448,7 +1450,7 @@ The notation A,B indicates that A and B are interpreted as a uint128 value, with
 
 ## itxn_field
 
-- Syntax: `itxn_field F` where F: [txn](#field-group-txn)
+- Syntax: `itxn_field F` where F: [txn](#field-txn)
 - Bytecode: 0xb2 {uint8}
 - Stack: ..., A &rarr; ...
 - set field F of the current inner transaction to A
@@ -1469,7 +1471,7 @@ The notation A,B indicates that A and B are interpreted as a uint128 value, with
 
 ## itxn
 
-- Syntax: `itxn F` where F: [txn](#field-group-txn)
+- Syntax: `itxn F` where F: [txn](#field-txn)
 - Bytecode: 0xb4 {uint8}
 - Stack: ... &rarr; ..., any
 - field F of the last inner transaction
@@ -1478,7 +1480,7 @@ The notation A,B indicates that A and B are interpreted as a uint128 value, with
 
 ## itxna
 
-- Syntax: `itxna F I` where F: [txna](#field-group-txna), I: a transaction field array index
+- Syntax: `itxna F I` where F: [txna](#field-txna), I: a transaction field array index
 - Bytecode: 0xb5 {uint8}, {uint8}
 - Stack: ... &rarr; ..., any
 - Ith value of the array field F of the last inner transaction
@@ -1497,7 +1499,7 @@ The notation A,B indicates that A and B are interpreted as a uint128 value, with
 
 ## gitxn
 
-- Syntax: `gitxn T F` where T: transaction group index, F: [txn](#field-group-txn)
+- Syntax: `gitxn T F` where T: transaction group index, F: [txn](#field-txn)
 - Bytecode: 0xb7 {uint8}, {uint8}
 - Stack: ... &rarr; ..., any
 - field F of the Tth transaction in the last inner group submitted
@@ -1506,7 +1508,7 @@ The notation A,B indicates that A and B are interpreted as a uint128 value, with
 
 ## gitxna
 
-- Syntax: `gitxna T F I` where T: transaction group index, F: [txna](#field-group-txna), I: transaction field array index
+- Syntax: `gitxna T F I` where T: transaction group index, F: [txna](#field-txna), I: transaction field array index
 - Bytecode: 0xb8 {uint8}, {uint8}, {uint8}
 - Stack: ... &rarr; ..., any
 - Ith value of the array field F from the Tth transaction in the last inner group submitted
@@ -1577,7 +1579,7 @@ For boxes that exceed 4,096 bytes, consider `box_create`, `box_extract`, and `bo
 
 ## txnas
 
-- Syntax: `txnas F` where F: [txna](#field-group-txna)
+- Syntax: `txnas F` where F: [txna](#field-txna)
 - Bytecode: 0xc0 {uint8}
 - Stack: ..., A: uint64 &rarr; ..., any
 - Ath value of the array field F of the current transaction
@@ -1585,7 +1587,7 @@ For boxes that exceed 4,096 bytes, consider `box_create`, `box_extract`, and `bo
 
 ## gtxnas
 
-- Syntax: `gtxnas T F` where T: transaction group index, F: [txna](#field-group-txna)
+- Syntax: `gtxnas T F` where T: transaction group index, F: [txna](#field-txna)
 - Bytecode: 0xc1 {uint8}, {uint8}
 - Stack: ..., A: uint64 &rarr; ..., any
 - Ath value of the array field F from the Tth transaction in the current group
@@ -1593,7 +1595,7 @@ For boxes that exceed 4,096 bytes, consider `box_create`, `box_extract`, and `bo
 
 ## gtxnsas
 
-- Syntax: `gtxnsas F` where F: [txna](#field-group-txna)
+- Syntax: `gtxnsas F` where F: [txna](#field-txna)
 - Bytecode: 0xc2 {uint8}
 - Stack: ..., A: uint64, B: uint64 &rarr; ..., any
 - Bth value of the array field F from the Ath transaction in the current group
@@ -1617,7 +1619,7 @@ For boxes that exceed 4,096 bytes, consider `box_create`, `box_extract`, and `bo
 
 ## itxnas
 
-- Syntax: `itxnas F` where F: [txna](#field-group-txna)
+- Syntax: `itxnas F` where F: [txna](#field-txna)
 - Bytecode: 0xc5 {uint8}
 - Stack: ..., A: uint64 &rarr; ..., any
 - Ath value of the array field F of the last inner transaction
@@ -1626,7 +1628,7 @@ For boxes that exceed 4,096 bytes, consider `box_create`, `box_extract`, and `bo
 
 ## gitxnas
 
-- Syntax: `gitxnas T F` where T: transaction group index, F: [txna](#field-group-txna)
+- Syntax: `gitxnas T F` where T: transaction group index, F: [txna](#field-txna)
 - Bytecode: 0xc6 {uint8}, {uint8}
 - Stack: ..., A: uint64 &rarr; ..., any
 - Ath value of the array field F from the Tth transaction in the last inner group submitted
@@ -1635,14 +1637,14 @@ For boxes that exceed 4,096 bytes, consider `box_create`, `box_extract`, and `bo
 
 ## vrf_verify
 
-- Syntax: `vrf_verify S` where S: [vrf_verify](#field-group-vrf_verify)
+- Syntax: `vrf_verify S` where S: [vrf_verify](#field-vrf_verify)
 - Bytecode: 0xd0 {uint8}
 - Stack: ..., A: []byte, B: [80]byte, C: [32]byte &rarr; ..., X: [64]byte, Y: bool
 - Verify the proof B of message A against pubkey C. Returns vrf output and verification flag.
 - **Cost**: 5700
 - Availability: v7
 
-### vrf_verify
+### Field vrf_verify
 
 Standards
 
@@ -1654,13 +1656,13 @@ Standards
 
 ## block
 
-- Syntax: `block F` where F: [block](#field-group-block)
+- Syntax: `block F` where F: [block](#field-block)
 - Bytecode: 0xd1 {uint8}
 - Stack: ..., A: uint64 &rarr; ..., any
 - field F of block A. Fail unless A falls between txn.LastValid-1002 and txn.FirstValid (exclusive)
 - Availability: v7
 
-### block
+### Field block
 
 Fields
 
@@ -1697,14 +1699,14 @@ Boxes are of constant length. If C < len(D), then len(D)-C bytes will be removed
 
 ## ec_add
 
-- Syntax: `ec_add G` where G: [EC](#field-group-ec)
+- Syntax: `ec_add G` where G: [EC](#field-ec)
 - Bytecode: 0xe0 {uint8}
 - Stack: ..., A: []byte, B: []byte &rarr; ..., []byte
 - for curve points A and B, return the curve point A + B
 - **Cost**: BN254g1=125; BN254g2=170; BLS12_381g1=205; BLS12_381g2=290
 - Availability: v10
 
-### EC
+### Field EC
 
 Groups
 
@@ -1728,7 +1730,7 @@ Does _not_ check if A and B are in the main prime-order subgroup.
 
 ## ec_scalar_mul
 
-- Syntax: `ec_scalar_mul G` where G: [EC](#field-group-ec)
+- Syntax: `ec_scalar_mul G` where G: [EC](#field-ec)
 - Bytecode: 0xe1 {uint8}
 - Stack: ..., A: []byte, B: []byte &rarr; ..., []byte
 - for curve point A and scalar B, return the curve point BA, the point A multiplied by the scalar B.
@@ -1739,7 +1741,7 @@ A is a curve point encoded and checked as described in `ec_add`. Scalar B is int
 
 ## ec_pairing_check
 
-- Syntax: `ec_pairing_check G` where G: [EC](#field-group-ec)
+- Syntax: `ec_pairing_check G` where G: [EC](#field-ec)
 - Bytecode: 0xe2 {uint8}
 - Stack: ..., A: []byte, B: []byte &rarr; ..., bool
 - 1 if the product of the pairing of each point in A with its respective point in B is equal to the identity element of the target group Gt, else 0
@@ -1750,7 +1752,7 @@ A and B are concatenated points, encoded and checked as described in `ec_add`. A
 
 ## ec_multi_scalar_mul
 
-- Syntax: `ec_multi_scalar_mul G` where G: [EC](#field-group-ec)
+- Syntax: `ec_multi_scalar_mul G` where G: [EC](#field-ec)
 - Bytecode: 0xe3 {uint8}
 - Stack: ..., A: []byte, B: []byte &rarr; ..., []byte
 - for curve points A and scalars B, return curve point B0A0 + B1A1 + B2A2 + ... + BnAn
@@ -1762,7 +1764,7 @@ The name `ec_multi_scalar_mul` was chosen to reflect common usage, but a more co
 
 ## ec_subgroup_check
 
-- Syntax: `ec_subgroup_check G` where G: [EC](#field-group-ec)
+- Syntax: `ec_subgroup_check G` where G: [EC](#field-ec)
 - Bytecode: 0xe4 {uint8}
 - Stack: ..., A: []byte &rarr; ..., bool
 - 1 if A is in the main prime-order subgroup of G (including the point at infinity) else 0. Program fails if A is not in G at all.
@@ -1771,7 +1773,7 @@ The name `ec_multi_scalar_mul` was chosen to reflect common usage, but a more co
 
 ## ec_map_to
 
-- Syntax: `ec_map_to G` where G: [EC](#field-group-ec)
+- Syntax: `ec_map_to G` where G: [EC](#field-ec)
 - Bytecode: 0xe5 {uint8}
 - Stack: ..., A: []byte &rarr; ..., []byte
 - maps field element A to group G
@@ -1783,14 +1785,14 @@ G1 element inputs are base field elements and G2 element inputs are quadratic fi
 
 ## mimc
 
-- Syntax: `mimc C` where C: [Mimc Configurations](#field-group-mimc configurations)
+- Syntax: `mimc C` where C: [Mimc Configurations](#field-mimc-configurations)
 - Bytecode: 0xe6 {uint8}
 - Stack: ..., A: []byte &rarr; ..., [32]byte
 - MiMC hash of scalars A, using curve and parameters specified by configuration C
 - **Cost**: BN254Mp110=10 + 550 per 32 bytes of A; BLS12_381Mp111=10 + 550 per 32 bytes of A
 - Availability: v11
 
-### Mimc Configurations
+### Field Mimc Configurations
 
 Parameters
 

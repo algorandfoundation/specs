@@ -1,0 +1,34 @@
+name: CD
+
+on:
+  push:
+    branches:
+      - develop  # TODO: change to master
+
+jobs:
+  ci:
+    uses: ./.github/workflows/ci.yaml
+    with:
+      artifact-name: specs-site-master
+
+  deploy-pages:
+    needs: ci
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    steps:
+      - name: Download built site
+        uses: actions/download-artifact@v5
+        with:
+          name: specs-site-master
+          path: book/html
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: book/html
+
+      - name: Deploy to GitHub Pages
+        uses: actions/deploy-pages@v4

@@ -1,0 +1,32 @@
+name: PR CI + Deployment preview
+
+on:
+  pull_request:
+    types: [ opened, reopened, synchronize, ready_for_review ]
+
+jobs:
+  ci:
+    if: (github.event.pull_request == null || !github.event.pull_request.draft)
+    uses: ./.github/workflows/ci.yaml
+    with:
+      artifact-name: specs-site-pr-${{ github.event.pull_request.number }}
+
+  deploy-preview:
+    needs: ci
+    if: github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download built site
+        uses: actions/download-artifact@v5
+        with:
+          name: specs-site-pr-${{ github.event.pull_request.number }}
+          path: book/html
+
+      - name: Publish to Cloudflare Pages
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CF_ACCOUNT_ID }}
+          gitHubToken: ${{ secrets.GITHUB_TOKEN }}
+          command: |
+            pages deploy ./book/html --project-name algorand-specs

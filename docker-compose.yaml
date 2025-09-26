@@ -1,14 +1,28 @@
 services:
   mdbook:
     container_name: mdbook
-    build: .
+    build:
+      context: .
+      target: ci-cd   # build the CI/CD stage
     ports:
       - 3000:3000
       - 3001:3001
-    command:
-      - serve
-      - --hostname
-      - '0.0.0.0'
+    command: ["serve", "--hostname", "0.0.0.0"]
+    volumes:
+      - ./src:/book/src
+      - ./book:/book/book
+
+  mdbook-release:
+    container_name: mdbook-release
+    build:
+      context: .
+      target: release  # build the release stage
+    ports:
+      - 3000:3000
+      - 3001:3001
+    command: ["serve", "--hostname", "0.0.0.0"]
+    profiles:
+      - release
     volumes:
       - ./src:/book/src
       - ./book:/book/book

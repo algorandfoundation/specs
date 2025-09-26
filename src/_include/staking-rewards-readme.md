@@ -22,7 +22,7 @@ probabilistic consensus protocol, pure chance might lead to a node appearing to 
 transaction type, the _heartbeat_, allows a node to explicitly indicate that it is online even if it
 does not propose blocks due to "bad luck".
 
-# Payouts
+## Payouts
 
 Payouts are made in every block, if the proposer has opted into receiving them, has an Algo balance
 in an appropriate range, and has not been suspended for poor behavior since opting-in.  The size of
@@ -58,14 +58,14 @@ handed off to `agreement` which would manipulate the block only to add the appro
 and to zero the `ProposerPayout` if the account that proposed was not actually eligible to receive a
 payout.
 
-# Suspensions
+## Suspensions
 
 Accounts can be _suspended_ for poor behavior.  There are two forms of poor behavior that can lead
 to suspension. First, an account is considered _absent_ if it fails to propose as often as it
 should. Second, an account can be suspended for failing to respond to a _challenge_ issued by the
 network at random.
 
-## Absenteeism
+### Absenteeism
 
 An account can be expected to propose once every `n = TotalOnlineStake/AccountOnlineStake` rounds.
 For example, a node with 2% of online stake ought to propose once every 50 rounds.  Of course the
@@ -78,7 +78,7 @@ An absent account is added to the `AbsentParticipationAccounts` list of the bloc
 evaluating a block, accounts in `AbsentParticipationAccounts` are suspended by changing their
 `Status` to `Offline` and setting `IncentiveEligible` to false, but retaining their voting keys.
 
-### Keyreg and `LastHeartbeat`
+#### Keyreg and `LastHeartbeat`
 
 As described so far, 320 rounds after a `keyreg` to go online, an account suddenly is expected to
 have proposed more recently than 20 times its new expected interval. That would be impossible, since
@@ -86,7 +86,7 @@ it was not online until that round.  Therefore, when a `keyreg` is used to go on
 `IncentiveEligible`, the account's `LastHeartbeat` field is set 320 rounds into the future. In
 effect, the account is treated as though it proposed in the first round it is online.
 
-### Large Algo increases and `LastHeartbeat`
+#### Large Algo increases and `LastHeartbeat`
 
 A similar problem can occur when an online account receives Algos. 320 rounds after receiving the
 new Algos, the account's expected proposal interval will shrink. If, for example, such an account
@@ -95,7 +95,7 @@ enough, and will be suspended immediately.  To mitigate this risk, any time an o
 `IncentiveEligible` account balance doubles from a single `Pay`, its `LastHeartbeat` is incremented
 to 320 rounds past the current round.
 
-## Challenges
+### Challenges
 
 The absenteeism checks quickly suspend a high-value account if it becomes inoperative.  For example,
 an account with 2% of stake can be marked absent after 500 rounds (about 24 minutes). After
@@ -120,7 +120,7 @@ parameters, nodes can be expected to be challenged daily.  When suspended, accou
 with the `GoOnlineFee` in order to receive block payouts again, so it becomes unprofitable for
 these low-stake nodes to operate with poor uptimes.
 
-# Heartbeats
+## Heartbeats
 
 The absenteeism mechanism is subject to rare false positives.  The challenge mechanism explicitly
 requires an affirmative response from nodes to indicate they are operating properly on behalf of a
@@ -144,7 +144,7 @@ mitigate that risk. Heartbeats have rather been designed to avoid _motivating_ s
 that they can accomplish their actual goal of noticing poor behavior stemming from _inadvertent_
 operational problems.
 
-## Free Heartbeats
+### Free Heartbeats
 
 Challenges occur frequently, so it important that `algod` can easily send Heartbeats as
 required. How should these transactions be paid for? Many accounts, especially high-value accounts,
@@ -161,7 +161,7 @@ The conditions for a free Heartbeat are:
 1. The `HbAddress` is `IncentiveEligible`.
 1. There is no `Note`, `Lease`, or `RekeyTo`.
 
-## Heartbeat Service
+### Heartbeat Service
 
 The Heartbeat Service (`heartbeat/service.go`) watches the state of all accounts for which `algod`
 has participation keys.  If any of those accounts meets the requirements above, a heartbeat
@@ -176,5 +176,5 @@ brought back online manually. It would be reasonable to consider in the future:
 
 or
 
-2. Allowing for paid heartbeats by the heartbeat service when configured with access to a funded
+1. Allowing for paid heartbeats by the heartbeat service when configured with access to a funded
    account's spending key.
