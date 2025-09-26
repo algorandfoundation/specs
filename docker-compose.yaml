@@ -9,8 +9,12 @@ services:
       - 3001:3001
     command: ["serve", "--hostname", "0.0.0.0"]
     volumes:
+      - ./src:/book/src
       - ./book:/book/book
       - ./theme:/book/theme
+      - ./book.toml:/book/book.toml
+      - ./mermaid.min.js:/book/mermaid.min.js
+      - ./mermaid-init.js:/book/mermaid-init.js
 
   mdbook-release:
     container_name: mdbook-release
@@ -24,5 +28,9 @@ services:
     profiles:
       - release
     volumes:
+      - ./src:/book/src
       - ./book:/book/book
       - ./theme:/book/theme
+      - ./book.toml:/book/book.toml
+      - ./mermaid.min.js:/book/mermaid.min.js
+      - ./mermaid-init.js:/book/mermaid-init.js
