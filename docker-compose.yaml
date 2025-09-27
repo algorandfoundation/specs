@@ -3,7 +3,7 @@ services:
     container_name: mdbook
     build:
       context: .
-      target: ci-cd   # build the CI/CD stage
+      target: ci-cd # build the CI/CD stage
     ports:
       - 3000:3000
       - 3001:3001
@@ -16,7 +16,7 @@ services:
     container_name: mdbook-release
     build:
       context: .
-      target: release  # build the release stage
+      target: release # build the release stage
     platform: linux/amd64
     ports:
       - 3000:3000
