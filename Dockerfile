@@ -6,7 +6,6 @@ WORKDIR /book
 
 COPY book.toml .
 COPY theme ./theme
-COPY mermaid.min.js mermaid-init.js ./
 
 RUN apt-get update && apt-get install -y --no-install-recommends curl \
     && rm -rf /var/lib/apt/lists/* \
