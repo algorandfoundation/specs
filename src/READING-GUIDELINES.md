@@ -1,4 +1,4 @@
-# Hello Shane!
+# Hello Shane
 
 The Algorand Specifications consist of _normative_ and _non-normative_ sections.
 
