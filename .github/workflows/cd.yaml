@@ -30,5 +30,11 @@ jobs:
         with:
           path: book/html
 
-      - name: Deploy to GitHub Pages
-        uses: actions/deploy-pages@v4
+      - name: Publish to Cloudflare Pages
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CF_ACCOUNT_ID }}
+          gitHubToken: ${{ secrets.GITHUB_TOKEN }}
+          command: |
+            pages deploy ./book/html --project-name algorand-specs
