@@ -566,7 +566,7 @@ $$
 Note that _observing_ a message is distinct from _receiving_ a
 message.  A message which has been received might not be observed (for
 instance, the message may be from an old round).  Refer to the [relay
-rules][Relay Rules] for details.
+rules](#relay-rules) for details.
 
 
 Special Values
@@ -608,7 +608,7 @@ Whenever the player receives a message event, it may decide to _relay_
 that or another message. In this case, the player will produce that
 output before producing any subsequent output (which may result from
 the player's observation of that message; see the [broadcast
-rules][Broadcast Rules] below).
+rules](#broadcast-rules) below).
 
 A player may receive messages from a peer which indicates that the
 peer is misbehaving. These cases are marked with an asterisk (*) and
@@ -721,8 +721,8 @@ $$
 Note: An implementation may _buffer_ a proposal in this case.
 Specifically, an implementation which relays a proposal without
 checking that it is valid may optionally choose to replay this event
-when it observes that a new round has begun (see [below][Internal
-Transitions]).  In this case, on the conclusion of a new round, this
+when it observes that a new round has begun (see [below](#internal-transitions)).
+In this case, on the conclusion of a new round, this
 proposal is processed once again as input.
 
 Implementations may store and relay fewer proposals than specified

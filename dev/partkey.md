@@ -17,7 +17,7 @@ An algorand node interacts with three types of cryptographic keys:
 
  - _voting keys_, a set of keys used for authentication, i.e. identify an 
     account. Algorand uses a hierarchical (two\-level) signature scheme that 
-    ensures [forward security](https://en.wikipedia.org/wiki/Forward_secrecy), 
+    ensures [forward security][forward-security], 
     which will be detailed in next section. 
 
  - _VRF selection keys_, keys used for proving membership of selection. 
@@ -177,7 +177,7 @@ And this verified credential is wrapped in a $\Vote$ struct with _Raw Vote_
 ## Algorand State Proof Keys 
 ### Algorand's Committable Ephemeral Keys Scheme - Merkle Signature Scheme
 
-Algorand achieves [forward security](https://en.wikipedia.org/wiki/Forward_secrecy) using Merkle Signature Scheme. This scheme consists of using a different ephemeral key for each round in which it will be used. The scheme uses vector commitment to generate commitment to those keys. 
+Algorand achieves [forward security][forward-security] using Merkle Signature Scheme. This scheme consists of using a different ephemeral key for each round in which it will be used. The scheme uses vector commitment to generate commitment to those keys. 
 The private key must be deleted after the round passes in order the completely achieves forward secrecy.
 
 The Merkle scheme uses Falcon scheme as the underlying digital signature algorithm.
@@ -206,7 +206,7 @@ where:
 
 - _P_$_{k_{i}}$ is a 14,344-bit string representing the Falcon ephemeral public key.
 
-- hash: is the SUBSET-SUM hash function as defined in the [Algorand Cryptographic Primitives Specification](Crypto.md)
+- hash: is the SUBSET-SUM hash function as defined in the [Algorand Cryptographic Primitives Specification](./crypto.md)
 
 
 #### Signatures
@@ -271,3 +271,5 @@ A signature _s_ for a message _m_ at round _r_ is valid under the public commitm
     - _leaf_ := "KP" || _schemeId_ || _Round_ || _s.VerifyingKey_
     
     - _Round_ :=  _r_ - ( _r_ % _keyLifeTime_)
+
+[forward-security]: https://en.wikipedia.org/wiki/Forward_secrecy

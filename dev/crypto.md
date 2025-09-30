@@ -51,7 +51,7 @@ below specifies each prefix (in quotation marks):
       [ephemeral signatures](#ephemeral-key-signature).
     - "MA": An internal node in a [Merkle tree](#merkle-tree).
     - "MB": A bottom leaf in a vector commitment [vector commitment](#vector-commitment).
-    - "KP": Is a public key used by the Merkle siganture scheme [Merkle Siganture Scheme](merklesignaturescheme)
+    - "KP": Is a public key used by the Merkle siganture scheme [Merkle Siganture Scheme](./partkey.md)
     - "spc": A coin used as part of the state proofs construction.
     - "spp": Participant's information (state proof pk and weight) used for state proofs.
     - "sps": A signature from a specific participant that is used for state proofs.
@@ -65,14 +65,14 @@ below specifies each prefix (in quotation marks):
     - "TX": A _Transaction_.
     - "SpecialAddr": A prefix used to generate designated addresses for specific functions, such as sending state proof transactions.
  - In the [Algorand Byzantine Fault Tolerance protocol](./abft.md):
-    - "AS": An _Agreement Selector_, which is also a [VRF][Verifiable Random Function] input.
+    - "AS": An _Agreement Selector_, which is also a [VRF](#verifiable-random-function) input.
     - "CR": A _Credential_.
     - "SD": A _Seed_.
     - "PL": A _Payload_.
     - "PS": A _Proposer Seed_.
     - "VO": A _Vote_.
  - In other places:
-    - "arc": Prefix for ARCs-related hashes https://github.com/algorandfoundation/ARCs. The prefix for ARC-XXXX should start with "arcXXXX" (where "XXXX" is the 0-padded number of the ARC). For example ARC-0003 can use any prefix starting with "arc0003".
+    - "arc": Prefix for [ARCs-related][arcs] hashes. The prefix for ARC-XXXX should start with "arcXXXX" (where "XXXX" is the 0-padded number of the ARC). For example ARC-0003 can use any prefix starting with "arc0003".
     - "MX": An arbitrary message used to prove ownership of a
       cryptographic secret.
     - "NPR": A message which proves a peer's stake in an Algorand
@@ -109,7 +109,7 @@ in the block header by increasing collision resistance against Grover's algorith
 
 ### SUBSET-SUM
 Algorand uses [SUBSET-SUM algorithm](./cryptographic-specs/sumhash-spec.pdf) which is a quantum-resilient hash function.
-This function is used by the [Merkle Keystore](merklekeystore) to commit on
+This function is used by the [Merkle Keystore](./partkey.md) to commit on
 ephemeral public keys. It is also used to create Merkle trees for the StateProofs. 
 
 ## Digital Signature
@@ -361,7 +361,7 @@ where:
 
 -  _L_ is a 64-bit, little-endian integer representing the participant's `L` value as described in the [technical report][compactcert].
 
-- _serializedMerkleSignature_ representing a merkleSignature of the participant  [merkle signature binary representation](https://github.com/algorandfoundation/specs/blob/master/dev/partkey.md#signatures)
+- _serializedMerkleSignature_ representing a merkleSignature of the participant  [merkle signature binary representation](./partkey.md#signatures)
 
 
 When a signature is missing in the signature array, i.e the prover didn't receive a signature for this slot. The slot would be 
@@ -383,7 +383,7 @@ _version_ is an 8-bit constant with value of 0
 _participantCommitment_ is a 512-bit string representing the vector commitment root on the participant array
 
 _LnProvenWeight_ an 8-bit string representing the natural logarithm value $\ln(ProvenWeight)$ with 16 bits of precision, as described in
-[SNARK-Friendly  Weight Threshold Verification][weight-threshold]
+[SNARK-Friendly  Weight Threshold Verification](./cryptographic-specs/weight-thresh.pdf)
 
 _signatureCommitment_ is a 512-bit string representing the vector commitment root on the signature array
 
@@ -466,7 +466,7 @@ if:
 - The number of reveals in the state proof should be less than of equal to 640
 
 - Using the trusted Proven Weight (supplied by the verifier), The state proof should pass
-  the [SNARK-Friendly  Weight Threshold Verification][weight-threshold] check.
+  the [SNARK-Friendly  Weight Threshold Verification](./cryptographic-specs/weight-thresh.pdf) check.
 
 - All of the participant and signature information that appears in
   the reveals is validated by the Vector commitment proofs for the participants
@@ -494,8 +494,8 @@ Similarly, the quantum-secure verifier aims for a larger security strength of ${
 To generate a SNARK proof, we need to be able to "downgrade" a valid SP with ${target_{PQ}}$ strength into one with merely ${target_{C}}$ strength, by truncating some of the reveals to stay within the bounds.
 
 
-First, let us prove that a valid SP with ${NumReveals_{PQ}}$ number of reveals that satisfies Equation (5) in [SNARK-Friendly Weight Threshold Verification][weight-threshold] for a given  ${target_{C}}$ can be "downgrade" to have ${NumReveals_{C}}$ = ceiling(${NumReveals_{PQ}}$ * ${target_{C}}$ / ${target_{PQ}}$).
-We remark that values d, b, T, Y, and D (in [SNARK-Friendly Weight Threshold Verification][weight-threshold) only depend on signedWeight, but not the number of reveals nor the target.
+First, let us prove that a valid SP with ${NumReveals_{PQ}}$ number of reveals that satisfies Equation (5) in [SNARK-Friendly Weight Threshold Verification](./cryptographic-specs/weight-thresh.pdf) for a given  ${target_{C}}$ can be "downgrade" to have ${NumReveals_{C}}$ = ceiling(${NumReveals_{PQ}}$ * ${target_{C}}$ / ${target_{PQ}}$).
+We remark that values d, b, T, Y, and D (in [SNARK-Friendly Weight Threshold Verification](./cryptographic-specs/weight-thresh.pdf) only depend on signedWeight, but not the number of reveals nor the target.
 Hence, we just need to prove that:
 
 ${NumReveals_{C}}$ >= ${target_{C}}$ * T * Y / D
@@ -524,8 +524,8 @@ Since the quantum-secure verifier is not bottlenecked by reveals, we can take ${
 
 [sha]: https://doi.org/10.6028/NIST.FIPS.180-4
 [rfcsha]: https://datatracker.ietf.org/doc/html/rfc4634
-[sumhash]: https://github.com/algorandfoundation/specs/blob/master/dev/cryptographic-specs/sumhash-spec.pdf
 [ed25519]: https://tools.ietf.org/html/rfc8032
 [msgpack]: https://github.com/msgpack/msgpack/blob/master/spec.md
 [falcon]: https://falcon-sign.info/falcon.pdf
 [compactcert]: https://eprint.iacr.org/archive/2020/1568/20210330:194331
+[arcs]: https://github.com/algorandfoundation/ARCs
