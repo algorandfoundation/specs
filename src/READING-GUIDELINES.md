@@ -40,7 +40,7 @@ Part
         └── 1.1.1. Sub Section
 ```
 
-Each _Part_ begins with an _Overview_, highlighting the covered _functional blocks_,
+Each _Part_ begins with a _Preamble_, highlighting the covered _functional blocks_,
 usually divided into two _Chapters_: _normative_ and _non-normative_ (always present).
 
 The navigation sidebar can be folded up to the _Chapter_ level by clicking the folding
