@@ -76,7 +76,9 @@ $$
 &\text{19:} \quad \quad \PSreturn \PScomment{Ignore vote} \\\\
 &\text{20:} \quad \PSendif \\\\
 &\text{21: } \PSendfunction \\\\
-\\\\
+$$
+
+$$
 &\text{22: } \PSfunction \HandleVote(\vt): \\\\
 &\text{23:} \quad \ValidateVote(\vt) \PScomment{Check the validity of the vote} \\\\
 &\text{24:} \quad V \gets V \cup \vt \PScomment{Observe the vote} \\\\
