@@ -1,4 +1,4 @@
-# Algorand Ledger Overview
+# Algorand Ledger Non-Normative Specifications
 
 The following is a _non-normative_ specification of the _Algorand Ledger_.
 
