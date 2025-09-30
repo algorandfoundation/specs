@@ -50,24 +50,29 @@ below specifies each prefix (in quotation marks):
     - "OT1" and "OT2": The first and second layers of keys used for
       [ephemeral signatures](#ephemeral-key-signature).
     - "MA": An internal node in a [Merkle tree](#merkle-tree).
-    - "MB": A bottem leaf in a vector commitment [vector commitment](#vector-commitment).
+    - "MB": A bottom leaf in a vector commitment [vector commitment](#vector-commitment).
     - "KP": Is a public key used by the Merkle siganture scheme [Merkle Siganture Scheme](merklesignaturescheme)
+    - "spc": A coin used as part of the state proofs construction.
+    - "spp": Participant's information (state proof pk and weight) used for state proofs.
+    - "sps": A signature from a specific participant that is used for state proofs.
  - In the [Algorand Ledger](./ledger.md):
     - "BH": A _Block Header_.
     - "BR": A _Balance Record_.
     - "GE": A _Genesis_ configuration.
+    - "spm": A state proof message.
     - "STIB": A _SignedTxnInBlock_ that appears as part of the leaf in the Merkle tree of transactions.
     - "TL": A leaf in the Merkle tree of transactions.
     - "TX": A _Transaction_.
+    - "SpecialAddr": A prefix used to generate designated addresses for specific functions, such as sending state proof transactions.
  - In the [Algorand Byzantine Fault Tolerance protocol](./abft.md):
-    - "AS": An _Agreement Selector_, which is also a [VRF][Verifiable
-      Random Function] input.
+    - "AS": An _Agreement Selector_, which is also a [VRF][Verifiable Random Function] input.
     - "CR": A _Credential_.
     - "SD": A _Seed_.
     - "PL": A _Payload_.
     - "PS": A _Proposer Seed_.
     - "VO": A _Vote_.
  - In other places:
+    - "arc": Prefix for ARCs-related hashes https://github.com/algorandfoundation/ARCs. The prefix for ARC-XXXX should start with "arcXXXX" (where "XXXX" is the 0-padded number of the ARC). For example ARC-0003 can use any prefix starting with "arc0003".
     - "MX": An arbitrary message used to prove ownership of a
       cryptographic secret.
     - "NPR": A message which proves a peer's stake in an Algorand
@@ -85,13 +90,22 @@ below specifies each prefix (in quotation marks):
 
 ## Hash Functions
 
-### SHA512-256
+### SHA512/256
 Algorand uses the [SHA-512/256 algorithm][sha] as its primary
 cryptographic hash function.
 
 Algorand uses this hash function to (1) commit to data for signing and
 for the Byzantine Fault Tolerance protocol, and (2) rerandomize its
 random seed.
+
+### SHA256
+Algorand uses [SHA-256 algorithm][rfcsha] to allow verification of Algorand's state and transactions
+on environments where SHA512_256 is not supported.
+
+### SHA512
+Algorand uses the [SHA-512 algorithm][rfcsha] to strengthen post-quantum security
+for the previous block hash (`prev512`) and transaction commitment (`txn512`)
+in the block header by increasing collision resistance against Grover's algorithm.
 
 ### SUBSET-SUM
 Algorand uses [SUBSET-SUM algorithm](./cryptographic-specs/sumhash-spec.pdf) which is a quantum-resilient hash function.
@@ -287,8 +301,231 @@ def verify(elems, proof, root):
 
 Algorand uses [Vector Commitments](./cryptographic-specs/merkle-vc-full.pdf), which allows for concisely committing to an ordered (indexed) vector of data entries, based on Merkle trees.
 
+# State Proofs
+
+State proofs (aka Compact Certificates) allow external parties to efficiently validate
+Algorand blocks.  The [technical report][compactcert] provides the
+overall approach of state proofs; this section describes the
+specific details of how state proofs are realized in Algorand.
+
+As a brief summary of the technical report, state proofs operate
+in three steps:
+
+- The first step is to commit to a set of participants that are eligible
+  to produce signatures, along with a weight for each participant.
+  In Algorand's case, these end up being the online accounts, and the
+  weights are the account balances.
+
+- The second step is for each participant to sign the same message, and
+  broadcast this signature to others.  In Algorand's case, the message would contain
+  a commitment on blocks in a specific period.
+
+- The third step is for relays to collect these signatures from a
+  large fraction of participants (by weight) and generate a state 
+  proof.  Given a sufficient number of signatures, a relay
+  can form a state proof, which effectively consists of a
+  small number of signatures, pseudo-randomly chosen out of all of
+  the signatures.
+
+The resulting state proof proves that at least some `provenWeight`
+of participants have signed the message.  The actual weight of
+all participants that have signed the message must be greater than
+`provenWeight`.
+
+## Participant commitment
+
+The state proof scheme requires a commitment to a dense array of participants, 
+in some well-defined order. In order to grantee this property, Algorand uses Vector Commitment.
+Leaf hashing is done in the following manner:
+
+_leaf_ = hash("spp" || _Weight_ || _KeyLifeTime_ || _StateProofPK_) for each online participant.
+
+where:
+
+- _Weight_ is a 64-bit, little-endian integer representing the participant's balance in MicroAlgos
+
+- _KeyLifeTime_ is a 64-bit, little-endian constant integer with value of 256
+
+- _StateProofPK_ is a 512-bit string representing the participant's merkle signature scheme commitment.
+
+
+## Signature format
+
+Similarly to the participant commitment, the state proof scheme requires a commitment
+to a signature array. Leaf hashing is done in the following manner:
+
+
+_leaf_ = hash("sps" || _L_ || _serializedMerkleSignature_) for each online participant.
+
+where:
+
+-  _L_ is a 64-bit, little-endian integer representing the participant's `L` value as described in the [technical report][compactcert].
+
+- _serializedMerkleSignature_ representing a merkleSignature of the participant  [merkle signature binary representation](https://github.com/algorandfoundation/specs/blob/master/dev/partkey.md#signatures)
+
+
+When a signature is missing in the signature array, i.e the prover didn't receive a signature for this slot. The slot would be 
+decoded as an empty string. As a result the vector commitment leaf of this slot would be the hash  value of the constant domain separator "MB" (the bottom leaf)
+
+## Choice of revealed signatures
+
+As described in the [technical report][compactcert] section IV.A, a
+state proof contains a pseudorandomly chosen set of signatures.
+The choice is made using a coin.  In Algorand's implementation, the
+coin derivation is made in the following manner:
+
+_Hin_ = ("spc" || _version_ || _participantCommitment_ || _LnProvenWeight_ || _signatureCommitment_ || _signedWeight_ || _stateproofMessageHash_ )
+
+where:
+
+_version_ is an 8-bit constant with value of 0
+
+_participantCommitment_ is a 512-bit string representing the vector commitment root on the participant array
+
+_LnProvenWeight_ an 8-bit string representing the natural logarithm value $\ln(ProvenWeight)$ with 16 bits of precision, as described in
+[SNARK-Friendly  Weight Threshold Verification][weight-threshold]
+
+_signatureCommitment_ is a 512-bit string representing the vector commitment root on the signature array
+
+_signedWeight_ is a 64-bit, little-endian integer representing the state proof signed weight
+
+_stateproofMessageHash_ is a 256-bit string representing the message that would be verified by the state proof. (it would be the hash result of the state proof message)
+
+
+For short, we refer below to the revealed signatures simply as 'reveals'
+
+We compute:
+
+_R_ = SHAKE256(_Hin_)
+
+For every reveal,
+- Extract a 64-bit string from _R_. 
+- use rejection sampling and extract additional 64-bit string from _R_ if needed
+
+This would grantee having a uniform random coin in [0,signedWeight).
+
+## State proof format
+
+A State proof consists of seven fields:
+
+- The Vector commitment root to the array of signatures, under msgpack
+  key `c`.
+
+- The total weight of all signers whose signatures appear in the array
+  of signatures, under msgpack key `w`.
+
+- The Vector commitment proof for the signatures revealed above, under msgpack
+  key `S`.
+
+- The Vector commitment proof for the participants revealed above, under msgpack
+  key `P`.
+
+- The Falcon signature salt version, under msgpack key `v`, is the expected salt version of 
+every signature in the state proof.
+
+- The set of revealed signatures, chosen as described in section IV.A
+  of the [technical report][compactcert], under msgpack key `r`.  This set is stored as a
+  msgpack map.  The key of the map is the position in the array of the
+  participant whose signature is being revealed.  The value in the map
+  is a msgpack struct with the following fields:
+
+  -- The participant information, encoded as described [above](#participant-commitment),
+    under msgpack key `p`.
+
+  -- The signature information, encoded as described [above](#signature-format),
+    under msgpack key `s`.
+
+- A sequence of positions, under msgpack key `pr`. The sequence defines the order of the
+  participant whose signature is being revealed. i.e
+
+  _PositionsToReveal_ = [IntToInd(coin$_{0}$),...,IntToInd(coin$_{numReveals-1}$)]
+
+where IntToInd and numReveals are defined in the [technical report][compactcert], section IV.
+
+
+Note that, although the state proof contains a commitment to
+the signatures, it does not contain a commitment to the participants.
+The set of participants must already be known in order to verify a
+state proof.  In practice, a commitment to the participants is
+stored in the block header of an earlier block, and in the state proof message that was
+proven by the previous state proof.
+
+
+## State proof validity
+
+A state proof is valid for the message hash, 
+with respect to a commitment to the array of participants,
+if:
+
+- The depth of the vector commitment for the signature and the participant information
+  should be less than or equal to 20.
+
+- All falcon signatures should have the same salt version and it should 
+  by equal to the salt version specified in state proof
+
+- The number of reveals in the state proof should be less than of equal to 640
+
+- Using the trusted Proven Weight (supplied by the verifier), The state proof should pass
+  the [SNARK-Friendly  Weight Threshold Verification][weight-threshold] check.
+
+- All of the participant and signature information that appears in
+  the reveals is validated by the Vector commitment proofs for the participants
+  (against the commitment to participants, supplied by the verifier) 
+  and signatures (against the commitment in the state proof itself), respectively.
+
+- All of the signatures are valid signatures for the message hash.
+
+- For every i $\in$ {0,...,numReveals-1} there is a reveal in map denote by _r_$_{i}$, where  _r_$_{i}$ $\gets$ T[_PositionsToReveal_[_i_]]
+  and _r_$_{i}$.Sig.L <= _coin_$_{i}$ <  _r_$_{i}$.Sig.L + _r_$_{i}$.Part.Weight. 
+  
+  T is defined in the [technical report][compactcert], section IV.
+
+## Setting security strength
+
+- ${target_C}$: "classical" security strength. This is set to ${k+q}$ (${k+q}$ are defined in section IV.A of the [technical report][compactcert]). The goal is to have ${<= 1/2^{k}}$ probability of breaking the state proof by an attacker that makes up to ${2^{q}}$ hash evaluations/queries. We use ${target_C}$ = 192, which corresponds to, for example, ${k=128}$ and ${q=64}$, or ${k=96}$ and ${q=96}$.
+- ${target_{PQ}}$: "post-quantum" security strength. This is set to ${k+2q}$, because at a cost of about ${2^q}$, a quantum attacker can search among up to ${2^{2q}}$ hash evaluations (this is a highly attacker-favorable estimate). We use ${target_{PQ} = 256}$, which corresponds to, for example, ${k=128}$ and ${q=64}$, or ${k=96}$ and ${q=80}$.
+
+## Bounding The Number of Reveals
+
+In order for the SNARK prover for State Proofs to be efficient enough, we must impose an upper bound ${MaxReveals_{C}}$ on the number of "reveals" the SP can contain, while still reaching its target security strength ${target_C = 192}$. Concretely, for now we wish to set  ${MaxReveals_{C} = 480}$.
+
+Similarly, the quantum-secure verifier aims for a larger security strength of ${target_{PQ} = 256}$, and we can also impose an upper bound ${MaxReveals_{PQ}}$ on the number of reveals it can handle. (Recall that a smaller number of reveals means that signedWeight/provenWeight must be larger in order to reach a particular security strength, so we cannot set ${MaxReveals_{C}}$ or ${MaxReveals_{PQ}}$ too low.)
+
+To generate a SNARK proof, we need to be able to "downgrade" a valid SP with ${target_{PQ}}$ strength into one with merely ${target_{C}}$ strength, by truncating some of the reveals to stay within the bounds.
+
+
+First, let us prove that a valid SP with ${NumReveals_{PQ}}$ number of reveals that satisfies Equation (5) in [SNARK-Friendly Weight Threshold Verification][weight-threshold] for a given  ${target_{C}}$ can be "downgrade" to have ${NumReveals_{C}}$ = ceiling(${NumReveals_{PQ}}$ * ${target_{C}}$ / ${target_{PQ}}$).
+We remark that values d, b, T, Y, and D (in [SNARK-Friendly Weight Threshold Verification][weight-threshold) only depend on signedWeight, but not the number of reveals nor the target.
+Hence, we just need to prove that:
+
+${NumReveals_{C}}$ >= ${target_{C}}$ * T * Y / D
+
+Which implies it is sufficient to prove:
+
+${NumReveals_{PQ}}$ * ${target_{C}}$ / ${target_{PQ}}$ >= ${target_{C}}$ * T * Y / D
+
+Since ${target_{C}}$ > 0 and  ${target_{PQ}}$ > 0, we get just need to prove that:
+
+${NumReveals_{PQ}}$ >= ${target_{PQ}}$ * T * Y / D. 
+
+This last inequality holds since the SP satisfies Equation (5).
+
+For a given ${MaxReveals_{C}}$ and the desired security strengths, we need to calculate a suitable ${target_{PQ}}$ bound so that the following property holds:
+
+Since the "downgraded" state proof has ${NumReveals_{C}}$ = ceiling(${NumReveals_{PQ}}$ * ${target_{C}}$ / ${target_{PQ}}$), and ${NumReveals_{PQ}}$ <= ${MaxReveals_{PQ}}$, and ${NumReveals_{C}}$ <= ${MaxReveals_{C}}$ we get
+
+${MaxReveals_{C}}$ <= ceiling(${MaxReveals_{PQ}}$ * ${target_{C}}$ / ${target_{PQ}}$)
+
+and we can set
+
+${MaxReveals_{C}}$ <= ceiling(${MaxReveals_{PQ}}$ * ${target_{C}}$ / ${target_{PQ}}$)
+
+Since the quantum-secure verifier is not bottlenecked by reveals, we can take ${MaxReveals_{PQ}}$ <= floor(${MaxReveals_{C}} * {target_{PQ}} / {target_C}$) to be an equality, i.e., ${MaxReveals_{PQ}}$ = floor(...). Therefore we need to set ${MaxReveals_{PQ}}$ to 640. 
 
 [sha]: https://doi.org/10.6028/NIST.FIPS.180-4
+[rfcsha]: https://datatracker.ietf.org/doc/html/rfc4634
+[sumhash]: https://github.com/algorandfoundation/specs/blob/master/dev/cryptographic-specs/sumhash-spec.pdf
 [ed25519]: https://tools.ietf.org/html/rfc8032
 [msgpack]: https://github.com/msgpack/msgpack/blob/master/spec.md
 [falcon]: https://falcon-sign.info/falcon.pdf
+[compactcert]: https://eprint.iacr.org/archive/2020/1568/20210330:194331

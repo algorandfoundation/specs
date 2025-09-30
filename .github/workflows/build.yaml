@@ -1,0 +1,50 @@
+name: Build and Test
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - "*"
+
+jobs:
+  build-and-test:
+    defaults:
+      run:
+        working-directory: 'dev'
+
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
+
+      - name: Install Dependencies
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -qq pandoc texlive-latex-base texlive-latex-recommended lmodern texlive-fonts-recommended texlive-latex-extra
+
+      - name: Build
+        run: |
+          mkdir -p ./{pdf,html}
+          make
+          tar -czvf specs.tar.gz html pdf
+
+      - name: Get short SHA
+        if: github.ref == 'refs/heads/master' && github.event_name == 'push'
+        id: vars
+        run: echo "sha_short=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+
+      - name: Publish Release
+        if: github.ref == 'refs/heads/master' && github.event_name == 'push'
+        uses: softprops/action-gh-release@v1
+        with:
+          # According to https://github.com/softprops/action-gh-release/issues/158 working-directory doesn't work, need to
+          # specify path
+          files: |
+            dev/html/*
+            dev/pdf/*
+            dev/specs.tar.gz
+          tag_name: ${{ steps.vars.outputs.sha_short }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

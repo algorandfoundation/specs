@@ -44,23 +44,47 @@ All integers described in this document are unsigned.
 Parameters
 ==========
 
+\newcommand \FilterTimeout {\mathrm{FilterTimeout}}
+
+\newcommand \DeadlineTimeout {\mathrm{DeadlineTimeout}}
+
 The protocol is parameterized by the following constants:
 
- - $\lambda, \lambda_f, \Lambda$ are values representing durations of time.
+ - $\lambda, \lambda_{0min}, \lambda_{0max}, \lambda_f, \Lambda, \Lambda_0$ are values representing durations of time.
  - $\delta_s, \delta_r$ are positive integers (the "seed lookback" and
    "seed refresh interval").
 
 For convenience, we define $\delta_b$ (the "balance lookback") to be
 $2\delta_s\delta_r$.
 
-Algorand v1 sets $\delta_s = 2$, $\delta_r = 80$, $\lambda = 2$ seconds,
-$\lambda_f = 5$ minutes, and $\Lambda = 17$ seconds.
+We define $\FilterTimeout(p)$ on period $p$ as follows:
+
+  - If $p = 0$:
+    The $\FilterTimeout(p)$ is calculated dynamically based on the lower 95th percentile of observed 
+    lowest credential per round arrival times. 
+
+    - 2$\lambda_{0min} <= \FilterTimeout(p) <= 2\lambda_{0max}$
+  - If $p \ne 0$:
+    - $\FilterTimeout(p) = 2\lambda$
+
+We define $\DeadlineTimeout(p)$ on period $p$ as follows:
+
+  - If $p = 0$:
+    - $\DeadlineTimeout(p) = \Lambda_0$
+  - If $p \ne 0$:
+    - $\DeadlineTimeout(p) = \Lambda$
+
+
+Algorand sets $\delta_s = 2$, $\delta_r = 80$, $\lambda = 2$ seconds, $\lambda_{0min} = 0.25$ seconds, 
+$\lambda_{0max} = 1.5$ seconds, $\lambda_f = 5$ minutes, $\Lambda = 17$ seconds, and $\Lambda_0 = 4$ seconds.
 
 Identity, Authorization, and Authentication
 ===========================================
 
 \newcommand \pk {\mathrm{pk}}
 \newcommand \sk {\mathrm{sk}}
+\newcommand \fv {\text{first}}
+\newcommand \lv {\text{last}}
 \newcommand \Sign {\mathrm{Sign}}
 \newcommand \Verify {\mathrm{Verify}}
 \newcommand \Rand {\mathrm{Rand}}
@@ -74,9 +98,11 @@ _address_.
 Each player owns exactly one _participation keypair_. A participation
 keypair consists of a _public key_ $\pk$ and a _secret key_ $\sk$.
 A keypair is an opaque object which is defined in the [specification
-of participation keys in Algorand](./partkey.md).
+of participation keys in Algorand](./partkey.md). Each participation
+keypair is valid for a range of rounds $(r_\fv, r_\lv)$.
 
-Let $m, m'$ be arbitrary sequences of bits, $B_k, \Bbar$ be 64-bit integers,
+Let $m, m'$ be arbitrary sequences of bits, $B_k, \Bbar$ be 64-bit integers
+representing balances in microalgos with rewards applied,
 $\tau, \taubar$ be 32-bit integers, and $Q$ be a 256-bit string.  Let
 $(\pk_k, \sk_k)$ be some valid keypair.
 
@@ -152,13 +178,17 @@ The following functions are defined on $L$:
 
  - _Seed Lookup_: If $e_r = (o_r, Q_r)$, then $\Seed(L, r)$ = $Q_r$.
 
- - _Record Lookup_: $\Record(L, r, I_k) = (\pk_{k,r}, B_{k,r})$ for
+ - _Record Lookup_: $\Record(L, r, I_k) = (\pk_{k,r}, B_{k,r}, r_\fv, r_\lv)$ for
    some address $I_k$, some public key $\pk_{k,r}$, and some 64-bit
-   integer $B_{k,r}$.
+   integer $B_{k,r}$. $r_\fv$ and $r_\lv$ define the first valid and last
+   valid rounds for this participating account.
 
  - _Digest Lookup_: $\DigestLookup(L, r) = \Digest(e_r)$.
 
- - _Total Stake Lookup_: $\Stake(L, r) = \sum_k \Record(L, r, I_k)$.
+ - _Total Stake Lookup_: We use $\mathcal{K}_{r_b,r_v}$ to represent all players with participation keys
+   at $r_b$ that are eligible to vote at $r_v$. 
+   Let $\mathcal{K}_{r_b,r_v}$ be the set of all $k$ for which $(\pk_{k,r_b}, B_{k,r_b}, r_\fv, r_\lv) = \Record(L, r_b, I_k)$ and $r_\fv \leq r_v \leq r_\lv$ holds. 
+   Then $\Stake(L, r_b, r_v) = \sum_{k \in \mathcal{K}_{r_b,r_v}} B_{k,r_b}$.
 
 A ledger may support an opaque _entry generation_ procedure
 $$
@@ -275,11 +305,12 @@ unambiguous) if the following conditions are true:
  - If $s \in \{\Propose, \Soft, \Cert, \Late, \Redo\}$, $v \neq \bot$.
    Conversely, if $s = \Down$, $v = \bot$.
 
- - Let $(\pk, B) = \Record(L, r - \delta_b, I)$,
-   $\Bbar = \Stake(L, r - \delta_b)$, $Q = \Seed(L, r - \delta_s)$,
+ - Let $(\pk, B, r_\fv, r_\lv) = \Record(L, r - \delta_b, I)$,
+   $\Bbar = \Stake(L, r - \delta_b, r)$, $Q = \Seed(L, r - \delta_s)$,
    $\tau = \CommitteeThreshold(s)$, and
-   $\taubar = \CommitteeSize(s)$.  
-   Then $\Verify(y, x, x', \pk, B, \Bbar, Q, \tau, \taubar) \neq 0$.
+   $\taubar = \CommitteeSize(s)$.
+   Then $\Verify(y, x, x', \pk, B, \Bbar, Q, \tau, \taubar) \neq 0$ and
+   $r_\fv \leq r \leq r_\lv$.
 
 Observe that valid votes contain outputs of the $\Sign$ procedure;
 i.e., $y := \Sign(x, x', \sk, B, \Bbar, Q, \tau, \taubar)$.
@@ -300,7 +331,8 @@ Informally, these conditions check the following:
  - The last condition checks that the vote was properly signed by a voter who
    was selected to serve on the committee for this round, period, and step,
    where the committee selection process uses the voter's stake and keys as of
-   $\delta_b$ rounds before the vote.
+   $\delta_b$ rounds before the vote. It also checks if the vote's round is
+   within the range associated with the voter's participation key.
 
 An _equivocation vote pair_ or _equivocation vote_
 $\Equivocation(I, r, p, s)$ is a pair of votes which differ in
@@ -368,8 +400,11 @@ unambiguous) if the following conditions are true:
 
  - The seed $s$ and seed proof are valid as specified in the following section.
 
- - Let $(B, \pk) = \Record(L, r - \delta_b, I)$.
+ - Let $(\pk, B, r_\fv, r_\lv) = \Record(L, r - \delta_b, I)$.
    If $p = 0$, then $\Verify(y, Q_0, Q_0, \pk, 0, 0, 0, 0, 0) \neq 0$.
+
+ - Let $(\pk, B, r_\fv, r_\lv) = \Record(L, r - \delta_b, I)$.
+   Then $r_\fv \leq r \leq r_\lv$.
 
 If $e$ matches $v$, we write $e = \Proposal(v)$.
 
@@ -385,7 +420,7 @@ proposer. Additionally, every $\delta_s\delta_r$ rounds,  the digest of a previo
 proof is the corresponding VRF proof, or 0 if the VRF was not used.
 
 More formally, suppose $I$ is a correct proposer in round $r$ and period $p$.
-Let $(B, \pk) = \Record(L, r - \delta_b, I)$ and $\sk$ be the secret key
+Let $(\pk, B, r_\fv, r_\lv) = \Record(L, r - \delta_b, I)$ and $\sk$ be the secret key
 corresponding to $\pk$.  Let $\alpha$ be a 256-bit integer.  Then $I$ computes
 the seed proof $y$ for a new entry as follows:
 
@@ -408,7 +443,7 @@ $$
 
 The seed is valid if the following verification procedure succeeds:
 
-1. Let $(B, \pk) = \Record(L, r - \delta_b, I)$; let $q_0 = \Seed(L, r-\delta_s)$.
+1. Let $(\pk, B, r_\fv, r_\lv) = \Record(L, r - \delta_b, I)$; let $q_0 = \Seed(L, r-\delta_s)$.
 
 2. If $p = 0$, check $\mathrm{VRF.Verify}(y, q_0, \pk)$, immediately returning
    failure if verification fails. Let
@@ -779,26 +814,26 @@ New Step
 
 A player may also update its step after receiving a timeout event.
 
-On observing a timeout event of $2\lambda$, the player sets
+On observing a timeout event of $\FilterTimeout(p)$ for period $p$, the player sets
 $s := \Cert$.
 
-On observing a timeout event of $\max\{4\lambda, \Lambda\}$, the
+On observing a timeout event of $\DeadlineTimeout(p)$ for period $p$, the
 player sets $s := \Next_0$.
 
 On observing a timeout event of
-$\max\{4\lambda, \Lambda\} + 2^{s_t}\lambda + r$ where
+$\DeadlineTimeout(p) + 2^{s_t}\lambda + r$ where
 $r \in [0, 2^{s_t}\lambda]$ sampled uniformly at random, the player sets
 $s := s_t$.
 
 In other words,
 $$
 \begin{aligned}
-  &N((r, p, s, \sbar, V, P, \vbar), L, t(2\lambda, p))
+  &N((r, p, s, \sbar, V, P, \vbar), L, t(\FilterTimeout(p), p))
  &&= ((r, p, \Cert, \sbar, V, P, \vbar), L', \ldots) \\
-  &N((r, p, s, \sbar, V, P, \vbar), L, t(\max\{4\lambda, \Lambda\}, p))
+  &N((r, p, s, \sbar, V, P, \vbar), L, t(\DeadlineTimeout(p), p))
  &&= ((r, p, \Next_0, \sbar, V, P, \vbar), L', \ldots) \\
   &N((r, p, s, \sbar, V, P, \vbar), L,
-     t(\max\{4\lambda, \Lambda\} + 2^{s_t}\lambda + r, p))
+     t(\DeadlineTimeout(p) + 2^{s_t}\lambda + r, p))
  &&= ((r, p, s_t, \sbar, V, P, \vbar), L', \ldots).
  \end{aligned}
 $$
@@ -816,7 +851,7 @@ identified with the address $I$ and possesses the secret key $\sk$,
 and the agreement is occurring on the ledger $L$.  Then the player
 constructs a vote $\Vote(I, r, p, s, v)$ by doing the following:
 
- - Let $(\pk, B) = \Record(L, r - \delta_b, I)$,
+ - Let $(\pk, B, r_\fv, r_\lv) = \Record(L, r - \delta_b, I)$,
    $\Bbar = \Stake(L, r - \delta_b)$, $Q = \Seed(L, r - \delta_s)$,
    $\tau = \CommitteeThreshold(s)$, $\taubar = \CommitteeSize(s).$
 
@@ -933,7 +968,7 @@ $$
 Filtering
 ---------
 
-On observing a timeout event of $2\lambda$ (where
+On observing a timeout event of $\FilterTimeout(p)$ (where
 $\mu = (H, H', l, p_\mu) = \mu(S, r, p)$),
 
  - if $\mu \neq \bot$ and if
@@ -952,15 +987,15 @@ $\mu = (H, H', l, p_\mu) = \mu(S, r, p)$),
 
 In other words, in the first case above,
 $$
-N(S, L, t(2\lambda, p)) = (S, L, \Vote(I, r, p, \Soft, \mu));
+N(S, L, t(\FilterTimeout(p), p)) = (S, L, \Vote(I, r, p, \Soft, \mu));
 $$
 while in the second case above,
 $$
-N(S, L, t(2\lambda, p)) = (S, L, \Vote(I, r, p, \Soft, \vbar));
+N(S, L, t(\FilterTimeout(p), p)) = (S, L, \Vote(I, r, p, \Soft, \vbar));
 $$
 and if neither case is true,
 $$
-N(S, L, t(2\lambda, p)) = (S, L, \epsilon).
+N(S, L, t(\FilterTimeout(p), p)) = (S, L, \epsilon).
 $$
 
 Certifying
@@ -1028,8 +1063,8 @@ Recovery
 
 On observing a timeout event of
 
- - $T = \max\{4\lambda, \Lambda\}$ or
- - $T = \max\{4\lambda, \Lambda\} + 2^{s_t}\lambda + r$ where
+ - $T = \DeadlineTimeout(p)$ or
+ - $T = \DeadlineTimeout(p) + 2^{s_t}\lambda + r$ where
    $r \in [0, 2^{s_t}\lambda]$ sampled uniformly at random,
 
 the player attempts to resynchronize and then broadcasts*
