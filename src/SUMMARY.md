@@ -1,47 +1,47 @@
 # Summary
 
-- [Algorand Specifications]()
+- [Algorand Specifications](./COVER.md)
 
 ---
 
 # Introduction
 
-- [Reading Guidelines](READING-GUIDELINES.md)
+- [Reading Guidelines](./READING-GUIDELINES.md)
 
 # Algorand BFT Protocol
 
-- [Overview]()
+- [Preamble](./abft/abft-overview.md)
 - [Normative](./abft/abft.md)
-  - [Notation](abft/abft-notation.md)
-  - [Parameters](abft/abft-parameters.md)
-  - [Players](abft/abft-participants.md)
-  - [Ledger](abft/abft-ledger.md)
-  - [Messages](abft/abft-messages.md)
-    - [Data Types](abft/abft-messages-data-types.md)
-    - [Votes](abft/abft-messages-votes.md)
-    - [Bundles](abft/abft-messages-bundles.md)
-    - [Proposals](abft/abft-messages-proposals.md)
-    - [Seed](abft/abft-messages-seed.md)
-  - [State Machine](abft/abft-state-machine.md)
-  - [Player State](abft/abft-player-state.md)
-  - [Relay Rules](abft/abft-relay-rules.md)
-    - [Votes](abft/abft-relay-rules-votes.md)
-    - [Bundles](abft/abft-relay-rules-bundles.md)
-    - [Proposals](abft/abft-relay-rules-proposals.md)
-  - [State Transitions](abft/abft-state-transitions.md)
-    - [New Round](abft/abft-state-transitions-new-round.md)
-    - [New Period](abft/abft-state-transitions-new-period.md)
-    - [Garbage Collection](abft/abft-state-transitions-garbage-collection.md)
-    - [New Step](abft/abft-state-transitions-new-step.md)
-  - [Broadcast Rules](abft/abft-broadcast-rules.md)
-    - [Resynchronization Attempt](abft/abft-broadcast-rules-resync.md)
-    - [Proposals](abft/abft-broadcast-rules-proposals.md)
-    - [Reproposal Payloads](abft/abft-broadcast-rules-reproposals.md)
-    - [Filtering](abft/abft-broadcast-rules-filtering.md)
-    - [Certifying](abft/abft-broadcast-rules-certifying.md)
-    - [Commitment](abft/abft-broadcast-rules-commit.md)
-    - [Recovery](abft/abft-broadcast-rules-recovery.md)
-    - [Fast Recovery](abft/abft-broadcast-rules-fast-recovery.md)
+  - [Notation](./abft/abft-notation.md)
+  - [Parameters](./abft/abft-parameters.md)
+  - [Players](./abft/abft-participants.md)
+  - [Ledger](./abft/abft-ledger.md)
+  - [Messages](./abft/abft-messages.md)
+    - [Data Types](./abft/abft-messages-data-types.md)
+    - [Votes](./abft/abft-messages-votes.md)
+    - [Bundles](./abft/abft-messages-bundles.md)
+    - [Proposals](./abft/abft-messages-proposals.md)
+    - [Seed](./abft/abft-messages-seed.md)
+  - [State Machine](./abft/abft-state-machine.md)
+  - [Player State](./abft/abft-player-state.md)
+  - [Relay Rules](./abft/abft-relay-rules.md)
+    - [Votes](./abft/abft-relay-rules-votes.md)
+    - [Bundles](./abft/abft-relay-rules-bundles.md)
+    - [Proposals](./abft/abft-relay-rules-proposals.md)
+  - [State Transitions](./abft/abft-state-transitions.md)
+    - [New Round](./abft/abft-state-transitions-new-round.md)
+    - [New Period](./abft/abft-state-transitions-new-period.md)
+    - [Garbage Collection](./abft/abft-state-transitions-garbage-collection.md)
+    - [New Step](./abft/abft-state-transitions-new-step.md)
+  - [Broadcast Rules](./abft/abft-broadcast-rules.md)
+    - [Resynchronization Attempt](./abft/abft-broadcast-rules-resync.md)
+    - [Proposals](./abft/abft-broadcast-rules-proposals.md)
+    - [Reproposal Payloads](./abft/abft-broadcast-rules-reproposals.md)
+    - [Filtering](./abft/abft-broadcast-rules-filtering.md)
+    - [Certifying](./abft/abft-broadcast-rules-certifying.md)
+    - [Commitment](./abft/abft-broadcast-rules-commit.md)
+    - [Recovery](./abft/abft-broadcast-rules-recovery.md)
+    - [Fast Recovery](./abft/abft-broadcast-rules-fast-recovery.md)
 - [Non-Normative](./abft/non-normative/abft-nn.md)
   - [General Concepts](./abft/non-normative/abft-nn-general-concepts.md)
   - [Context Tuple](./abft/non-normative/abft-nn-context-tuple.md)
@@ -66,7 +66,7 @@
 
 # Algorand Ledger
 
-- [Overview](./ledger/ledger-overview.md)
+- [Preamble](./ledger/ledger-overview.md)
 - [Normative](./ledger/ledger.md)
   - [Parameters](./ledger/ledger-parameters.md)
   - [States](./ledger/ledger-state.md)
@@ -137,7 +137,7 @@
 
 # Algorand Virtual Machine
 
-- [Overview](./avm/avm-overview.md)
+- [Preamble](./avm/avm-overview.md)
 - [Normative](./avm/avm.md)
   - [Stack](./avm/avm-stack.md)
   - [Scratch Space](./avm/avm-scratch-space.md)
@@ -170,7 +170,7 @@
 
 # Algorand Keys
 
-- [Overview](./keys/keys-overview.md)
+- [Preamble](./keys/keys-overview.md)
 - [Normative](./keys/keys.md)
   - [Root Keys](./keys/keys-root.md)
   - [Voting and Participation Keys](./keys/keys-participation.md)
@@ -182,7 +182,7 @@
 
 # Algorand Cryptographic Primitives
 
-- [Overview]()
+- [Preamble](./crypto/crypto-overview.md)
 - [Normative](./crypto/crypto.md)
   - [Representation](./crypto/crypto-representation.md)
     - [Canonical Msgpack](./crypto/crypto-msgpack.md)
@@ -210,7 +210,7 @@
 
 # Algorand Network
 
-- [Overview](./network/network-overview.md)
+- [Preamble](./network/network-overview.md)
 - [Non-Normative](./network/non-normative/network-nn.md)
   - [Notation](./network/non-normative/network-nn-notation.md)
   - [Parameters](./network/non-normative/network-nn-parameters.md)
@@ -227,7 +227,7 @@
 
 # Algod Node
 
-- [Overview](./node/node-overview.md)
+- [Preamble](./node/node-overview.md)
 - [AI DeepWiki (Experimental)](./node/node-deepwiki.md)
 - [Non-Normative](./node/non-normative/node-nn.md)
   - [Initialization](./node/non-normative/node-nn-init.md)

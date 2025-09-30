@@ -1,7 +1,7 @@
-# Algorand Virtual Machine Overview
+# Algorand Virtual Machine
 
-The Algorand Virtual Machine (AVM) is a _bytecode-based Turing-complete stack
-interpreter_ that executes programs associated with Algorand transactions.
+This part describes the Algorand Virtual Machine (AVM), a _bytecode-based Turing-complete
+stack interpreter_ that executes programs associated with Algorand transactions.
 
 _TEAL_ is an assembly language syntax for specifying a program that is ultimately
 converted to AVM bytecode.

@@ -1,4 +1,4 @@
-# Algorand Keys Overview
+# Algorand Keys
 
 This part specifies the list of keys and their capabilities in Algorand.
 

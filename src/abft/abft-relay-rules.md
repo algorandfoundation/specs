@@ -12,8 +12,8 @@ A player may receive messages from a misbehaving peer. These cases are marked wi
 an asterisk (*) and enable the node to perform a special action (e.g., disconnect
 from the peer).
 
-> For examples of what these special actions may involve, see the non-normative
-> [Algorand Network Overview](../network/network-overview.md).
+> For examples of what these special actions may involve, see the
+> [Algorand Network non-normative section](../network/network-overview.md).
 
 We say that a player _ignores_ a message if it produces no outputs on
 receiving that message.

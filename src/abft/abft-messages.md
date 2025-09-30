@@ -6,4 +6,4 @@ A message is an opaque object containing arbitrary data, save for the fields def
 below.
 
 > For a detailed overview of message composition, whether consensus or other types,
-> see the [Algorand Network Overview](../network/network-overview.md).
+> see the [Algorand Network non-normative section](../network/network-overview.md).
