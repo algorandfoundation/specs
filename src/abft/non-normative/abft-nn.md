@@ -1,4 +1,4 @@
-# Algorand Byzantine Fault Tolerance Protocol 
+# Algorand Byzantine Fault Tolerance Protocol Overview
 
 The following section is a _non-normative_ overview of the Algorand Agreement Protocol.
 

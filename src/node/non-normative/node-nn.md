@@ -1,4 +1,4 @@
-# Non-Normative
+# Algod Node Overview
 
 This chapter provides a _non-normative_ overview of the `algod` node daemon components.
 

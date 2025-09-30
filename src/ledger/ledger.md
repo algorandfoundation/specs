@@ -1,4 +1,4 @@
-# Algorand Ledger State Machine Specification
+# Algorand Ledger Specification
 
 Algorand replicates a state and the state's history between protocol participants.
 

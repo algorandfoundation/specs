@@ -4,7 +4,7 @@ $$
 \newcommand \HYB {\mathrm{HYB}}
 $$
 
-# Non-Normative
+# Algorand Network Overview
 
 This is a non-normative description of the Algorand Network Layer, responsible for
 handling connections and message transport between nodes.

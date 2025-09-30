@@ -1,4 +1,4 @@
-# Ledger Overview
+# Algorand Ledger
 
 This part describes the _Algorand Ledger_, which records the history and the state
 of the distributed system, defining its entities (e.g., blocks, transactions, accounts,

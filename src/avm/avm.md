@@ -1,4 +1,4 @@
-# The Algorand Virtual Machine (AVM) and TEAL
+# The Algorand Virtual Machine (AVM) and TEAL Specification
 
 The AVM is a bytecode-based stack interpreter that executes programs
 associated with Algorand transactions.
