@@ -26,7 +26,7 @@ is treated as an opaque data packet with two mandatory fields:
 - A _randomness seed_.
 
 For details on the remaining fields and the structure of a block, please refer to
-the Ledger's [normative specification](../../ledger/ledger.md) and [non-normative section](../../ledger/non-normative/ledger-nn.md).
+the Ledger's [normative specification](../../ledger/ledger.md) and [non-normative chapter](../../ledger/non-normative/ledger-nn.md).
 
 The Algorand Agreement Protocol is executed between _nodes_.
 
