@@ -23,7 +23,7 @@ repos:
         minimum_pre_commit_version: 3.2.0
         types: [ text ]
         additional_dependencies: [ ]
-        exclude: '(^|/)(_archive)/'
+        exclude: '(^|/)_archive(/|$)'
 
   - repo: https://github.com/lycheeverse/lychee
     rev: lychee-v0.20.1
