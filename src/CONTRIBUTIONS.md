@@ -18,7 +18,7 @@ The source code is structured as follows:
 
 ```text
 .github/                  -> GitHub actions and CI/CD workflows
-.archive/                 -> Legacy specification archive
+_archive/                 -> Legacy specification archive
 src/                      -> mdBook source code
 └── _include/             -> Code snippets, templates, TeX-macros, and examples
 └── _excalidraw/          -> Excalidraw diagrams source code
@@ -27,7 +27,7 @@ src/                      -> mdBook source code
     └── non-normative/    -> Part A non-normative files
 └── Part_B/               -> Part B files
 └── Part.../              -> ...
-└── SUMMARY.md, ...       -> mdBook SUMMARY.md, cover, prefix/suffix-chapters, etc.
+└── SUMMARY.md, ...       -> mdBook SUMMARY.md, COVER.md, prefix/suffix-chapters, etc.
 ```
 
 ## Markdown
