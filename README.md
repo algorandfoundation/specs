@@ -1,6 +1,6 @@
 # Algorand Specifications
 
-The Algorand Specifications is continuously deployed at https://spec.algorand.org/.
+The Algorand Specifications is continuously deployed at <https://spec.algorand.co/>.
 
 The $\LaTeX$ PDF Book version is generated on [release](https://github.com/algorandfoundation/specs/releases/latest).
 
