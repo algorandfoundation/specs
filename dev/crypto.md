@@ -51,7 +51,7 @@ below specifies each prefix (in quotation marks):
       [ephemeral signatures](#ephemeral-key-signature).
     - "MA": An internal node in a [Merkle tree](#merkle-tree).
     - "MB": A bottom leaf in a vector commitment [vector commitment](#vector-commitment).
-    - "KP": Is a public key used by the Merkle siganture scheme [Merkle Siganture Scheme](./partkey.md)
+    - "KP": Is a public key used by the Merkle signature scheme [Merkle Signature Scheme](./partkey.md)
     - "spc": A coin used as part of the state proofs construction.
     - "spp": Participant's information (state proof pk and weight) used for state proofs.
     - "sps": A signature from a specific participant that is used for state proofs.
