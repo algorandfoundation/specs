@@ -495,7 +495,7 @@ To generate a SNARK proof, we need to be able to "downgrade" a valid SP with ${t
 
 
 First, let us prove that a valid SP with ${NumReveals_{PQ}}$ number of reveals that satisfies Equation (5) in [SNARK-Friendly Weight Threshold Verification](./cryptographic-specs/weight-thresh.pdf) for a given  ${target_{C}}$ can be "downgrade" to have ${NumReveals_{C}}$ = ceiling(${NumReveals_{PQ}}$ * ${target_{C}}$ / ${target_{PQ}}$).
-We remark that values d, b, T, Y, and D (in [SNARK-Friendly Weight Threshold Verification](./cryptographic-specs/weight-thresh.pdf) only depend on signedWeight, but not the number of reveals nor the target.
+We remark that values d, b, T, Y, and D (in [SNARK-Friendly Weight Threshold Verification](./cryptographic-specs/weight-thresh.pdf)) only depend on signedWeight, but not the number of reveals nor the target.
 Hence, we just need to prove that:
 
 ${NumReveals_{C}}$ >= ${target_{C}}$ * T * Y / D
