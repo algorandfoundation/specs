@@ -182,7 +182,7 @@
 
 # Algorand Cryptographic Primitives
 
-- [Preamble]()
+- [Preamble](./crypto/crypto-overview.md)
 - [Normative](./crypto/crypto.md)
   - [Representation](./crypto/crypto-representation.md)
     - [Canonical Msgpack](./crypto/crypto-msgpack.md)
