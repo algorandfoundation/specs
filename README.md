@@ -15,3 +15,6 @@ examples, etc.).
 
 The last Algorand Specifications release tag supporting the _old_ format (HTML and PDF)
 is: [`7791a63`](https://github.com/algorandfoundation/specs/releases/tag/7791a63).
+
+The source files for the old format are available in the [`_archive`](./_archive)
+folder.
