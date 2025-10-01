@@ -73,4 +73,7 @@ Once MathJax rendering is correctly set, you should see a calligraphic “C”.
 ## PDF Book
 
 Readers used to classical \\( \text{\LaTeX} \\)-styled books can download the full
-book from the [latest release artifacts](https://github.com/algorandfoundation/specs/releases/latest).
+PDF Book from the [latest release artifacts](https://github.com/algorandfoundation/specs/releases/latest).
+
+> ⚠️ The PDF Book is a work in progress, it may contain formatting errors and missing
+> graphic contents. You can track the progress of the PDF Book in [this issue](https://github.com/algorandfoundation/specs/issues/243).

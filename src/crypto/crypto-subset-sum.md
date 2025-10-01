@@ -1,6 +1,6 @@
 # SUBSET-SUM
 
-Algorand uses [SUBSET-SUM algorithm](https://github.com/algorandfoundation/specs/blob/master/dev/cryptographic-specs/sumhash-spec.pdf),
+Algorand uses [SUBSET-SUM algorithm](../../_archive/dev/cryptographic-specs/sumhash-spec.pdf),
 which is a _quantum-resilient_ hash function.
 
 This algorithm is used:

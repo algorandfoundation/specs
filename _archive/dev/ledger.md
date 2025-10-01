@@ -71,7 +71,7 @@ the ledger. Each state consists of the following components:
    proposed.
 
  - A _seed_, which is a source of randomness used to [establish consensus on the
-   next state][abft-spec].
+   next state](./abft.md).
 
  - The current _reward state_, which describes the policy at which incentives
    are distributed to participants.
@@ -307,7 +307,7 @@ The timestamp $t_{r+1}$ of a block in round $r$ is valid if:
 \newcommand \Seed {\mathrm{Seed}}
 
 The seed is a 256-bit integer.  Seeds are validated and updated according to the
-[specification of the Algorand Byzantine Fault Tolerance protocol][abft-spec].
+[specification of the Algorand Byzantine Fault Tolerance protocol](./abft.md).
 The $\Seed$ procedure specified there returns the seed from the desired round.
 
 # Reward State
@@ -324,13 +324,13 @@ and the amount of money left over after distribution $B^*_r$.
 
 The reward state depends on the $I_{pool}$, the address of the _incentive pool_, and
 the functions $\Stake(r, I_{pool})$ and $\Units(r)$.  These are defined as part of the
-[Account State][Account State] below.
+[Account State](#account-state) below.
 
 Informally, every $\omega_r$ rounds, the rate $R_r$ is updated such that rewards given over the next
 $\omega_r$ rounds will drain the incentive pool, leaving it with the minimum balance $b_{min}$.
 The _rewards residue_ $B^*_r$ is the amount of leftover rewards that should have been given in the previous round but
 could not be evenly divided among all reward units. The residue carries over into the rewards to be given in the next round.
-The actual draining of the incentive pool account is described in the [Validity and State Changes][Validity and State Changes] section further below.
+The actual draining of the incentive pool account is described in the [Validity and State Changes](#validity-and-state-changes) section further below.
 
 More formally, let $Z = \Units(r)$. Given a reward state $(T_r, R_r, B^*_r)$, the new reward
 state is $(T_{r+1}, R_{r+1}, B^*_{r+1})$ where
@@ -356,7 +356,7 @@ following fields: the account _raw balance_, the account _status_, the
 block incentive _eligibility_ flag, the account _last_proposed_ round, the
 account _last_heartbeat_ round, the account _rewards base_ and _total
 awarded amount_, the account _spending key_, and the account
-[_participation keys_][partkey-spec].
+[_participation keys_](./partkey.md).
 
 The account raw balance $a_I$ is a 64-bit unsigned integer which determines how
 much money the address has.
@@ -392,17 +392,17 @@ stake_ an account has, which is a 64-bit unsigned integer defined as follows:
  - 0 otherwise.
 
 The account's spending key determines how transactions from this account must be authorized (e.g., what public key to verify transaction signatures against).
-Transactions from this account must have this value (or, if this value zero, the account's address) as their authorization address. This is described in the [Authorization and Signatures][Authorization and Signatures] section below.
+Transactions from this account must have this value (or, if this value zero, the account's address) as their authorization address. This is described in the [Authorization and Signatures](#authorization-and-signatures) section below.
 
 The account's participation keys $\pk$ are defined in Algorand's [specification
-of participation keys][partkey-spec].
+of participation keys](./partkey.md).
 
 The account's eligibility $\ie$ is a flag that determines whether the
 account has elected to receive payouts for proposing blocks (assuming
 it meets balance requirements at the time of proposal).
 
 An account's participation keys and voting stake from a recent round is returned
-by the $\Record$ procedure in the [Byzantine Agreement Protocol][abft-spec].
+by the $\Record$ procedure in the [Byzantine Agreement Protocol](./abft.md).
 
 There exist two special addresses: $I_{pool}$, the address of the _incentive pool_,
 and $I_f$, the address of the _fee sink_.  For both of these accounts,
@@ -441,16 +441,15 @@ parameters_, which can be encoded as a msgpack struct:
   For Version 4 or higher programs, the cost of the program during execution must not exceed 700.
 
 - An immutable "global state schema" (`GlobalStateSchema`), which sets a limit
-  on the size of the global [Key/Value Store][Key/Value Stores] that
-  may be associated with this application (see ["State Schemas"][State
-  Schemas]). This field is encoded with msgpack field `gsch`.
+  on the size of the global [Key/Value Store](#keyvalue-stores) that
+  may be associated with this application (see ["State Schemas"](#state-schemas)). This field is encoded with msgpack field `gsch`.
 
   The maximum number of values that this schema may permit is 64.
 
 - An immutable "local state schema" (`LocalStateSchema`), which sets a limit on
-  the size of a [Key/Value Store][Key/Value Stores] that this
+  the size of a [Key/Value Store](#keyvalue-stores) that this
   application will allocate in the account data of an account that has opted in
-  (see ["State Schemas"][State Schemas]). This field is encoded with msgpack
+  (see ["State Schemas"](#state-schemas)). This field is encoded with msgpack
   field `lsch`.
 
   The maximum number of values that this schema may permit is 16.
@@ -468,17 +467,16 @@ parameters_, which can be encoded as a msgpack struct:
   `v`.
 
 - The "global state" (`GlobalState`) associated with this application, stored as
-  a [Key/Value Store][Key/Value Stores]. This field is encoded with
+  a [Key/Value Store](#keyvalue-stores). This field is encoded with
   msgpack field `gs`.
 
 Each application created increases the minimum balance
 requirement of the creator by 100,000*(1+`ExtraProgramPages`) microAlgos,
-plus the [`GlobalStateSchema`Minimum Balance contribution][App Minimum Balance Changes].
+plus the [`GlobalStateSchema`Minimum Balance contribution](#app-minimum-balance-changes).
 
 Each application opted in to increases the minimum balance
 requirements of the opting-in account by 100,000 microAlgos plus the
-[`LocalStateSchema` Minimum Balance contribution][App Minimum Balance
-Changes].
+[`LocalStateSchema` Minimum Balance contribution](#app-minimum-balance-changes).
 
 ### Key/Value Stores
 
@@ -494,7 +492,7 @@ The maximum length of a key in a KV is 64 bytes.
 ### State Schemas
 
 A state schema represents limits on the number of each value type that may
-appear in a [Key/Value Store (KV)][Key/Value Stores]. State schemas
+appear in a [Key/Value Store (KV)](#keyvalue-stores). State schemas
 are used to control the maximum size of global and local state KVs.
 
 A state schema is composed of two fields:
@@ -728,7 +726,7 @@ specific fashion:
 # State Proof Parameters
 
 - To limit the resources allocated for creating state proofs, state proof parameters are set to $N_{SP}=1024$, $\delta_{SP}=256$, and $\delta_{SPB}=16$.
-- Setting $KQ_{SP}={target_{PQ}}$ to achieve post-quantum security for state proofs. see [state proof crypto spec][sp-crypto-spec] for details.
+- Setting $KQ_{SP}={target_{PQ}}$ to achieve post-quantum security for state proofs. See [State Proof crypto spec](./crypto.md#state-proofs) for details.
 - On Algorand we assume that at least 70% of the participating stake is honest. Under this assumption there can't be a malicious state proof that would be accepted by the verifier and has a signed weight of more than 30% of the total online stake. Hence, we set the ProvenWeight to be $f_{SP}$=$2^{32}*30/100$
 (as the numerator of a fraction out of $2^{32}$)
 
@@ -797,7 +795,7 @@ transaction contains the following fields:
    transaction is valid.  The $\GenesisHash$ is required.
 
  - The _group_ $grp$, an optional 32-byte hash whose meaning is described in
-   the [Transaction Groups][Transaction Groups] section below.
+   the [Transaction Groups](#transaction-groups) section below.
 
  - The _rekey to address_ $\RekeyTo$, a 32-byte string. If nonzero, the transaction will set the sender account's spending key to this value. (If the _RekeyTo_ address matches the sender address, then the spending key is instead set to zero.)
 
@@ -1006,7 +1004,7 @@ The state proof transaction includes four additional fields:
 
  - Under msgpack key `sptype`, the type of the state proof; currently always zero.
  - Under msgpack key `sprnd`, the last round that this state proof attest to.
- - Under msgpack key `sp`, the state proof fields as defined in the [state proof format](https://github.com/algorandfoundation/specs/blob/master/dev/crypto.md#state-proof-format).
+ - Under msgpack key `sp`, the state proof fields as defined in the [state proof format](./crypto.md#state-proof-format).
  - Under msgpack key `spmsg`, a structure that compose the state proof message, whose hash is being attested
    by the state proof. This structure defined [above](#state-proof-message)
 
@@ -1016,7 +1014,7 @@ In order for a state proof transaction to be valid the following conditions shou
  - Sender address should be equal to a special sender address, which is the hash of the domain-separation prefix `SpecialAddr` with the string `StateProofSender`.
  - The transaction must not have any signature, must not have any fee, must have an empty note, must not have the rekeying field set, must not have any lease, and must not be part of a transaction group. 
  - The round of the state proof (`sprnd`) must be exactly equal to the next expected state proof round in the block header, as described [above](#state-proof-tracking).
- - The state proof verification code should return `True` (see [state proof validity](https://github.com/algorandfoundation/specs/blob/master/dev/crypto.md#state-proof-validity)), given the state proof message, the state proof fields extracted from the transaction. In addition, the verifier should also be given a trusted commitment to the participant array and Proven Weight value. The trusted data should be taken from the on-chain data at the relevant round. 
+ - The state proof verification code should return `True` (see [state proof validity](./crypto.md#state-proof-validity)), given the state proof message, the state proof fields extracted from the transaction. In addition, the verifier should also be given a trusted commitment to the participant array and Proven Weight value. The trusted data should be taken from the on-chain data at the relevant round. 
  
 
 To encourage the formation of shorter state proof, the rule for
@@ -1059,7 +1057,7 @@ struct under msgpack field `hb`.
 
  - The _heartbeat proof_ $prf$, which must contain a valid signing of
    $sd$ using $vid$ and $kd$ using the voting signature scheme
-   outlined in the discussion of [_participation keys_][partkey-spec].
+   outlined in the discussion of [_participation keys_](./partkey.md).
 
 Authorization and Signatures
 ----------------------------
@@ -1074,7 +1072,7 @@ The _authorizer address_, a 32 byte string, determines against what to verify th
  - A valid signature (`sig`) is a (64-byte) valid ed25519 signature of the transaction (encoded in canonical msgpack and with domain separation prefix "TX") where the public key is the authorizer address (interpreted as an ed25519 public key).
 
  - A valid multisignature (`msig`) is an object containing
-   the following fields and which hashes to the authorizer address as described in the [Multisignature][Multisignature] section:
+   the following fields and which hashes to the authorizer address as described in the [Multisignature](#multisignature) section:
 
    - The _subsig_ array of subsignatures each consisting of a signer address and a 64-byte signature
      of the transaction. Note, multisignature transaction must contain
@@ -1132,10 +1130,10 @@ and contains the following fields:
   contains the following fields:
   - A `GlobalDelta`, encoding changes to the global state of the called
     application, encoded as msgpack field `gd`.
-    - `gd` is a [`StateDelta`][State Deltas].
+    - `gd` is a [`StateDelta`](#state-deltas).
   - Zero or more `LocalDeltas`, encoding changes to some local states associated
     with the called application, encoded as msgpack field `ld`.
-    - `ld` maps an "account offset" to a [`StateDelta`][State Deltas]. Account
+    - `ld` maps an "account offset" to a [`StateDelta`](#state-deltas). Account
       offset 0 is the transaction's sender. Account offsets 1 and greater refer
       to the account specified at that offset minus one in the transaction's
       `Accounts` slice. An account would have its `LocalDeltas` changes as long
@@ -1162,8 +1160,8 @@ and contains the following fields:
 
 ### State Deltas
 
-A state delta represents an update to a [Key/Value Store
-(KV)][Key/Value Stores]. It is represented as an associative array
+A state delta represents an update to a [Key/Value Store (KV)](#keyvalue-stores).
+It is represented as an associative array
 mapping a byte-array key to a single value delta. It represents a
 series of actions that when applied to the previous state of the
 key/value store will yield the new state.
@@ -1288,7 +1286,7 @@ transactions require no fee, and Heartbeat transactions require no fee
 if they have a zero "Group" field, and the _heartbeat address_ was
 challenged between 100 and 200 rounds ago, and has not proposed or
 heartbeat since that challenge. Further explanation of this rule is
-found in [Heartbeat Transaction Semantics] section, below.
+found in [Heartbeat Transaction Semantics](#heartbeat-transaction) section, below.
 
 If the sum of the lengths of the boxes denoted by the box references in a
 transaction group exceeds 2,048 times the total number of box
@@ -1300,7 +1298,7 @@ nothing to the sum of lengths.
 If the sum of the lengths of the boxes modified (by creation or
 modification) in a transaction group exceeds the I/O Budget of the
 group at any time during evaluation (see [ApplicationCall Transaction
-Semantics]), then the block is invalid.
+Semantics](#applicationcall-transaction-semantics)), then the block is invalid.
 
 If the sum of the lengths of all the logic signatures and their arguments
 in a transaction group exceeds the number of transactions in the group times
@@ -1308,7 +1306,7 @@ in a transaction group exceeds the number of transactions in the group times
 
 Beyond the TxGroup, MinFee, Box size, and LogicSig size checks, each transaction in a
 group is evaluated separately and must be valid on its own, as
-described below in the [Validity and State Changes] section. For
+described below in the [Validity and State Changes](#validity-and-state-changes) section. For
 example, an account with balance 50 could not spend 100 in transaction
 A and afterward receive 500 in transaction B, even if transactions A
 and B are in the same group, because transaction A would leave the
@@ -1497,7 +1495,7 @@ point must be discarded and the entire transaction rejected.
   never be violated. The program's execution will fail on the first
   instruction that would cause the relevant schema to be
   violated. Writing a `Bytes` value to a local or global [Key/Value
-  Store][Key/Value Stores] such that the sum of the lengths of the key
+  Store](#keyvalue-stores) such that the sum of the lengths of the key
   and value in bytes exceeds 128, or writing any value to a key longer
   than 64 bytes, will likewise cause the program to fail on the
   offending instruction.
@@ -1558,7 +1556,7 @@ identifier $\GenesisID_B$, the following conditions must all hold:
  - $|N| \leq N_{\max}$.
  - $I \neq I_{pool}$, $I \neq I_f$, and $I \neq 0$.
  - $\Stake(r+1, I) \geq f \geq f_{\min}$.
- - The transaction is properly authorized as described in the [Authorization and Signatures][Authorization and Signatures] section.
+ - The transaction is properly authorized as described in the [Authorization and Signatures](#authorization-and-signatures) section.
  - $\Hash(\Tx) \notin \TxTail_r$.
  - If $x \neq 0$, there exists no $\Tx' \in TxTail$ with sender $I'$, lease value
    $x'$, and last valid round $r_2'$ such that $I' = I$, $x' = x$, and
@@ -1648,8 +1646,3 @@ In this case every occurrence is counted independently in validation.
 Validation process checks all non-empty signatures are valid and their count
 not less than the threshold. Validation fails if any of signatures is invalid
 even if count of all remaining correct signatures is greater or equals than the threshold.
-
-
-[sp-crypto-spec]: https://github.com/algorandfoundation/specs/blob/master/dev/crypto.md#state-proofs
-[abft-spec]: https://github.com/algorand/spec/abft.md
-[partkey-spec]: https://github.com/algorand/spec/partkey.md
