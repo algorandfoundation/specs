@@ -17,6 +17,7 @@ services:
     build:
       context: .
       target: release # build the release stage
+    platform: linux/amd64
     ports:
       - 3000:3000
       - 3001:3001
