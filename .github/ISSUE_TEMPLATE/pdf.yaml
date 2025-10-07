@@ -1,0 +1,43 @@
+name: PDF Book
+description: Provide feedback on the Algorand Specification PDF Book.
+title: "[PDF Book]: "
+labels: ["pdf"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to provide feedback on the Algorand Specifications! Your input is invaluable in helping us improve the documents.
+        If you haven't already, please read the contribution guidelines at https://specs.algorand.co/CONTRIBUTIONS
+
+  - type: input
+    id: content-page
+    attributes:
+      label: Content Page
+      description: Please provide the PDF Book page and the release version you are providing feedback on.
+    validations:
+      required: true
+
+  - type: dropdown
+    id: feedback-type
+    attributes:
+      label: Feedback Type
+      description: What type of feedback do you have?
+      multiple: true
+      options:
+        - Table
+        - LaTeX formula
+        - Diagram
+        - Image
+        - Layout
+        - Other
+      default: 0
+    validations:
+      required: true
+
+  - type: textarea
+    id: fix-suggestion
+    attributes:
+      label: Improvement Suggestion
+      description: Please provide an improvement suggestion for the PDF Book.
+    validations:
+      required: true
