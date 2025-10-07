@@ -1,0 +1,26 @@
+name: Broken Table
+description: Report broken table.
+title: "[Table]: "
+labels: ["broken-table"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to provide feedback on the Algorand Specifications! Your input is invaluable in helping us improve the documents.
+        If you haven't already, please read the contribution guidelines at https://specs.algorand.co/CONTRIBUTIONS
+
+  - type: input
+    id: table-url
+    attributes:
+      label: Broken table URL
+      description: Please provide the URL of the specs page you are providing feedback on.
+    validations:
+      required: true
+
+  - type: textarea
+    id: fix-suggestion
+    attributes:
+      label: Fix Suggestion
+      description: Please provide a fix suggestion for the table.
+    validations:
+      required: false
