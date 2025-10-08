@@ -39,7 +39,7 @@ The state machine _receives_ two types of events as inputs.
    \\( t(\lambda, p) \\).
 
 > For more details on the way these events may be constructed from an implementation
-> point of view, refer to the non-normative [Algorand ABFT Overview](./non-normative/abft-nn.md).
+> point of view, refer to the [Algorand ABFT non-normative section](./non-normative/abft-nn.md).
 
 ## Outputs
 
@@ -56,5 +56,5 @@ transmitted. A relay action is written as the same message except
 with an asterisk. For instance, an action to relay a vote is written
 as \\( \Vote^\ast(r, p, s, v) \\).
 
-> For implementation details on relay and broadcasting actions, refer to the non-normative
-> [Algorand Network Overview](../network/network-overview.md).
+> For implementation details on relay and broadcasting actions, refer to the
+> [Algorand Network non-normative section](../network/network-overview.md).

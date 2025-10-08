@@ -27,8 +27,4 @@ and the initial consensus participation state (and keys),
 
 ## Genesis Block Example
 
-The following is the Algorand MainNet _genesis block_:
-
-```json
-{{#include ../../_include/genesis-block.json}}
-```
+The Algorand MainNet _genesis block_ is available as [JSON file](../../_include/genesis-block.json).

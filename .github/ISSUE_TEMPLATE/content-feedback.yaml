@@ -1,0 +1,43 @@
+name: Content Feedback
+description: Provide feedback on the Algorand Specification contents.
+title: "[Feedback]: "
+labels: ["feedback"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to provide feedback on the Algorand Specifications! Your input is invaluable in helping us improve the documents.
+        If you haven't already, please read the contribution guidelines at https://specs.algorand.co/CONTRIBUTIONS
+
+  - type: input
+    id: content-url
+    attributes:
+      label: Content URL
+      description: Please provide the URL of the documentation page you are providing feedback on.
+    validations:
+      required: true
+
+  - type: dropdown
+    id: feedback-type
+    attributes:
+      label: Feedback Type
+      description: What type of feedback do you have?
+      multiple: true
+      options:
+        - Inaccuracy
+        - Confusing explanation
+        - Missing reference info
+        - Code example needed
+        - Outdated info
+        - Other
+      default: 0
+    validations:
+      required: true
+
+  - type: textarea
+    id: fix-suggestion
+    attributes:
+      label: Improvement Suggestion
+      description: Please provide an improvement suggestion for the content.
+    validations:
+      required: true

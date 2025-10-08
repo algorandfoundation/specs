@@ -128,7 +128,7 @@ root on the participant array'
 
 - \\( \ln(\Proven\W) \\) an 8-bit string representing the _natural logarithm_
 value of \\( \Proven\W \\) with 16 bits of precision, as described in [SNARK-Friendly
-Weight Threshold Verification](https://github.com/algorandfoundation/specs/blob/master/dev/cryptographic-specs/weight-thresh.pdf),
+Weight Threshold Verification](../../_archive/dev/cryptographic-specs/weight-thresh.pdf),
 
 - \\( \Sig\Cmt \\) is a 512-bit string representing the vector commitment root on
 the signature array,
@@ -217,7 +217,7 @@ to the salt version specified in the State Proof,
 - The number of reveals in the State Proof should be less than or equal to \\( 640 \\),
 
 - Using the trusted \\( \Proven\W \\) (supplied by the verifier), the State Proof
-should pass the [SNARK-Friendly Weight Threshold Verification](https://github.com/algorandfoundation/specs/blob/master/dev/cryptographic-specs/weight-thresh.pdf)
+should pass the [SNARK-Friendly Weight Threshold Verification](../../_archive/dev/cryptographic-specs/weight-thresh.pdf)
 check.
 
 - All of the participant and signature information that appears in the reveals is
@@ -266,14 +266,14 @@ with \\( \target_{PQ} \\) strength into one with merely \\( \target_C \\) streng
 by truncating some of the reveals to stay within the bounds.
 
 First, let us prove that a valid State Proof with \(( NRev_{PQ} \\) number of reveals
-that satisfies Equation (5) in [SNARK-Friendly Weight Threshold Verification](https://github.com/algorandfoundation/specs/blob/master/dev/cryptographic-specs/weight-thresh.pdf)
+that satisfies Equation (5) in [SNARK-Friendly Weight Threshold Verification](../../_archive/dev/cryptographic-specs/weight-thresh.pdf)
 for a given \\( \target_C \\) can be “downgrade” to have:
 
 $$
 \NRev_C = \ceil\left( \NRev_{PQ} \times \frac{\target_{C}}{\target_{PQ}} \right)
 $$
 
-We remark that values \\( d, b, T, Y, D \\) (in [SNARK-Friendly Weight Threshold Verification](https://github.com/algorandfoundation/specs/blob/master/dev/cryptographic-specs/weight-thresh.pdf))
+We remark that values \\( d, b, T, Y, D \\) (in [SNARK-Friendly Weight Threshold Verification](../../_archive/dev/cryptographic-specs/weight-thresh.pdf))
 only depend on \\( \Signed\W \\), but not the number of reveals nor the target.
 
 Hence, we just need to prove that:

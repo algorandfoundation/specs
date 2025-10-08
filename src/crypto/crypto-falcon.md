@@ -1,6 +1,6 @@
 # FALCON
 
-Algorand uses a [deterministic](https://github.com/algorandfoundation/specs/blob/master/dev/cryptographic-specs/falcon-deterministic.pdf)
+Algorand uses a [deterministic](../../_archive/dev/cryptographic-specs/falcon-deterministic.pdf)
 version of [FALCON lattice-based signature scheme](https://falcon-sign.info/falcon.pdf).
 
 FALCON is _quantum-resilient_ and a _SNARK-friendly_ digital signature scheme used
