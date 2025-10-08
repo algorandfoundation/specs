@@ -1,7 +1,7 @@
-name: PDF Book
-description: Provide feedback on the Algorand Specification PDF Book.
-title: "[PDF Book]: "
-labels: ["pdf"]
+name: HTML Site
+description: Provide feedback on the Algorand Specification HTML Site.
+title: "[HTML Site]: "
+labels: ["html"]
 body:
   - type: markdown
     attributes:
@@ -10,10 +10,10 @@ body:
         If you haven't already, please read the contribution guidelines at https://specs.algorand.co/CONTRIBUTIONS
 
   - type: input
-    id: pdf-page
+    id: page-url
     attributes:
-      label: PDF Page
-      description: Please provide the PDF Book page and the release version you are providing feedback on.
+      label: Page URL
+      description: Please provide the URL of the specs page you are providing feedback on.
     validations:
       required: true
 
@@ -29,6 +29,7 @@ body:
         - Diagram
         - Image
         - Layout
+        - Broken link
         - Other
     validations:
       required: true
@@ -40,11 +41,3 @@ body:
       description: Please provide an improvement suggestion for the PDF Book.
     validations:
       required: true
-
-  - type: input
-    id: screenshot-link
-    attributes:
-      label: PDF Screenshot
-      description: Please provide a URL of a screenshot of the PDF Book that shows the issue you are reporting.
-    validations:
-      required: false
