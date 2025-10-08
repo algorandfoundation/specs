@@ -6,9 +6,18 @@ Foundation [repository](https://github.com/algorandfoundation/specs).
 If you would like to contribute, please consider submitting an issue or opening a
 pull request.
 
-By clicking on the _“Suggest an edit”_ icon in the top-right corner, while reading
-this book, you will be redirected to the relevant source code file to be referenced
-in an issue or edited in a pull request.
+## Typos
+
+To fix typos, consider opening a pull request labeled _"typo"_. By clicking on the
+_“Suggest an edit”_ icon in the top-right corner of the page containing the typo,
+you will be redirected to the relevant source code file to be edited in the pull
+request.
+
+## Issues
+
+To report major issues, such as unclear contents, errors in mathematical formulas,
+broken rendering of the Web version or PDF version, broken rendering of diagrams,
+broken links, etc. please consider submitting a [templated issue](https://github.com/algorandfoundation/specs/issues/new/choose).
 
 ## Source Code
 
