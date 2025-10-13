@@ -35,7 +35,7 @@ jobs:
 
       - name: Get latest master commit short SHA
         id: sha
-        run: echo "sha=$(git rev-parse --short origin/develop)" >> $GITHUB_OUTPUT  # TODO: change to master
+        run: echo "sha=$(git rev-parse --short origin/master)" >> $GITHUB_OUTPUT
 
       - name: Prepare artifacts
         run: |
