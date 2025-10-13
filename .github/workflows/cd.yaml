@@ -3,7 +3,7 @@ name: CD
 on:
   push:
     branches:
-      - develop  # TODO: change to master
+      - master
 
 jobs:
   ci:
