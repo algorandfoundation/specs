@@ -1,0 +1,31 @@
+name: CD
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  ci:
+    uses: ./.github/workflows/ci.yaml
+    with:
+      artifact-name: specs-site-master
+
+  deploy-pages:
+    needs: ci
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download built site
+        uses: actions/download-artifact@v5
+        with:
+          name: specs-site-master
+          path: book/html
+
+      - name: Publish to Cloudflare Pages
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CF_ACCOUNT_ID }}
+          gitHubToken: ${{ secrets.GITHUB_TOKEN }}
+          command: |
+            pages deploy ./book/html --project-name algorand-specs

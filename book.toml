@@ -1,0 +1,41 @@
+[book]
+title = "Algorand Specifications"
+authors = ["Algorand Foundation"]
+description = "Algorand normative and non-normative specifications"
+src = "src"
+multilingual = false
+language = "en"
+text-direction = "ltr"
+
+[preprocessor.mermaid]
+command = "mdbook-mermaid"
+
+[output.html]
+theme = "theme"
+default-theme = "light"
+preferred-dark-theme = "dark"
+smart-punctuation = true
+mathjax-support = true
+additional-js = ["mermaid.min.js", "mermaid-init.js", "theme/gtm.js", "theme/gtm-noscript.js"]
+git-repository-url = "https://github.com/algorandfoundation/specs"
+git-repository-icon = "fa-github"
+edit-url-template = "https://github.com/algorandfoundation/specs/edit/master/{path}"
+site-url = "https://specs.algorand.co/"
+
+[output.html.fold]
+enable = true
+level = 3  # Navigation sidebar unfolded up to the 4th 0-based level. Tune it according to the max SUMMARY.md level depth.
+
+[output.pandoc]
+optional = true
+
+[output.pandoc.profile.pdf]
+output-file = "algorand-specs.pdf"
+pdf-engine = "lualatex"
+
+[output.pandoc.profile.pdf.variables]
+mainfont = "Noto Serif"
+sansfont = "Noto Sans"
+monofont = "Noto Sans Mono"
+mainfontfallback = ["NotoColorEmoji:mode=harf"]
+monofontfallback = ["NotoColorEmoji:mode=harf"]

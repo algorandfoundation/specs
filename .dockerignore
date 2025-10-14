@@ -1,0 +1,22 @@
+# DOTs
+.*
+
+# ORIGINAL SPECS
+dev/
+overview/
+
+# SPECS
+src/
+
+# DOCKER
+docker-compose.yaml
+Dockerfile
+
+# README
+LICENSE
+README.md
+
+# MDBOOK
+book/
+mermaid-init.js
+mermaid.min.js

@@ -1,0 +1,39 @@
+repos:
+  - repo: https://github.com/igorshubovych/markdownlint-cli
+    rev: v0.45.0
+    hooks:
+      - id: markdownlint
+        name: markdownlint
+        description: "Checks the style of Markdown/Commonmark files."
+        language: node
+        entry: markdownlint
+        minimum_pre_commit_version: 3.2.0
+        types: [ markdown ]
+        additional_dependencies: [ ]
+        files: '^(src/.*\.md|README\.md)'
+
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: trailing-whitespace
+        name: trim trailing whitespace
+        description: "Trims trailing whitespace."
+        language: python
+        entry: trailing-whitespace-fixer
+        minimum_pre_commit_version: 3.2.0
+        types: [ text ]
+        additional_dependencies: [ ]
+        exclude: '(^|/)_archive(/|$)'
+
+  - repo: https://github.com/lycheeverse/lychee
+    rev: lychee-v0.20.1
+    hooks:
+    - id: lychee
+      name: lychee
+      description: "Run 'lychee' docker image for fast, async, stream-based link checking"
+      language: docker_image
+      entry: lycheeverse/lychee:latest
+      args: ["--no-progress"]
+      types: [ markdown ]
+      require_serial: true
+      files: '^(src/.*\.md|README\.md)'

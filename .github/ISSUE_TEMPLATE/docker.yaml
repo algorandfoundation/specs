@@ -1,0 +1,26 @@
+name: Docker Image
+description: Report bugs or feedback on the Docker images.
+title: "[Docker]: "
+labels: ["docker"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to provide feedback on the Algorand Specifications! Your input is invaluable in helping us improve the documents.
+        If you haven't already, please read the contribution guidelines at https://specs.algorand.co/CONTRIBUTIONS
+
+  - type: input
+    id: docker-image
+    attributes:
+      label: Docker Image
+      description: Please provide a feedback or report a bug on the Docker images.
+    validations:
+      required: true
+
+  - type: textarea
+    id: fix-suggestion
+    attributes:
+      label: Fix Suggestion
+      description: Please provide a fix suggestion for the Dockerfile or docker-compose.
+    validations:
+      required: false

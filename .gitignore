@@ -18,3 +18,8 @@ dev/pdf
 *.cb
 *.cb2
 .*.lb
+
+# mdBook
+book/
+mermaid.min.js
+mermaid-init.js
