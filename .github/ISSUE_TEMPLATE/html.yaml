@@ -2,6 +2,7 @@ name: HTML Site
 description: Provide feedback on the Algorand Specification HTML Site.
 title: "[HTML Site]: "
 labels: ["html"]
+type: "Feedback"
 body:
   - type: markdown
     attributes:
