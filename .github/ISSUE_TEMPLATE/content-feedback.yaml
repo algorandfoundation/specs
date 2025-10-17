@@ -1,7 +1,7 @@
 name: Content Feedback
 description: Provide feedback on the Algorand Specification contents.
 title: "[Feedback]: "
-labels: ["feedback"]
+type: "Feedback"
 body:
   - type: markdown
     attributes:
