@@ -585,6 +585,11 @@ html:not(.sidebar-resizing) .sidebar {
 
 .chapter li a.active {
     color: var(--sidebar-active);
+    border-left: 3px solid var(--sidebar-active);
+    border-radius: 2px;
+    padding: 0 5px;
+    background-color: var(--theme-hover);
+    font-weight: 600;
 }
 
 .chapter li > a.toggle {
