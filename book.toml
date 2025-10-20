@@ -32,6 +32,7 @@ optional = true
 [output.pandoc.profile.pdf]
 output-file = "algorand-specs.pdf"
 pdf-engine = "lualatex"
+filters = ["mermaid-filter"]
 
 [output.pandoc.profile.pdf.variables]
 mainfont = "Noto Serif"
