@@ -35,7 +35,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 RUN PANDOC_VERSION=3.8.2 && \
     ARCH=$(dpkg --print-architecture) && \
-    curl -L -o pandoc-${PANDOC_VERSION}-1-${ARCH}.deb https://github.com/jgm/pandoc/releases/download/${PANDOC_VERSION}/pandoc-${PANDOC_VERSION}-1-${ARCH}.deb && \
+    curl -fL -o pandoc-${PANDOC_VERSION}-1-${ARCH}.deb https://github.com/jgm/pandoc/releases/download/${PANDOC_VERSION}/pandoc-${PANDOC_VERSION}-1-${ARCH}.deb && \
     dpkg -i pandoc-${PANDOC_VERSION}-1-${ARCH}.deb && \
     rm pandoc-${PANDOC_VERSION}-1-${ARCH}.deb
 
