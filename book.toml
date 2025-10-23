@@ -37,5 +37,6 @@ pdf-engine = "lualatex"
 mainfont = "Noto Serif"
 sansfont = "Noto Sans"
 monofont = "Noto Sans Mono"
-mainfontfallback = ["NotoColorEmoji:mode=harf"]
-monofontfallback = ["NotoColorEmoji:mode=harf"]
+mainfontfallback = ["NotoColorEmoji:mode=harf", "Noto Sans Symbols:mode=harf", "Noto Sans Symbols2:mode=harf"]
+sansfontfallback = ["NotoColorEmoji:mode=harf", "Noto Sans Symbols:mode=harf", "Noto Sans Symbols2:mode=harf"]
+monofontfallback = ["NotoColorEmoji:mode=harf", "Noto Sans Symbols:mode=harf", "Noto Sans Symbols2:mode=harf"]
