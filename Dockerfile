@@ -35,9 +35,10 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && rm -rf /var/lib/apt/lists/* \
     && fc-cache -fv
 
-ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
-ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium
-ENV MERMAID_FILTER_FORMAT=svg
+ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true \
+    PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium \
+    MERMAID_FILTER_FORMAT=svg \
+    MMD_PATH=/usr/local/lib/node_modules/mermaid-filter/node_modules/.bin
 
 RUN npm install --global mermaid-filter@1.4.7
 
@@ -52,7 +53,6 @@ RUN cargo install mdbook-pandoc
 COPY puppeteer-config.json /etc/puppeteer-config.json
 
 # Wrap the real mmdc executable to inject the config file option
-ARG MMD_PATH="/usr/local/lib/node_modules/mermaid-filter/node_modules/.bin"
 RUN mv "${MMD_PATH}/mmdc" "${MMD_PATH}/mmdc-original"
 COPY --chmod=755 mmdc-wrapper.sh "${MMD_PATH}/mmdc"
 
