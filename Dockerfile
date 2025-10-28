@@ -39,7 +39,7 @@ ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
 ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium
 ENV MERMAID_FILTER_FORMAT=svg
 
-RUN npm install --global mermaid-filter
+RUN npm install --global mermaid-filter@1.4.7
 
 RUN PANDOC_VERSION=3.8.2 && \
     ARCH=$(dpkg --print-architecture) && \
