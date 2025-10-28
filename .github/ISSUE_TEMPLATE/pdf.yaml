@@ -2,6 +2,7 @@ name: PDF Book
 description: Provide feedback on the Algorand Specification PDF Book.
 title: "[PDF Book]: "
 labels: ["pdf"]
+type: "Feedback"
 body:
   - type: markdown
     attributes:

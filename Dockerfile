@@ -22,7 +22,6 @@ ENTRYPOINT ["mdbook"]
 FROM base AS release
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    pandoc \
     texlive \
     texlive-luatex \
     texlive-xetex \
@@ -54,6 +53,12 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 ENV PUPPETEER_CACHE_DIR /usr/local/share/puppeteer_cache
 
 RUN npm install --global mermaid-filter
+RUN PANDOC_VERSION=3.8.2 && \
+    ARCH=$(dpkg --print-architecture) && \
+    curl -fL -o pandoc-${PANDOC_VERSION}-1-${ARCH}.deb https://github.com/jgm/pandoc/releases/download/${PANDOC_VERSION}/pandoc-${PANDOC_VERSION}-1-${ARCH}.deb && \
+    dpkg -i pandoc-${PANDOC_VERSION}-1-${ARCH}.deb && \
+    rm pandoc-${PANDOC_VERSION}-1-${ARCH}.deb
+
 RUN cargo install mdbook-pandoc
 
 COPY puppeteer-config.json /etc/puppeteer-config.json

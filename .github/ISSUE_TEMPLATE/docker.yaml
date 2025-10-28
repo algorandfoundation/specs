@@ -2,6 +2,7 @@ name: Docker Image
 description: Report bugs or feedback on the Docker images.
 title: "[Docker]: "
 labels: ["docker"]
+type: "Feedback"
 body:
   - type: markdown
     attributes:

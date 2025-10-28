@@ -16,7 +16,7 @@ default-theme = "light"
 preferred-dark-theme = "dark"
 smart-punctuation = true
 mathjax-support = true
-additional-js = ["mermaid.min.js", "mermaid-init.js", "theme/gtm.js", "theme/gtm-noscript.js"]
+additional-js = ["mermaid.min.js", "mermaid-init.js", "theme/gtm.js", "theme/gtm-noscript.js", "theme/sidebar-active-link.js"]
 git-repository-url = "https://github.com/algorandfoundation/specs"
 git-repository-icon = "fa-github"
 edit-url-template = "https://github.com/algorandfoundation/specs/edit/master/{path}"
@@ -38,5 +38,6 @@ filters = ["mermaid-filter"]
 mainfont = "Noto Serif"
 sansfont = "Noto Sans"
 monofont = "Noto Sans Mono"
-mainfontfallback = ["NotoColorEmoji:mode=harf"]
-monofontfallback = ["NotoColorEmoji:mode=harf"]
+mainfontfallback = ["NotoColorEmoji:mode=harf", "Noto Sans Symbols:mode=harf", "Noto Sans Symbols2:mode=harf"]
+sansfontfallback = ["NotoColorEmoji:mode=harf", "Noto Sans Symbols:mode=harf", "Noto Sans Symbols2:mode=harf"]
+monofontfallback = ["NotoColorEmoji:mode=harf", "Noto Sans Symbols:mode=harf", "Noto Sans Symbols2:mode=harf"]
