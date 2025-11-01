@@ -41,7 +41,7 @@ jobs:
         run: docker compose run mdbook build
 
       - name: Upload built site
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: ${{ inputs.artifact-name }}
           path: book/html/*
