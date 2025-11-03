@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1
 
-FROM rust:1.90-slim-bookworm AS base
+FROM rust:1.91-slim-bookworm AS base
 
 WORKDIR /book
 
