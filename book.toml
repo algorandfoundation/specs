@@ -3,7 +3,6 @@ title = "Algorand Specifications"
 authors = ["Algorand Foundation"]
 description = "Algorand normative and non-normative specifications"
 src = "src"
-multilingual = false
 language = "en"
 text-direction = "ltr"
 

@@ -332,7 +332,7 @@ html.dark img {
 
 /* CookieBot widget style override */
 #CookiebotWidget {
-  right: 10px !important; /* Adjust distance from right */
+  right: 10px !important;
   left: auto !important;
   top: auto !important;
 }
