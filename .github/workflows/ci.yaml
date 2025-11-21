@@ -19,6 +19,9 @@ jobs:
           fetch-depth: 0
           submodules: recursive
 
+      - name: Ensure submodules are initialized
+        run: git submodule update --init --recursive
+
       - name: Install pre-commit
         run: pip install --upgrade pip pre-commit
 
