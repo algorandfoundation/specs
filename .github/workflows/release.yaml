@@ -29,6 +29,8 @@ jobs:
 
       - name: Checkout repository
         uses: actions/checkout@v5
+        with:
+          submodules: recursive
 
       - name: Build mdBook for release (HTML + PDF)
         run: docker compose run mdbook-release build
