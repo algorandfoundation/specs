@@ -329,3 +329,10 @@ sup {
 html.dark img {
   filter: invert(1) hue-rotate(180deg);
 }
+
+/* CookieBot widget style override */
+#CookiebotWidget {
+  right: 10px !important; /* Adjust distance from right */
+  left: auto !important;
+  top: auto !important;
+}
