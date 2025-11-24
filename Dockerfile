@@ -2,24 +2,36 @@
 
 FROM rust:1.91-slim-bookworm AS base
 
+ARG MDBOOK_VERSION=0.5.1
+ARG MDBOOK_MERMAID_VERSION=0.17.0
+
 WORKDIR /book
 
 COPY book.toml .
 COPY theme ./theme
 
-RUN apt-get update && apt-get install -y --no-install-recommends curl \
-    && rm -rf /var/lib/apt/lists/* \
-    && cargo install mdbook mdbook-mermaid \
-    && mdbook-mermaid install
+# Install basic tooling required for building mdBook and running health checks.
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends curl \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install mdBook and the Mermaid preprocessor with matching versions.
+RUN cargo install --locked --force --root /usr/local mdbook --version ${MDBOOK_VERSION} \
+    && cargo install --locked --force --root /usr/local mdbook-mermaid --version ${MDBOOK_MERMAID_VERSION}
 
 # CI/CD image
 FROM base AS ci-cd
 
-HEALTHCHECK CMD curl --fail http://localhost:3000 || exit 1
+RUN mdbook-mermaid install
+
 ENTRYPOINT ["mdbook"]
+
+HEALTHCHECK CMD curl --fail http://localhost:3000 || exit 1
 
 # Release image
 FROM base AS release
+
+ARG MDBOOK_PANDOC_VERSION=0.11.0
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
     texlive \
@@ -48,7 +60,7 @@ RUN PANDOC_VERSION=3.8.2 && \
     dpkg -i pandoc-${PANDOC_VERSION}-1-${ARCH}.deb && \
     rm pandoc-${PANDOC_VERSION}-1-${ARCH}.deb
 
-RUN cargo install mdbook-pandoc
+RUN cargo install --locked --force --root /usr/local mdbook --version ${MDBOOK_VERSION}
 
 COPY puppeteer-config.json /etc/puppeteer-config.json
 
@@ -56,6 +68,6 @@ COPY puppeteer-config.json /etc/puppeteer-config.json
 RUN mv "${MMD_PATH}/mmdc" "${MMD_PATH}/mmdc-original"
 COPY --chmod=755 mmdc-wrapper.sh "${MMD_PATH}/mmdc"
 
-HEALTHCHECK CMD curl --fail http://localhost:3000 || exit 1
-
 ENTRYPOINT ["mdbook"]
+
+HEALTHCHECK CMD curl --fail http://localhost:3000 || exit 1
