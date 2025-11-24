@@ -3,7 +3,6 @@ title = "Algorand Specifications"
 authors = ["Algorand Foundation"]
 description = "Algorand normative and non-normative specifications"
 src = "src"
-multilingual = false
 language = "en"
 text-direction = "ltr"
 
@@ -17,6 +16,7 @@ preferred-dark-theme = "dark"
 smart-punctuation = true
 mathjax-support = true
 additional-js = ["mermaid.min.js", "mermaid-init.js", "gtm.js", "gtm-noscript.js", "theme/sidebar-active-link.js"]
+additional-css = ["theme-override.css"]
 git-repository-url = "https://github.com/algorandfoundation/specs"
 git-repository-icon = "fa-github"
 edit-url-template = "https://github.com/algorandfoundation/specs/edit/master/{path}"

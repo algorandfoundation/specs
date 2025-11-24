@@ -9,6 +9,7 @@ WORKDIR /book
 
 COPY book.toml .
 COPY theme ./theme
+COPY theme-override.css gtm.js gtm-noscript.js ./
 
 # Install basic tooling required for building mdBook and running health checks.
 RUN apt-get update \
