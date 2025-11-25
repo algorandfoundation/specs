@@ -32,6 +32,9 @@ jobs:
         with:
           submodules: recursive
 
+      - name: Init submodules
+        run: git submodule update --init --recursive
+
       - name: Build mdBook for release (HTML + PDF)
         run: docker compose run mdbook-release build
 
