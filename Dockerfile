@@ -61,7 +61,7 @@ RUN PANDOC_VERSION=3.8.2 && \
     dpkg -i pandoc-${PANDOC_VERSION}-1-${ARCH}.deb && \
     rm pandoc-${PANDOC_VERSION}-1-${ARCH}.deb
 
-RUN cargo install --locked --force --root /usr/local mdbook --version ${MDBOOK_VERSION}
+RUN cargo install --locked --force --root /usr/local mdbook-pandoc --version ${MDBOOK_PANDOC_VERSION}
 
 COPY puppeteer-config.json /etc/puppeteer-config.json
 
