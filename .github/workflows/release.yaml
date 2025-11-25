@@ -28,7 +28,9 @@ jobs:
             core.info(`User @${actor} has '${permission}' permission. Proceeding with release.`);
 
       - name: Checkout repository
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
+        with:
+          submodules: recursive
 
       - name: Build mdBook for release (HTML + PDF)
         run: docker compose run mdbook-release build
