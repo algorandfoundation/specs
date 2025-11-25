@@ -14,9 +14,13 @@ jobs:
 
     steps:
       - name: Checkout repo
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
+          submodules: recursive
+
+      - name: Initialize git submodules
+        run: git submodule update --init --recursive
 
       - name: Install pre-commit
         run: pip install --upgrade pip pre-commit
