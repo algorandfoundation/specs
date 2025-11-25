@@ -15,10 +15,9 @@ default-theme = "light"
 preferred-dark-theme = "dark"
 smart-punctuation = true
 mathjax-support = true
-additional-js = ["gtm.js", "gtm-noscript.js", "theme/sidebar-active-link.js"]
+additional-js = ["mermaid.min.js", "mermaid-init.js","gtm.js", "gtm-noscript.js", "theme/sidebar-active-link.js"]
 additional-css = ["theme-override.css"]
 git-repository-url = "https://github.com/algorandfoundation/specs"
-
 edit-url-template = "https://github.com/algorandfoundation/specs/edit/master/{path}"
 site-url = "https://specs.algorand.co/"
 
