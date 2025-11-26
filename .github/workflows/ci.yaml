@@ -41,16 +41,6 @@ jobs:
       - name: Build mdBook for CI/CD (HTML)
         run: docker compose run mdbook build
 
-      - name: Remove .html suffixes from links
-        run: |
-          # Process toc-*.js files (handles hashed filenames)
-          find book/ -name 'toc-*.js' -o -name 'toc.js' | xargs sed -i 's|href="index\.html"|href="."|g'
-          find book/ -name 'toc-*.js' -o -name 'toc.js' | xargs sed -i 's|\(href="[a-zA-Z0-9.][^"]*\)\.html"|\1"|g'
-
-          # Process all HTML files
-          find book/ -name '*.html' -exec sed -i 's|href="index\.html"|href="."|g' {} +
-          find book/ -name '*.html' -exec sed -i 's|\(href="[a-zA-Z0-9.][^"]*\)\.html"|\1"|g' {} +
-
       - name: Upload built site
         uses: actions/upload-artifact@v5
         with:
