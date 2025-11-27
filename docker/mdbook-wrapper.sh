@@ -13,7 +13,8 @@ if [ "$1" = "build" ]; then
     find book/ -type f \( -name "*.html" -o -name "toc.js" -o -name "toc-*.js" \) -print0 | \
         xargs -0 sed -i \
             -e 's|href="index\.html"|href="."|g' \
-            -e 's|\(href="[^":]*\)\.html\(["#]\)|\1\2|g'
+            -e 's|\(href="[^":]*\)/index\.html\(["#?]\)|\1/\2|g' \
+            -e 's|\(href="[^":]*\)\.html\(["#?]\)|\1\2|g'
 
     echo "Done!"
 fi
