@@ -20,6 +20,10 @@ RUN apt-get update \
 RUN cargo install --locked --force --root /usr/local mdbook --version ${MDBOOK_VERSION} \
     && cargo install --locked --force --root /usr/local mdbook-mermaid --version ${MDBOOK_MERMAID_VERSION}
 
+# Wrap mdbook to automatically remove .html suffixes after build
+RUN mv /usr/local/bin/mdbook /usr/local/bin/mdbook-original
+COPY --chmod=755 docker/mdbook-wrapper.sh /usr/local/bin/mdbook
+
 # CI/CD image
 FROM base AS ci-cd
 
@@ -63,11 +67,11 @@ RUN PANDOC_VERSION=3.8.2 && \
 
 RUN cargo install --locked --force --root /usr/local mdbook-pandoc --version ${MDBOOK_PANDOC_VERSION}
 
-COPY puppeteer-config.json /etc/puppeteer-config.json
+COPY docker/puppeteer-config.json /etc/puppeteer-config.json
 
 # Wrap the real mmdc executable to inject the config file option
 RUN mv "${MMD_PATH}/mmdc" "${MMD_PATH}/mmdc-original"
-COPY --chmod=755 mmdc-wrapper.sh "${MMD_PATH}/mmdc"
+COPY --chmod=755 docker/mmdc-wrapper.sh "${MMD_PATH}/mmdc"
 
 ENTRYPOINT ["mdbook"]
 
