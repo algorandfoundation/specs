@@ -299,7 +299,7 @@ make install-tools
 
 #### Build and Serve
 
-Build and serve the specs book (HTML) locally (hot reload) on `[localhost:3000](http://localhost:3000):
+Build and serve the specs book (HTML) locally (hot reload) on [localhost:3000](http://localhost:3000):
 
 ```shell
 make serve
