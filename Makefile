@@ -30,7 +30,7 @@ install-tools:
 	cargo install mdbook-mermaid --version "$(MDBOOK_MERMAID_VERSION)"
 	$(MAKE) mermaid-assets
 
-# Ensures mermaid.min.js and mermaid-init.js exist + book.toml is configured (idempotent).
+# Ensures mermaid.min.js and mermaid-init.js exist in the book directory (idempotent).
 mermaid-assets: tools
 	mdbook-mermaid install "$(BOOK_DIR)"
 
