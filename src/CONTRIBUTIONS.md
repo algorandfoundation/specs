@@ -227,20 +227,108 @@ Structured diagrams (e.g., flow charts, sequence diagrams, etc.) are defined wit
 
 Unstructured diagrams and images are drawn with [Excalidraw](https://excalidraw.com/).
 
-Excalidraw images **MUST** be exported in `.svg` format and saved in the `./src/images/`
-folder.
+Excalidraw images **MUST** be exported in `.svg` format withouth background and saved
+in the `./src/images/`folder.
 
 Excalidraw images source code **MUST** be committed in the `./src/.excalidraw/`
 folder.
 
-## Docker
+## Installation
 
-The Algorand Specifications repository makes use of a `Dockerfile`.
+### Clone Repository
 
-To run the `specs` book as a container:
+Clone the Algorand Specifications repository and install the git submodules:
+
+**SSH** clone:
+
+```shell
+git clone --recurse-submodules git@github.com:algorandfoundation/specs.git
+cd specs
+```
+
+or
+
+**HTML** clone:
+
+```shell
+git clone --recurse-submodules https://github.com/algorandfoundation/specs.git
+cd specs
+```
+
+### Sync git submodules
+
+If the Algorand Specifications repository is already cloned, sync the git submodules
+in the `specs` folder:
+
+```shell
+git submodule update --init --recursive
+```
+
+### Docker
+
+To run the Algorand Specifications book as a Docker container from the `specs` folder:
 
 ```shell
 docker compose up
 ```
 
-This will serve the `specs` book on [localhost:3000](http://localhost:3000).
+This will serve (hot reload) the book on [localhost:3000](http://localhost:3000).
+
+### Local (without Docker)
+
+This section is for contributors who **cannot / do not want to** use Docker.
+
+> The PDF Book and release toolchain (Pandoc, mdbook-pandoc, LaTeX, etc.) are intentionally
+> **out of scope** here.
+
+#### Dependencies
+
+**Rust toolchain (`cargo`)**: install Rust with [rustup](https://rust-lang.org/tools/install/)
+
+```shell
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+```
+
+**mdBook tools**: install via `Makefile`
+
+```shell
+make install-tools
+```
+
+> Ensure Cargo’s bin dir (usually `~/.cargo/bin`) is on your `PATH`.
+
+#### Build and Serve
+
+Build and serve the specs book (HTML) locally (hot reload) on `[localhost:3000](http://localhost:3000):
+
+```shell
+make serve
+```
+
+Build (only) the specs book (HTML):
+
+```shell
+make build
+```
+
+Clean up the specs book build artifacts:
+
+```shell
+make clean
+```
+
+## CI/CD and Release
+
+The CI/CD and Release pipeline is defined in the `.github/workflows/` files.
+
+The CI runs on a Pull Request to:
+
+- Enforce [pre-commit](https://pre-commit.com/) hooks for linting and formatting;
+- Provide warnings for broken links;
+- Deploy the book preview to a temporary URL for review.
+
+The CD pipeline deploys the book to <https://specs.algorand.co> on every push to
+the `master` branch.
+
+The Release pipeline creates the release tag, builds the PDF Book, and publishes
+it as a release artifact.
