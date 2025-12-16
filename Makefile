@@ -12,13 +12,16 @@ PORT   ?= 3000
 MERMAID_ASSETS := mermaid.min.js mermaid-init.js
 
 .PHONY: help tools install-tools mermaid-assets build serve clean clean-mermaid
+.PHONY: lint install-lint-tools
 
 help:
 	@echo "Targets:"
-	@echo "  make install-tools   Install pinned mdbook/mdbook-mermaid and set up Mermaid assets"
-	@echo "  make serve           Serve the book locally (HOST=$(HOST) PORT=$(PORT))"
-	@echo "  make build           Build the HTML into ./book"
-	@echo "  make clean           Remove ./book and generated Mermaid JS assets"
+	@echo "  make install-tools         Install pinned mdbook/mdbook-mermaid and set up Mermaid assets (requires cargo)"
+	@echo "  make install-lint-tools    Install pre-commit (requires python3 + pip)"
+	@echo "  make serve                 Serve the book locally (HOST=$(HOST) PORT=$(PORT))"
+	@echo "  make build                 Build the HTML into ./book"
+	@echo "  make clean                 Remove ./book and generated Mermaid JS assets"
+	@echo "  make lint                  Run pre-commit hooks on all files"
 
 tools:
 	@command -v "$(MDBOOK)" >/dev/null || { echo "ERROR: 'mdbook' not found. Run: make install-tools"; exit 1; }
@@ -30,7 +33,12 @@ install-tools:
 	cargo install mdbook-mermaid --version "$(MDBOOK_MERMAID_VERSION)"
 	$(MAKE) mermaid-assets
 
-# Ensures mermaid.min.js and mermaid-init.js exist in the book directory (idempotent).
+install-lint-tools:
+	@command -v python3 >/dev/null || { echo "ERROR: 'python3' not found."; exit 1; }
+	@python3 -m pip --version >/dev/null 2>&1 || { echo "ERROR: pip not available for python3."; exit 1; }
+	@python3 -m pip install --user pre-commit
+
+# Ensures mermaid.min.js and mermaid-init.js exist + book.toml is configured (idempotent).
 mermaid-assets: tools
 	mdbook-mermaid install "$(BOOK_DIR)"
 
@@ -56,3 +64,7 @@ clean-mermaid:
 			fi; \
 		fi; \
 	done
+
+lint:
+	@command -v pre-commit >/dev/null || { echo "ERROR: 'pre-commit' not found. Run: make install-lint-tools"; exit 1; }
+	@pre-commit run --all-files
