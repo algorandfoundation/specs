@@ -9,7 +9,10 @@ services:
       - 3001:3001
     command: ["serve", "--hostname", "0.0.0.0"]
     volumes:
+      - ./book.toml:/book/book.toml:ro
       - ./src:/book/src
+      - ./theme:/book/theme:ro
+      - ./theme-ext:/book/theme-ext:ro
       - ./book:/book/book
 
   mdbook-release:
@@ -25,5 +28,8 @@ services:
     profiles:
       - release
     volumes:
+      - ./book.toml:/book/book.toml:ro
       - ./src:/book/src
+      - ./theme:/book/theme:ro
+      - ./theme-ext:/book/theme-ext:ro
       - ./book:/book/book
