@@ -228,7 +228,7 @@ Structured diagrams (e.g., flow charts, sequence diagrams, etc.) are defined wit
 Unstructured diagrams and images are drawn with [Excalidraw](https://excalidraw.com/).
 
 Excalidraw images **MUST** be exported in `.svg` format without background and saved
-in the `./src/images/`folder.
+in the `./src/images/` folder.
 
 Excalidraw images source code **MUST** be committed in the `./src/.excalidraw/`
 folder.
