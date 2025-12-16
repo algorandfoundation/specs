@@ -3,33 +3,31 @@ services:
     container_name: mdbook
     build:
       context: .
-      target: ci-cd # build the CI/CD stage
+      target: ci-cd
+      args:
+        MDBOOK_VERSION: ${MDBOOK_VERSION-0.5.1}
+        MDBOOK_MERMAID_VERSION: ${MDBOOK_MERMAID_VERSION-0.17.0}
+    working_dir: /book
     ports:
       - 3000:3000
-      - 3001:3001
-    command: ["serve", "--hostname", "0.0.0.0"]
+    command: ["mdbook", "serve", "--hostname", "0.0.0.0", "--port", "3000"]
     volumes:
-      - ./book.toml:/book/book.toml:ro
-      - ./src:/book/src
-      - ./theme:/book/theme:ro
-      - ./theme-ext:/book/theme-ext:ro
-      - ./book:/book/book
+      - .:/book
 
   mdbook-release:
     container_name: mdbook-release
     build:
       context: .
-      target: release # build the release stage
+      target: release
+      args:
+        MDBOOK_VERSION: ${MDBOOK_VERSION-0.5.1}
+        MDBOOK_MERMAID_VERSION: ${MDBOOK_MERMAID_VERSION-0.17.0}
     platform: linux/amd64
+    working_dir: /book
     ports:
-      - 3000:3000
-      - 3001:3001
-    command: ["serve", "--hostname", "0.0.0.0"]
+      - 3001:3000
+    command: ["mdbook", "serve", "--hostname", "0.0.0.0", "--port", "3000"]
     profiles:
       - release
     volumes:
-      - ./book.toml:/book/book.toml:ro
-      - ./src:/book/src
-      - ./theme:/book/theme:ro
-      - ./theme-ext:/book/theme-ext:ro
-      - ./book:/book/book
+      - .:/book
