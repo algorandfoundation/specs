@@ -16,31 +16,14 @@ RUN apt-get update \
 RUN cargo install --locked --force --root /usr/local mdbook --version ${MDBOOK_VERSION} \
     && cargo install --locked --force --root /usr/local mdbook-mermaid --version ${MDBOOK_MERMAID_VERSION}
 
-# Bundle default mermaid assets inside the image (so we don't need project files at build time).
-# At runtime, the entrypoint will copy these into /book if the mounted book.toml references them.
-RUN set -eux; \
-    tmp="$(mktemp -d)"; \
-    mdbook init --force --ignore=none --title "mdbook" "$tmp"; \
-    mdbook-mermaid install "$tmp"; \
-    install -d /usr/local/share/mdbook-mermaid; \
-    cp "$tmp/mermaid.min.js" "$tmp/mermaid-init.js" /usr/local/share/mdbook-mermaid/; \
-    rm -rf "$tmp"
-
 # Wrap mdbook to automatically remove .html suffixes after build
 RUN mv /usr/local/bin/mdbook /usr/local/bin/mdbook-original
 COPY --chmod=755 docker/mdbook-wrapper.sh /usr/local/bin/mdbook
 
-# Small entrypoint: ensures mermaid assets exist when requested, then runs mdbook.
-COPY --chmod=755 docker/entrypoint.sh /usr/local/bin/entrypoint
-
-# CI/CD image
 FROM base AS ci-cd
-
-ENTRYPOINT ["/usr/local/bin/entrypoint"]
 
 HEALTHCHECK CMD curl --fail http://localhost:3000 || exit 1
 
-# Release image
 FROM base AS release
 
 ARG MDBOOK_PANDOC_VERSION=0.11.0
@@ -68,7 +51,8 @@ RUN npm install --global mermaid-filter@1.4.7
 
 RUN PANDOC_VERSION=3.8.2 && \
     ARCH=$(dpkg --print-architecture) && \
-    curl -fL -o pandoc-${PANDOC_VERSION}-1-${ARCH}.deb https://github.com/jgm/pandoc/releases/download/${PANDOC_VERSION}/pandoc-${PANDOC_VERSION}-1-${ARCH}.deb && \
+    curl -fL -o pandoc-${PANDOC_VERSION}-1-${ARCH}.deb \
+      https://github.com/jgm/pandoc/releases/download/${PANDOC_VERSION}/pandoc-${PANDOC_VERSION}-1-${ARCH}.deb && \
     dpkg -i pandoc-${PANDOC_VERSION}-1-${ARCH}.deb && \
     rm pandoc-${PANDOC_VERSION}-1-${ARCH}.deb
 
@@ -79,7 +63,5 @@ COPY docker/puppeteer-config.json /etc/puppeteer-config.json
 # Wrap the real mmdc executable to inject the config file option
 RUN mv "${MMD_PATH}/mmdc" "${MMD_PATH}/mmdc-original"
 COPY --chmod=755 docker/mmdc-wrapper.sh "${MMD_PATH}/mmdc"
-
-ENTRYPOINT ["/usr/local/bin/entrypoint"]
 
 HEALTHCHECK CMD curl --fail http://localhost:3000 || exit 1
