@@ -186,18 +186,18 @@ TeX macros can be imported entirely or partially (e.g., just a functional block)
 > Import all TeX-macros:
 >
 > ```text
-> \{{#include ./.include/tex-macros.md:all}}
+> \{{#include ./_include/tex-macros.md:all}}
 > ```
 >
 > Import just a block of TeX-macros (e.g., pseudocode commands):
 >
 > ```text
-> \{{#include ./.include/tex-macros.md:pseudocode}}
+> \{{#include ./_include/tex-macros.md:pseudocode}}
 > ```
 
 ## Block Styles
 
-Block styles are defined in the `./src/.include/styles.md` file using the mdBook
+Block styles are defined in the `./src/_include/styles.md` file using the mdBook
 [include feature](https://rust-lang.github.io/mdBook/format/mdbook.html#including-files).
 
 Block styles (e.g., examples, implementation notes, etc.) are “styled quote” blocks
@@ -228,9 +228,9 @@ Structured diagrams (e.g., flow charts, sequence diagrams, etc.) are defined wit
 Unstructured diagrams and images are drawn with [Excalidraw](https://excalidraw.com/).
 
 Excalidraw images **MUST** be exported in `.svg` format without a background and
-saved in the `./src/images/` folder.
+saved in the `./src/_images/` folder.
 
-Excalidraw images source code **MUST** be committed in the `./src/.excalidraw/`
+Excalidraw images source code **MUST** be committed in the `./src/_excalidraw/`
 folder.
 
 ## Installation

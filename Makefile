@@ -164,5 +164,5 @@ clean:
 	done
 
 lint:
-	@command -v pre-commit >/dev/null || { echo "ERROR: 'pre-commit' not found. Run: make install-lint-tools"; exit 1; }
+	@command -v pre-commit >/dev/null || { echo "ERROR: 'pre-commit' not found. Run: make setup-lint-tools"; exit 1; }
 	@pre-commit run --all-files
