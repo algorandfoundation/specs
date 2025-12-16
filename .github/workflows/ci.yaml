@@ -40,8 +40,7 @@ jobs:
 
       - name: Build mdBook for CI/CD (HTML)
         run: |
-          make docker-ci
-          docker compose run mdbook mdbook build .
+          make docker-ci-all
 
       - name: Upload built site
         uses: actions/upload-artifact@v5

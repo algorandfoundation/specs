@@ -23,7 +23,7 @@ MERMAID_CMD_DOCKER = $(DOCKER_COMPOSE) run --rm mdbook mdbook-mermaid
 
 .PHONY: help doctor \
         setup serve serve-auto build clean lint setup-lint-tools \
-        docker-ci docker-release docker-serve
+        docker-ci docker-release docker-serve docker-build-html docker-ci-all
 
 help:
 	@echo "Local:"
@@ -120,6 +120,11 @@ docker-ci:
 	  --build-arg MDBOOK_MERMAID_VERSION=$(MDBOOK_MERMAID_VERSION)
 	@echo "Installing Mermaid assets via ci-cd container..."
 	$(MERMAID_CMD_DOCKER) install $(BOOK_DIR)
+
+docker-build-html:
+	$(MDBOOK_CMD_DOCKER) build $(BOOK_DIR)
+
+docker-ci-all: docker-ci docker-build-html
 
 # Full release flow: build all images, install Mermaid assets, then build via release image
 docker-release:
