@@ -248,7 +248,7 @@ cd specs
 
 or
 
-**HTML** clone:
+**HTTPS** clone:
 
 ```shell
 git clone --recurse-submodules https://github.com/algorandfoundation/specs.git
