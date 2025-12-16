@@ -39,7 +39,9 @@ jobs:
           pre-commit run lychee --all-files --verbose || true
 
       - name: Build mdBook for CI/CD (HTML)
-        run: docker compose run mdbook build
+        run: |
+          make docker-ci
+          docker compose run mdbook mdbook build .
 
       - name: Upload built site
         uses: actions/upload-artifact@v5
