@@ -264,55 +264,52 @@ git submodule update --init --recursive
 
 ## Build and Serve
 
-### Docker
+Use the `make` command to build and serve the Algorand Specifications book locally
+or in a Docker container.
 
-To run the Algorand Specifications book as a Docker container from the `specs` folder:
+### In Container
+
+To build and serve the book in a Docker container, the following dependencies are
+required:
+
+- **Docker**;
+- **Docker Compose**.
+
+Build the Docker image:
 
 ```shell
-docker compose up
+make docker-ci
 ```
 
-This will serve (hot reload) the book on [localhost:3000](http://localhost:3000).
+Serve (hot reload) the book on [localhost:3000](http://localhost:3000):
 
-### Local (without Docker)
+```shell
+make docker-serve
+```
+
+### Locally
 
 This section is for contributors who **cannot / do not want to** use Docker.
 
 > The PDF Book and release toolchain (Pandoc, mdbook-pandoc, LaTeX, etc.) are intentionally
 > **out of scope** here.
 
-To build and serve mdBook locally, the following dependencies are required:
+To build and serve the book locally, the following dependencies are required:
 
-**Rust toolchain** (`cargo`): install Rust with [rustup](https://rust-lang.org/tools/install/)
-
-```shell
-curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
-```
+- **Rust toolchain** (`cargo`): install Rust with [rustup](https://rust-lang.org/tools/install/).
 
 Install the mdBook tools:
 
 ```shell
-make install-tools
+make setup
 ```
 
 > Ensure Cargo’s bin dir (usually `~/.cargo/bin`) is on your `PATH`.
 
-Build and serve the specs book (HTML) locally (hot reload) on [localhost:3000](http://localhost:3000):
+Build and serve the book (HTML) locally (hot reload) on [localhost:3000](http://localhost:3000):
 
 ```shell
 make serve
-```
-
-or build (only) the specs book (HTML):
-
-```shell
-make build
-```
-
-Clean up the specs book build artifacts:
-
-```shell
-make clean
 ```
 
 ## Linting and Formatting
@@ -321,12 +318,12 @@ Linting and formatting are enforced with [pre-commit](https://pre-commit.com/).
 
 To run pre-commit hooks locally, the following dependencies are required:
 
-**Python** (`python3 + pip`).
+- **Python** (`python3 + pip`).
 
 Install pre-commit hooks:
 
 ```shell
-make install-lint-tools
+make setup-lint-tools
 ```
 
 Run pre-commit hooks:
