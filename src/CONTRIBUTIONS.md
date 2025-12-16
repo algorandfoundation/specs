@@ -227,15 +227,13 @@ Structured diagrams (e.g., flow charts, sequence diagrams, etc.) are defined wit
 
 Unstructured diagrams and images are drawn with [Excalidraw](https://excalidraw.com/).
 
-Excalidraw images **MUST** be exported in `.svg` format without background and saved
-in the `./src/images/` folder.
+Excalidraw images **MUST** be exported in `.svg` format without a background and
+saved in the `./src/images/` folder.
 
 Excalidraw images source code **MUST** be committed in the `./src/.excalidraw/`
 folder.
 
 ## Installation
-
-### Clone Repository
 
 Clone the Algorand Specifications repository and install the git submodules:
 
@@ -264,6 +262,8 @@ in the `specs` folder:
 git submodule update --init --recursive
 ```
 
+## Build and Serve
+
 ### Docker
 
 To run the Algorand Specifications book as a Docker container from the `specs` folder:
@@ -281,15 +281,15 @@ This section is for contributors who **cannot / do not want to** use Docker.
 > The PDF Book and release toolchain (Pandoc, mdbook-pandoc, LaTeX, etc.) are intentionally
 > **out of scope** here.
 
-#### Dependencies
+To build and serve mdBook locally, the following dependencies are required:
 
-**Rust toolchain (`cargo`)**: install Rust with [rustup](https://rust-lang.org/tools/install/)
+**Rust toolchain** (`cargo`): install Rust with [rustup](https://rust-lang.org/tools/install/)
 
 ```shell
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 ```
 
-**mdBook tools**: install via `Makefile`
+Install the mdBook tools:
 
 ```shell
 make install-tools
@@ -297,15 +297,13 @@ make install-tools
 
 > Ensure Cargo’s bin dir (usually `~/.cargo/bin`) is on your `PATH`.
 
-#### Build and Serve
-
 Build and serve the specs book (HTML) locally (hot reload) on [localhost:3000](http://localhost:3000):
 
 ```shell
 make serve
 ```
 
-Build (only) the specs book (HTML):
+or build (only) the specs book (HTML):
 
 ```shell
 make build
@@ -317,13 +315,33 @@ Clean up the specs book build artifacts:
 make clean
 ```
 
+## Linting and Formatting
+
+Linting and formatting are enforced with [pre-commit](https://pre-commit.com/).
+
+To run pre-commit hooks locally, the following dependencies are required:
+
+**Python** (`python3 + pip`).
+
+Install pre-commit hooks:
+
+```shell
+make install-lint-tools
+```
+
+Run pre-commit hooks:
+
+```shell
+make lint
+```
+
 ## CI/CD and Release
 
 The CI/CD and Release pipeline is defined in the `.github/workflows/` files.
 
 The CI runs on a Pull Request to:
 
-- Enforce [pre-commit](https://pre-commit.com/) hooks for linting and formatting;
+- Enforce linting and formatting;
 - Provide warnings for broken links;
 - Deploy the book preview to a temporary URL for review.
 
