@@ -12,6 +12,9 @@ The $\LaTeX$ PDF Book version is generated on [release](https://github.com/algor
 If you would like to contribute, please read the [contribution guideline](https://specs.algorand.co/CONTRIBUTIONS)
 first.
 
+To build and serve the Algorand Specifications locally, refer to the [installation
+instructions](https://specs.algorand.co/CONTRIBUTIONS#installation).
+
 ### Typos
 
 To fix typos, consider opening a pull request labeled _"typo"_. By clicking on the
