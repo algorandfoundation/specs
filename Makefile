@@ -22,8 +22,8 @@ MDBOOK_CMD_DOCKER  = $(DOCKER_COMPOSE) run --rm mdbook mdbook
 MERMAID_CMD_DOCKER = $(DOCKER_COMPOSE) run --rm mdbook mdbook-mermaid
 
 .PHONY: help doctor \
-        setup serve serve-auto build clean lint setup-lint-tools \
-        docker-ci docker-release docker-serve docker-build-html docker-ci-all
+        setup serve serve-auto build clean lint lint-setup \
+        docker-setup docker-release docker-serve docker-build-html docker-ci
 
 help:
 	@echo "Local:"
@@ -33,14 +33,14 @@ help:
 	@echo "  make serve-auto        Serve locally if possible, else via Docker"
 	@echo ""
 	@echo "Docker:"
-	@echo "  make docker-ci         Build light ci-cd image and install Mermaid assets via Docker"
+	@echo "  make docker-setup      Build light ci-cd image and install Mermaid assets via Docker"
 	@echo "  make docker-serve      Serve the book using the ci-cd Docker image"
 	@echo "  make docker-release    Build all images and build the book via release image"
 	@echo ""
 	@echo "Misc:"
 	@echo "  make doctor            Check tools, Mermaid assets, and config"
 	@echo "  make clean             Remove build artifacts and untracked Mermaid JS"
-	@echo "  make setup-lint-tools  Install pre-commit (requires python3 + pip)"
+	@echo "  make lint-setup        Install pre-commit (requires python3 + pip)"
 	@echo "  make lint              Run pre-commit on the repo"
 
 # ---------- Diagnostics ----------
@@ -101,8 +101,8 @@ serve-auto:
 		echo "Using local mdbook..."; \
 		$(MAKE) serve; \
 	else \
-		echo "Local mdbook not found, falling back to Docker (docker-ci + docker-serve)..."; \
-		$(MAKE) docker-ci; \
+		echo "Local mdbook not found, falling back to Docker (docker-setup + docker-serve)..."; \
+		$(MAKE) docker-setup; \
 		$(MAKE) docker-serve; \
 	fi
 
@@ -113,7 +113,7 @@ build:
 # ---------- Docker workflow ----------
 
 # Light Docker flow: build ci-cd image and install Mermaid assets
-docker-ci:
+docker-setup:
 	@echo "Building ci-cd (light) Docker image..."
 	$(DOCKER_COMPOSE) build mdbook \
 	  --build-arg MDBOOK_VERSION=$(MDBOOK_VERSION) \
@@ -124,7 +124,7 @@ docker-ci:
 docker-build-html:
 	$(MDBOOK_CMD_DOCKER) build $(BOOK_DIR)
 
-docker-ci-all: docker-ci docker-build-html
+docker-ci: docker-setup docker-build-html
 
 # Full release flow: build all images, install Mermaid assets, then build via release image
 docker-release:
@@ -143,7 +143,7 @@ docker-serve:
 
 # ---------- Misc ----------
 
-setup-lint-tools:
+lint-setup:
 	@command -v python3 >/dev/null || { echo "ERROR: 'python3' not found."; exit 1; }
 	@python3 -m pip --version >/dev/null 2>&1 || { echo "ERROR: pip not available for python3."; exit 1; }
 	@python3 -m pip install --user pre-commit
@@ -164,5 +164,6 @@ clean:
 	done
 
 lint:
-	@command -v pre-commit >/dev/null || { echo "ERROR: 'pre-commit' not found. Run: make setup-lint-tools"; exit 1; }
-	@pre-commit run --all-files
+	@command -v pre-commit >/dev/null || { echo "ERROR: 'pre-commit' not found. Run: make lint-setup"; exit 1; }
+	@pre-commit run markdownlint --all-files --verbose
+	@pre-commit run trailing-whitespace --all-files --verbose
