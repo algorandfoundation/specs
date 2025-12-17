@@ -6,18 +6,18 @@
 
 ### Scalar Fields
 
-{{#include ../_include/auto/avm-fields-txn-scalar.md}}
+{{#include ../_include/auto/opcodes/txn-fields.md}}
 
 ### Array Fields
 
-{{#include ../_include/auto/avm-fields-txn-array.md}}
+{{#include ../_include/auto/opcodes/txna-fields.md}}
 
 ## Global Fields
 
 Global fields are fields that are common to all the transactions in the group. In
 particular, it includes consensus parameters.
 
-{{#include ../_include/auto/avm-fields-global.md}}
+{{#include ../_include/auto/opcodes/global-fields.md}}
 
 ## Asset Fields
 
@@ -26,20 +26,20 @@ Asset fields include `AssetHolding` and `AssetParam` fields that are used in the
 
 ### Asset Holding
 
-{{#include ../_include/auto/avm-fields-asset-holding.md}}
+{{#include ../_include/auto/opcodes/asset_holding-fields.md}}
 
 ### Asset Parameters
 
-{{#include ../_include/auto/avm-fields-asset-params.md}}
+{{#include ../_include/auto/opcodes/asset_params-fields.md}}
 
 ## Application Fields
 
 Application fields used in the `app_params_get` opcode.
 
-{{#include ../_include/auto/avm-fields-application.md}}
+{{#include ../_include/auto/opcodes/app_params-fields.md}}
 
 ## Account Fields
 
 Account fields used in the `acct_params_get` opcode.
 
-{{#include ../_include/auto/avm-fields-account.md}}
+{{#include ../_include/auto/opcodes/acct_params-fields.md}}

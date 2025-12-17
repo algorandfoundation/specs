@@ -1,3 +1,3 @@
 # Flow Control
 
-{{#include ../_include/auto/avm-ops-flow-control.md}}
+{{#include ../_include/auto/opcodes/flow_control.md}}

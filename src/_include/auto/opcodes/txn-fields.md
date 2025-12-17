@@ -1,0 +1,65 @@
+| INDEX | NAME | TYPE | IN | NOTES |
+| :-: | :------ | :--: | :-: | :--------- |
+| 0 | Sender | address |      | 32 byte address |
+| 1 | Fee | uint64 |      | microalgos |
+| 2 | FirstValid | uint64 |      | round number |
+| 3 | FirstValidTime | uint64 | v7  | UNIX timestamp of block before txn.FirstValid. Fails if negative |
+| 4 | LastValid | uint64 |      | round number |
+| 5 | Note | []byte |      | Any data up to 1024 bytes |
+| 6 | Lease | [32]byte |      | 32 byte lease value |
+| 7 | Receiver | address |      | 32 byte address |
+| 8 | Amount | uint64 |      | microalgos |
+| 9 | CloseRemainderTo | address |      | 32 byte address |
+| 10 | VotePK | [32]byte |      | 32 byte address |
+| 11 | SelectionPK | [32]byte |      | 32 byte address |
+| 12 | VoteFirst | uint64 |      | The first round that the participation key is valid. |
+| 13 | VoteLast | uint64 |      | The last round that the participation key is valid. |
+| 14 | VoteKeyDilution | uint64 |      | Dilution for the 2-level participation key |
+| 15 | Type | []byte |      | Transaction type as bytes |
+| 16 | TypeEnum | uint64 |      | Transaction type as integer |
+| 17 | XferAsset | uint64 |      | Asset ID |
+| 18 | AssetAmount | uint64 |      | value in Asset's units |
+| 19 | AssetSender | address |      | 32 byte address. Source of assets if Sender is the Asset's Clawback address. |
+| 20 | AssetReceiver | address |      | 32 byte address |
+| 21 | AssetCloseTo | address |      | 32 byte address |
+| 22 | GroupIndex | uint64 |      | Position of this transaction within an atomic transaction group. A stand-alone transaction is implicitly element 0 in a group of 1 |
+| 23 | TxID | [32]byte |      | The computed ID for this transaction. 32 bytes. |
+| 24 | ApplicationID | uint64 | v2  | ApplicationID from ApplicationCall transaction |
+| 25 | OnCompletion | uint64 | v2  | ApplicationCall transaction on completion action |
+| 27 | NumAppArgs | uint64 | v2  | Number of ApplicationArgs |
+| 29 | NumAccounts | uint64 | v2  | Number of Accounts |
+| 30 | ApprovalProgram | []byte | v2  | Approval program |
+| 31 | ClearStateProgram | []byte | v2  | Clear state program |
+| 32 | RekeyTo | address | v2  | 32 byte Sender's new AuthAddr |
+| 33 | ConfigAsset | uint64 | v2  | Asset ID in asset config transaction |
+| 34 | ConfigAssetTotal | uint64 | v2  | Total number of units of this asset created |
+| 35 | ConfigAssetDecimals | uint64 | v2  | Number of digits to display after the decimal place when displaying the asset |
+| 36 | ConfigAssetDefaultFrozen | bool | v2  | Whether the asset's slots are frozen by default or not, 0 or 1 |
+| 37 | ConfigAssetUnitName | []byte | v2  | Unit name of the asset |
+| 38 | ConfigAssetName | []byte | v2  | The asset name |
+| 39 | ConfigAssetURL | []byte | v2  | URL |
+| 40 | ConfigAssetMetadataHash | [32]byte | v2  | 32 byte commitment to unspecified asset metadata |
+| 41 | ConfigAssetManager | address | v2  | 32 byte address |
+| 42 | ConfigAssetReserve | address | v2  | 32 byte address |
+| 43 | ConfigAssetFreeze | address | v2  | 32 byte address |
+| 44 | ConfigAssetClawback | address | v2  | 32 byte address |
+| 45 | FreezeAsset | uint64 | v2  | Asset ID being frozen or un-frozen |
+| 46 | FreezeAssetAccount | address | v2  | 32 byte address of the account whose asset slot is being frozen or un-frozen |
+| 47 | FreezeAssetFrozen | bool | v2  | The new frozen value, 0 or 1 |
+| 49 | NumAssets | uint64 | v3  | Number of Assets |
+| 51 | NumApplications | uint64 | v3  | Number of Applications |
+| 52 | GlobalNumUint | uint64 | v3  | Number of global state integers in ApplicationCall |
+| 53 | GlobalNumByteSlice | uint64 | v3  | Number of global state byteslices in ApplicationCall |
+| 54 | LocalNumUint | uint64 | v3  | Number of local state integers in ApplicationCall |
+| 55 | LocalNumByteSlice | uint64 | v3  | Number of local state byteslices in ApplicationCall |
+| 56 | ExtraProgramPages | uint64 | v4  | Number of additional pages for each of the application's approval and clear state programs. An ExtraProgramPages of 1 means 2048 more total bytes, or 1024 for each program. |
+| 57 | Nonparticipation | bool | v5  | Marks an account nonparticipating for rewards |
+| 59 | NumLogs | uint64 | v5  | Number of Logs (only with `itxn` in v5). Application mode only |
+| 60 | CreatedAssetID | uint64 | v5  | Asset ID allocated by the creation of an ASA (only with `itxn` in v5). Application mode only |
+| 61 | CreatedApplicationID | uint64 | v5  | ApplicationID allocated by the creation of an application (only with `itxn` in v5). Application mode only |
+| 62 | LastLog | []byte | v6  | The last message emitted. Empty bytes if none were emitted. Application mode only |
+| 63 | StateProofPK | [64]byte | v6  | State proof public key |
+| 65 | NumApprovalProgramPages | uint64 | v7  | Number of Approval Program pages |
+| 67 | NumClearStateProgramPages | uint64 | v7  | Number of ClearState Program pages |
+| 68 | RejectVersion | uint64 | v12  | Application version for which the txn must reject |
+

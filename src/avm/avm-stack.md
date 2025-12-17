@@ -45,20 +45,4 @@ The most common bounded types are named to provide more semantic information in 
 documentation and as type checking during assembly time to provide more informative
 error messages.
 
-### Definitions
-
-| Name       | Bound                               | AVM Type |
-|:-----------|:------------------------------------|:--------:|
-| `[]byte`   | \\( len(x) \leq 4096 \\)            | `[]byte` |
-| `[32]byte` | \\( len(x) = 32 \\)                 | `[]byte` |
-| `[64]byte` | \\( len(x) = 64 \\)                 | `[]byte` |
-| `[80]byte` | \\( len(x) = 80 \\)                 | `[]byte` |
-| `address`  | \\( len(x) = 32 \\)                 | `[]byte` |
-| `bigint`   | \\( len(x) \leq 64 \\)              | `[]byte` |
-| `boxName`  | \\( 1 \leq len(x) \leq 64 \\)       | `[]byte` |
-| `method`   | \\( len(x) = 4 \\)                  | `[]byte` |
-| `stateKey` | \\( len(x) \leq 64 \\)              | `[]byte` |
-| `bool`     | \\( x \leq 1 \\)                    | `uint64` |
-| `uint64`   | \\( x \leq 18446744073709551615 \\) | `uint64` |
-| `any`      |                                     |  `any`   |
-| `none`     |                                     |  `none`  |
+{{#include ../_include/auto/avm-stack-types.md}}
