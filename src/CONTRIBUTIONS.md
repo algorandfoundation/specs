@@ -278,7 +278,7 @@ required:
 Build the Docker image:
 
 ```shell
-make docker-ci
+make docker-setup
 ```
 
 Serve (hot reload) the book on [localhost:3000](http://localhost:3000):
@@ -323,7 +323,7 @@ To run pre-commit hooks locally, the following dependencies are required:
 Install pre-commit hooks:
 
 ```shell
-make setup-lint-tools
+make lint-setup
 ```
 
 Run pre-commit hooks:
