@@ -32,7 +32,8 @@ dependency.
 > 1. Computes the hashes of each transaction in the list (without their _group_
 > field set): \\( [\Hash(A), \Hash(B), \Hash(C)] \\);
 >
-> 1. Hash them together in the specified order, getting the _group hash_: \\( G = \Hash([\Hash(A), \Hash(B), \Hash(C)]) \\);
+> 1. Hash them together in the specified order, getting the _group hash_:
+> \\( G = \Hash([\Hash(A), \Hash(B), \Hash(C)]) \\);
 >
 > 1. Set the _group_ field of all the transactions to the _group hash_ (\\( G \\))
 > _before_ signing them.
