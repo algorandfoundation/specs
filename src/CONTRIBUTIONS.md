@@ -318,7 +318,7 @@ Linting and formatting are enforced with [pre-commit](https://pre-commit.com/).
 
 To run pre-commit hooks locally, the following dependencies are required:
 
-- **Python** (`python3 + pip`).
+- **Python** (`python3 + pip`): install [pip](https://pip.pypa.io/en/stable/installation/).
 
 Install pre-commit hooks:
 
@@ -331,6 +331,9 @@ Run pre-commit hooks:
 ```shell
 make lint
 ```
+
+> Link checker (`lychee`) requires Docker, it can be run optionally (outside `make
+> lint`) with: `pre-commit run lychee --all-files --verbose`.
 
 ## CI/CD and Release
 
