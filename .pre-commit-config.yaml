@@ -1,6 +1,6 @@
 repos:
   - repo: https://github.com/igorshubovych/markdownlint-cli
-    rev: v0.45.0
+    rev: v0.47.0
     hooks:
       - id: markdownlint
         name: markdownlint
@@ -9,11 +9,10 @@ repos:
         entry: markdownlint
         minimum_pre_commit_version: 3.2.0
         types: [ markdown ]
-        additional_dependencies: [ ]
         files: '^(src/.*\.md|README\.md)'
 
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v5.0.0
+    rev: v6.0.0
     hooks:
       - id: trailing-whitespace
         name: trim trailing whitespace
@@ -22,18 +21,18 @@ repos:
         entry: trailing-whitespace-fixer
         minimum_pre_commit_version: 3.2.0
         types: [ text ]
-        additional_dependencies: [ ]
         exclude: '(^|/)_archive(/|$)'
 
   - repo: https://github.com/lycheeverse/lychee
-    rev: lychee-v0.20.1
+    rev: lychee-v0.22.0
     hooks:
-    - id: lychee
-      name: lychee
-      description: "Run 'lychee' docker image for fast, async, stream-based link checking"
-      language: docker_image
-      entry: lycheeverse/lychee:latest
-      args: ["--no-progress"]
-      types: [ markdown ]
-      require_serial: true
-      files: '^(src/.*\.md|README\.md)'
+      - id: lychee
+        name: lychee-system
+        description: "Run 'lychee' using system installation (requires: cargo install lychee)"
+        entry: lychee
+        minimum_pre_commit_version: 3.2.0
+        language: system
+        args: [ "--no-progress" ]
+        types: [ text ]
+        require_serial: true
+        files: '^(src/.*\.md|README\.md)'
