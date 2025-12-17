@@ -20,7 +20,7 @@ jobs:
           submodules: recursive
 
       - name: Install pre-commit
-        run: pip install --upgrade pip pre-commit
+        run: make lint-setup
 
       - name: Cache pre-commit hooks
         uses: actions/cache@v4
@@ -31,8 +31,7 @@ jobs:
 
       - name: Run strict pre-commit hooks
         run: |
-          pre-commit run markdownlint --all-files --verbose
-          pre-commit run trailing-whitespace --all-files --verbose
+          make lint
 
       - name: Run soft pre-commit hooks as a warning
         run: |
@@ -40,7 +39,7 @@ jobs:
 
       - name: Build mdBook for CI/CD (HTML)
         run: |
-          make docker-ci-all
+          make docker-ci
 
       - name: Upload built site
         uses: actions/upload-artifact@v5
