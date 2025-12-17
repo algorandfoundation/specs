@@ -27,11 +27,11 @@ repos:
     rev: lychee-v0.22.0
     hooks:
       - id: lychee
-        name: lychee-system
-        description: "Run 'lychee' using system installation (requires: cargo install lychee)"
-        entry: lychee
+        name: lychee-docker
+        description: "Run 'lychee' docker image for fast, async, stream-based link checking (auto-installs)"
+        entry: lycheeverse/lychee:latest
         minimum_pre_commit_version: 3.2.0
-        language: system
+        language: docker_image
         args: [ "--no-progress" ]
         types: [ text ]
         require_serial: true
