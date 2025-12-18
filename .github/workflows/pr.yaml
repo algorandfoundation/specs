@@ -13,16 +13,22 @@ jobs:
 
   deploy-preview:
     needs: ci
-    if: github.event.pull_request.user.login != 'dependabot[bot]'
     runs-on: ubuntu-latest
     steps:
+      - name: Skip preview deploy on forks / Dependabot
+        if: ${{ github.event.pull_request.head.repo.full_name != github.repository || github.event.pull_request.user.login == 'dependabot[bot]' }}
+        run: |
+          echo "Preview deploy skipped. A maintainer can run a manual preview deploy if desired."
+
       - name: Download built site
+        if: ${{ github.event.pull_request.head.repo.full_name == github.repository && github.event.pull_request.user.login != 'dependabot[bot]' }}
         uses: actions/download-artifact@v6
         with:
           name: specs-site-pr-${{ github.event.pull_request.number }}
           path: book/html
 
       - name: Publish to Cloudflare Pages
+        if: ${{ github.event.pull_request.head.repo.full_name == github.repository && github.event.pull_request.user.login != 'dependabot[bot]' }}
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
