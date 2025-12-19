@@ -138,15 +138,7 @@ docker-setup:
 
 # Run 'mdbook-test' in Docker (ci-cd image)
 docker-test:
-	@set -euo pipefail; \
-	out="$$(mktemp)"; \
-	$(MDBOOK_CMD_DOCKER) test $(BOOK_DIR) 2>&1 | tee "$$out"; \
-	status=$${PIPESTATUS[0]}; \
-	if [ $$status -eq 0 ] && grep -qE '^(ERROR |Error updating )' "$$out"; then \
-		status=1; \
-	fi; \
-	rm -f "$$out"; \
-	exit $$status
+	$(MDBOOK_CMD_DOCKER) test $(BOOK_DIR)
 
 docker-build-html:
 	$(MDBOOK_CMD_DOCKER) build $(BOOK_DIR)
