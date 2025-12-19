@@ -186,18 +186,18 @@ TeX macros can be imported entirely or partially (e.g., just a functional block)
 > Import all TeX-macros:
 >
 > ```text
-> \{{#include ./.include/tex-macros.md:all}}
+> \{{#include ./_include/tex-macros.md:all}}
 > ```
 >
 > Import just a block of TeX-macros (e.g., pseudocode commands):
 >
 > ```text
-> \{{#include ./.include/tex-macros.md:pseudocode}}
+> \{{#include ./_include/tex-macros.md:pseudocode}}
 > ```
 
 ## Block Styles
 
-Block styles are defined in the `./src/.include/styles.md` file using the mdBook
+Block styles are defined in the `./src/_include/styles.md` file using the mdBook
 [include feature](https://rust-lang.github.io/mdBook/format/mdbook.html#including-files).
 
 Block styles (e.g., examples, implementation notes, etc.) are “styled quote” blocks
@@ -227,20 +227,128 @@ Structured diagrams (e.g., flow charts, sequence diagrams, etc.) are defined wit
 
 Unstructured diagrams and images are drawn with [Excalidraw](https://excalidraw.com/).
 
-Excalidraw images **MUST** be exported in `.svg` format and saved in the `./src/images/`
+Excalidraw images **MUST** be exported in `.svg` format without a background and
+saved in the `./src/_images/` folder.
+
+Excalidraw images source code **MUST** be committed in the `./src/_excalidraw/`
 folder.
 
-Excalidraw images source code **MUST** be committed in the `./src/.excalidraw/`
-folder.
+## Installation
 
-## Docker
+Clone the Algorand Specifications repository and install the git submodules:
 
-The Algorand Specifications repository makes use of a `Dockerfile`.
-
-To run the `specs` book as a container:
+**SSH** clone:
 
 ```shell
-docker compose up
+git clone --recurse-submodules git@github.com:algorandfoundation/specs.git
+cd specs
 ```
 
-This will serve the `specs` book on [localhost:3000](http://localhost:3000).
+or
+
+**HTTPS** clone:
+
+```shell
+git clone --recurse-submodules https://github.com/algorandfoundation/specs.git
+cd specs
+```
+
+### Sync git submodules
+
+If the Algorand Specifications repository is already cloned, sync the git submodules
+in the `specs` folder:
+
+```shell
+git submodule update --init --recursive
+```
+
+## Build and Serve
+
+Use the `make` command to build and serve the Algorand Specifications book locally
+or in a Docker container.
+
+> Use the `make doctor` command to check your environment for build dependencies.
+
+### In Container
+
+To build and serve the book in a Docker container, the following dependencies are
+required:
+
+- **Docker** and **Docker Compose**.
+
+Build the Docker image:
+
+```shell
+make docker-setup
+```
+
+Build and serve (hot reload) the book on [localhost:3000](http://localhost:3000):
+
+```shell
+make docker-serve
+```
+
+### Locally
+
+This section is for contributors who **cannot / do not want to** use Docker.
+
+> The PDF Book and release toolchain (Pandoc, mdbook-pandoc, LaTeX, etc.) are intentionally
+> **out of scope** here.
+
+To build and serve the book locally, the following dependencies are required:
+
+- **Rust toolchain** (`cargo`): install Rust with [rustup](https://rust-lang.org/tools/install/).
+
+Install the mdBook tools:
+
+```shell
+make setup
+```
+
+> Ensure Cargo’s bin dir (usually `~/.cargo/bin`) is on your `PATH`.
+
+Build and serve the book (HTML) locally (hot reload) on [localhost:3000](http://localhost:3000):
+
+```shell
+make serve
+```
+
+## Linting and Formatting
+
+Linting and formatting are enforced with [pre-commit](https://pre-commit.com/).
+
+To run pre-commit hooks locally, the following dependencies are required:
+
+- **Python** (`python3 + pip`): install [pip](https://pip.pypa.io/en/stable/installation/).
+
+Install pre-commit hooks:
+
+```shell
+make lint-setup
+```
+
+Run pre-commit hooks:
+
+```shell
+make lint
+```
+
+> Link checker (`lychee`) requires Docker, it can be run optionally (outside `make
+> lint`) with: `pre-commit run lychee --all-files --verbose`.
+
+## CI/CD and Release
+
+The CI/CD and Release pipeline is defined in the `.github/workflows/` files.
+
+The CI runs on a Pull Request to:
+
+- Enforce linting and formatting;
+- Test the HTML book build;
+- Provide warnings for broken links;
+- Deploy the book preview to a temporary URL for review.
+
+The CD pipeline deploys the book to <https://specs.algorand.co> on every push to
+the `master` branch.
+
+The Release pipeline creates the release tag, builds the PDF Book, and publishes
+it as a release artifact.
