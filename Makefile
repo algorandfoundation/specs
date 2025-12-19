@@ -92,10 +92,10 @@ doctor:
 	@echo ""
 	@echo "== Linting and formatting =="
 	@if command -v pre-commit >/dev/null 2>&1; then \
-	    echo "✔ pre-commit found: $$(pre-commit --version)"; \
-    else \
-	    echo "✖ pre-commit not found in PATH (run: make lint-setup)"; \
-    fi
+		echo "✔ pre-commit found: $$(pre-commit --version)"; \
+	else \
+		echo "✖ pre-commit not found in PATH (run: make lint-setup)"; \
+	fi
 
 # ---------- Local workflow ----------
 
