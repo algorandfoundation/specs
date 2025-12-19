@@ -27,7 +27,7 @@ MERMAID_CMD_DOCKER = $(DOCKER_COMPOSE) run --rm mdbook mdbook-mermaid
 
 .PHONY: help doctor \
         setup test serve \
-        docker-setup docker-test docker-build-html docker-ci docker-serve docker-release \
+        docker-setup docker-test docker-build-html docker-serve docker-release \
         test-auto serve-auto \
         clean lint-setup lint links-check
 
@@ -150,8 +150,6 @@ docker-test:
 
 docker-build-html:
 	$(MDBOOK_CMD_DOCKER) build $(BOOK_DIR)
-
-docker-ci: docker-setup docker-build-html
 
 # Full release flow: build all images, install Mermaid assets, then build via release image
 docker-release:
