@@ -9,4 +9,3 @@
 | `appl` | `6` | Application calls |
 | `stpf` | `7` | State Proof |
 | `hb` | `8` | Consensus heartbeat |
-

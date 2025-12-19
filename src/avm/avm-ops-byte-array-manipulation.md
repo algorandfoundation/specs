@@ -2,7 +2,7 @@
 
 ## Byte Manipulation
 
-{{#include ../_include/auto/opcodes/byte_array_manipulation.md}}
+{{#include ../_include/auto/opcodes/byte-array-manipulation.md}}
 
 ## Byte Arithmetic
 
@@ -18,7 +18,7 @@ explicitly restricted, though only `b*` and `b+` can produce a larger
 output than their inputs, so there is an implicit length limit of 128
 bytes on outputs.
 
-{{#include ../_include/auto/opcodes/byte_array_arithmetic.md}}
+{{#include ../_include/auto/opcodes/byte-array-arithmetic.md}}
 
 ## Bitwise Operations
 
@@ -28,4 +28,4 @@ same length as the other input.  The returned values are the same
 length as the longer input.  Therefore, unlike array arithmetic,
 these results may contain leading zero bytes.
 
-{{#include ../_include/auto/opcodes/byte_array_logic.md}}
+{{#include ../_include/auto/opcodes/byte-array-logic.md}}
