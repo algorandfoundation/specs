@@ -28,13 +28,17 @@ jobs:
           path: ~/.cache/pre-commit
           key: precommit-${{ runner.os }}-${{ hashFiles('.pre-commit-config.yaml') }}
 
-      - name: Run strict pre-commit hooks
+      - name: Run strict linting and formatting checks
         run: |
           make lint
 
-      - name: Run soft pre-commit hooks as a warning
+      - name: Run soft links check (warning only)
         run: |
-          pre-commit run lychee --all-files --verbose || true
+          make links-check || true
+
+      - name: Test mdBook build (HTML)
+        run: |
+          make docker-test
 
       - name: Build mdBook for CI/CD (HTML)
         run: |
