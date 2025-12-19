@@ -267,13 +267,14 @@ git submodule update --init --recursive
 Use the `make` command to build and serve the Algorand Specifications book locally
 or in a Docker container.
 
+> Use the `make doctor` command to check your environment for build dependencies.
+
 ### In Container
 
 To build and serve the book in a Docker container, the following dependencies are
 required:
 
-- **Docker**;
-- **Docker Compose**.
+- **Docker** and **Docker Compose**.
 
 Build the Docker image:
 
@@ -281,7 +282,7 @@ Build the Docker image:
 make docker-setup
 ```
 
-Serve (hot reload) the book on [localhost:3000](http://localhost:3000):
+Build and serve (hot reload) the book on [localhost:3000](http://localhost:3000):
 
 ```shell
 make docker-serve
@@ -342,6 +343,7 @@ The CI/CD and Release pipeline is defined in the `.github/workflows/` files.
 The CI runs on a Pull Request to:
 
 - Enforce linting and formatting;
+- Test the HTML book build;
 - Provide warnings for broken links;
 - Deploy the book preview to a temporary URL for review.
 
