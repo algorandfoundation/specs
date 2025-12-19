@@ -25,12 +25,12 @@
 | `args` | Ath LogicSig argument |
 | `txn f` | field F of current transaction |
 | `gtxn t f` | field F of the Tth transaction in the current group |
-| `txna f i` | Ith value of the array field F of the current transaction<br />`txna` can be called using `txn` with 2 immediates. |
+| `txna f i` | Ith value of the array field F of the current transaction |
 | `txnas f` | Ath value of the array field F of the current transaction |
-| `gtxna t f i` | Ith value of the array field F from the Tth transaction in the current group<br />`gtxna` can be called using `gtxn` with 3 immediates. |
+| `gtxna t f i` | Ith value of the array field F from the Tth transaction in the current group |
 | `gtxnas t f` | Ath value of the array field F from the Tth transaction in the current group |
 | `gtxns f` | field F of the Ath transaction in the current group |
-| `gtxnsa f i` | Ith value of the array field F from the Ath transaction in the current group<br />`gtxnsa` can be called using `gtxns` with 2 immediates. |
+| `gtxnsa f i` | Ith value of the array field F from the Ath transaction in the current group |
 | `gtxnsas f` | Bth value of the array field F from the Ath transaction in the current group |
 | `global f` | global field F |
 | `load i` | Ith scratch space value. All scratch spaces are 0 at program start. |

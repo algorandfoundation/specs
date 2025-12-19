@@ -501,7 +501,8 @@ for notes on transaction fields available, see `txn`. If this transaction is _i_
 - Syntax: `txna F I` where F: [txna](#txna), I: transaction field array index
 - Bytecode: 0x36 {uint8}, {uint8}
 - Stack: ... &rarr; ..., any
-- Ith value of the array field F of the current transaction<br />`txna` can be called using `txn` with 2 immediates.
+- Ith value of the array field F of the current transaction
+- `txna` can be called by using `txn` with 2 immediates.
 - Availability: v2
 
 ### txna
@@ -524,7 +525,8 @@ Fields (see [transaction reference](https://developer.algorand.org/docs/referenc
 - Syntax: `gtxna T F I` where T: transaction group index, F: [txna](#txna), I: transaction field array index
 - Bytecode: 0x37 {uint8}, {uint8}, {uint8}
 - Stack: ... &rarr; ..., any
-- Ith value of the array field F from the Tth transaction in the current group<br />`gtxna` can be called using `gtxn` with 3 immediates.
+- Ith value of the array field F from the Tth transaction in the current group
+- `gtxna` can be called by using `gtxn` with 3 immediates.
 - Availability: v2
 
 ## gtxns
@@ -542,7 +544,8 @@ for notes on transaction fields available, see `txn`. If top of stack is _i_, `g
 - Syntax: `gtxnsa F I` where F: [txna](#txna), I: transaction field array index
 - Bytecode: 0x39 {uint8}, {uint8}
 - Stack: ..., A: uint64 &rarr; ..., any
-- Ith value of the array field F from the Ath transaction in the current group<br />`gtxnsa` can be called using `gtxns` with 2 immediates.
+- Ith value of the array field F from the Ath transaction in the current group
+- `gtxnsa` can be called by using `gtxns` with 2 immediates.
 - Availability: v3
 
 ## gload
@@ -796,7 +799,8 @@ When A is a uint64, index 0 is the least significant bit. Setting bit 3 to 1 on 
 
 - Bytecode: 0x58
 - Stack: ..., A: []byte, B: uint64, C: uint64 &rarr; ..., []byte
-- A range of bytes from A starting at B up to but not including B+C. If B+C is larger than the array length, the program fails<br />`extract3` can be called using `extract` with no immediates.
+- A range of bytes from A starting at B up to but not including B+C. If B+C is larger than the array length, the program fails
+- `extract3` can be called by using `extract` with no immediates.
 - Availability: v5
 
 ## extract_uint16
@@ -825,14 +829,16 @@ When A is a uint64, index 0 is the least significant bit. Setting bit 3 to 1 on 
 - Syntax: `replace2 S` where S: start position
 - Bytecode: 0x5c {uint8}
 - Stack: ..., A: []byte, B: []byte &rarr; ..., []byte
-- Copy of A with the bytes starting at S replaced by the bytes of B. Fails if S+len(B) exceeds len(A)<br />`replace2` can be called using `replace` with 1 immediate.
+- Copy of A with the bytes starting at S replaced by the bytes of B. Fails if S+len(B) exceeds len(A)
+- `replace2` can be called by using `replace` with 1 immediate.
 - Availability: v7
 
 ## replace3
 
 - Bytecode: 0x5d
 - Stack: ..., A: []byte, B: uint64, C: []byte &rarr; ..., []byte
-- Copy of A with the bytes starting at B replaced by the bytes of C. Fails if B+len(C) exceeds len(A)<br />`replace3` can be called using `replace` with no immediates.
+- Copy of A with the bytes starting at B replaced by the bytes of C. Fails if B+len(C) exceeds len(A)
+- `replace3` can be called by using `replace` with no immediates.
 - Availability: v7
 
 ## base64_decode
