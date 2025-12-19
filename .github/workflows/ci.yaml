@@ -20,26 +20,29 @@ jobs:
           submodules: recursive
 
       - name: Install pre-commit
-        run: pip install --upgrade pip pre-commit
+        run: make lint-setup
 
       - name: Cache pre-commit hooks
         uses: actions/cache@v4
         with:
           path: ~/.cache/pre-commit
           key: precommit-${{ runner.os }}-${{ hashFiles('.pre-commit-config.yaml') }}
-          restore-keys: precommit-${{ runner.os }}-
 
-      - name: Run strict pre-commit hooks
+      - name: Run strict linting and formatting checks
         run: |
-          pre-commit run markdownlint --all-files --verbose
-          pre-commit run trailing-whitespace --all-files --verbose
+          make lint
 
-      - name: Run soft pre-commit hooks as a warning
+      - name: Run soft links check (warning only)
         run: |
-          pre-commit run lychee --all-files --verbose || true
+          make links-check || true
+
+      - name: Test mdBook build (HTML)
+        run: |
+          make docker-test
 
       - name: Build mdBook for CI/CD (HTML)
-        run: docker compose run mdbook build
+        run: |
+          make docker-ci
 
       - name: Upload built site
         uses: actions/upload-artifact@v5
