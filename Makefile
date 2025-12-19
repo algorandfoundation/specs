@@ -10,6 +10,10 @@ BOOK_DIR ?= .
 HOST     ?= 127.0.0.1
 PORT     ?= 3000
 
+# MDBOOK_TEST_MODE controls how 'mdbook test' run: auto|local|docker
+MDBOOK_TEST_MODE ?= auto
+MDBOOK_TEST_MODE := $(strip $(MDBOOK_TEST_MODE))
+
 MERMAID_ASSETS := mermaid.min.js mermaid-init.js
 
 DOCKER_COMPOSE ?= docker compose
@@ -22,31 +26,38 @@ MDBOOK_CMD_DOCKER  = $(DOCKER_COMPOSE) run --rm mdbook mdbook
 MERMAID_CMD_DOCKER = $(DOCKER_COMPOSE) run --rm mdbook mdbook-mermaid
 
 .PHONY: help doctor \
-        setup serve serve-auto build clean lint lint-setup \
-        docker-setup docker-release docker-serve docker-build-html docker-ci
+        setup test serve \
+        docker-setup docker-test docker-build-html docker-ci docker-serve docker-release \
+        test-auto serve-auto \
+        clean lint-setup lint links-check
 
 help:
 	@echo "Local:"
-	@echo "  make setup             Install local mdBook tools + Mermaid assets (requires cargo)"
-	@echo "  make serve             Serve the book locally"
-	@echo "  make build             Build the book locally"
-	@echo "  make serve-auto        Serve locally if possible, else via Docker"
+	@echo "  make setup             Install local mdBook tools and install Mermaid assets (requires cargo)"
+	@echo "  make test              Test the book locally"
+	@echo "  make serve             Build and serve the book locally"
 	@echo ""
 	@echo "Docker:"
-	@echo "  make docker-setup      Build light ci-cd image and install Mermaid assets via Docker"
-	@echo "  make docker-serve      Serve the book using the ci-cd Docker image"
-	@echo "  make docker-release    Build all images and build the book via release image"
+	@echo "  make docker-setup      Build mdBook light ci-cd image and install Mermaid assets (requires docker)"
+	@echo "  make docker-test       Test the book via ci-cd image"
+	@echo "  make docker-serve      Build and serve the book via ci-cd image"
+	@echo "  make docker-release    Build mdBook full release image and build the book (HTML and PDF)"
+	@echo ""
+	@echo "Auto:"
+	@echo "  make test-auto         Test the book locally if possible, else via Docker"
+	@echo "  make serve-auto        Build and serve the book locally if possible, else via Docker"
 	@echo ""
 	@echo "Misc:"
-	@echo "  make doctor            Check tools, Mermaid assets, and config"
+	@echo "  make doctor            Check dependencies, mdBook, Mermaid assets, and config"
 	@echo "  make clean             Remove build artifacts and untracked Mermaid JS"
 	@echo "  make lint-setup        Install pre-commit (requires python3 + pip)"
-	@echo "  make lint              Run pre-commit on the repo"
+	@echo "  make lint              Run pre-commit on the repo (requires pre-commit)"
+	@echo "  make links-check       Run 'lychee' links checker on the repo (requires pre-commit + docker)"
 
 # ---------- Diagnostics ----------
 
 doctor:
-	@echo "== mdBook doctor =="
+	@echo "== mdBook =="
 	@if [ -f "book.toml" ]; then \
 		echo "✔ book.toml found"; \
 	else \
@@ -60,7 +71,7 @@ doctor:
 		fi; \
 	done
 	@echo ""
-	@echo "== Local tools =="
+	@echo "== Local workflow =="
 	@if command -v $(MDBOOK) >/dev/null 2>&1; then \
 		echo "✔ $(MDBOOK) found: $$($(MDBOOK) --version)"; \
 	else \
@@ -72,12 +83,19 @@ doctor:
 		echo "✖ mdbook-mermaid not found in PATH"; \
 	fi
 	@echo ""
-	@echo "== Docker =="
+	@echo "== Docker workflow =="
 	@if command -v docker >/dev/null 2>&1 && command -v docker compose >/dev/null 2>&1; then \
 		echo "✔ docker and docker compose available"; \
 	else \
 		echo "✖ docker or docker compose not available"; \
 	fi
+	@echo ""
+	@echo "== Linting and formatting =="
+	@if command -v pre-commit >/dev/null 2>&1; then \
+	    echo "✔ pre-commit found: $$(pre-commit --version)"; \
+    else \
+	    echo "✖ pre-commit not found in PATH (run: make lint-setup)"; \
+    fi
 
 # ---------- Local workflow ----------
 
@@ -91,24 +109,21 @@ setup:
 	@echo "Installing Mermaid assets into $(BOOK_DIR)..."
 	$(MERMAID_CMD_LOCAL) install $(BOOK_DIR)
 
-# Serve the book locally
+# Build and serve the book locally
 serve:
 	$(MDBOOK_CMD_LOCAL) serve --hostname $(HOST) --port $(PORT) $(BOOK_DIR)
 
-# Auto mode: prefer local, fall back to Docker if mdbook is missing
-serve-auto:
-	@if command -v $(MDBOOK) >/dev/null 2>&1; then \
-		echo "Using local mdbook..."; \
-		$(MAKE) serve; \
-	else \
-		echo "Local mdbook not found, falling back to Docker (docker-setup + docker-serve)..."; \
-		$(MAKE) docker-setup; \
-		$(MAKE) docker-serve; \
-	fi
-
-# Build the book locally
-build:
-	$(MDBOOK_CMD_LOCAL) build $(BOOK_DIR)
+# Run 'mdbook-test' locally
+test:
+	@set -euo pipefail; \
+	out="$$(mktemp)"; \
+	$(MDBOOK_CMD_LOCAL) test $(BOOK_DIR) 2>&1 | tee "$$out"; \
+	status=$${PIPESTATUS[0]}; \
+	if [ $$status -eq 0 ] && grep -qE '^(ERROR |Error updating )' "$$out"; then \
+		status=1; \
+	fi; \
+	rm -f "$$out"; \
+	exit $$status
 
 # ---------- Docker workflow ----------
 
@@ -120,6 +135,18 @@ docker-setup:
 	  --build-arg MDBOOK_MERMAID_VERSION=$(MDBOOK_MERMAID_VERSION)
 	@echo "Installing Mermaid assets via ci-cd container..."
 	$(MERMAID_CMD_DOCKER) install $(BOOK_DIR)
+
+# Run 'mdbook-test' in Docker (ci-cd image)
+docker-test:
+	@set -euo pipefail; \
+	out="$$(mktemp)"; \
+	$(MDBOOK_CMD_DOCKER) test $(BOOK_DIR) 2>&1 | tee "$$out"; \
+	status=$${PIPESTATUS[0]}; \
+	if [ $$status -eq 0 ] && grep -qE '^(ERROR |Error updating )' "$$out"; then \
+		status=1; \
+	fi; \
+	rm -f "$$out"; \
+	exit $$status
 
 docker-build-html:
 	$(MDBOOK_CMD_DOCKER) build $(BOOK_DIR)
@@ -137,9 +164,40 @@ docker-release:
 	@echo "Building book via release image..."
 	$(DOCKER_COMPOSE) run --rm mdbook-release mdbook build $(BOOK_DIR)
 
-# Serve using Docker (ci-cd image) with ports exposed
+# Build and serve using Docker (ci-cd image) with ports exposed
 docker-serve:
 	$(DOCKER_COMPOSE) up mdbook
+
+# ---------- Auto workflow ----------
+
+# Auto mode: prefer local, fall back to Docker if mdbook is missing
+serve-auto:
+	@if command -v $(MDBOOK) >/dev/null 2>&1; then \
+		echo "Using local mdbook..."; \
+		$(MAKE) serve; \
+	else \
+		echo "Local mdbook not found, falling back to Docker (docker-setup + docker-serve)..."; \
+		$(MAKE) docker-setup; \
+		$(MAKE) docker-serve; \
+	fi
+
+# Auto mode for tests: prefer local, fall back to Docker if mdbook is missing
+test-auto:
+	@case "$(MDBOOK_TEST_MODE)" in \
+		local) \
+			$(MAKE) test ;; \
+		docker) \
+			$(MAKE) docker-test ;; \
+		auto) \
+			if command -v $(MDBOOK) >/dev/null 2>&1; then \
+				echo "Using local mdbook..."; \
+				$(MAKE) test; \
+			else \
+				echo "Local mdbook not found; running tests in Docker..."; \
+				$(MAKE) docker-test; \
+			fi ;; \
+		*) echo "ERROR: MDBOOK_TEST_MODE must be auto|local|docker (got: $(MDBOOK_TEST_MODE))" >&2; exit 2 ;; \
+	esac
 
 # ---------- Misc ----------
 
@@ -165,5 +223,9 @@ clean:
 
 lint:
 	@command -v pre-commit >/dev/null || { echo "ERROR: 'pre-commit' not found. Run: make lint-setup"; exit 1; }
-	@pre-commit run markdownlint --all-files --verbose
-	@pre-commit run trailing-whitespace --all-files --verbose
+	@pre-commit run markdownlint --all-files
+	@pre-commit run trailing-whitespace --all-files
+
+links-check:
+	@command -v pre-commit >/dev/null || { echo "ERROR: 'pre-commit' not found. Run: make lint-setup"; exit 1; }
+	@pre-commit run lychee --all-files --verbose
