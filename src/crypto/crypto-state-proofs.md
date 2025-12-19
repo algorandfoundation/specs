@@ -97,7 +97,7 @@ Where:
 value as described in the [technical report](https://eprint.iacr.org/archive/2020/1568/20210330:194331).
 
 - \\( \SerializedMerkleSignature \\) representing a Merkle Signature of the participant
-[merkle signature binary representation](https://github.com/algorandfoundation/specs/blob/master/dev/partkey.md#signatures)
+[merkle signature binary representation](../keys/keys-state-proof.md#signatures)
 
 When a signature is missing in the signature array, i.e., the prover didn’t receive
 a signature for this slot, the slot would be decoded as an empty string. As a result,

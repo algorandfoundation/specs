@@ -7,13 +7,9 @@ ARG MDBOOK_MERMAID_VERSION=0.17.0
 
 WORKDIR /book
 
-COPY book.toml .
-COPY theme ./theme
-COPY theme-ext ./theme
-
 # Install basic tooling required for building mdBook and running health checks.
 RUN apt-get update \
-    && apt-get install -y --no-install-recommends curl \
+    && apt-get install -y --no-install-recommends curl ca-certificates \
     && rm -rf /var/lib/apt/lists/*
 
 # Install mdBook and the Mermaid preprocessor with matching versions.
@@ -24,16 +20,10 @@ RUN cargo install --locked --force --root /usr/local mdbook --version ${MDBOOK_V
 RUN mv /usr/local/bin/mdbook /usr/local/bin/mdbook-original
 COPY --chmod=755 docker/mdbook-wrapper.sh /usr/local/bin/mdbook
 
-# CI/CD image
 FROM base AS ci-cd
-
-RUN mdbook-mermaid install
-
-ENTRYPOINT ["mdbook"]
 
 HEALTHCHECK CMD curl --fail http://localhost:3000 || exit 1
 
-# Release image
 FROM base AS release
 
 ARG MDBOOK_PANDOC_VERSION=0.11.0
@@ -61,7 +51,8 @@ RUN npm install --global mermaid-filter@1.4.7
 
 RUN PANDOC_VERSION=3.8.2 && \
     ARCH=$(dpkg --print-architecture) && \
-    curl -fL -o pandoc-${PANDOC_VERSION}-1-${ARCH}.deb https://github.com/jgm/pandoc/releases/download/${PANDOC_VERSION}/pandoc-${PANDOC_VERSION}-1-${ARCH}.deb && \
+    curl -fL -o pandoc-${PANDOC_VERSION}-1-${ARCH}.deb \
+      https://github.com/jgm/pandoc/releases/download/${PANDOC_VERSION}/pandoc-${PANDOC_VERSION}-1-${ARCH}.deb && \
     dpkg -i pandoc-${PANDOC_VERSION}-1-${ARCH}.deb && \
     rm pandoc-${PANDOC_VERSION}-1-${ARCH}.deb
 
@@ -72,7 +63,5 @@ COPY docker/puppeteer-config.json /etc/puppeteer-config.json
 # Wrap the real mmdc executable to inject the config file option
 RUN mv "${MMD_PATH}/mmdc" "${MMD_PATH}/mmdc-original"
 COPY --chmod=755 docker/mmdc-wrapper.sh "${MMD_PATH}/mmdc"
-
-ENTRYPOINT ["mdbook"]
 
 HEALTHCHECK CMD curl --fail http://localhost:3000 || exit 1
