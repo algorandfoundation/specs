@@ -1,3 +1,3 @@
 # Cryptographic Operations
 
-{{#include ../_include/auto/avm-ops-cryptography.md}}
+{{#include ../_include/auto/opcodes/cryptography.md}}

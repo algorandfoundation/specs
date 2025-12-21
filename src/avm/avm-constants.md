@@ -37,25 +37,8 @@ the execution of its Approval Program or Clear State Program.
 
 The constants below describe the available actions.
 
-|        ACTION         | VALUE | DESCRIPTION                                                                                                                                                                                                                                         |
-|:---------------------:|:-----:|:----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-|       `NoOpOC`        |  `0`  | _Only_ execute the Approval Program associated with the _application ID_, with no additional effects.                                                                                                                                               |
-|       `OptInOC`       |  `1`  | _Before_ executing the Approval Program, allocate _local state_ for the _application ID_ into the _sender_’s account data.                                                                                                                          |
-|     `CloseOutOC`      |  `2`  | _After_ executing the Approval Program, clear any _local state_ for the _application ID_ out of the _sender_’s account data.                                                                                                                        |
-|    `ClearStateOC`     |  `3`  | _Do not_ execute the Approval Program, and instead execute the Clear State Program (which may not reject this transaction). Additionally, clear any _local state_ for the _application ID_ out of the _sender_’s account data (as in `CloseOutOC`). |
-| `UpdateApplicationOC` |  `4`  | _After_ executing the Approval Program, _replace_ the Approval Program and Clear State Program associated with the _application ID_ with the programs specified in this transaction.                                                                |
-| `DeleteApplicationOC` |  `5`  | _After_ executing the Approval Program, _delete_ the parameters of with the _application ID_ from the account data of the application’s creator.                                                                                                    |
+{{#include ../_include/auto/constants-on-completion.md}}
 
 ### Transaction Type Enum Constants
 
-|   TYPE    | VALUE | DESCRIPTION                       |
-|:---------:|:-----:|:----------------------------------|
-| `unknown` |  `0`  | Unknown type, invalid transaction |
-|   `pay`   |  `1`  | ALGO transfers (payment)          |
-| `keyreg`  |  `2`  | Consensus keys registration       |
-|  `acfg`   |  `3`  | Asset creation and configuration  |
-|  `axfer`  |  `4`  | Asset transfer                    |
-|  `afrz`   |  `5`  | Asset freeze and unfreeze         |
-|  `appl`   |  `6`  | Application calls                 |
-|  `stpf`   |  `7`  | State Proof                       |
-|   `hb`    |  `8`  | Consensus heartbeat               |
+{{#include ../_include/auto/constants-type-enums.md}}

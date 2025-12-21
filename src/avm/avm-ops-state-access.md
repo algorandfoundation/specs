@@ -2,19 +2,19 @@
 
 ## Block Access
 
-{{#include ../_include/auto/avm-ops-state-access-block.md}}
+{{#include ../_include/auto/opcodes/block-access.md}}
 
 ## Account Access
 
-{{#include ../_include/auto/avm-ops-state-access-account.md}}
+{{#include ../_include/auto/opcodes/account-access.md}}
 
 ## Asset Access
 
-{{#include ../_include/auto/avm-ops-state-access-asset.md}}
+{{#include ../_include/auto/opcodes/asset-access.md}}
 
 ## Application Access
 
-{{#include ../_include/auto/avm-ops-state-access-app.md}}
+{{#include ../_include/auto/opcodes/application-access.md}}
 
 ## Box Access
 
@@ -34,4 +34,4 @@ Assets, and Apps though State Access opcodes _are_ allowed in
 ClearState programs because the current application and sender account
 are sure to be _available_.
 
-{{#include ../_include/auto/avm-ops-state-access-box.md}}
+{{#include ../_include/auto/opcodes/box-access.md}}
