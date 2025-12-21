@@ -7,7 +7,7 @@ If you would like to contribute, please consider submitting an [issue](https://g
 or opening a [pull request](https://github.com/algorandfoundation/specs/pulls).
 
 > [!IMPORTANT]
-> Commit must be signed!
+> All commits must be signed!
 
 ## Typos
 
