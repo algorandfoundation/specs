@@ -26,7 +26,7 @@ Applications have access to everything a Logic Signature may access (see [sectio
 as well as the ability to examine blockchain state, such as balances and application
 state (their own state and the state of other applications).
 
-Applications also have access to some [Global Fields](./avm-ops-fields.md) that are
+Applications also have access to some [Global Fields](./avm-appendix-a.md#global) that are
 not visible to Logic Signatures because their values change over time.
 
 Since Applications access changing state, nodes have to rerun their code to determine
