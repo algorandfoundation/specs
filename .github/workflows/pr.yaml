@@ -30,3 +30,21 @@ jobs:
           gitHubToken: ${{ secrets.GITHUB_TOKEN }}
           command: |
             pages deploy ./book/html --project-name algorand-specs --branch pr-${{ github.event.pull_request.number }}
+
+  # Satisfies branch protection when deploy is skipped for external PRs
+  deploy-status:
+    needs: [ci, deploy-preview]
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check status
+        run: |
+          if [[ "${{ needs.ci.result }}" != "success" ]]; then
+            echo "CI failed"
+            exit 1
+          fi
+          if [[ "${{ needs.deploy-preview.result }}" == "failure" ]]; then
+            echo "Deploy failed"
+            exit 1
+          fi
+          echo "All checks passed (deploy may have been skipped)"
