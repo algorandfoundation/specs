@@ -1,0 +1,39 @@
+name: External PR Deployment preview (Manual)
+
+on:
+  workflow_dispatch:
+    inputs:
+      pr_number:
+        description: 'PR number to deploy'
+        required: true
+        type: number
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout PR
+        uses: actions/checkout@v4
+        with:
+          ref: refs/pull/${{ inputs.pr_number }}/head
+
+      - name: Build site
+        uses: ./.github/workflows/ci.yaml
+        with:
+          artifact-name: specs-site-pr-${{ inputs.pr_number }}
+
+      - name: Download built site
+        uses: actions/download-artifact@v6
+        with:
+          name: specs-site-pr-${{ inputs.pr_number }}
+          path: book/html
+
+      - name: Publish to Cloudflare Pages
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CF_ACCOUNT_ID }}
+          gitHubToken: ${{ secrets.GITHUB_TOKEN }}
+          command: |
+            pages deploy ./book/html --project-name algorand-specs --branch pr-${{ inputs.pr_number }}
+
