@@ -6,9 +6,6 @@ Foundation [repository](https://github.com/algorandfoundation/specs).
 If you would like to contribute, please consider submitting an [issue](https://github.com/algorandfoundation/specs/issues/new/choose)
 or opening a [pull request](https://github.com/algorandfoundation/specs/pulls).
 
-> [!IMPORTANT]
-> All commits must be signed!
-
 ## Typos
 
 To fix typos, consider opening a pull request labeled _"typo"_. By clicking on the
