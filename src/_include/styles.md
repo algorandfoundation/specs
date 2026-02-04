@@ -11,3 +11,8 @@
 > **IMPLEMENTATION:**
 > 
 // ANCHOR_END: impl
+
+// ANCHOR: note
+> [!NOTE]
+>
+// ANCHOR_END: note
