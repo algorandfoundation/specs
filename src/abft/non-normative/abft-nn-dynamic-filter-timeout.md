@@ -24,7 +24,7 @@ will diverge towards the maximum of \\( \lambdaMax \\).
 > See the formal definition of the filtering timeout parameters in the [ABFT
 > normative section](../abft-parameters.md).
 
-> ⚙️ **IMPLEMENTATION**
+{{#include ../../_include/styles.md:impl}}
 >
 > Dynamic filter timeout [to reference implementation](https://github.com/algorand/go-algorand/blob/df0613a04432494d0f437433dd1efd02481db838/agreement/player.go#L318).
 
