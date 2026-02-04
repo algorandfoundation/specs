@@ -69,6 +69,7 @@ Numbered lists **MUST** be defined with `1`-only style.
 Table rows **MUST** use the same column widths.
 
 {{#include ./_include/styles.md:example}}
+>
 > ✅ Correct table format
 >
 > ```text
@@ -92,7 +93,7 @@ Table rows **MUST** use the same column widths.
 > Result:
 >
 > | Month    | Savings |
-> |----------|---------|
+> | -------- | ------- |
 > | January  | €250    |
 > | February | €80     |
 > | March    | €420    |
@@ -114,7 +115,7 @@ row.
 > Result:
 >
 > | Name   | Quantity | Size |
-> |:-------|:--------:|-----:|
+> | :----- | :------: | ---: |
 > | Item A |    1     |    S |
 > | Item B |    5     |    M |
 > | Item C |    10    |   XL |
@@ -130,6 +131,7 @@ Mathematical formulas are defined with [MathJax](https://www.mathjax.org/).
 Inline equations **MUST** include extra spaces in the MathJax delimiters.
 
 {{#include ./_include/styles.md:example}}
+>
 > Equation: \\( \int x dx = \frac{x^2}{2} + C \\)
 >
 > ✅ Correct inline delimiter
@@ -149,6 +151,7 @@ Inline equations **MUST** include extra spaces in the MathJax delimiters.
 Block equations **MUST** use the `$$` delimiter (instead of `\\[ ... \\]`).
 
 {{#include ./_include/styles.md:example}}
+>
 > Equation:
 >
 > $$
@@ -183,6 +186,7 @@ TeX-macros **MUST** be imported at the top of the consumer files using the mdBoo
 TeX macros can be imported entirely or partially (e.g., just a functional block).
 
 {{#include ./_include/styles.md:example}}
+>
 > Import all TeX-macros:
 >
 > ```text
@@ -204,6 +208,7 @@ Block styles (e.g., examples, implementation notes, etc.) are “styled quote”
 included in the book.
 
 {{#include ./_include/styles.md:example}}
+>
 > This example block has been included with the following syntax:
 >
 > ```text
@@ -334,7 +339,7 @@ make lint
 ```
 
 > Link checker (`lychee`) requires Docker, it can be run optionally (outside `make
-> lint`) with: `pre-commit run lychee --all-files --verbose`.
+lint`) with: `pre-commit run lychee --all-files --verbose`.
 
 ## CI/CD and Release
 
