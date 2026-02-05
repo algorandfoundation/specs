@@ -51,9 +51,11 @@ icon (**>**), next to the level name.
 > Notes like this are non-normative comments in the normative sections.
 
 {{#include ./_include/styles.md:example}}
+>
 > Sections like this are examples aiming to clarify the formal specifications.
 
 {{#include ./_include/styles.md:impl}}
+>
 > Sections like this contain links to the `go-algorand` reference implementation.
 
 The `code-blocks` may contain pseudocode or real code snippets.

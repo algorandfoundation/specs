@@ -1,9 +1,19 @@
 // ANCHOR: example
-> [!TIP]
+
+> [!IMPORTANT]
+> **EXAMPLE:**
 >
 // ANCHOR_END: example
 
 // ANCHOR: impl
-> [!NOTE]
+
+> [!IMPORTANT]
+> **IMPLEMENTATION:**
 >
 // ANCHOR_END: impl
+
+// ANCHOR: note
+
+> [!NOTE]
+>
+// ANCHOR_END: note
