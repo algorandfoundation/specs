@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1
 
-FROM rust:1.95-slim-bookworm AS base
+FROM rust:1.96-slim-bookworm AS base
 
 ARG MDBOOK_VERSION=0.5.1
 ARG MDBOOK_MERMAID_VERSION=0.17.0
