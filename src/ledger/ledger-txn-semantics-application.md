@@ -25,7 +25,9 @@ system transaction counter (this is the same ID selection algorithm as used by [
     When creating an application, the application parameters specified by the transaction
     (Approval Program, Clear State Program, Global State Schema, Local State Schema,
     and Extra Program Pages) are allocated into the sender’s account data, keyed
-    by the new application ID.
+    by the new application ID. The application’s [size sponsor](./ledger-applications.md#size-sponsor)
+    is left unset, so the creator bears the minimum balance contributions of its
+    Global State Schema and Extra Program Pages.
 
     Continue to [Step 2](#step-2).
 
@@ -122,7 +124,27 @@ is equal to `UpdateApplicationOC`
   - Update the Approval Program and Clear State Program for this application according
   to the programs specified in this _application call_ transaction and increment
   the Application Version. The new programs are not executed in this transaction.
-  **SUCCEED**.
+
+  - This transaction changes the application’s size if it supplies a non-zero
+  [Extra Program Pages](./ledger-txn-application-call.md#extra-program-pages) or a
+  non-empty [Global State Schema](./ledger-txn-application-call.md#global-state-schema).
+  When it does:
+
+    - Install the transaction’s Extra Program Pages and Global State Schema as the
+    application’s new values, replacing the previous ones. If the new Global State
+    Schema is smaller than the application’s current global state usage, **FAIL**.
+
+    - Reassign the [size sponsor](./ledger-applications.md#size-sponsor): remove the
+    minimum balance contributions of the _former_ Extra Program Pages and Global State
+    Schema from the current size sponsor (the creator when unset), and add the
+    contributions of the _new_ values to the transaction’s sender, which becomes the
+    new size sponsor (recorded as unset when the sender is the creator).
+
+    An update that supplies neither field leaves the application’s Extra Program Pages,
+    Global State Schema, and size sponsor unchanged. The Local State Schema is never
+    changed by an update.
+
+  - **SUCCEED**.
 
 ## Application Stateful Execution Semantics
 

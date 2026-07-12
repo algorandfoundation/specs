@@ -1,5 +1,5 @@
 
-# Version 12 Opcodes
+# Version 13 Opcodes
 
 Opcodes have a cost of 1 unless otherwise specified.
 
@@ -1046,6 +1046,9 @@ params: Txn.ForeignAssets offset (or, since v4, an _available_ asset id. Return:
 | 7 | AppCreator | address |      | Creator address |
 | 8 | AppAddress | address |      | Address for which this application has authority |
 | 9 | AppVersion | uint64 | v12  | Version of the app, incremented each time the approval or clear program changes |
+| 10 | AppSizeSponsor | address | v13  | If non-zero, this account is responsible for the app's extra pages and global state balance requirement |
+| 11 | AppForeignBoxReads | bool | v13  | This app's boxes may be read by any app |
+| 12 | AppFamilyBoxAccess | bool | v13  | This app's boxes may be read and written by any app (existing or future) with the same creator |
 
 params: Txn.ForeignApps offset or an _available_ app id. Return: did_exist flag (1 if the application existed and 0 otherwise), value.
 
@@ -1101,6 +1104,22 @@ params: Txn.ForeignApps offset or an _available_ app id. Return: did_exist flag 
 - the total online stake in the agreement round
 - Availability: v11
 - Mode: Application
+
+## app_params_set
+
+- Syntax: `app_params_set F` where F: [app_params_set Fields](#app_params_set-fields)
+- Bytecode: 0x76 {uint8}
+- Stack: ..., A: uint64 &rarr; ...
+- set field F of the current app to A
+- Availability: v13
+- Mode: Application
+
+### app_params_set Fields
+
+| INDEX | NAME | TYPE | NOTES |
+| :-: | :------ |:--:| :--------- |
+| 11 | AppForeignBoxReads | bool | This app's boxes may be read by any app |
+| 12 | AppFamilyBoxAccess | bool | This app's boxes may be read and written by any app (existing or future) with the same creator |
 
 ## min_balance
 
@@ -1163,10 +1182,28 @@ pushints args are not added to the intcblock during assembly processes
 ## falcon_verify
 
 - Bytecode: 0x85
-- Stack: ..., A: []byte, B: [1232]byte, C: [1793]byte &rarr; ..., bool
-- for (data A, compressed-format signature B, pubkey C) verify the signature of data against the pubkey => {0 or 1}
+- Stack: ..., A: []byte, B: []byte, C: [1793]byte &rarr; ..., bool
+- for (data A, deterministic FALCON-1024 compressed-format signature B, pubkey C) verify the signature of data against the pubkey => {0 or 1}
 - **Cost**: 1700
 - Availability: v12
+
+Signature B is variable-length, with maximum size 1423 bytes.
+
+## sumhash512
+
+- Bytecode: 0x86
+- Stack: ..., A: []byte &rarr; ..., [64]byte
+- sumhash512 of value A, yields [64]byte
+- **Cost**: 150 + 7 per 4 bytes of A
+- Availability: v13
+
+## sha512
+
+- Bytecode: 0x87
+- Stack: ..., A: []byte &rarr; ..., [64]byte
+- SHA512 of value A, yields [64]byte
+- **Cost**: 15 + 32 per 2 bytes of A
+- Availability: v13
 
 ## callsub
 
@@ -1669,6 +1706,10 @@ For boxes that exceed 4,096 bytes, consider `box_create`, `box_extract`, and `bo
 | 7 | BlkProtocol | []byte | v11  |  |
 | 8 | BlkTxnCounter | uint64 | v11  |  |
 | 9 | BlkProposerPayout | uint64 | v11  |  |
+| 10 | BlkBranch512 | [64]byte | v13  |  |
+| 11 | BlkSha512_256TxnCommitment | [32]byte | v13  |  |
+| 12 | BlkSha256TxnCommitment | [32]byte | v13  |  |
+| 13 | BlkSha512TxnCommitment | [64]byte | v13  |  |
 
 ## box_splice
 
@@ -1686,6 +1727,86 @@ Boxes are of constant length. If C < len(D), then len(D)-C bytes will be removed
 - Stack: ..., A: boxName, B: uint64 &rarr; ...
 - change the size of box named A to be of length B, adding zero bytes to end or removing bytes from the end, as needed. Fail if the name A is empty, A is not an existing box, or B exceeds 32,768.
 - Availability: v10
+- Mode: Application
+
+## app_box_create
+
+- Bytecode: 0xd4 0x01
+- Stack: ..., A: uint64, B: boxName, C: uint64 &rarr; ..., bool
+- create a box named B, of length C, for app A. Fail if the name B is empty or C exceeds 32,768. Returns 0 if B already existed, else 1
+- Availability: v13
+- Mode: Application
+
+Newly created boxes are filled with 0 bytes. `app_box_create` will fail if the referenced box already exists with a different size. Otherwise, existing boxes are unchanged by `app_box_create`.
+
+## app_box_extract
+
+- Bytecode: 0xd4 0x02
+- Stack: ..., A: uint64, B: boxName, C: uint64, D: uint64 &rarr; ..., []byte
+- read D bytes from box B of app A, starting at offset C. Fail if box B does not exist, or the byte range is outside B's size.
+- Availability: v13
+- Mode: Application
+
+## app_box_replace
+
+- Bytecode: 0xd4 0x03
+- Stack: ..., A: uint64, B: boxName, C: uint64, D: []byte &rarr; ...
+- write byte-array D into box B of app A, starting at offset C. Fail if box B does not exist, or the byte range is outside B's size.
+- Availability: v13
+- Mode: Application
+
+## app_box_del
+
+- Bytecode: 0xd4 0x04
+- Stack: ..., A: uint64, B: boxName &rarr; ..., bool
+- delete box named B of app A if it exists. Return 1 if B existed, 0 otherwise
+- Availability: v13
+- Mode: Application
+
+## app_box_len
+
+- Bytecode: 0xd4 0x05
+- Stack: ..., A: uint64, B: boxName &rarr; ..., X: uint64, Y: bool
+- X is the length of box B of app A if B exists, else 0. Y is 1 if B exists, else 0.
+- Availability: v13
+- Mode: Application
+
+## app_box_get
+
+- Bytecode: 0xd4 0x06
+- Stack: ..., A: uint64, B: boxName &rarr; ..., X: []byte, Y: bool
+- X is the contents of box B of app A if B exists, else ''. Y is 1 if B exists, else 0.
+- Availability: v13
+- Mode: Application
+
+For boxes that exceed 4,096 bytes, consider `app_box_create`, `app_box_extract`, and `app_box_replace`
+
+## app_box_put
+
+- Bytecode: 0xd4 0x07
+- Stack: ..., A: uint64, B: boxName, C: []byte &rarr; ...
+- replaces the contents of box B of app A with byte-array C. Fails if B exists and len(C) != len(box B). Creates B if it does not exist
+- Availability: v13
+- Mode: Application
+
+For boxes that exceed 4,096 bytes, consider `app_box_create`, `app_box_extract`, and `app_box_replace`
+
+## app_box_splice
+
+- Bytecode: 0xd4 0x08
+- Stack: ..., A: uint64, B: boxName, C: uint64, D: uint64, E: []byte &rarr; ...
+- set box B of app A to contain its previous bytes up to index C, followed by E, followed by the original bytes of B that began at index C+D.
+- Availability: v13
+- Mode: Application
+
+Boxes are of constant length. If D < len(E), then len(E)-D bytes will be removed from the end. If D > len(E), zero bytes will be appended to the end to reach the box length.
+
+## app_box_resize
+
+- Bytecode: 0xd4 0x09
+- Stack: ..., A: uint64, B: boxName, C: uint64 &rarr; ...
+- change the size of box named B of app A to be of length C, adding zero bytes to end or removing bytes from the end, as needed. Fail if the name B is empty, B is not an existing box, or C exceeds 32,768.
+- Availability: v13
 - Mode: Application
 
 ## ec_add
@@ -1790,4 +1911,24 @@ G1 element inputs are base field elements and G2 element inputs are quadratic fi
 
 A is a list of concatenated 32 byte big-endian unsigned integer scalars.  Fail if A's length is not a multiple of 32 or any element exceeds the curve modulus.
 
-The MiMC hash function has known collisions since any input which is a multiple of the elliptic curve modulus will hash to the same value. MiMC is thus not a general purpose hash function, but meant to be used in zero knowledge applications to match a zk-circuit implementation.
+MiMC hashes field elements, not arbitrary byte strings; reducing external inputs modulo the curve modulus makes congruent inputs hash identically. MiMC is thus not a general purpose hash function, but meant to be used in zero knowledge applications to match a zk-circuit implementation.
+
+## poseidon2
+
+- Syntax: `poseidon2 C` where C: [Poseidon2 Configurations Parameters](#poseidon2-configurations-parameters)
+- Bytecode: 0xe7 {uint8}
+- Stack: ..., A: []byte &rarr; ..., [32]byte
+- Poseidon2 hash of scalars A, using curve and parameters specified by configuration C
+- **Cost**: BN254t2=7 + 350 per 32 bytes of A; BLS12_381t2=7 + 350 per 32 bytes of A
+- Availability: v13
+
+### Poseidon2 Configurations Parameters
+
+| INDEX | NAME | NOTES |
+| :-: | :------ | :--------- |
+| 0 | BN254t2 | Poseidon2 Merkle-Damgard configuration for BN254 with width = 2, full rounds = 6, partial rounds = 50 |
+| 1 | BLS12_381t2 | Poseidon2 Merkle-Damgard configuration for BLS12-381 with width = 2, full rounds = 6, partial rounds = 50 |
+
+A is a list of concatenated 32 byte big-endian unsigned integer scalars. Fail if A's length is not a multiple of 32 or any element exceeds the curve modulus.
+
+Poseidon2 hashes field elements, not arbitrary byte strings; reducing external inputs modulo the curve modulus makes congruent inputs hash identically. Poseidon2 is thus not a general purpose hash function, but meant to be used in zero knowledge applications to match a zk-circuit implementation.

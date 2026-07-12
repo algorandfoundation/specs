@@ -4,7 +4,9 @@
 | `keccak256` | Keccak256 hash of value A, yields [32]byte |
 | `sha512_256` | SHA512_256 hash of value A, yields [32]byte |
 | `sha3_256` | SHA3_256 hash of value A, yields [32]byte |
-| `falcon_verify` | for (data A, compressed-format signature B, pubkey C) verify the signature of data against the pubkey => {0 or 1} |
+| `sha512` | SHA512 of value A, yields [64]byte |
+| `sumhash512` | sumhash512 of value A, yields [64]byte |
+| `falcon_verify` | for (data A, deterministic FALCON-1024 compressed-format signature B, pubkey C) verify the signature of data against the pubkey => {0 or 1} |
 | `ed25519verify` | for (data A, signature B, pubkey C) verify the signature of ("ProgData" \|\| program_hash \|\| data) against the pubkey => {0 or 1} |
 | `ed25519verify_bare` | for (data A, signature B, pubkey C) verify the signature of the data against the pubkey => {0 or 1} |
 | `ecdsa_verify v` | for (data A, signature B, C and pubkey D, E) verify the signature of the data against the pubkey => {0 or 1} |
@@ -18,3 +20,4 @@
 | `ec_subgroup_check g` | 1 if A is in the main prime-order subgroup of G (including the point at infinity) else 0. Program fails if A is not in G at all. |
 | `ec_map_to g` | maps field element A to group G |
 | `mimc c` | MiMC hash of scalars A, using curve and parameters specified by configuration C |
+| `poseidon2 c` | Poseidon2 hash of scalars A, using curve and parameters specified by configuration C |

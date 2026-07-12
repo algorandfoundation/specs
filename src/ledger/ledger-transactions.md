@@ -21,6 +21,7 @@ $$
 \newcommand \Group {\Tx\mathrm{G}}
 \newcommand \RekeyTo {\mathrm{RekeyTo}}
 \newcommand \MaxTxnNoteBytes {T_{m,\max}}
+\newcommand \MaxAbsoluteTxnNoteBytes {T_{m,\mathrm{abs}}}
 $$
 
 # Transactions
@@ -134,7 +135,9 @@ is instead set to zero, and the original _spending keys_ are re-established.
 
 The _note_ \\( N \\) (**OPTIONAL**) contains arbitrary data appended to the transaction.
 
-- The _note_ byte length **MUST NOT** exceed \\( \MaxTxnNoteBytes \\).
+- The _note_ byte length **MUST NOT** exceed \\( \MaxAbsoluteTxnNoteBytes \\). Bytes
+beyond \\( \MaxTxnNoteBytes \\) incur a fee surcharge (see the
+[group fee requirement](./ledger-txn-groups.md)).
 
 ## Semantic
 
