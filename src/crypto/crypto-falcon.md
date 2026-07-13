@@ -19,4 +19,3 @@ The library defines the following sizes:
 | Private Key            |               \\( 2305 \\)                |
 | Signature - CT Format  |               \\( 1538 \\)                |
 | Signature - Compressed | Variable, up to a maximum of \\( 1423 \\) |
-
