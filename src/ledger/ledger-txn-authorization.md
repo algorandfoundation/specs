@@ -129,6 +129,7 @@ The `pqsig` object contains the following fields:
 
 - The scheme identifier `sch`, a 2-byte string identifying the post-quantum signature
 scheme. The supported values are:
+
   - `f1`, denoting [deterministic FALCON-1024](../crypto/crypto-falcon.md).
 
 - The address salt `slt`, a 1-byte unsigned integer.
