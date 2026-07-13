@@ -2,6 +2,10 @@ $$
 \newcommand \Hash {\mathrm{Hash}}
 \newcommand \pk {\mathrm{pk}}
 \newcommand \MSigPrefix {\texttt{MultisigAddr}}
+\newcommand \PQAPrefix {\texttt{PQA}}
+\newcommand \Tx {\mathrm{Tx}}
+\newcommand \Fee {\mathrm{fee}}
+\newcommand \MinTxnFee {T_{\Fee,\min}}
 $$
 
 # Authorization and Signatures
@@ -22,11 +26,11 @@ The `SignedTxn` struct contains:
 
 - An **OPTIONAL** _authorizer address_ (field `sgnr`);
 
-- Exactly one of a _signature_ (field `sig`), _multisignature_ (field `msig`), or
-_logic signature_ (field `lsig`).
+- Exactly one of a _signature_ (field `sig`), _multisignature_ (field `msig`),
+_logic signature_ (field `lsig`), or _post-quantum signature_ (field `pqsig`).
 
 The _authorizer address_, a 32-byte address, determines against what to verify the
-`sig` / `msig` / `lsig`, as described below.
+`sig` / `msig` / `lsig` / `pqsig`, as described below.
 
 If the `sgnr` field is omitted (or zero), then the _authorizer address_ defaults
 to the transaction _sender_ address.
@@ -77,6 +81,10 @@ Also the program **MUST** execute and finish with a single non-zero value on the
 AVM stack (see [AVM specifications](../avm/avm.md) for details on program execution
 semantics).
 
+A valid _post-quantum signature_ (`pqsig`) is an object which derives the _authorizer
+address_ and signs the transaction with a post-quantum signature scheme, as described
+in the [Post-Quantum Signature](#post-quantum-signature) section.
+
 ## Multisignature
 
 Multisignature term describes a special multisignature address, signing and validation
@@ -111,3 +119,60 @@ The multisignature validation process checks that:
 
 Validation fails if any of the signatures is invalid, even if the count of all remaining
 correct signatures is greater or equals than the threshold.
+
+## Post-Quantum Signature
+
+A post-quantum signature authorizes a transaction with a post-quantum digital signature
+scheme.
+
+The `pqsig` object contains the following fields:
+
+- The scheme identifier `sch`, a 2-byte string identifying the post-quantum signature
+scheme. The supported values are:
+  - `f1`, denoting [deterministic FALCON-1024](../crypto/crypto-falcon.md).
+
+- The address salt `slt`, a 1-byte unsigned integer.
+
+- The canonical public key `pk` of the scheme, a byte string.
+
+- The canonical signature `sig` of the scheme, a non-empty byte string. For scheme
+`f1`, it must be a FALCON-1024 signature in compressed format.
+
+The _post-quantum address_ of a scheme identifier, salt, and public key is derived
+by hashing their concatenation with the domain separation prefix \\( \PQAPrefix \\):
+
+$$
+\mathrm{PQAddr} = \Hash(\PQAPrefix, \mathtt{sch}, \mathtt{slt}, \pk)
+$$
+
+> The salt takes part in the address derivation, so one public key derives up to
+> \\( 256 \\) distinct addresses. This allows clients to select, by rejection sampling
+> over the salt, an address which is not a valid Ed25519 public key, so that no
+> Ed25519 signature may ever authorize the account. This property is not enforced
+> by consensus.
+
+A post-quantum signature is valid if all the following conditions hold:
+
+1. The scheme identifier `sch` is supported;
+
+1. The post-quantum address derived from `sch`, `slt`, and `pk` is equal to the
+_authorizer address_ of the transaction;
+
+1. The signature `sig` is valid for the message \\( \Hash(\Tx) \\), the 32-byte
+[transaction identifier](./ledger-transactions.md), under the public key `pk`,
+according to the scheme denoted by `sch`.
+
+> Note that, unlike `sig` and `msig`, which sign the domain-separated encoded
+> transaction, the message signed by a `f1` signature is the 32-byte _hash_ of the
+> domain-separated encoded transaction.
+
+### Fee Surcharge
+
+A transaction authorized with a post-quantum signature requires an additional fee,
+given by the scheme _fee contribution_:
+
+- `f1`: \\( 2 \times \MinTxnFee \\).
+
+This contribution adds to the [minimum fee](./ledger-txn-groups.md) otherwise required
+by the transaction or by its transaction group, if any. Zero-fee heartbeat transactions
+with a zero _group_ field are exempt from the fee contribution.

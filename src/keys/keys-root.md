@@ -15,7 +15,12 @@ version, the authorization threshold, and all the participating public keys;
 
 - A [logic signature](../avm/avm-mode-logic-signatures.md#contract-account-mode)
 program, wholly in charge of a _contract account_. The account address is derived
-by hashing the program bytecode.
+by hashing the program bytecode;
+
+- A post-quantum scheme key pair. The account address is derived by hashing the
+scheme identifier, an address salt, and the public key, as specified in the
+[Post-Quantum Signature](../ledger/ledger-txn-authorization.md#post-quantum-signature)
+section of the Ledger specification.
 
 Regardless of the authorization method, root keys are used to authorize transaction
 messages as well as delegating the voting authentication using _voting keys_, unless
