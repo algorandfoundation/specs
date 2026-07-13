@@ -65,7 +65,7 @@ Additionally, if a block contains a transaction group of more than \\( \MaxTxGro
 transactions, the block is invalid.
 
 If the sum of the fees paid by the \\( n \\) transactions in a transaction group
-is less than \\( n \times \MinTxnFee )\\, then the block is invalid. There are two
+is less than \\( n \times \MinTxnFee \\), then the block is invalid. There are two
 exceptions to this fee requirement:
 
 1. State Proof transactions require no fee;
