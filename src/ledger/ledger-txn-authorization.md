@@ -3,6 +3,7 @@ $$
 \newcommand \pk {\mathrm{pk}}
 \newcommand \MSigPrefix {\texttt{MultisigAddr}}
 \newcommand \PQAPrefix {\texttt{PQA}}
+\newcommand \PQProgramPrefix {\texttt{PQProgram}}
 \newcommand \Tx {\mathrm{Tx}}
 \newcommand \Fee {\mathrm{fee}}
 \newcommand \MinTxnFee {T_{\Fee,\min}}
@@ -70,12 +71,17 @@ section:
   - An **OPTIONAL** multisignature `lmsig` from the authorizer address of the transaction
   over the bytes of the authorizer address and the bytes in `l`.
 
-  - An **OPTIONAL** array of byte strings `arg` which are arguments supplied to the
-  program in `l` (`arg` bytes are not covered by `sig` or `msig`).
+  - An **OPTIONAL** post-quantum signature `pqsig` from the authorizer address of
+  the transaction over the bytes of the authorizer address and the bytes in `l`,
+  as described in the [Logic Signature Delegation](#logic-signature-delegation)
+  section.
 
-The logic signature is valid if exactly one of `sig` or `msig` is a valid signature
-of the program by the authorizer address of the transaction, or if neither `sig`
-nor `msig` is set and the hash of the program is equal to the authorizer address.
+  - An **OPTIONAL** array of byte strings `arg` which are arguments supplied to the
+  program in `l` (`arg` bytes are not covered by `sig`, `msig`, or `pqsig`).
+
+The logic signature is valid if exactly one of `sig`, `msig`, or `pqsig` is a valid
+signature of the program by the authorizer address of the transaction, or if none
+of them is set and the hash of the program is equal to the authorizer address.
 
 Also the program **MUST** execute and finish with a single non-zero value on the
 AVM stack (see [AVM specifications](../avm/avm.md) for details on program execution
@@ -123,7 +129,8 @@ correct signatures is greater or equals than the threshold.
 ## Post-Quantum Signature
 
 A post-quantum signature authorizes a transaction with a post-quantum digital signature
-scheme.
+scheme, either directly (`SignedTxn` field `pqsig`) or by delegating a logic signature
+(`lsig` field `pqsig`, see [Logic Signature Delegation](#logic-signature-delegation)).
 
 The `pqsig` object contains the following fields:
 
@@ -167,13 +174,36 @@ according to the scheme denoted by `sch`.
 > transaction, the message signed by a `f1` signature is the 32-byte _hash_ of the
 > domain-separated encoded transaction.
 
+### Logic Signature Delegation
+
+A post-quantum account **MAY** delegate a [logic signature](../avm/avm-mode-logic-signatures.md#delegated-signature-mode):
+the `lsig` object carries a `pqsig` object, as defined above, in place of an Ed25519
+signature or multisignature delegation.
+
+A post-quantum logic signature delegation is valid if all the following conditions
+hold:
+
+1. The scheme identifier `sch` is supported;
+
+1. The post-quantum address derived from `sch`, `slt`, and `pk` is equal to the
+_authorizer address_ of the transaction;
+
+1. The signature `sig` is valid for the message \\( \Hash(\PQProgramPrefix, A, \mathtt{l}) \\),
+the 32-byte hash of the _authorizer address_ \\( A \\) concatenated with the program
+bytecode `l` (with domain separation prefix \\( \PQProgramPrefix \\)), under the
+public key `pk`, according to the scheme denoted by `sch`.
+
+> The signed message binds the delegating account address: a delegation produced
+> for one account is not valid for any other account, in particular for a different
+> salted address derived from the same public key.
+
 ### Fee Surcharge
 
-A transaction authorized with a post-quantum signature requires an additional fee,
-given by the scheme _fee contribution_:
+A transaction authorized with a post-quantum signature, either directly or through
+a [post-quantum delegated logic signature](#logic-signature-delegation), requires
+an additional fee, given by the scheme _fee contribution_:
 
 - `f1`: \\( 2 \times \MinTxnFee \\).
 
 This contribution adds to the [minimum fee](./ledger-txn-groups.md) otherwise required
-by the transaction or by its transaction group, if any. Zero-fee heartbeat transactions
-with a zero _group_ field are exempt from the fee contribution.
+by the transaction or by its transaction group, if any.

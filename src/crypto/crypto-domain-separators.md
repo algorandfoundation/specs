@@ -21,6 +21,9 @@ The list below specifies each `prefix`:
   - `BR`: A _Balance Record_.
   - `GE`: A _Genesis_ configuration.
   - `PQA`: A [_post-quantum account address_](../ledger/ledger-txn-authorization.md#post-quantum-signature).
+  - `PQProgram`: A logic signature program delegation by a
+  [post-quantum account](../ledger/ledger-txn-authorization.md#logic-signature-delegation)
+  (the delegating account address concatenated with the program bytecode).
   - `spm`: A _State Proof_ message.
   - `STIB`: A _SignedTxnInBlock_ that appears as part of the leaf in the Merkle
   tree of transactions.

@@ -51,18 +51,22 @@ The total program cost of all Logic Signatures in a group **MUST NOT** exceed
 
 ## Modes
 
-A program can either authorize some _delegated action_ on a normal signature-based
-or multisignature-based account or be wholly in charge of a _contract account_.
+A program can either authorize some _delegated action_ on a normal signature-based,
+multisignature-based, or post-quantum account or be wholly in charge of a _contract
+account_.
 
 ### Delegated Signature Mode
 
 If the account has signed the program (by providing a valid [Ed25519](../crypto/crypto-ed25519.md)
 signature or valid multisignature for the authorizer address on the string `Program`
 concatenated with the program bytecode) then, if the program returns `True`, the
-transaction is authorized as if the account had signed it. This allows an account
-to hand out a signed program so that other users can carry out delegated actions
-that are approved by the program. Note that Logic Signature arguments are _not_
-signed.
+transaction is authorized as if the account had signed it. A post-quantum account
+instead signs the hash of the string `PQProgram` concatenated with the authorizer
+address and the program bytecode (see
+[Logic Signature Delegation](../ledger/ledger-txn-authorization.md#logic-signature-delegation)).
+This allows an account to hand out a signed program so that other users can carry
+out delegated actions that are approved by the program. Note that Logic Signature
+arguments are _not_ signed.
 
 ### Contract Account Mode
 
