@@ -79,7 +79,7 @@ ago, and has not proposed or heartbeat since that challenge.
 
 Additionally, each transaction authorized with a [post-quantum signature](./ledger-txn-authorization.md#post-quantum-signature),
 directly or through a delegated logic signature, raises the minimum fee requirement
-of its group by the scheme _fee contribution_.
+of its group by the scheme _fee contribution_ (see [Fee Surcharge](./ledger-txn-authorization.md#fee-surcharge)).
 
 If the sum of the lengths of the boxes denoted by the box references in a transaction
 group exceeds \\( \BytesPerBoxReference \\) times the total number of box references
