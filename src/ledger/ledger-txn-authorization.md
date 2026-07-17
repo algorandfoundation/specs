@@ -66,20 +66,22 @@ section:
   - The logic `l` which is versioned bytecode (see [AVM specifications](../avm/avm.md)).
 
   - An **OPTIONAL** single signature `sig` of 64-bytes valid from the authorizer
-  address of the transaction which has signed the bytes in `l`.
+  address of the transaction which has signed the string `Program` concatenated
+  with the bytes in `l`.
 
-  - An **OPTIONAL** multisignature `lmsig` from the authorizer address of the transaction
-  over the bytes of the authorizer address and the bytes in `l`.
+  - An **OPTIONAL** multisignature `lmsig` from the authorizer address of the
+  transaction over the string `MsigProgram` concatenated with the bytes of the
+  authorizer address and the bytes in `l`.
 
   - An **OPTIONAL** post-quantum signature `pqsig` from the authorizer address of
-  the transaction over the bytes of the authorizer address and the bytes in `l`,
-  as described in the [Logic Signature Delegation](#logic-signature-delegation)
-  section.
+  the transaction over the 32-byte hash of the string `PQProgram` concatenated
+  with the bytes of the authorizer address and the bytes in `l`, as described in
+  the [Logic Signature Delegation](#logic-signature-delegation) section.
 
   - An **OPTIONAL** array of byte strings `arg` which are arguments supplied to the
-  program in `l` (`arg` bytes are not covered by `sig`, `msig`, or `pqsig`).
+  program in `l` (`arg` bytes are not covered by `sig`, `lmsig`, or `pqsig`).
 
-The logic signature is valid if exactly one of `sig`, `msig`, or `pqsig` is a valid
+The logic signature is valid if exactly one of `sig`, `lmsig`, or `pqsig` is a valid
 signature of the program by the authorizer address of the transaction, or if none
 of them is set and the hash of the program is equal to the authorizer address.
 

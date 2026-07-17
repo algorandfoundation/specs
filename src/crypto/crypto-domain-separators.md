@@ -20,6 +20,9 @@ The list below specifies each `prefix`:
   - `BH`: A _Block Header_.
   - `BR`: A _Balance Record_.
   - `GE`: A _Genesis_ configuration.
+  - `MsigProgram`: A logic signature program delegation by a
+  [multisignature account](../avm/avm-mode-logic-signatures.md#delegated-signature-mode)
+  (the delegating account address concatenated with the program bytecode).
   - `PQA`: A [_post-quantum account address_](../ledger/ledger-txn-authorization.md#post-quantum-signature).
   - `PQProgram`: A logic signature program delegation by a
   [post-quantum account](../ledger/ledger-txn-authorization.md#logic-signature-delegation)
