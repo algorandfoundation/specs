@@ -9,15 +9,19 @@ $$
 Logic Signatures execute as part of testing a proposed transaction to see if it is
 valid and authorized to be committed into a block. If an authorized program executes
 and finishes with a single non-zero `uint64` value on the Stack, then that program
-has validated the transaction it is attached to.
+has validated (approved) the transaction it is attached to.
+
+A Logic Signature is carried in the `lsig` field of a `SignedTxn` structure: the
+_program_ bytecode is the msgpack field `l` and the **OPTIONAL** _arguments_ are
+the field `arg` (see [Authorization and Signatures](../ledger/ledger-txn-authorization.md)).
 
 The program has access to data from the transaction it is attached to (`txn` opcode),
 any transactions in a transaction group it is part of (`gtxn` opcode), and a few
 global values like consensus parameters (`global` opcode).
 
-Some _arguments_ may be attached to a transaction being validated by a program. Arguments
-are an array of byte strings. A common pattern would be to have the key to unlock
-some contract as an argument.
+Arguments are an array of byte strings. A common pattern would be to have the key
+to unlock some contract as an argument. Note that Logic Signature arguments are
+_not_ signed.
 
 Be aware that Logic Signature arguments are recorded on the blockchain and publicly
 visible when the transaction is submitted to the network, even before the transaction
@@ -52,23 +56,27 @@ The total program cost of all Logic Signatures in a group **MUST NOT** exceed
 ## Modes
 
 A program can either authorize some _delegated action_ on a normal signature-based,
-multisignature-based, or post-quantum account or be wholly in charge of a _contract
-account_.
+multisignature-based, or post-quantum signature-based account or be wholly in charge
+of a _contract account_.
 
 ### Delegated Signature Mode
 
-If the account has signed the program (by providing a valid [Ed25519](../crypto/crypto-ed25519.md)
-signature from the authorizer address on the string `Program` concatenated with
-the program bytecode, or a valid multisignature for the authorizer address on the
-string `MsigProgram` concatenated with the authorizer address and the program
-bytecode) then, if the program returns `True`, the transaction is authorized as
-if the account had signed it. A post-quantum account
-instead signs the hash of the string `PQProgram` concatenated with the authorizer
-address and the program bytecode (see
-[Logic Signature Delegation](../ledger/ledger-txn-authorization.md#logic-signature-delegation)).
-This allows an account to hand out a signed program so that other users can carry
-out delegated actions that are approved by the program. Note that Logic Signature
-arguments are _not_ signed.
+In this mode, the account signs the program by providing exactly one of the following:
+
+- An [Ed25519](../crypto/crypto-ed25519.md) signature (`lsig` field `sig`), for a
+normal signature-based account;
+
+- A multisignature (field `lmsig`), for a multisignature-based account;
+
+- A post-quantum signature (field `pqsig`), for a post-quantum signature-based account.
+
+The signed messages and validity conditions are defined in the
+[Logic Signature Delegation](../ledger/ledger-txn-authorization.md#logic-signature-delegation)
+section of the ledger specifications.
+
+If the program is properly signed and approves, the transaction is authorized as
+if the account had signed it. This allows an account to hand out a signed program
+so that other users can carry out delegated actions that are approved by the program.
 
 ### Contract Account Mode
 

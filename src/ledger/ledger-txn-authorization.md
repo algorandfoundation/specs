@@ -3,8 +3,6 @@ $$
 \newcommand \pk {\mathrm{pk}}
 \newcommand \MSigPrefix {\texttt{MultisigAddr}}
 \newcommand \PQAPrefix {\texttt{PQA}}
-\newcommand \PQProgramPrefix {\texttt{PQProgram}}
-\newcommand \Tx {\mathrm{Tx}}
 \newcommand \Fee {\mathrm{fee}}
 \newcommand \MinTxnFee {T_{\Fee,\min}}
 $$
@@ -52,46 +50,39 @@ public key).
 which hashes to the _authorizer address_ as described in the [Multisignature](#multisignature)
 section:
 
-  - The `subsig` array of subsignatures, each consisting of a signer address and a
-  64-byte signature of the transaction. Note that transaction signed by a multisignature
-  account **MUST** contain all signer's addresses in the `subsig` array even if the
-  transaction has not been signed by that address.
+  - The `subsig` array of subsignatures, each consisting of a signer address and
+  a 64-byte signature of the message covered by the multisignature. The signature
+  **MUST** contain all signer's addresses in the `subsig` array even if the transaction
+  has not been signed by that address.
 
   - The threshold `thr` that is a minimum number of **REQUIRED** signatures.
 
   - The multisignature version `v` (current value is \\( 1 \\)).
 
+- A valid _post-quantum signature_ (`pqsig`) is an object which derives the _authorizer
+address_ and signs the transaction with a post-quantum signature scheme, as described
+in the [Post-Quantum Signature](#post-quantum-signature) section.
+
 - A valid _logic signature_ (`lsig`) is an object containing the following fields:
 
   - The logic `l` which is versioned bytecode (see [AVM specifications](../avm/avm.md)).
 
-  - An **OPTIONAL** single signature `sig` of 64-bytes valid from the authorizer
-  address of the transaction which has signed the string `Program` concatenated
-  with the bytes in `l`.
-
-  - An **OPTIONAL** multisignature `lmsig` from the authorizer address of the
-  transaction over the string `MsigProgram` concatenated with the bytes of the
-  authorizer address and the bytes in `l`.
-
-  - An **OPTIONAL** post-quantum signature `pqsig` from the authorizer address of
-  the transaction over the 32-byte hash of the string `PQProgram` concatenated
-  with the bytes of the authorizer address and the bytes in `l`, as described in
-  the [Logic Signature Delegation](#logic-signature-delegation) section.
+  - At most one **OPTIONAL** delegation signature: a single signature `sig`, a multisignature
+  `lmsig`, or a post-quantum signature `pqsig` from the authorizer address of the
+  transaction, as described in the [Logic Signature Delegation](#logic-signature-delegation)
+  section.
 
   - An **OPTIONAL** array of byte strings `arg` which are arguments supplied to the
   program in `l` (`arg` bytes are not covered by `sig`, `lmsig`, or `pqsig`).
 
-The logic signature is valid if exactly one of `sig`, `lmsig`, or `pqsig` is a valid
-signature of the program by the authorizer address of the transaction, or if none
-of them is set and the hash of the program is equal to the authorizer address.
+The logic signature is valid if the one set is a valid [delegation signature](#logic-signature-delegation)
+of the program by the authorizer address of the transaction, or if none of them is
+set and the authorizer address is equal to the program hash defined in the
+[Contract Account Mode](../avm/avm-mode-logic-signatures.md#contract-account-mode).
 
 Also the program **MUST** execute and finish with a single non-zero value on the
 AVM stack (see [AVM specifications](../avm/avm.md) for details on program execution
 semantics).
-
-A valid _post-quantum signature_ (`pqsig`) is an object which derives the _authorizer
-address_ and signs the transaction with a post-quantum signature scheme, as described
-in the [Post-Quantum Signature](#post-quantum-signature) section.
 
 ## Multisignature
 
@@ -121,7 +112,7 @@ In this case, every occurrence is counted independently in validation.
 
 The multisignature validation process checks that:
 
-1. All non-empty signatures are valid;
+1. All non-empty signatures are valid for the same message covered by the multisignature;
 
 1. The valid signatures count is not less than the threshold.
 
@@ -145,8 +136,7 @@ scheme. The supported values are:
 
 - The canonical public key `pk` of the scheme, a byte string.
 
-- The canonical signature `sig` of the scheme, a non-empty byte string. For scheme
-`f1`, it must be a FALCON-1024 signature in compressed format.
+- The canonical signature `sig` of the scheme, a non-empty byte string.
 
 The _post-quantum address_ of a scheme identifier, salt, and public key is derived
 by hashing their concatenation with the domain separation prefix \\( \PQAPrefix \\):
@@ -168,36 +158,9 @@ A post-quantum signature is valid if all the following conditions hold:
 1. The post-quantum address derived from `sch`, `slt`, and `pk` is equal to the
 _authorizer address_ of the transaction;
 
-1. The signature `sig` is valid for the message \\( \Hash(\Tx) \\), the 32-byte
-[transaction identifier](./ledger-transactions.md), under the public key `pk`,
-according to the scheme denoted by `sch`.
-
-> Note that, unlike `sig` and `msig`, which sign the domain-separated encoded
-> transaction, the message signed by a `f1` signature is the 32-byte _hash_ of the
-> domain-separated encoded transaction.
-
-### Logic Signature Delegation
-
-A post-quantum account **MAY** delegate a [logic signature](../avm/avm-mode-logic-signatures.md#delegated-signature-mode):
-the `lsig` object carries a `pqsig` object, as defined above, in place of an Ed25519
-signature or multisignature delegation.
-
-A post-quantum logic signature delegation is valid if all the following conditions
-hold:
-
-1. The scheme identifier `sch` is supported;
-
-1. The post-quantum address derived from `sch`, `slt`, and `pk` is equal to the
-_authorizer address_ of the transaction;
-
-1. The signature `sig` is valid for the message \\( \Hash(\PQProgramPrefix, A, \mathtt{l}) \\),
-the 32-byte hash of the _authorizer address_ \\( A \\) concatenated with the program
-bytecode `l` (with domain separation prefix \\( \PQProgramPrefix \\)), under the
-public key `pk`, according to the scheme denoted by `sch`.
-
-> The signed message binds the delegating account address: a delegation produced
-> for one account is not valid for any other account, in particular for a different
-> salted address derived from the same public key.
+1. The signature `sig` is valid for the transaction (encoded in canonical msgpack
+and with [domain separation prefix](../crypto/crypto-domain-separators.md) `TX`),
+under the public key `pk`, according to the scheme denoted by `sch`.
 
 ### Fee Surcharge
 
@@ -209,3 +172,29 @@ an additional fee, given by the scheme _fee contribution_:
 
 This contribution adds to the [minimum fee](./ledger-txn-groups.md) otherwise required
 by the transaction or by its transaction group, if any.
+
+## Logic Signature Delegation
+
+An account **MAY** delegate authority to a logic signature by signing its program
+(see the [Delegated Signature Mode](../avm/avm-mode-logic-signatures.md#delegated-signature-mode)
+of the AVM specifications).
+
+The `lsig` object carries the delegation signature in one of the following forms,
+according to the delegating account type:
+
+- The single signature `sig` is a valid 64-byte [Ed25519 signature](../crypto/crypto-ed25519.md)
+of the string `Program` concatenated with the bytes in `l`, where the public key
+is the _authorizer address_.
+
+- The multisignature `lmsig` is a valid multisignature (an object structured as
+`msig`), which hashes to the _authorizer address_ as described in the [Multisignature](#multisignature)
+section, where the covered message is the string `MsigProgram` concatenated with
+the bytes of the authorizer address and the bytes in `l`.
+
+- The post-quantum signature `pqsig` is a valid [post-quantum signature](#post-quantum-signature),
+where the signed message is the string `PQProgram` concatenated with the bytes of
+the authorizer address and the bytes in `l`, in place of the transaction.
+
+> The `lmsig` and `pqsig` messages bind the delegating account address: a delegation
+> produced for one account is not valid for any other account (in particular, for a
+> different salted address derived from the same post-quantum public key).
