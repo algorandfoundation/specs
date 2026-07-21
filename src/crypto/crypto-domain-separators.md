@@ -20,6 +20,13 @@ The list below specifies each `prefix`:
   - `BH`: A _Block Header_.
   - `BR`: A _Balance Record_.
   - `GE`: A _Genesis_ configuration.
+  - `MsigProgram`: A logic signature program delegation by a
+  [multisignature account](../avm/avm-mode-logic-signatures.md#delegated-signature-mode)
+  (the delegating account address concatenated with the program bytecode).
+  - `PQA`: A [_post-quantum account address_](../ledger/ledger-txn-authorization.md#post-quantum-signature).
+  - `PQProgram`: A logic signature program delegation by a
+  [post-quantum account](../ledger/ledger-txn-authorization.md#logic-signature-delegation)
+  (the delegating account address concatenated with the program bytecode).
   - `spm`: A _State Proof_ message.
   - `STIB`: A _SignedTxnInBlock_ that appears as part of the leaf in the Merkle
   tree of transactions.
@@ -42,6 +49,8 @@ The list below specifies each `prefix`:
   number of the ARC). For example, ARC-0003 can use any prefix starting with `arc0003`.
   - `MX`: An arbitrary message used to prove ownership of a cryptographic secret.
   - `NPR`: A message that proves a peer’s stake in an Algorand networking implementation.
+  - `PQK`: The derivation of a post-quantum signing key seed from master entropy
+  (used by key management tools).
   - `TE`: An arbitrary message reserved for testing purposes.
   - `Program`: A TEAL bytecode program.
   - `ProgData`: Data that is signed within TEAL bytecode programs.

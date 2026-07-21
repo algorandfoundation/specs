@@ -1,9 +1,11 @@
 # Algorand Keys Specification
 
-An Algorand node interacts with three types of cryptographic keys:
+An Algorand node interacts with three types of cryptographic material:
 
-- _Root keys_, a key pair (public and private) used to control the access to a particular
-account. These key pairs are also known as _Spending Keys_ (as they sign accounts’ transactions).
+- _Root keys_, the authorization material used to control the access to a particular
+account: a single key pair (such as Ed25519 or a post-quantum scheme), a multisignature
+composition of key pairs, or a logic signature program. Root keys are also known as
+_Spending Keys_ (as they authorize accounts’ transactions).
 
 - _Voting keys_, a set of keys used for authentication, i.e. identify an account
 in the Algorand Byzantine Fault Tolerant protocol (see [ABFT section](../abft/abft.md)).

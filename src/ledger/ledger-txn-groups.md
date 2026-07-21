@@ -65,7 +65,7 @@ Additionally, if a block contains a transaction group of more than \\( \MaxTxGro
 transactions, the block is invalid.
 
 If the sum of the fees paid by the \\( n \\) transactions in a transaction group
-is less than \\( n \times \MinTxnFee )\\, then the block is invalid. There are two
+is less than \\( n \times \MinTxnFee \\), then the block is invalid. There are two
 exceptions to this fee requirement:
 
 1. State Proof transactions require no fee;
@@ -76,6 +76,10 @@ ago, and has not proposed or heartbeat since that challenge.
 
 > Further explanation of this rule is found in [Heartbeat transaction semantics](./ledger-txn-semantics-heartbeat.md)
 > section.
+
+Additionally, each transaction authorized with a [post-quantum signature](./ledger-txn-authorization.md#post-quantum-signature),
+directly or through a delegated logic signature, raises the minimum fee requirement
+of its group by the scheme _fee contribution_ (see [Fee Surcharge](./ledger-txn-authorization.md#fee-surcharge)).
 
 If the sum of the lengths of the boxes denoted by the box references in a transaction
 group exceeds \\( \BytesPerBoxReference \\) times the total number of box references
