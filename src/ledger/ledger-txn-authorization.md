@@ -166,12 +166,15 @@ under the public key `pk`, according to the scheme denoted by `sch`.
 
 A transaction authorized with a post-quantum signature, either directly or through
 a [post-quantum delegated logic signature](#logic-signature-delegation), requires
-an additional fee, given by the scheme _fee contribution_:
+an additional fee, given by the _scheme fee contribution_:
 
 - `f1`: \\( 2 \times \MinTxnFee \\).
 
 This contribution adds to the [minimum fee](./ledger-txn-groups.md) otherwise required
-by the transaction or by its transaction group, if any.
+by the transaction or by its transaction group, if any. The contribution adds even
+when the minimum fee is discounted in a fee-exempt Heartbeat transaction authorized
+by a post-quantum signature. The contribution never applies to a State Proof transaction,
+since it carries no authorization at all.
 
 ## Logic Signature Delegation
 
