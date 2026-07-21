@@ -153,7 +153,8 @@ The _congestion tax_ of this block **MUST** equal
 
 $$
 \begin{cases}
-\max\!\left( \left\lfloor \dfrac{C \, (1{,}000{,}000 - d)}{1{,}000{,}000} \right\rfloor - d, \; 0 \right), & L \le 500{,}000, \\[2.5ex]
+\max\!\left( \left\lfloor \dfrac{C \, (1{,}000{,}000 - d)}{1{,}000{,}000} \right\rfloor - d, \; 0 \right),
+& L \le 500{,}000, \\[2.5ex]
 \left\lfloor \dfrac{C \, (1{,}000{,}000 + u)}{1{,}000{,}000} \right\rfloor + u, & L > 500{,}000.
 \end{cases}
 $$

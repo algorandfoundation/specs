@@ -152,16 +152,16 @@ The Algorand _Ledger_ is parameterized by the values in the following tables.
 
 ## Transaction
 
-|           Parameter           |     Current Value      |  Unit  | Description                                                                                           | Reference Implementation Name |
-|:-----------------------------:|:----------------------:|:------:|-------------------------------------------------------------------------------------------------------|-------------------------------|
-|      \\( \MaxTxTail \\)       |    \\( 1{,}000 \\)     |        | Length of the _Transaction Tail_                                                                      |                               |
-| \\( \MaxKeyregValidPeriod \\) | \\( 16{,}777{,}215 \\) | rounds | Maximum voting range in a `keyreg` transaction, defined as \\( (256 \times 2^{16})-1 \\)              | `MaxKeyregValidPeriod`        |
-|    \\( \MaxTxGroupSize \\)    |       \\( 16 \\)       |  txn   | Maximum number of transactions allowed in a group                                                     | `MaxTxGroupSize`              |
-|      \\( \MaxTxnLife \\)      |     \\( 1,000 \\)      | rounds | Maximum difference between last valid and first valid round, defines transaction lifespan in the pool | `MaxTxnLife`                  |
-|      \\( \MinTxnFee \\)       |    \\( 1{,}000 \\)     | μALGO  | Minimum processing fee for any transaction                                                            | `MinTxnFee`                   |
-|   \\( \MaxTxnNoteBytes \\)    |    \\( 1{,}024 \\)     | bytes  | Maximum length of a transaction note field without a fee surcharge                                    | `MaxTxnNoteBytes`             |
-| \\( \MaxAbsoluteTxnNoteBytes \\) | \\( 4{,}096 \\) | bytes | Absolute maximum length of a transaction note field; bytes beyond \\( \MaxTxnNoteBytes \\) incur a fee surcharge | `MaxAbsoluteTxnNoteBytes` |
-| \\( \PerByteTxnSurcharge \\) | \\( 100 \\) | millionths of \\( \MinTxnFee \\) / byte | Fee surcharge per byte by which a transaction field exceeds its basic size limit | `PerByteTxnSurcharge` |
+|            Parameter             |     Current Value      |                  Unit                   | Description                                                                                                      | Reference Implementation Name |
+|:--------------------------------:|:----------------------:|:---------------------------------------:|------------------------------------------------------------------------------------------------------------------|-------------------------------|
+|        \\( \MaxTxTail \\)        |    \\( 1{,}000 \\)     |                                         | Length of the _Transaction Tail_                                                                                 |                               |
+|  \\( \MaxKeyregValidPeriod \\)   | \\( 16{,}777{,}215 \\) |                 rounds                  | Maximum voting range in a `keyreg` transaction, defined as \\( (256 \times 2^{16})-1 \\)                         | `MaxKeyregValidPeriod`        |
+|     \\( \MaxTxGroupSize \\)      |       \\( 16 \\)       |                   txn                   | Maximum number of transactions allowed in a group                                                                | `MaxTxGroupSize`              |
+|       \\( \MaxTxnLife \\)        |     \\( 1,000 \\)      |                 rounds                  | Maximum difference between last valid and first valid round, defines transaction lifespan in the pool            | `MaxTxnLife`                  |
+|        \\( \MinTxnFee \\)        |    \\( 1{,}000 \\)     |                  μALGO                  | Minimum processing fee for any transaction                                                                       | `MinTxnFee`                   |
+|     \\( \MaxTxnNoteBytes \\)     |    \\( 1{,}024 \\)     |                  bytes                  | Maximum length of a transaction note field without a fee surcharge                                               | `MaxTxnNoteBytes`             |
+| \\( \MaxAbsoluteTxnNoteBytes \\) |    \\( 4{,}096 \\)     |                  bytes                  | Absolute maximum length of a transaction note field; bytes beyond \\( \MaxTxnNoteBytes \\) incur a fee surcharge | `MaxAbsoluteTxnNoteBytes`     |
+|   \\( \PerByteTxnSurcharge \\)   |      \\( 100 \\)       | millionths of \\( \MinTxnFee \\) / byte | Fee surcharge per byte by which a transaction field exceeds its basic size limit                                 | `PerByteTxnSurcharge`         |
 
 ## Account
 
@@ -185,45 +185,45 @@ The Algorand _Ledger_ is parameterized by the values in the following tables.
 
 ## LogicSig
 
-|        Parameter         |  Current Value   |  Unit   | Description                                                | Reference Implementation Name |
-|:------------------------:|:----------------:|:-------:|------------------------------------------------------------|-------------------------------|
-| \\( \LogicSigMaxCost \\) | \\( 20{,}000 \\) | opcodes | Maximum opcode cost for LSig                               | `LogicSigMaxCost`             |
-| \\( \LogicSigMaxSize \\) | \\( 1{,}000 \\)  |  bytes  | Maximum combined length of LSig program and LSig arguments | `LogicSigMaxSize`             |
-| \\( \MaxAbsoluteLogicSigProgramSize \\) | \\( 16{,}000 \\) | bytes | Absolute maximum length of a single LSig program; program bytes beyond \\( \LogicSigMaxSize \\) per transaction (pooled across the group) incur a fee surcharge | `MaxAbsoluteLogicSigProgramSize` |
+|                Parameter                |  Current Value   |  Unit   | Description                                                                                                                                                     | Reference Implementation Name    |
+|:---------------------------------------:|:----------------:|:-------:|-----------------------------------------------------------------------------------------------------------------------------------------------------------------|----------------------------------|
+|        \\( \LogicSigMaxCost \\)         | \\( 20{,}000 \\) | opcodes | Maximum opcode cost for LSig                                                                                                                                    | `LogicSigMaxCost`                |
+|        \\( \LogicSigMaxSize \\)         | \\( 1{,}000 \\)  |  bytes  | Maximum combined length of LSig program and LSig arguments                                                                                                      | `LogicSigMaxSize`                |
+| \\( \MaxAbsoluteLogicSigProgramSize \\) | \\( 16{,}000 \\) |  bytes  | Absolute maximum length of a single LSig program; program bytes beyond \\( \LogicSigMaxSize \\) per transaction (pooled across the group) incur a fee surcharge | `MaxAbsoluteLogicSigProgramSize` |
 
 ## Application
 
-|             Parameter             |   Current Value   |     Unit     | Description                                                             | Reference Implementation Name |
-|:---------------------------------:|:-----------------:|:------------:|-------------------------------------------------------------------------|-------------------------------|
-|  \\( \AppFlatOptInMinBalance \\)  | \\( 100{,}000 \\) |    μALGO     | MBR for opting in to a single application                               | `AppFlatOptInMinBalance`      |
-| \\( \AppFlatParamsMinBalance \\)  | \\( 100{,}000 \\) |    μALGO     | MBR for creating a single application                                   | `AppFlatParamsMinBalance`     |
-|    \\( \BoxByteMinBalance \\)     |    \\( 400 \\)    | μALGO / byte | MBR per byte of box storage                                             | `BoxByteMinBalance`           |
-|    \\( \BoxFlatMinBalance \\)     |  \\( 2{,}500 \\)  |    μALGO     | MBR per box created                                                     | `BoxFlatMinBalance`           |
-|   \\( \BytesPerBoxReference \\)   |  \\( 2{,}048\\)   |    bytes     | Box read and write payload per reference                                | `BytesPerBoxReference`        |
-|        \\( \MaxBoxSize \\)        | \\( 32{,}768 \\)  |    bytes     | Maximum size of a box                                                   | `MaxBoxSize`                  |
-|        \\( \MaxAppArgs \\)        |    \\( 16 \\)     |              | Maximum number of arguments for an `appl` transaction                   | `MaxAppArgs`                  |
-|   \\( \MaxAppBoxReferences \\)    |     \\( 8 \\)     |              | Maximum number of box references for an `appl` transaction              | `MaxAppBoxReferences`         |
-|   \\( \MaxAppBytesValueLen \\)    |    \\( 128 \\)    |    bytes     | Maximum length of a bytes value used in an application’s state          | `MaxAppBytesValueLen`         |
-|       \\( \MaxAppKeyLen \\)       |    \\( 64 \\)     |    bytes     | Maximum length of a key used in an application’s state                  | `MaxAppKeyLen`                |
-|    \\( \MaxAppProgramCost \\)     |    \\( 700 \\)    |   opcodes    | Maximum cost of application Approval or ClearState application program  | `MaxAppProgramCost`           |
-|     \\( \MaxAppProgramLen \\)     |  \\( 2{,}048 \\)  |    bytes     | Maximum length of application Approval or ClearState program page       | `MaxAppProgramLen`            |
-|  \\( \MaxAppSumKeyValueLens \\)   |    \\( 128 \\)    |    bytes     | Maximum sum of the lengths of the key and value of one app state entry  | `MaxAppSumKeyValueLens`       |
-|    \\( \MaxAppTotalArgLen \\)     |  \\( 2{,}048 \\)  |    bytes     | Maximum sum of the lengths of argument for an `appl` transaction        | `MaxAppTotalArgLen`           |
-| \\( \MaxAbsoluteTotalArgLen \\) | \\( 16{,}384 \\) | bytes | Absolute maximum sum of argument lengths for an `appl` transaction; bytes beyond \\( \MaxAppTotalArgLen \\) incur a fee surcharge | `MaxAbsoluteTotalArgLen` |
-|  \\( \MaxAppTotalProgramLen \\)   |  \\( 2{,}048 \\)  |    bytes     | Maximum combined length of application Approval and ClearState programs | `MaxAppTotalProgramLen`       |
-| \\( \MaxAppTotalTxnReferences \\) |     \\( 8 \\)     |              | Maximum number of references for an `appl` transaction                  | `MaxAppTotalTxnReferences`    |
-|    \\( \MaxAppTxnAccounts \\)     |     \\( 8 \\)     |              | Maximum number of account references for an `appl` transaction          | `MaxAppTxnAccounts`           |
-|   \\( \MaxAppTxnForeignApps \\)   |     \\( 8 \\)     |              | Maximum number of application references for an `appl` transaction      | `MaxAppTxnForeignApps`        |
-|  \\( \MaxAppTxnForeignAssets \\)  |     \\( 8 \\)     |              | Maximum number of asset references for an `appl` transaction            | `MaxAppTxnForeignAssets`      |
-|       \\( \MaxAppAccess \\)       |    \\( 16 \\)     |              | Maximum number of resources access list for an `appl` transaction       | `MaxAppAccess`                |
-| \\( \MaxExtraAppProgramPages \\)  |     \\( 3 \\)     |              | Maximum extra length for application program in pages without a fee surcharge | `MaxExtraAppProgramPages`     |
-| \\( \MaxAbsoluteExtraProgramPages \\) | \\( 7 \\) | | Absolute maximum extra length for application program in pages; program bytes beyond the basic size incur a fee surcharge | `MaxAbsoluteExtraProgramPages` |
-|  \\( \MaxGlobalSchemaEntries \\)  |    \\( 64 \\)     |              | Maximum number of key/value pairs of application global state           | `MaxGlobalSchemaEntries`      |
-|  \\( \MaxLocalSchemaEntries \\)   |    \\( 16 \\)     |              | Maximum number of key/value pairs of application local state            | `MaxLocalSchemaEntries`       |
-|   \\( \MaxInnerTransactions \\)   |    \\( 16 \\)     |     txn      | Maximum number of inner transactions for an `appl` transaction          | `MaxInnerTransactions`        |
-|  \\( \SchemaBytesMinBalance \\)   | \\( 25{,}000 \\)  |    μALGO     | Additional MBR for `[]bytes` values in application state                | `SchemaBytesMinBalance`       |
-| \\( \SchemaMinBalancePerEntry \\) | \\( 25{,}000 \\)  |    μALGO     | MBR for key-value pair in application state                             | `SchemaMinBalancePerEntry`    |
-|   \\( \SchemaUintMinBalance \\)   |  \\( 35{,}00 \\)  |    μALGO     | Additional MBR for `uint64` values in application state                 | `SchemaUintMinBalance`        |
+|               Parameter               |   Current Value   |     Unit     | Description                                                                                                                       | Reference Implementation Name  |
+|:-------------------------------------:|:-----------------:|:------------:|-----------------------------------------------------------------------------------------------------------------------------------|--------------------------------|
+|    \\( \AppFlatOptInMinBalance \\)    | \\( 100{,}000 \\) |    μALGO     | MBR for opting in to a single application                                                                                         | `AppFlatOptInMinBalance`       |
+|   \\( \AppFlatParamsMinBalance \\)    | \\( 100{,}000 \\) |    μALGO     | MBR for creating a single application                                                                                             | `AppFlatParamsMinBalance`      |
+|      \\( \BoxByteMinBalance \\)       |    \\( 400 \\)    | μALGO / byte | MBR per byte of box storage                                                                                                       | `BoxByteMinBalance`            |
+|      \\( \BoxFlatMinBalance \\)       |  \\( 2{,}500 \\)  |    μALGO     | MBR per box created                                                                                                               | `BoxFlatMinBalance`            |
+|     \\( \BytesPerBoxReference \\)     |  \\( 2{,}048\\)   |    bytes     | Box read and write payload per reference                                                                                          | `BytesPerBoxReference`         |
+|          \\( \MaxBoxSize \\)          | \\( 32{,}768 \\)  |    bytes     | Maximum size of a box                                                                                                             | `MaxBoxSize`                   |
+|          \\( \MaxAppArgs \\)          |    \\( 16 \\)     |              | Maximum number of arguments for an `appl` transaction                                                                             | `MaxAppArgs`                   |
+|     \\( \MaxAppBoxReferences \\)      |     \\( 8 \\)     |              | Maximum number of box references for an `appl` transaction                                                                        | `MaxAppBoxReferences`          |
+|     \\( \MaxAppBytesValueLen \\)      |    \\( 128 \\)    |    bytes     | Maximum length of a bytes value used in an application’s state                                                                    | `MaxAppBytesValueLen`          |
+|         \\( \MaxAppKeyLen \\)         |    \\( 64 \\)     |    bytes     | Maximum length of a key used in an application’s state                                                                            | `MaxAppKeyLen`                 |
+|      \\( \MaxAppProgramCost \\)       |    \\( 700 \\)    |   opcodes    | Maximum cost of application Approval or ClearState application program                                                            | `MaxAppProgramCost`            |
+|       \\( \MaxAppProgramLen \\)       |  \\( 2{,}048 \\)  |    bytes     | Maximum length of application Approval or ClearState program page                                                                 | `MaxAppProgramLen`             |
+|    \\( \MaxAppSumKeyValueLens \\)     |    \\( 128 \\)    |    bytes     | Maximum sum of the lengths of the key and value of one app state entry                                                            | `MaxAppSumKeyValueLens`        |
+|      \\( \MaxAppTotalArgLen \\)       |  \\( 2{,}048 \\)  |    bytes     | Maximum sum of the lengths of argument for an `appl` transaction                                                                  | `MaxAppTotalArgLen`            |
+|    \\( \MaxAbsoluteTotalArgLen \\)    | \\( 16{,}384 \\)  |    bytes     | Absolute maximum sum of argument lengths for an `appl` transaction; bytes beyond \\( \MaxAppTotalArgLen \\) incur a fee surcharge | `MaxAbsoluteTotalArgLen`       |
+|    \\( \MaxAppTotalProgramLen \\)     |  \\( 2{,}048 \\)  |    bytes     | Maximum combined length of application Approval and ClearState programs                                                           | `MaxAppTotalProgramLen`        |
+|   \\( \MaxAppTotalTxnReferences \\)   |     \\( 8 \\)     |              | Maximum number of references for an `appl` transaction                                                                            | `MaxAppTotalTxnReferences`     |
+|      \\( \MaxAppTxnAccounts \\)       |     \\( 8 \\)     |              | Maximum number of account references for an `appl` transaction                                                                    | `MaxAppTxnAccounts`            |
+|     \\( \MaxAppTxnForeignApps \\)     |     \\( 8 \\)     |              | Maximum number of application references for an `appl` transaction                                                                | `MaxAppTxnForeignApps`         |
+|    \\( \MaxAppTxnForeignAssets \\)    |     \\( 8 \\)     |              | Maximum number of asset references for an `appl` transaction                                                                      | `MaxAppTxnForeignAssets`       |
+|         \\( \MaxAppAccess \\)         |    \\( 16 \\)     |              | Maximum number of resources access list for an `appl` transaction                                                                 | `MaxAppAccess`                 |
+|   \\( \MaxExtraAppProgramPages \\)    |     \\( 3 \\)     |              | Maximum extra length for application program in pages without a fee surcharge                                                     | `MaxExtraAppProgramPages`      |
+| \\( \MaxAbsoluteExtraProgramPages \\) |     \\( 7 \\)     |              | Absolute maximum extra length for application program in pages; program bytes beyond the basic size incur a fee surcharge         | `MaxAbsoluteExtraProgramPages` |
+|    \\( \MaxGlobalSchemaEntries \\)    |    \\( 64 \\)     |              | Maximum number of key/value pairs of application global state                                                                     | `MaxGlobalSchemaEntries`       |
+|    \\( \MaxLocalSchemaEntries \\)     |    \\( 16 \\)     |              | Maximum number of key/value pairs of application local state                                                                      | `MaxLocalSchemaEntries`        |
+|     \\( \MaxInnerTransactions \\)     |    \\( 16 \\)     |     txn      | Maximum number of inner transactions for an `appl` transaction                                                                    | `MaxInnerTransactions`         |
+|    \\( \SchemaBytesMinBalance \\)     | \\( 25{,}000 \\)  |    μALGO     | Additional MBR for `[]bytes` values in application state                                                                          | `SchemaBytesMinBalance`        |
+|   \\( \SchemaMinBalancePerEntry \\)   | \\( 25{,}000 \\)  |    μALGO     | MBR for key-value pair in application state                                                                                       | `SchemaMinBalancePerEntry`     |
+|     \\( \SchemaUintMinBalance \\)     |  \\( 35{,}00 \\)  |    μALGO     | Additional MBR for `uint64` values in application state                                                                           | `SchemaUintMinBalance`         |
 
 ---
 
