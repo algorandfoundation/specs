@@ -91,9 +91,11 @@ this fee requirement:
 
 1. State Proof transactions require no fee;
 
-1. Heartbeat transactions require no fee if they have a zero _group_ field, and
-the _heartbeat address_ was challenged between \\( 100 \\) and \\( 200 \\) rounds
-ago, and has not proposed or heartbeat since that challenge.
+1. Heartbeat transactions that set the
+[_heartbeat challenge discount_](./ledger-txn-heartbeat.md#heartbeat-challenge-discount)
+flag require \\( \MinTxnFee \\) less, provided the _heartbeat address_ was challenged
+between \\( 100 \\) and \\( 200 \\) rounds ago, and has not proposed or heartbeat
+since that challenge.
 
 > Further explanation of this rule is found in [Heartbeat transaction semantics](./ledger-txn-semantics-heartbeat.md)
 > section.
