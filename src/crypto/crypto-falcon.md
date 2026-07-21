@@ -11,6 +11,8 @@ from post-quantum accounts (scheme identifier `f1`, see
 FALCON signatures contain a _salt version_. Algorand only accepts signatures with
 a salt version equal to `0`.
 
+FALCON-1024 signatures **MUST** be in compressed format.
+
 The library defines the following sizes:
 
 | Component              |               Size (bytes)                |
