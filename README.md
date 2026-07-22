@@ -15,35 +15,6 @@ first.
 To build and serve the Algorand Specifications locally, refer to the [installation
 instructions](https://specs.algorand.co/CONTRIBUTIONS#installation).
 
-### Linting
-
-CI runs `make lint` on every pull request and **fails the build** if it does not
-pass, so run it locally before pushing. `make lint` drives [pre-commit](https://pre-commit.com/),
-which enforces two hooks defined in [`.pre-commit-config.yaml`](./.pre-commit-config.yaml):
-
-- **markdownlint** — Markdown style, configured by [`.markdownlint.json`](./.markdownlint.json).
-- **trailing-whitespace** — no trailing whitespace.
-
-```sh
-make lint-setup   # once: installs pre-commit (needs python3 + pip)
-make lint         # run the same checks CI runs
-```
-
-To have the checks run automatically on every `git commit`, install the git hook:
-
-```sh
-pre-commit install
-```
-
-Rules that commonly trip up new content:
-
-- **Line length (MD013): 120 characters.** Fenced code blocks and Markdown tables
-  are exempt, but `$$…$$` math blocks are **not** — wrap long LaTeX across lines
-  (whitespace is insignificant in math mode; only `\\` ends a row).
-- **Table alignment (MD060): `aligned` style.** Every row's pipes must line up with
-  the header. When you add or edit a row, re-pad the whole column so the `|`
-  separators stay aligned.
-
 ### Typos
 
 To fix typos, consider opening a pull request labeled _"typo"_. By clicking on the

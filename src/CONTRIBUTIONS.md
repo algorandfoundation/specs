@@ -174,6 +174,12 @@ Block equations **MUST** use the `$$` delimiter (instead of `\\[ ... \\]`).
 > \\]
 > ```
 
+The 120-character line-length limit is **not** waived inside `$$ ... $$` blocks
+(unlike fenced code blocks and tables), so long equations **MUST** be wrapped
+across multiple lines. Whitespace is insignificant in MathJax, so a line may be
+broken at any token; within a `cases` or array environment, break before a
+column separator (`&`) or after a row terminator (`\\`).
+
 ### TeX-Macros
 
 TeX-macros are defined in the `./src/_include/tex-macros/` folder using the mdBook
