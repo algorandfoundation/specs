@@ -29,3 +29,13 @@ updates:
         update-types:
           - minor
           - patch
+
+  - package-ecosystem: pre-commit
+    directory: "/"
+    schedule:
+      interval: "monthly"
+    groups:
+      minor-and-patch:
+        update-types:
+          - minor
+          - patch

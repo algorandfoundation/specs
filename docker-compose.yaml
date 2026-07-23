@@ -5,9 +5,15 @@ services:
       context: .
       target: ci-cd
       args:
-        MDBOOK_VERSION: ${MDBOOK_VERSION-0.5.1}
-        MDBOOK_MERMAID_VERSION: ${MDBOOK_MERMAID_VERSION-0.17.0}
+        UV_VERSION: ${UV_VERSION}
+        UV_IMAGE_SHA256: ${UV_IMAGE_SHA256}
     working_dir: /book
+    user: "${LOCAL_UID:-1000}:${LOCAL_GID:-1000}"
+    environment:
+      HOME: /book/.cache/home
+      PRE_COMMIT_HOME: /book/.cache/pre-commit
+      UV_CACHE_DIR: /book/.cache/uv
+      UV_PYTHON_INSTALL_DIR: /book/.cache/uv/python
     ports:
       - 3000:3000
     command: ["mdbook", "serve", "--hostname", "0.0.0.0", "--port", "3000"]
@@ -20,10 +26,12 @@ services:
       context: .
       target: release
       args:
-        MDBOOK_VERSION: ${MDBOOK_VERSION-0.5.1}
-        MDBOOK_MERMAID_VERSION: ${MDBOOK_MERMAID_VERSION-0.17.0}
-    platform: linux/amd64
+        UV_VERSION: ${UV_VERSION}
+        UV_IMAGE_SHA256: ${UV_IMAGE_SHA256}
     working_dir: /book
+    user: "${LOCAL_UID:-1000}:${LOCAL_GID:-1000}"
+    environment:
+      HOME: /book/.cache/home
     ports:
       - 3001:3000
     command: ["mdbook", "serve", "--hostname", "0.0.0.0", "--port", "3000"]
