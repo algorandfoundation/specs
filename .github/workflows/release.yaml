@@ -4,14 +4,21 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
+
+concurrency:
+  group: release
+  cancel-in-progress: false
 
 jobs:
   release-drafter:
     runs-on: ubuntu-latest
+    timeout-minutes: 90
+    permissions:
+      contents: write
     steps:
       - name: Check user permissions
-        uses: actions/github-script@v9
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
@@ -28,26 +35,34 @@ jobs:
             core.info(`User @${actor} has '${permission}' permission. Proceeding with release.`);
 
       - name: Checkout repository
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
+          ref: master
+          fetch-depth: 0
           submodules: recursive
 
       - name: Build mdBook for release (HTML + PDF)
         run: make docker-release
 
-      - name: Get latest master commit short SHA
-        id: sha
-        run: echo "sha=$(git rev-parse --short origin/master)" >> $GITHUB_OUTPUT
+      - name: Record source commit
+        id: source
+        run: |
+          echo "full-sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+          echo "short-sha=$(git rev-parse --short HEAD)" >> "$GITHUB_OUTPUT"
 
       - name: Prepare artifacts
         run: |
           mkdir -p release-artifacts
-          cp book/pandoc/pdf/algorand-specs.pdf release-artifacts/algorand-specs-${{ steps.sha.outputs.sha }}.pdf
+          cp book/pandoc/pdf/algorand-specs.pdf release-artifacts/algorand-specs-${{ steps.source.outputs.short-sha }}.pdf
 
       - name: Create Draft Release and Upload Artifacts
-        uses: softprops/action-gh-release@v3
+        uses: softprops/action-gh-release@3d0d9888cb7fd7b750713d6e236d1fcb99157228 # v3
         with:
-          tag_name: ${{ steps.sha.outputs.sha }}
-          name: ${{ steps.sha.outputs.sha }}
+          tag_name: ${{ steps.source.outputs.short-sha }}
+          name: ${{ steps.source.outputs.short-sha }}
+          target_commitish: ${{ steps.source.outputs.full-sha }}
           draft: true
-          files: release-artifacts/algorand-specs-${{ steps.sha.outputs.sha }}.pdf
+          generate_release_notes: true
+          body: |
+            Source commit: [`${{ steps.source.outputs.full-sha }}`](https://github.com/${{ github.repository }}/commit/${{ steps.source.outputs.full-sha }})
+          files: release-artifacts/algorand-specs-${{ steps.source.outputs.short-sha }}.pdf
