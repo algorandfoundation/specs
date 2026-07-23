@@ -141,7 +141,7 @@ Dependencies are pinned in the format native to each ecosystem.
 |------------------------------------------------------|-----------------------------------------------------------------------------|---------------------------------------|
 | Shared tool versions, image digests, and checksums   | [`toolchain.env`](toolchain.env)                                            | Manual                                |
 | Remote pre-commit hooks, including Lychee            | [`.pre-commit-config.yaml`](.pre-commit-config.yaml)                        | Dependabot or `pre-commit autoupdate` |
-| GitHub Actions                                       | Full commit SHAs in [`.github/workflows/`](.github/workflows/)              | Dependabot                            |
+| GitHub Actions                                       | Full commit SHAs in `.github/workflows/`                                    | Dependabot                            |
 | Rust base image                                      | [`Dockerfile`](Dockerfile)                                                  | Dependabot                            |
 | Docker platform configuration                        | [`docker-compose.yaml`](docker-compose.yaml)                                | Manual                                |
 | mdBook theme                                         | [`theme`](theme) submodule gitlink                                          | Manual                                |
