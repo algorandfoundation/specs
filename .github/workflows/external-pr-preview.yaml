@@ -8,24 +8,71 @@ on:
         required: true
         type: number
 
+permissions:
+  contents: read
+  pull-requests: read
+
+concurrency:
+  group: external-pr-preview-${{ inputs.pr_number }}
+  cancel-in-progress: true
+
 jobs:
+  resolve-pr:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      checkout-ref: ${{ steps.pr.outputs.result }}
+    steps:
+      - name: Resolve PR merge commit
+        id: pr
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9
+        env:
+          PR_NUMBER: ${{ inputs.pr_number }}
+        with:
+          result-encoding: string
+          script: |
+            const prNumber = Number(process.env.PR_NUMBER);
+            const { data: pullRequest } = await github.rest.pulls.get({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: prNumber,
+            });
+            if (pullRequest.state !== 'open') {
+              core.setFailed(`PR #${prNumber} is ${pullRequest.state}, not open.`);
+              return;
+            }
+            if (!pullRequest.merge_commit_sha) {
+              core.setFailed(`PR #${prNumber} has no merge commit SHA.`);
+              return;
+            }
+            core.info(`Building PR #${prNumber} at ${pullRequest.merge_commit_sha}.`);
+            return pullRequest.merge_commit_sha;
+
   ci:
+    needs: resolve-pr
     uses: ./.github/workflows/ci.yaml
     with:
       artifact-name: specs-site-pr-${{ inputs.pr_number }}
+      checkout-ref: ${{ needs.resolve-pr.outputs.checkout-ref }}
 
   deploy-preview:
     needs: ci
     runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      deployments: write
+    environment:
+      name: preview
     steps:
       - name: Download built site
-        uses: actions/download-artifact@v8
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8
         with:
           name: specs-site-pr-${{ inputs.pr_number }}
           path: book/html
 
       - name: Publish to Cloudflare Pages
-        uses: cloudflare/wrangler-action@v4
+        uses: cloudflare/wrangler-action@ebbaa1584979971c8614a24965b4405ff95890e0 # v4
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CF_ACCOUNT_ID }}

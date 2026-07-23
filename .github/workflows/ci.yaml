@@ -7,46 +7,33 @@ on:
         description: "Name for the mdBook build artifact"
         required: true
         type: string
+      checkout-ref:
+        description: "Immutable commit SHA to build"
+        required: true
+        type: string
+
+permissions:
+  contents: read
 
 jobs:
   checks:
     runs-on: ubuntu-latest
+    timeout-minutes: 20
 
     steps:
       - name: Checkout repo
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
+          ref: ${{ inputs.checkout-ref }}
           fetch-depth: 0
           submodules: recursive
 
-      - name: Install pre-commit
-        run: make lint-setup
-
-      - name: Cache pre-commit hooks
-        uses: actions/cache@v6
-        with:
-          path: ~/.cache/pre-commit
-          key: precommit-${{ runner.os }}-${{ hashFiles('.pre-commit-config.yaml') }}
-
-      - name: Run strict linting and formatting checks
-        run: |
-          make lint
-
-      - name: Run soft links check (warning only)
-        run: |
-          make links-check || true
-
-      - name: Test mdBook build (HTML)
-        run: |
-          make docker-test
-
-      - name: Build mdBook for CI/CD (HTML)
-        run: |
-          make docker-ci
+      - name: Lint, test, and build mdBook (HTML)
+        run: make docker-ci
 
       - name: Upload built site
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
         with:
           name: ${{ inputs.artifact-name }}
-          path: book/html/*
+          path: book/html/
           retention-days: 1
