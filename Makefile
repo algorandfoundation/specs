@@ -145,7 +145,7 @@ check: lint test
 
 # Run 'mdbook-test' locally
 test:
-	@set -uo pipefail; \
+	@set -euo pipefail; \
 	out="$$(mktemp)"; \
 	trap 'rm -f "$$out"' EXIT; \
 	status=0; \
@@ -168,7 +168,7 @@ docker-setup: docker-image
 
 # Run 'mdbook-test' in Docker (ci-cd image)
 docker-test: docker-setup
-	@set -uo pipefail; \
+	@set -euo pipefail; \
 	out="$$(mktemp)"; \
 	trap 'rm -f "$$out"' EXIT; \
 	status=0; \
