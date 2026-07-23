@@ -7,13 +7,14 @@ services:
       args:
         UV_VERSION: ${UV_VERSION}
         UV_IMAGE_SHA256: ${UV_IMAGE_SHA256}
+    platform: linux/amd64
     working_dir: /book
     user: "${LOCAL_UID:-1000}:${LOCAL_GID:-1000}"
     environment:
-      HOME: /book/.cache/home
-      PRE_COMMIT_HOME: /book/.cache/pre-commit
-      UV_CACHE_DIR: /book/.cache/uv
-      UV_PYTHON_INSTALL_DIR: /book/.cache/uv/python
+      HOME: /book/.cache/linux-amd64/home
+      PRE_COMMIT_HOME: /book/.cache/linux-amd64/pre-commit
+      UV_CACHE_DIR: /book/.cache/linux-amd64/uv
+      UV_PYTHON_INSTALL_DIR: /book/.cache/linux-amd64/uv/python
     ports:
       - 3000:3000
     command: ["mdbook", "serve", "--hostname", "0.0.0.0", "--port", "3000"]
@@ -28,10 +29,11 @@ services:
       args:
         UV_VERSION: ${UV_VERSION}
         UV_IMAGE_SHA256: ${UV_IMAGE_SHA256}
+    platform: linux/amd64
     working_dir: /book
     user: "${LOCAL_UID:-1000}:${LOCAL_GID:-1000}"
     environment:
-      HOME: /book/.cache/home
+      HOME: /book/.cache/linux-amd64/home
     ports:
       - 3001:3000
     command: ["mdbook", "serve", "--hostname", "0.0.0.0", "--port", "3000"]

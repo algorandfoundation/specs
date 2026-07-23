@@ -17,7 +17,7 @@ jobs:
     uses: ./.github/workflows/ci.yaml
     with:
       artifact-name: specs-site-pr-${{ github.event.pull_request.number }}
-      checkout-ref: ${{ github.event.pull_request.merge_commit_sha }}
+      checkout-ref: ${{ github.sha }}
 
   deploy-preview:
     needs: ci

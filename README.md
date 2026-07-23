@@ -56,11 +56,18 @@ local environment with the repository's declared toolchain.
 
 ### Docker Workflow
 
-Run all gating checks in the project image:
+Run the same authoritative checks and HTML build as GitHub CI:
 
 ```shell
-make docker-check
+make ci
 ```
+
+This runs the Linux AMD64 toolchain, validates the theme submodule, executes all gating
+pre-commit hooks, runs `mdbook test`, and builds the HTML site. On ARM hosts, Docker
+uses emulation so that local and remote CI execute the same platform-specific tools.
+
+For a faster Docker-backed edit/test loop without the final HTML build, use
+`make docker-check`.
 
 Serve the book with hot reload at <http://localhost:3000>. The command builds the image
 and installs the generated Mermaid assets first:
@@ -78,30 +85,33 @@ make setup
 ```
 
 Ensure Cargo's binary directory, normally `~/.cargo/bin`, is on `PATH`. Run the native
-checks and then serve the book:
+validation and then serve the book:
 
 ```shell
 make check
 make serve
 ```
 
-The local workflow does not install the PDF release toolchain.
+`make check` uses tools installed on the host and warns when their versions differ
+from `toolchain.env`. When it emits no version-drift warnings, it is the local equivalent
+of Dockerized `make ci`. The local workflow does not install the PDF release toolchain.
 
 ## Build and Validation
 
-Before merging a change, run the check command for the selected path:
+Before submitting a change, choose either validation path:
 
 ```shell
-# Native
-make check
+# Exact GitHub Linux AMD64 environment (requires Docker)
+make ci
 
-# Docker
-make docker-check
+# Equivalent native checks; ensure no version-drift warnings are emitted
+make check
 ```
 
-Both commands run every gating pre-commit hook—including Markdown, YAML, TOML, whitespace,
-and offline local-link checks—and then run `mdbook test`. `make test-auto` and
-`make serve-auto` remain available when automatic native-to-Docker fallback is useful.
+`make ci` requires Docker and runs the exact environment used by GitHub. `make check`
+does not require Docker and runs the same validation gates and HTML build with native
+tools. `make test-auto` and `make serve-auto` remain available when automatic
+native-to-Docker fallback is useful.
 
 External links are deliberately checked separately because remote services can be
 transiently unavailable:
@@ -129,10 +139,11 @@ Dependencies are pinned in the format native to each ecosystem.
 
 | Dependency                                           | Source of truth                                                             | Update mechanism                      |
 |------------------------------------------------------|-----------------------------------------------------------------------------|---------------------------------------|
-| Shared tool versions, uv image digest, and checksums | [`toolchain.env`](toolchain.env)                                            | Manual                                |
+| Shared tool versions, image digests, and checksums   | [`toolchain.env`](toolchain.env)                                            | Manual                                |
 | Remote pre-commit hooks, including Lychee            | [`.pre-commit-config.yaml`](.pre-commit-config.yaml)                        | Dependabot or `pre-commit autoupdate` |
 | GitHub Actions                                       | Full commit SHAs in [`.github/workflows/`](.github/workflows/)              | Dependabot                            |
-| Docker base and Compose images                       | [`Dockerfile`](Dockerfile) and [`docker-compose.yaml`](docker-compose.yaml) | Dependabot                            |
+| Rust base image                                      | [`Dockerfile`](Dockerfile)                                                  | Dependabot                            |
+| Docker platform configuration                        | [`docker-compose.yaml`](docker-compose.yaml)                                | Manual                                |
 | mdBook theme                                         | [`theme`](theme) submodule gitlink                                          | Manual                                |
 
 Dependabot configuration is maintained in [`.github/dependabot.yaml`](.github/dependabot.yaml).
@@ -146,7 +157,7 @@ When changing it:
 
 1. Update the relevant version and any associated checksum.
 1. Run `make versions-check`.
-1. Run `make check` and `make docker-check`.
+1. Run `make ci`, or `make check` and confirm that it emits no version-drift warnings.
 1. Run `make docker-release` when the change affects Pandoc, `mdbook-pandoc`, Mermaid
    Filter, the Docker base, or other release dependencies.
 
@@ -158,18 +169,23 @@ updating `uv`, resolve the corresponding digest and update both values:
 docker buildx imagetools inspect ghcr.io/astral-sh/uv:<version>
 ```
 
-Keep other ecosystem-native pins out of `toolchain.env`: action SHAs belong in workflow
-files, hook revisions in the pre-commit configuration, base-image references in the
-Dockerfile, and the theme revision in the submodule gitlink.
+`PYTHON_VERSION` pins the uv-managed interpreter used for pre-commit, while
+`NODE_VERSION` pins the Node runtime bootstrapped by pre-commit for Markdownlint.
+
+Keep ecosystem-native pins in their native configuration: GitHub Action SHAs belong in
+workflow files, hook revisions in the pre-commit configuration, the Rust base image in
+the Dockerfile, and the theme revision in the submodule gitlink.
 
 ### Pre-commit Hook Updates
 
-Dependabot and `pre-commit autoupdate` can update every configured hook repository.
+Dependabot can update every configured hook repository. When updating manually, use
+`pre-commit autoupdate --freeze` so each `rev` remains an immutable commit SHA with its
+release tag recorded in a comment.
+
 After an updater changes the configuration, run:
 
 ```shell
-make check
-make docker-check
+make ci
 ```
 
 Run `make links-check` or `make docker-links-check` as well when Lychee changes.
@@ -178,7 +194,7 @@ Run `make links-check` or `make docker-links-check` as well when Lychee changes.
 
 - Keep the human-readable version comment when Dependabot updates a GitHub Action's
   immutable commit SHA.
-- Rebuild and test both Docker targets after changing the base image.
+- Resolve and record the new multi-platform digest when changing the uv image.
 - When updating the theme submodule, review the upstream change, update the gitlink,
   and validate both HTML and PDF output.
 
@@ -230,7 +246,8 @@ ref selected when dispatching the workflow.
 - Run `git submodule update --init --recursive` when the theme is missing or at
   the wrong recorded revision.
 - Run `make setup` after changing the local mdBook tool versions.
-- Run `make docker-check` after changing the containerized HTML or lint toolchain.
+- Run `make ci`, or run `make check` and confirm that it emits no version-drift
+  warnings, before submitting changes.
 - Use `make clean` before investigating stale generated output.
 
 ## Archived Specifications

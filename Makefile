@@ -20,7 +20,7 @@ MERMAID_ASSETS := mermaid.min.js mermaid-init.js
 
 DOCKER_COMPOSE ?= docker compose
 UVX            ?= uvx
-PRE_COMMIT      = $(UVX) pre-commit@$(PRE_COMMIT_VERSION)
+PRE_COMMIT      = $(UVX) --managed-python --python $(PYTHON_VERSION) pre-commit@$(PRE_COMMIT_VERSION)
 
 # Commands for local and Docker-backed execution
 MDBOOK_CMD_LOCAL   = $(MDBOOK)
@@ -31,9 +31,10 @@ MERMAID_CMD_DOCKER = $(DOCKER_COMPOSE) run --rm mdbook mdbook-mermaid
 PRE_COMMIT_DOCKER  = $(DOCKER_COMPOSE) run --rm mdbook $(PRE_COMMIT)
 
 .PHONY: help doctor \
-        setup test serve check \
+        setup test serve build-html check native-version-warnings \
         docker-image docker-setup docker-test docker-serve docker-build-html \
         docker-lint docker-links-check docker-check docker-ci docker-release \
+        ci ci-start ci-info submodules-check \
         test-auto serve-auto local-ready \
         clean versions-check hooks-install lint links-check
 
@@ -42,13 +43,14 @@ help:
 	@echo "  make setup             Install local mdBook tools and install Mermaid assets (requires cargo)"
 	@echo "  make test              Test the book locally"
 	@echo "  make serve             Build and serve the book locally"
-	@echo "  make check             Run native lint and mdBook tests (requires cargo + uv)"
+	@echo "  make check             Run native CI-equivalent checks and HTML build; warn on version drift"
 	@echo ""
 	@echo "Docker:"
+	@echo "  make ci                Run the authoritative GitHub-equivalent checks and HTML build"
 	@echo "  make docker-setup      Build mdBook light ci-cd image and install Mermaid assets (requires docker)"
 	@echo "  make docker-test       Test the book via ci-cd image"
 	@echo "  make docker-lint       Run all gating pre-commit hooks via ci-cd image"
-	@echo "  make docker-check      Run Docker-backed lint and mdBook tests"
+	@echo "  make docker-check      Run fast Docker-backed lint and mdBook tests (no HTML build)"
 	@echo "  make docker-links-check  Check external links via ci-cd image"
 	@echo "  make docker-serve      Build and serve the book via ci-cd image"
 	@echo "  make docker-release    Build mdBook full release image and build the book (HTML and PDF)"
@@ -122,7 +124,7 @@ doctor: versions-check
 			echo "⚠ uvx $$actual found; Docker uses $(UV_VERSION)"; \
 		fi; \
 	else \
-		echo "✖ uvx not found in PATH (install uv $(UV_VERSION), or use make docker-check)"; \
+		echo "✖ uvx not found in PATH (install uv $(UV_VERSION), or use make ci)"; \
 	fi
 
 # ---------- Local workflow ----------
@@ -141,7 +143,38 @@ setup:
 serve:
 	$(MDBOOK_CMD_LOCAL) serve --hostname $(HOST) --port $(PORT) $(BOOK_DIR)
 
-check: lint test
+check: native-version-warnings submodules-check lint test build-html
+
+build-html: versions-check
+	@bash docker/build-html.sh $(BOOK_DIR)
+
+native-version-warnings: versions-check
+	@if command -v $(MDBOOK) >/dev/null 2>&1; then \
+		actual="$$($(MDBOOK) --version 2>/dev/null | awk '{print $$NF}')"; \
+		actual="$${actual#v}"; \
+		if [ "$$actual" != "$(MDBOOK_VERSION)" ]; then \
+			echo "WARNING: $(MDBOOK) $$actual found; expected $(MDBOOK_VERSION). Native results may differ; run 'make ci' for the authoritative check."; \
+		fi; \
+	else \
+		echo "WARNING: $(MDBOOK) not found; run 'make setup' or use 'make ci'."; \
+	fi
+	@if command -v mdbook-mermaid >/dev/null 2>&1; then \
+		actual="$$(mdbook-mermaid --version 2>/dev/null | awk '{print $$NF}')"; \
+		actual="$${actual#v}"; \
+		if [ "$$actual" != "$(MDBOOK_MERMAID_VERSION)" ]; then \
+			echo "WARNING: mdbook-mermaid $$actual found; expected $(MDBOOK_MERMAID_VERSION). Native results may differ; run 'make ci' for the authoritative check."; \
+		fi; \
+	else \
+		echo "WARNING: mdbook-mermaid not found; run 'make setup' or use 'make ci'."; \
+	fi
+	@if command -v $(UVX) >/dev/null 2>&1; then \
+		actual="$$($(UVX) --version 2>/dev/null | awk '{print $$2}')"; \
+		if [ "$$actual" != "$(UV_VERSION)" ]; then \
+			echo "WARNING: uvx $$actual found; expected $(UV_VERSION). Native results may differ; run 'make ci' for the authoritative check."; \
+		fi; \
+	else \
+		echo "WARNING: uvx not found; install uv $(UV_VERSION) or use 'make ci'."; \
+	fi
 
 # Run 'mdbook-test' locally
 test:
@@ -186,10 +219,45 @@ docker-links-check: docker-image
 
 docker-check: docker-setup docker-lint docker-test
 
-docker-build-html: docker-setup
-	$(MDBOOK_CMD_DOCKER) build $(BOOK_DIR)
+docker-build-html: docker-image
+	@$(DOCKER_COMPOSE) run --rm mdbook bash docker/build-html.sh $(BOOK_DIR)
 
-docker-ci: docker-check docker-build-html
+ci-start:
+	@echo "== CI environment =="
+	@echo "source: $$(git rev-parse HEAD)"
+	@echo "target platform: linux/amd64"
+
+ci-info: ci-start submodules-check docker-image
+	@$(DOCKER_COMPOSE) run --rm mdbook bash -c '\
+		. ./toolchain.env; \
+		echo "runtime platform: $$(uname -s)/$$(uname -m)"; \
+		rustc --version; \
+		cargo --version; \
+		mdbook --version; \
+		mdbook-mermaid --version; \
+		uvx --version; \
+		uvx --managed-python --python "$$PYTHON_VERSION" "pre-commit@$$PRE_COMMIT_VERSION" --version; \
+		echo "python $$PYTHON_VERSION (pinned)"; \
+		echo "node $$NODE_VERSION (pinned for pre-commit)"'
+
+ci: ci-start ci-info docker-check docker-build-html
+
+# Backward-compatible alias. GitHub and contributors should use 'make ci'.
+docker-ci: ci
+
+submodules-check:
+	@status="$$(git submodule status --recursive)"; \
+	if [ -z "$$status" ] || printf '%s\n' "$$status" | grep -Eq '^[+U-]'; then \
+		echo "ERROR: submodules are missing or do not match their recorded commits." >&2; \
+		echo "Run 'git submodule update --init --recursive'." >&2; \
+		exit 1; \
+	fi; \
+	if ! git submodule foreach --quiet --recursive \
+		'git diff --quiet && git diff --cached --quiet && test -z "$$(git ls-files --others --exclude-standard)"'; then \
+		echo "ERROR: a submodule contains local changes or untracked files." >&2; \
+		exit 1; \
+	fi; \
+	echo "✔ submodules match their recorded commits and are clean"
 
 # Full release flow: build all images, install Mermaid assets, then build via release image
 docker-release: versions-check
@@ -251,7 +319,8 @@ versions-check:
 	. ./toolchain.env; \
 	for name in MDBOOK_VERSION MDBOOK_MERMAID_VERSION MDBOOK_PANDOC_VERSION \
 		PANDOC_VERSION PANDOC_SHA256_AMD64 PANDOC_SHA256_ARM64 \
-		MERMAID_FILTER_VERSION PRE_COMMIT_VERSION UV_VERSION UV_IMAGE_SHA256; do \
+		MERMAID_FILTER_VERSION PRE_COMMIT_VERSION PYTHON_VERSION NODE_VERSION \
+		UV_VERSION UV_IMAGE_SHA256; do \
 		value="$${!name:-}"; \
 		if [[ -z "$$value" || "$$value" =~ [^0-9A-Za-z._-] ]]; then \
 			echo "ERROR: invalid or missing $$name in toolchain.env" >&2; \
@@ -267,6 +336,11 @@ versions-check:
 	configured="$$(awk '$$1 == "minimum_pre_commit_version:" { print $$2 }' .pre-commit-config.yaml)"; \
 	if [[ "$$configured" != "$$PRE_COMMIT_VERSION" ]]; then \
 		echo "ERROR: minimum_pre_commit_version ($$configured) must match PRE_COMMIT_VERSION ($$PRE_COMMIT_VERSION)" >&2; \
+		exit 1; \
+	fi; \
+	configured="$$(awk '$$1 == "node:" { print $$2; exit }' .pre-commit-config.yaml)"; \
+	if [[ "$$configured" != "$$NODE_VERSION" ]]; then \
+		echo "ERROR: pre-commit node version ($$configured) must match NODE_VERSION ($$NODE_VERSION)" >&2; \
 		exit 1; \
 	fi; \
 	echo "✔ toolchain.env is valid"

@@ -1,15 +1,17 @@
 minimum_pre_commit_version: 4.6.0
 exclude: '(^|/)(_archive|docker|theme)(/|$)'
+default_language_version:
+  node: 26.5.0
 
 repos:
   - repo: https://github.com/igorshubovych/markdownlint-cli
-    rev: v0.49.1
+    rev: 5b5dddc4fb0f83c3ea1fc5616fa63e115dce83e0 # frozen: v0.49.1
     hooks:
       - id: markdownlint
         files: '^(src/.*\.md|README\.md|CONTRIBUTING\.md)'
 
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v6.0.0
+    rev: 3e8a8703264a2f4a69428a0aa4dcb512790b2c8c # frozen: v6.0.0
     hooks:
       - id: check-toml
       - id: check-yaml
