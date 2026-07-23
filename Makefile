@@ -31,12 +31,12 @@ MERMAID_CMD_DOCKER = $(DOCKER_COMPOSE) run --rm mdbook mdbook-mermaid
 PRE_COMMIT_DOCKER  = $(DOCKER_COMPOSE) run --rm mdbook $(PRE_COMMIT)
 
 .PHONY: help doctor \
-        setup test serve build-html check native-version-warnings \
+        setup test serve build-html check \
         docker-image docker-setup docker-test docker-serve docker-build-html \
         docker-lint docker-links-check docker-check docker-ci docker-release \
         ci ci-start ci-info submodules-check \
         test-auto serve-auto local-ready \
-        clean versions-check hooks-install lint links-check
+        clean toolchain-check versions-check hooks-install lint links-check
 
 help:
 	@echo "Local:"
@@ -61,7 +61,7 @@ help:
 	@echo ""
 	@echo "Misc:"
 	@echo "  make doctor            Check dependencies, mdBook, Mermaid assets, and config"
-	@echo "  make versions-check    Validate the shared toolchain version manifest"
+	@echo "  make versions-check    Validate toolchain pins and warn on native version drift"
 	@echo "  make clean             Remove build artifacts and untracked Mermaid JS"
 	@echo "  make hooks-install     Install the Git pre-commit hook (requires uv)"
 	@echo "  make lint              Run all gating pre-commit hooks locally (requires uv)"
@@ -69,7 +69,7 @@ help:
 
 # ---------- Diagnostics ----------
 
-doctor: versions-check
+doctor: toolchain-check
 	@echo "== mdBook =="
 	@if [ -f "book.toml" ]; then \
 		echo "✔ book.toml found"; \
@@ -143,12 +143,12 @@ setup:
 serve:
 	$(MDBOOK_CMD_LOCAL) serve --hostname $(HOST) --port $(PORT) $(BOOK_DIR)
 
-check: native-version-warnings submodules-check lint test build-html
+check: versions-check submodules-check lint test build-html
 
 build-html: versions-check
 	@bash docker/build-html.sh $(BOOK_DIR)
 
-native-version-warnings: versions-check
+versions-check: toolchain-check
 	@if command -v $(MDBOOK) >/dev/null 2>&1; then \
 		actual="$$($(MDBOOK) --version 2>/dev/null | awk '{print $$NF}')"; \
 		actual="$${actual#v}"; \
@@ -190,7 +190,7 @@ test:
 
 # ---------- Docker workflow ----------
 
-docker-image: versions-check
+docker-image: toolchain-check
 	@echo "Building ci-cd (light) Docker image..."
 	$(DOCKER_COMPOSE) build mdbook
 
@@ -260,7 +260,7 @@ submodules-check:
 	echo "✔ submodules match their recorded commits and are clean"
 
 # Full release flow: build all images, install Mermaid assets, then build via release image
-docker-release: versions-check
+docker-release: toolchain-check
 	@echo "Building all Docker images (ci-cd + release)..."
 	$(DOCKER_COMPOSE) --profile release build
 	@echo "Installing Mermaid assets via ci-cd container..."
@@ -314,7 +314,7 @@ test-auto:
 
 # ---------- Misc ----------
 
-versions-check:
+toolchain-check:
 	@set -eu; \
 	. ./toolchain.env; \
 	for name in MDBOOK_VERSION MDBOOK_MERMAID_VERSION MDBOOK_PANDOC_VERSION \

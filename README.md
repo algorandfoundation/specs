@@ -152,6 +152,7 @@ Dependabot configuration is maintained in [`.github/dependabot.yaml`](.github/de
 
 [`toolchain.env`](toolchain.env) is a manifest consumed by Make, Docker, and CI.
 It is the single source of truth for tool versioning.
+`make versions-check` validates the manifest and warns when native tool versions drift.
 
 When changing it:
 
