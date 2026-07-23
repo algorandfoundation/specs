@@ -26,10 +26,8 @@ The Algorand Specifications book is built with [mdBook](https://rust-lang.github
 The source code is structured as follows:
 
 ```text
-.github/                  -> GitHub actions and CI/CD workflows
-_archive/                 -> Legacy specification archive
 src/                      -> mdBook source code
-└── _include/             -> Code snippets, templates, TeX-macros, and examples
+└── _include/             -> Code snippets, templates, TeX-macros, auto-generated files, and examples
 └── _excalidraw/          -> Excalidraw diagrams source code
 └── _images/              -> SVG files
 └── Part_A/               -> Part A normative files
@@ -238,122 +236,12 @@ saved in the `./src/_images/` folder.
 Excalidraw images source code **MUST** be committed in the `./src/_excalidraw/`
 folder.
 
-## Installation
+## Prepare and Submit a Change
 
-Clone the Algorand Specifications repository and install the git submodules:
+Repository setup, local preview, validation commands, and pull-request preview
+behavior are maintained in the [repository README](https://github.com/algorandfoundation/specs#repository-setup).
+Follow those instructions before submitting a pull request.
 
-**SSH** clone:
-
-```shell
-git clone --recurse-submodules git@github.com:algorandfoundation/specs.git
-cd specs
-```
-
-or
-
-**HTTPS** clone:
-
-```shell
-git clone --recurse-submodules https://github.com/algorandfoundation/specs.git
-cd specs
-```
-
-### Sync git submodules
-
-If the Algorand Specifications repository is already cloned, sync the git submodules
-in the `specs` folder:
-
-```shell
-git submodule update --init --recursive
-```
-
-## Build and Serve
-
-Use the `make` command to build and serve the Algorand Specifications book locally
-or in a Docker container.
-
-> Use the `make doctor` command to check your environment for build dependencies.
-
-### In Container
-
-To build and serve the book in a Docker container, the following dependencies are
-required:
-
-- **Docker** and **Docker Compose**.
-
-Build the Docker image:
-
-```shell
-make docker-setup
-```
-
-Build and serve (hot reload) the book on [localhost:3000](http://localhost:3000):
-
-```shell
-make docker-serve
-```
-
-### Locally
-
-This section is for contributors who **cannot / do not want to** use Docker.
-
-> The PDF Book and release toolchain (Pandoc, mdbook-pandoc, LaTeX, etc.) are intentionally
-> **out of scope** here.
-
-To build and serve the book locally, the following dependencies are required:
-
-- **Rust toolchain** (`cargo`): install Rust with [rustup](https://rust-lang.org/tools/install/).
-
-Install the mdBook tools:
-
-```shell
-make setup
-```
-
-> Ensure Cargo’s bin dir (usually `~/.cargo/bin`) is on your `PATH`.
-
-Build and serve the book (HTML) locally (hot reload) on [localhost:3000](http://localhost:3000):
-
-```shell
-make serve
-```
-
-## Linting and Formatting
-
-Linting and formatting are enforced with [pre-commit](https://pre-commit.com/).
-
-To run pre-commit hooks locally, the following dependencies are required:
-
-- **Python** (`python3 + pip`): install [pip](https://pip.pypa.io/en/stable/installation/).
-
-Install pre-commit hooks:
-
-```shell
-make lint-setup
-```
-
-Run pre-commit hooks:
-
-```shell
-make lint
-```
-
-> Link checker (`lychee`) requires Docker, it can be run optionally (outside `make
-lint`) with: `pre-commit run lychee --all-files --verbose`.
-
-## CI/CD and Release
-
-The CI/CD and Release pipeline is defined in the `.github/workflows/` files.
-
-The CI runs on a Pull Request to:
-
-- Enforce linting and formatting;
-- Test the HTML book build;
-- Provide warnings for broken links;
-- Deploy the book preview to a temporary URL for review.
-
-The CD pipeline deploys the book to <https://specs.algorand.co> on every push to
-the `master` branch.
-
-The Release pipeline creates the release tag, builds the PDF Book, and publishes
-it as a release artifact.
+Keep each pull request focused and explain the scope and motivation in its description.
+When a change affects rendering, inspect its deployment preview. External-contribution
+previews are triggered by maintainers on request.
