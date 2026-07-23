@@ -5,7 +5,7 @@ ARG UV_IMAGE_SHA256
 
 FROM ghcr.io/astral-sh/uv:${UV_VERSION}@sha256:${UV_IMAGE_SHA256} AS uv
 
-FROM rust:1.96-slim-bookworm AS base
+FROM rust:1.96-slim-trixie AS base
 
 WORKDIR /book
 
