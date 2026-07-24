@@ -1,4 +1,4 @@
-# 🗳️ Consensus & Agreement
+# Consensus & Agreement
 
 ---
 

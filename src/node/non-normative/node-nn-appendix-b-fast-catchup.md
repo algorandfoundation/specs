@@ -1,4 +1,4 @@
-# 🎣 Fast Catchup
+# Fast Catchup
 
 ---
 

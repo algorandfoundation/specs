@@ -40,11 +40,7 @@ FROM base AS release
 RUN apt-get update && apt-get install -y --no-install-recommends \
     texlive \
     texlive-luatex \
-    texlive-xetex \
-    texlive-fonts-recommended \
-    texlive-fonts-extra \
-    fonts-noto \
-    fonts-noto-color-emoji \
+    fonts-noto-core \
     librsvg2-bin \
     npm \
     chromium \

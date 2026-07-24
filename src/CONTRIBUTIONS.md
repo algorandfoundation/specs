@@ -68,7 +68,7 @@ Table rows **MUST** use the same column widths.
 
 {{#include ./_include/styles.md:example}}
 >
-> ✅ Correct table format
+> **Correct table format:**
 >
 > ```text
 > | Month    | Savings |
@@ -78,7 +78,7 @@ Table rows **MUST** use the same column widths.
 > | March    | €420    |
 > ```
 >
-> ❌ Wrong table format
+> **Incorrect table format:**
 >
 > ```text
 > | Month | Savings |
@@ -132,13 +132,13 @@ Inline equations **MUST** include extra spaces in the MathJax delimiters.
 >
 > Equation: \\( \int x dx = \frac{x^2}{2} + C \\)
 >
-> ✅ Correct inline delimiter
+> **Correct inline delimiter:**
 >
 > ```text
 > \\( \int x dx = \frac{x^2}{2} + C \\)
 > ```
 >
-> ❌ Wrong inline delimiter
+> **Incorrect inline delimiter:**
 >
 > ```text
 > \\(\int x dx = \frac{x^2}{2} + C\\)
@@ -156,7 +156,7 @@ Block equations **MUST** use the `$$` delimiter (instead of `\\[ ... \\]`).
 > \mu = \frac{1}{N} \sum_{i=0} x_i
 > $$
 >
-> ✅ Correct block delimiter
+> **Correct block delimiter:**
 >
 > ```text
 > $$
@@ -164,7 +164,7 @@ Block equations **MUST** use the `$$` delimiter (instead of `\\[ ... \\]`).
 > $$
 > ```
 >
-> ❌ Wrong inline delimiter
+> **Incorrect block delimiter:**
 >
 > ```text
 > \\[

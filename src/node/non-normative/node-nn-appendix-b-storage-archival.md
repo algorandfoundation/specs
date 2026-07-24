@@ -1,4 +1,4 @@
-# 💾 Storage & Archival
+# Storage & Archival
 
 ---
 

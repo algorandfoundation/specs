@@ -1,4 +1,4 @@
-# ⚙️ General & Versioning
+# General & Versioning
 
 ---
 
