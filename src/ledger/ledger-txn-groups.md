@@ -4,6 +4,8 @@ $$
 \newcommand \MinTxnFee {T_{\Fee,\min}}
 \newcommand \BytesPerBoxReference {\Box_{\mathrm{IO}}}
 \newcommand \LogicSigMaxSize {\LogicSig_{\max}}
+\newcommand \MaxAbsoluteLogicSigProgramSize {\LogicSig_{\mathrm{abs}}}
+\newcommand \PerByteTxnSurcharge {T_{\Fee,b}}
 $$
 
 # Transaction Groups
@@ -64,15 +66,36 @@ the block is invalid.
 Additionally, if a block contains a transaction group of more than \\( \MaxTxGroupSize \\)
 transactions, the block is invalid.
 
-If the sum of the fees paid by the \\( n \\) transactions in a transaction group
-is less than \\( n \times \MinTxnFee )\\, then the block is invalid. There are two
-exceptions to this fee requirement:
+Each transaction in a group requires a fee of \\( \MinTxnFee \\), plus a _size
+surcharge_ for any field that exceeds its _basic_ size limit while remaining within
+the corresponding _absolute_ limit. Each byte in excess of a basic limit adds a
+surcharge of \\( \frac{\PerByteTxnSurcharge}{1{,}000{,}000} \\) of \\( \MinTxnFee \\).
+Surcharges apply to:
+
+- a transaction's [_note_](./ledger-transactions.md#note), for bytes beyond its
+basic limit;
+
+- an application call's [arguments](./ledger-txn-application-call.md#arguments), for
+bytes beyond their basic total length;
+
+- an application call's programs, for bytes beyond the basic combined program length
+(see [Extra Program Pages](./ledger-txn-application-call.md#extra-program-pages));
+
+- the group's logic signature programs, for bytes beyond a pooled free allowance of
+\\( n \times \LogicSigMaxSize \\) bytes.
+
+If the sum of the fees paid by the \\( n \\) transactions in a transaction group is
+less than the sum of the fees they require (each transaction's \\( \MinTxnFee \\)
+plus its size surcharges), then the block is invalid. There are two exceptions to
+this fee requirement:
 
 1. State Proof transactions require no fee;
 
-1. Heartbeat transactions require no fee if they have a zero _group_ field, and
-the _heartbeat address_ was challenged between \\( 100 \\) and \\( 200 \\) rounds
-ago, and has not proposed or heartbeat since that challenge.
+1. Heartbeat transactions that set the
+[_heartbeat challenge discount_](./ledger-txn-heartbeat.md#heartbeat-challenge-discount)
+flag require \\( \MinTxnFee \\) less, provided the _heartbeat address_ was challenged
+between \\( 100 \\) and \\( 200 \\) rounds ago, and has not proposed or heartbeat
+since that challenge.
 
 > Further explanation of this rule is found in [Heartbeat transaction semantics](./ledger-txn-semantics-heartbeat.md)
 > section.
@@ -88,9 +111,12 @@ a transaction group exceeds the I/O Budget of the group at any time during evalu
 (see [Application Call transaction semantics](./ledger-txn-semantics-application.md)),
 then the block is invalid.
 
-If the sum of the lengths of all the logic signatures and their arguments in a transaction
-group exceeds the number of transactions in the group times \\( \LogicSigMaxSize \\),
-then the block in invalid.
+Each logic signature _program_ **MUST NOT** exceed \\( \MaxAbsoluteLogicSigProgramSize \\)
+bytes, and the sum of the lengths of all the logic signature _arguments_ in a transaction
+group **MUST NOT** exceed the number of transactions in the group times
+\\( \LogicSigMaxSize \\); otherwise the block is invalid. Logic signature _program_
+bytes beyond a pooled free allowance of the same size are permitted, but incur a size
+surcharge as described in the group fee requirement above.
 
 Beyond the _group_ field, group minimum fee, group I/O Budget, and group logic sig
 size checks, each transaction in a group is evaluated separately and **MUST** be

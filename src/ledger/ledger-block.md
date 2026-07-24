@@ -9,6 +9,7 @@ $$
 \newcommand \PayoutsChallengeGracePeriod {\Heartbeat_\mathrm{grace}}
 \newcommand \PayoutsChallengeInterval {\Heartbeat_r}
 \newcommand \PayoutMaxMarkAbsent {B_{N_\mathrm{a},\max}}
+\newcommand \MaxTxnBytesPerBlock {B_{\max}}
 $$
 
 # Blocks
@@ -117,6 +118,52 @@ as described below, the _proposer payout_ **MUST** be \\( 0 \\). The proposer pa
 
 - The sum of the _bonus incentive_ and half of the _fees collected_.
 - The fee sink balance minus \\( \MinBalance \\).
+
+### Load
+
+The block's _load_ measures how full the block is, based on the total size of its
+transactions relative to the maximum permitted. It is stored in msgpack field `ld`
+as a fixed-point value in millionths (six digits of precision), so that
+\\( 1{,}000{,}000 \\) denotes a completely full block. The _load_ **MUST** equal
+
+$$
+\min\left( \left\lfloor \frac{1{,}000{,}000 \cdot s}{\MaxTxnBytesPerBlock} \right\rfloor, \; 1{,}000{,}000 \right)
+$$
+
+where \\( s \\) is the total number of transaction bytes in the block and
+\\( \MaxTxnBytesPerBlock \\) is the [maximum number of transaction bytes in a
+block](./ledger-parameters.md).
+
+### Congestion Tax
+
+The block's _congestion tax_ measures network congestion. It is stored in msgpack
+field `ct` as a fixed-point value in millionths, and is derived deterministically
+from the previous block's _load_ and _congestion tax_: it rises when the previous
+block was more than half full and falls when it was less than half full.
+
+Let \\( L \\) and \\( C \\) be the _load_ and _congestion tax_ of the previous block,
+and let
+
+$$
+d = \left\lfloor \frac{100{,}000 \, (500{,}000 - L)}{500{,}000} \right\rfloor, \qquad
+u = \left\lfloor \frac{100{,}000 \, (L - 500{,}000)}{500{,}000} \right\rfloor.
+$$
+
+The _congestion tax_ of this block **MUST** equal
+
+$$
+\begin{cases}
+\max\!\left( \left\lfloor \dfrac{C \, (1{,}000{,}000 - d)}{1{,}000{,}000} \right\rfloor - d, \; 0 \right),
+& L \le 500{,}000, \\[2.5ex]
+\left\lfloor \dfrac{C \, (1{,}000{,}000 + u)}{1{,}000{,}000} \right\rfloor + u, & L > 500{,}000.
+\end{cases}
+$$
+
+The subtraction is floored at \\( 0 \\) and the addition saturates at the maximum
+representable value. The target _load_ is half full (\\( 500{,}000 \\)); the
+multiplicative factor changes the tax by at most \\( 10\% \\) per block, while the
+additive term (also at most \\( 100{,}000 \\)) lets the tax grow away from and return
+to \\( 0 \\).
 
 ### Expired Participation Accounts
 

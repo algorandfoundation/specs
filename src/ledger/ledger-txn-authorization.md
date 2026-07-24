@@ -31,6 +31,10 @@ The _authorizer address_, a 32-byte address, determines against what to verify t
 If the `sgnr` field is omitted (or zero), then the _authorizer address_ defaults
 to the transaction _sender_ address.
 
+The `sgnr` field, if present, **MUST NOT** equal the transaction _sender_ address.
+Setting it to the _sender_ address is redundant with omitting it, so a `SignedTxn`
+whose `sgnr` equals its _sender_ is invalid.
+
 At the time the transaction is applied to the Ledger, the authorizer address **MUST**
 match the transaction _sender_ account's spending key (or the _sender_ address, if
 the account's spending key is zero). If it does not match, then the transaction was

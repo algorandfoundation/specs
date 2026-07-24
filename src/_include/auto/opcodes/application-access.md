@@ -10,3 +10,4 @@
 | `app_local_del` | delete key B from account A's local state of the current application |
 | `app_global_del` | delete key A from the global state of the current application |
 | `app_params_get f` | X is field F from app A. Y is 1 if A exists, else 0 |
+| `app_params_set f` | set field F of the current app to A |

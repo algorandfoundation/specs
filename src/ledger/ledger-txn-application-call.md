@@ -2,11 +2,13 @@ $$
 \newcommand \App {\mathrm{App}}
 \newcommand \MaxAppTotalTxnReferences {\App_{r,\max}}
 \newcommand \MaxExtraAppProgramPages {\App_{\mathrm{page},\max}}
+\newcommand \MaxAbsoluteExtraProgramPages {\App_{\mathrm{page},\mathrm{abs}}}
 \newcommand \MaxAppProgramLen {\App_{\mathrm{prog},\max}}
 \newcommand \MaxGlobalSchemaEntries {\App_{\mathrm{GS},\max}}
 \newcommand \MaxLocalSchemaEntries {\App_{\mathrm{LS},\max}}
 \newcommand \MaxAppArgs {\App_{\mathrm{arg},\max}}
 \newcommand \MaxAppTotalArgLen {\App_{\mathrm{ay},\max}}
+\newcommand \MaxAbsoluteTotalArgLen {\App_{\mathrm{ay},\mathrm{abs}}}
 \newcommand \MaxAppTxnAccounts {\App_{\mathrm{acc},\max}}
 \newcommand \MaxAppTxnForeignApps {\App_{\mathrm{app},\max}}
 \newcommand \MaxAppTxnForeignAssets {\App_{\mathrm{asa},\max}}
@@ -94,11 +96,13 @@ Version.
 A _program page_ (**OPTIONAL**) is a chunk of application program bytecode. The
 _extra program pages_ define the number of _program pages_ besides the first one.
 
-> This field is only used during _application creation_, and requests an increased
-> maximum size for the Approval Program or Clear State Program.
+> This field requests an increased maximum size for the Approval Program or Clear
+> State Program. It is used during _application creation_ and during an _update_ that
+> changes the application’s size (see [Global State Schema](#global-state-schema)).
 
-- There **MUST NOT** be more than \\( \MaxExtraAppProgramPages \\) _extra program
-pages_,
+- There **MUST NOT** be more than \\( \MaxAbsoluteExtraProgramPages \\) _extra program
+pages_; program bytes beyond the size afforded by \\( \MaxExtraAppProgramPages \\)
+extra pages incur a fee surcharge (see the [group fee requirement](./ledger-txn-groups.md)),
 
 - The _program page_ byte length **MUST NOT** exceed \\( \MaxAppProgramLen \\).
 
@@ -114,8 +118,17 @@ The _global state schema_ is a structure containing:
 | Number of Uints | `nui` | `uint64` | The number of _global_ 64-bit unsigned integer variables for the application. |
 | Number of Bytes | `nbs` | `uint64` | The number of _global_ byte-array variables for the application.              |
 
-> This field is only used during _application creation_, and sets bounds on the size
-> of the _global state_ associated with this application.
+> This field sets bounds on the size of the _global state_ associated with this
+> application. It is used during _application creation_ and during an _update_ that
+> changes the application’s size.
+>
+> An _update_ transaction changes the application’s size when it supplies a non-zero
+> _extra program pages_ or a non-empty _global state schema_. Such an update installs
+> both values, replacing the application’s current _extra program pages_ and _global
+> state schema_. The new _global state schema_ **MUST NOT** be smaller than the
+> application’s current global state usage. An ordinary _update_ (one that supplies
+> neither field) leaves the existing sizes unchanged. The _local state schema_ can
+> never be changed by an update.
 
 - There **MUST NOT** be more than \\( \MaxGlobalSchemaEntries \\) _global_ variables
 for the application.
@@ -149,7 +162,9 @@ the application being called.
 
 - There **MUST NOT** be more than \\( \MaxAppArgs \\) entries in this list,
 
-- The sum of their byte lengths **MUST NOT** exceed \\( \MaxAppTotalArgLen \\).
+- The sum of their byte lengths **MUST NOT** exceed \\( \MaxAbsoluteTotalArgLen \\).
+Bytes beyond \\( \MaxAppTotalArgLen \\) incur a fee surcharge (see the
+[group fee requirement](./ledger-txn-groups.md)).
 
 ### Foreign Accounts
 
@@ -226,6 +241,10 @@ an \\( 1 \\)-based index into the Access List.
 An omitted `d` indicates the _sender_ of the transaction.
 
 An omitted app (`p` or `i`) indicates the called Application.
+
+A Locals reference (`l`) **MUST NOT** omit its app (`p`) during _application
+creation_ (when `apid` is \\( 0 \\)), because the _sender_ holds no Local State for
+an application that does not yet exist.
 
 The _access list_ **MUST** be empty if any of the _foreign arrays_ (`apat`, `apfa`,
 `apas`), or _box reference_ list (`apbx`) fields are populated.

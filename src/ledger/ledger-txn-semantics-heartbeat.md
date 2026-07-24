@@ -8,9 +8,10 @@ $$
 
 # Heartbeat Transaction Semantics
 
-If a [_heartbeat transaction_](./ledger-txn-heartbeat.md)'s [_group_](./ledger-transactions.md#group)
-is empty, and the [_fee_](./ledger-transactions.md#fee) is less than \\( \MinTxnFee \\),
-the transaction **FAILS** to execute unless:
+If a [_heartbeat transaction_](./ledger-txn-heartbeat.md) sets the
+[_heartbeat challenge discount_](./ledger-txn-heartbeat.md#heartbeat-challenge-discount)
+flag (`c`), its required [_fee_](./ledger-transactions.md#fee) is reduced by
+\\( \MinTxnFee \\), and the transaction **FAILS** to execute unless:
 
 - The [_note_](./ledger-transactions.md#note) \\( N \\) is empty;
 
