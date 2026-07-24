@@ -11,6 +11,7 @@ services:
     working_dir: /book
     user: "${LOCAL_UID:-1000}:${LOCAL_GID:-1000}"
     environment:
+      GITHUB_TOKEN: "${GITHUB_TOKEN:-}"
       HOME: /book/.cache/linux-amd64/home
       PRE_COMMIT_HOME: /book/.cache/linux-amd64/pre-commit
       UV_CACHE_DIR: /book/.cache/linux-amd64/uv

@@ -29,6 +29,8 @@ jobs:
           submodules: recursive
 
       - name: Lint, test, and build mdBook (HTML)
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
         run: make ci
 
       - name: Upload built site
