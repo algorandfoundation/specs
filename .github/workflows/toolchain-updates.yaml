@@ -2,7 +2,7 @@ name: Toolchain update report
 
 on:
   schedule:
-    - cron: "23 7 1 * *"
+    - cron: "0 5 1 * *" # 5:00 AM UTC on the first day of every month
   workflow_dispatch:
 
 permissions:
