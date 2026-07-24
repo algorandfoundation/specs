@@ -5,8 +5,8 @@ services:
       context: .
       target: ci-cd
       args:
-        UV_VERSION: ${UV_VERSION}
-        UV_IMAGE_SHA256: ${UV_IMAGE_SHA256}
+        UV_VERSION: "${UV_VERSION:?UV_VERSION is required; run via Make or pass --env-file toolchain.env}"
+        UV_IMAGE_SHA256: "${UV_IMAGE_SHA256:?UV_IMAGE_SHA256 is required; run via Make or pass --env-file toolchain.env}"
     platform: linux/amd64
     working_dir: /book
     user: "${LOCAL_UID:-1000}:${LOCAL_GID:-1000}"
@@ -27,8 +27,8 @@ services:
       context: .
       target: release
       args:
-        UV_VERSION: ${UV_VERSION}
-        UV_IMAGE_SHA256: ${UV_IMAGE_SHA256}
+        UV_VERSION: "${UV_VERSION:?UV_VERSION is required; run via Make or pass --env-file toolchain.env}"
+        UV_IMAGE_SHA256: "${UV_IMAGE_SHA256:?UV_IMAGE_SHA256 is required; run via Make or pass --env-file toolchain.env}"
     platform: linux/amd64
     working_dir: /book
     user: "${LOCAL_UID:-1000}:${LOCAL_GID:-1000}"
