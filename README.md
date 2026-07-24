@@ -137,13 +137,13 @@ Use `make clean` to remove build output and untracked generated Mermaid assets.
 
 Dependencies are pinned in the format native to each ecosystem.
 
-| Dependency                                         | Source of truth                                      | Update mechanism                                |
-|----------------------------------------------------|------------------------------------------------------|-------------------------------------------------|
-| Tool versions, image digests, and checksums        | [`toolchain.env`](toolchain.env)                     | `make toolchain-updates` and maintainer review  |
-| Remote pre-commit hooks, including Lychee          | [`.pre-commit-config.yaml`](.pre-commit-config.yaml) | Dependabot or `pre-commit autoupdate`           |
-| GitHub Actions                                     | Full commit SHAs in `.github/workflows/`             | Dependabot                                      |
-| mdBook theme                                       | [`theme`](theme) submodule gitlink                   | Dependabot and maintainer review                |
-| Docker platform configuration                      | [`docker-compose.yaml`](docker-compose.yaml)         | Manual                                          |
+| Dependency                                  | Source of truth                                      | Update mechanism                                |
+|---------------------------------------------|------------------------------------------------------|-------------------------------------------------|
+| Tool versions, image digests, and checksums | [`toolchain.env`](toolchain.env)                     | `make toolchain-updates` and maintainer review  |
+| Remote hooks                                | [`.pre-commit-config.yaml`](.pre-commit-config.yaml) | Dependabot or `pre-commit autoupdate`           |
+| GitHub Actions                              | Full commit SHAs in `.github/workflows/`             | Dependabot                                      |
+| mdBook theme                                | [`theme`](theme) submodule gitlink                   | Dependabot and maintainer review                |
+| Docker platform configuration               | [`docker-compose.yaml`](docker-compose.yaml)         | Manual                                          |
 
 Dependabot configuration is maintained in [`.github/dependabot.yaml`](.github/dependabot.yaml)
 and covers GitHub Actions, pre-commit repositories, and Git submodules. Toolchain versions
@@ -175,7 +175,6 @@ When applying its suggestions:
 - `RUST_IMAGE_SHA256` and `UV_IMAGE_SHA256` pin their multi-platform container images.
 - Pandoc's architecture-specific packages are pinned by their release-asset SHA-256 digests.
 - `PYTHON_VERSION` pins the uv-managed interpreter used for pre-commit.
-- `NODE_VERSION` pins the Node runtime bootstrapped by pre-commit for Markdownlint.
 
 Keep ecosystem-native pins in their native configuration: GitHub Action SHAs belong in
 workflow files, hook revisions in the pre-commit configuration, and the theme revision

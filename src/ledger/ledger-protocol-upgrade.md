@@ -52,6 +52,7 @@ Where
 
 - \\( v_{r+1}^{\ast} \\) is \\( v_r^{\prime} \\) if \\( r = x_r^{\prime} \\) and \\( v_r^{\ast} \\)
 otherwise.
+
 - \\( v^{\prime}_{r+1} \\) is
   - the empty string if \\( r = x_r^{\prime} \\) or both \\( r = s_r \\) and
   \\( s_r + b < \UpgradeThreshold \\),
@@ -59,7 +60,7 @@ otherwise.
   - \\( v_r^{\prime} \\) otherwise.
 
 - \\( s_{r+1} \\) is
-  - \\( 0 \\) if \\( r = x_r^{\prime} \\) or both \\( r = s_r \\) and  \\( s_r + b < \UpgradeThreshold \\), and
+  - \\( 0 \\) if \\( r = x_r^{\prime} \\) or both \\( r = s_r \\) and \\( s_r + b < \UpgradeThreshold \\), and
   - \\( s_r + b \\) otherwise
 
 - \\( d_{r+1} \\) is

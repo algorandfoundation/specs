@@ -250,8 +250,7 @@ ci-info: ci-start submodules-check docker-image
 		mdbook-mermaid --version; \
 		uvx --version; \
 		uvx --managed-python --python "$$PYTHON_VERSION" "pre-commit@$$PRE_COMMIT_VERSION" --version; \
-		echo "python $$PYTHON_VERSION (pinned)"; \
-		echo "node $$NODE_VERSION (pinned for pre-commit)"'
+		echo "python $$PYTHON_VERSION (pinned)"'
 
 ci: ci-start ci-info docker-check docker-build-html
 
@@ -333,7 +332,7 @@ toolchain-check:
 	for name in RUST_VERSION RUST_IMAGE_SHA256 \
 		MDBOOK_VERSION MDBOOK_MERMAID_VERSION MDBOOK_PANDOC_VERSION \
 		PANDOC_VERSION PANDOC_SHA256_AMD64 PANDOC_SHA256_ARM64 \
-		MERMAID_FILTER_VERSION PRE_COMMIT_VERSION PYTHON_VERSION NODE_VERSION \
+		MERMAID_FILTER_VERSION PRE_COMMIT_VERSION PYTHON_VERSION \
 		UV_VERSION UV_IMAGE_SHA256; do \
 		value="$${!name:-}"; \
 		if [[ -z "$$value" || "$$value" =~ [^0-9A-Za-z._-] ]]; then \
@@ -350,11 +349,6 @@ toolchain-check:
 	configured="$$(awk '$$1 == "minimum_pre_commit_version:" { print $$2 }' .pre-commit-config.yaml)"; \
 	if [[ "$$configured" != "$$PRE_COMMIT_VERSION" ]]; then \
 		echo "ERROR: minimum_pre_commit_version ($$configured) must match PRE_COMMIT_VERSION ($$PRE_COMMIT_VERSION)" >&2; \
-		exit 1; \
-	fi; \
-	configured="$$(awk '$$1 == "node:" { print $$2; exit }' .pre-commit-config.yaml)"; \
-	if [[ "$$configured" != "$$NODE_VERSION" ]]; then \
-		echo "ERROR: pre-commit node version ($$configured) must match NODE_VERSION ($$NODE_VERSION)" >&2; \
 		exit 1; \
 	fi; \
 	echo "✔ toolchain.env is valid"

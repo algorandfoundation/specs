@@ -57,7 +57,7 @@ A duplication check is the core functionality of \\( \TxTail \\).
 
 \\( \textbf{Algorithm 1} \text{: Check Duplicate} \\)
 
-<!-- markdownlint-disable MD013 -->
+<!-- rumdl-disable MD013 -->
 $$
 \begin{aligned}
 &\text{1: } \PSfunction \CheckDuplicate(\Tx_r, \FirstValid, \LastValid, \Tx_{\ID}, \Tx_{\Lease}) \\\\
@@ -80,7 +80,7 @@ $$
 &\text{18: } \PSendfunction
 \end{aligned}
 $$
-<!-- markdownlint-enable MD013 -->
+<!-- rumdl-enable MD013 -->
 
 ---
 

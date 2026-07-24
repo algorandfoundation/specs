@@ -6,7 +6,11 @@ work_dir="$(mktemp -d)"
 trap 'rm -rf "$work_dir"' EXIT
 
 cd "$source_dir"
-git ls-files --recurse-submodules -z \
+while IFS= read -r -d '' file; do
+    if [[ -e "$file" || -L "$file" ]]; then
+        printf '%s\0' "$file"
+    fi
+done < <(git ls-files --recurse-submodules -z) \
     | tar --null --files-from=- --create --file=- \
     | tar --extract --file=- --directory="$work_dir"
 

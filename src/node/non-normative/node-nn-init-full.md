@@ -48,7 +48,7 @@ _Full Node_:
 
 \\( \textbf{Algorithm 1} \text{: Full Node Initialization} \\)
 
-<!-- markdownlint-disable MD013 -->
+<!-- rumdl-disable MD013 -->
 $$
 \begin{aligned}
 &\text{1: } \PSfunction \FullNode.\mathrm{Start}(\RootDir, \Config, \Phonebook, \Genesis) \\\\
@@ -90,7 +90,7 @@ $$
 &\text{37: } \PSendfunction
 \end{aligned}
 $$
-<!-- markdownlint-enable MD013 -->
+<!-- rumdl-enable MD013 -->
 
 ---
 

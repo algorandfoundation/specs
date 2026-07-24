@@ -27,3 +27,4 @@ mermaid-filter.err
 
 # Containerized tool caches
 /.cache/
+/.rumdl_cache/

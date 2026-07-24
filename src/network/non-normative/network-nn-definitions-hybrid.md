@@ -31,7 +31,7 @@ the sender \\( \Peer \\) of the incoming message.
 A Hybrid Network maintains both the [Relay Network definition](./network-nn-definitions-ws.md)
 and the [Peer-to-Peer Network definition](./network-nn-definitions-p2p.md).
 
-> See also the \\( \HYB \\) [identity challenge](./network-nn-identity.md#hybrid-network-identity-vhallenge)
+> See also the \\( \HYB \\) [identity challenge](./network-nn-identity.md#hybrid-network-identity-challenge)
 > for details on how peer deduplication works in both subnetworks.
 
 ## Hybrid Network Topology

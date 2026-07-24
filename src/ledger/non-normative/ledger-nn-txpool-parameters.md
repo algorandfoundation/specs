@@ -99,7 +99,7 @@ block that appears to be committed to the Ledger. This timeout is used within th
 > In the `go-algorand` reference implementation, this limit is set to \\( 1 \\)
 > second.
 
-# Constants
+## Constants
 
 The following two time constants are used to estimate how long it would take to
 properly complete a block after the system has _“given up”_ on assembling the `payset`.

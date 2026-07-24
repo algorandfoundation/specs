@@ -42,7 +42,7 @@ src/                      -> mdBook source code
 The book is written in [CommonMark](https://commonmark.org/).
 
 The CI pipeline enforces Markdown linting, formatting, and style checking with
-[`markdownlint`](https://github.com/DavidAnson/markdownlint).
+[`rumdl`](https://github.com/rvben/rumdl).
 
 ### Numbered Lists
 

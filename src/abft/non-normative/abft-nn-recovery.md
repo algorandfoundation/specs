@@ -28,7 +28,7 @@ has not been observed before \\( \DeadlineTimeout(p) \\) for a given period \\( 
 
 \\( \textbf{Algorithm 9} \text{: Recovery} \\)
 
-<!-- markdownlint-disable MD013 -->
+<!-- rumdl-disable MD013 -->
 $$
 \begin{aligned}
 &\text{1: } \PSfunction \Recovery() \\\\
@@ -37,10 +37,10 @@ $$
 &\text{4: } \quad \quad \c \gets \Sortition(a_I, r, p, s) \\\\
 &\text{5: } \quad \quad \PSif \c_j > 0 \PSthen \\\\
 &\text{6: } \quad \quad \quad \PSif \exists v = \Proposal_v(\prop, \prop_p, \prop_I) \\\\
-&\text{   } \quad \quad \quad \quad \quad \text{for some } \prop \in P \mid \IsCommittable(v) \PSthen \\\\
+            &\quad \quad \quad \quad \quad \text{for some } \prop \in P \mid \IsCommittable(v) \PSthen \\\\
 &\text{7: } \quad \quad \quad \quad \Broadcast(\Vote(a_I, r, p, s, v, \c)) \\\\
 &\text{8: } \quad \quad \quad \PSelseif \exists s_0 > \Cert \mid \Bundle(r, p - 1, s_0, \bot) \subseteq V \land \\\\
-&\text{   } \quad \quad \quad \quad \quad \quad \quad \exists s_1 > \Cert \mid \Bundle(r, p - 1, s_1, \bar{v}) \subseteq V \PSthen \\\\
+            &\quad \quad \quad \quad \quad \quad \quad \exists s_1 > \Cert \mid \Bundle(r, p - 1, s_1, \bar{v}) \subseteq V \PSthen \\\\
 &\text{9: } \quad \quad \quad \quad \Broadcast(\Vote(a_I, r, p, s, \bar{v}, \c)) \\\\
 &\text{10:} \quad \quad \quad \PSelse \\\\
 &\text{11:} \quad \quad \quad \quad \Broadcast(\Vote(a_I, r, p, s, \bot, \c)) \\\\
@@ -51,7 +51,7 @@ $$
 &\text{16: } \PSendfunction
 \end{aligned}
 $$
-<!-- markdownlint-enable MD013 -->
+<!-- rumdl-enable MD013 -->
 
 ---
 
@@ -84,7 +84,7 @@ A player is forbidden from equivocating in \\( \Next_k \\) votes.
 
 Lastly (Line 15), the node’s current \\( \s \\) is updated.
 
-> For a formal definition of this functionality, refer to the ABFT [normative section](../abft.md#recovery).
+> For a formal definition of this functionality, refer to the ABFT [normative section](../abft-broadcast-rules-recovery.md).
 
 ---
 

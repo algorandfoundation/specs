@@ -22,12 +22,12 @@ discarded and the entire transaction rejected.
 by the transaction is zero, create a new application with ID equal to one plus the
 system transaction counter (this is the same ID selection algorithm as used by [Assets](./ledger-txn-semantics-asset.md#asset-configuration)).
 
-    When creating an application, the application parameters specified by the transaction
-    (Approval Program, Clear State Program, Global State Schema, Local State Schema,
-    and Extra Program Pages) are allocated into the sender’s account data, keyed
-    by the new application ID.
+  When creating an application, the application parameters specified by the transaction
+  (Approval Program, Clear State Program, Global State Schema, Local State Schema,
+  and Extra Program Pages) are allocated into the sender’s account data, keyed
+  by the new application ID.
 
-    Continue to [Step 2](#step-2).
+  Continue to [Step 2](#step-2).
 
 - If the [_application ID_](./ledger-txn-application-call.md#application-id) specified
 by the transaction is nonzero, continue to [Step 2](#step-2).
@@ -35,7 +35,7 @@ by the transaction is nonzero, continue to [Step 2](#step-2).
 ### Step 2
 
 - If the [_on completion action_](./ledger-txn-application-call.md#on-completion-action)
-is equal to  `ClearStateOC`, then:
+is equal to `ClearStateOC`, then:
 
   - Check if the transaction’s sender is opted in to this [_application ID_](./ledger-txn-application-call.md#application-id).
   If not, **FAIL**.

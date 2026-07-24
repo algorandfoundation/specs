@@ -152,21 +152,6 @@ def python_version(current: str) -> str:
     return max(candidates, key=version_tuple)
 
 
-def node_version(current: str) -> str:
-    major = version_tuple(current)[0]
-    data = request_json("https://nodejs.org/dist/index.json")
-    candidates = [
-        stable_version(str(item["version"]), "nodejs.org")
-        for item in data
-        if isinstance(item, dict)
-        and "version" in item
-        and version_tuple(str(item["version"]).removeprefix("v"))[0] == major
-    ]
-    if not candidates:
-        raise UpdateError(f"no Node {major} release found")
-    return max(candidates, key=version_tuple)
-
-
 def image_digest(image: str) -> str:
     try:
         result = subprocess.run(
@@ -260,11 +245,6 @@ def collect_pins(current: dict[str, str]) -> list[Pin]:
             "PYTHON_VERSION",
             current["PYTHON_VERSION"],
             python_version(current["PYTHON_VERSION"]),
-        ),
-        Pin(
-            "NODE_VERSION",
-            current["NODE_VERSION"],
-            node_version(current["NODE_VERSION"]),
         ),
         Pin("UV_VERSION", current["UV_VERSION"], latest_uv),
         Pin(

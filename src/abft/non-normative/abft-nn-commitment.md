@@ -31,7 +31,7 @@ $$
 &\text{3: } \quad L \gets L || e \\\\
 &\text{4: } \quad \ApplyDeltas(e) \\\\
 &\text{5: } \quad \TP.\Update(e_t) \\\\
-&\text{6:  } \PSendfunction
+&\text{6: } \PSendfunction
 \end{aligned}
 $$
 

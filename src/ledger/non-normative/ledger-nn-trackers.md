@@ -23,7 +23,7 @@ Maintains account states up to a given round. Key methods include:
   - `AllBalances(round)`: Returns all account states at the specified `round`.
 
   - `Totals(round)`: Returns aggregate account totals for a given `round`, which
-  is useful when querying for total account balance in the cryptographic sortition.  <!-- TODO: link to Sortition -->>
+  is useful when querying for total account balance in the cryptographic sortition. <!-- TODO: link to Sortition -->>
 
 - **Recent Transactions Tracker**\
 Uses the [Transaction Tail](./ledger-nn-transaction-tail.md) to efficiently check

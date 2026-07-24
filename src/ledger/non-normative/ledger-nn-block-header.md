@@ -211,7 +211,7 @@ An optional list of online account addresses to be removed from consensus partic
 due to long-lasting absenteeism in the expected block proposals. Limited to \\( 32 \\)
 accounts.
 
-# Block Header Examples
+## Block Header Examples
 
 ## With Protocol Upgrade Proposal, Without Payout
 

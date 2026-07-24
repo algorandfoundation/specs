@@ -93,7 +93,7 @@ The stack is then validated to ensure:
    - All pushed values are valid `StackValue` types (either `uint64` or `[]byte`
    with length less than \\( 4096 \\) bytes).
 
-    An invalid stack state causes the transaction to be **REJECTED**.
+An invalid stack state causes the transaction to be **REJECTED**.
 
 1. **Program Counter Update**\
 Finally, if all validations pass, the program counter `PC()` is incremented to point

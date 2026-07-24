@@ -1,13 +1,11 @@
 minimum_pre_commit_version: 4.6.0
 exclude: '(^|/)(_archive|scripts|theme)(/|$)'
-default_language_version:
-  node: 26.5.0
 
 repos:
-  - repo: https://github.com/igorshubovych/markdownlint-cli
-    rev: 5b5dddc4fb0f83c3ea1fc5616fa63e115dce83e0 # frozen: v0.49.1
+  - repo: https://github.com/rvben/rumdl-pre-commit
+    rev: 5597a2751e69d4ec767059adae3a1913298b1a0b # frozen: v0.2.42
     hooks:
-      - id: markdownlint
+      - id: rumdl
         files: '^(src/.*\.md|README\.md|CONTRIBUTING\.md)'
 
   - repo: https://github.com/pre-commit/pre-commit-hooks

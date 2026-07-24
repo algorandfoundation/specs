@@ -13,7 +13,7 @@ Packets are decoded from `msgpakc` to `JSON`, with:
 
 > Examples of `msgpack` [network packets](https://github.com/algorandfoundation/specs/tree/master/src/_include/msgs).
 > For further details about Algorand canonical encoding, refer to the `msgpack`
-> [normative section](../../crypto/crypto.md#canonical-msgpack).
+> [normative section](../../crypto/crypto-msgpack.md).
 
 ## Agreement Vote (`AV`)
 
