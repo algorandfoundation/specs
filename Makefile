@@ -36,7 +36,8 @@ PRE_COMMIT_DOCKER  = $(DOCKER_COMPOSE) run --rm mdbook $(PRE_COMMIT)
         docker-lint docker-links-check docker-check docker-ci docker-release \
         ci ci-start ci-info submodules-check \
         test-auto serve-auto local-ready \
-        clean toolchain-check versions-check hooks-install lint links-check
+        clean toolchain-check versions-check uv-digest-update \
+        hooks-install lint links-check
 
 help:
 	@echo "Local:"
@@ -62,6 +63,7 @@ help:
 	@echo "Misc:"
 	@echo "  make doctor            Check dependencies, mdBook, Mermaid assets, and config"
 	@echo "  make versions-check    Validate toolchain pins and warn on native version drift"
+	@echo "  make uv-digest-update  Resolve and update the digest for the pinned uv version"
 	@echo "  make clean             Remove build artifacts and untracked Mermaid JS"
 	@echo "  make hooks-install     Install the Git pre-commit hook (requires uv)"
 	@echo "  make lint              Run all gating pre-commit hooks locally (requires uv)"
@@ -344,6 +346,26 @@ toolchain-check:
 		exit 1; \
 	fi; \
 	echo "✔ toolchain.env is valid"
+
+uv-digest-update:
+	@command -v docker >/dev/null 2>&1 || { echo "ERROR: 'docker' not found."; exit 1; }
+	@set -euo pipefail; \
+	digest="$$(docker buildx imagetools inspect \
+		"ghcr.io/astral-sh/uv:$(UV_VERSION)" --format '{{.Manifest.Digest}}')"; \
+	if [[ ! "$$digest" =~ ^sha256:[0-9a-f]{64}$$ ]]; then \
+		echo "ERROR: invalid uv image digest: $$digest" >&2; \
+		exit 1; \
+	fi; \
+	digest="$${digest#sha256:}"; \
+	tmp="$$(mktemp)"; \
+	trap 'rm -f "$$tmp"' EXIT; \
+	awk -v digest="$$digest" '\
+		/^UV_IMAGE_SHA256=/ { print "UV_IMAGE_SHA256=" digest; updated=1; next } \
+		{ print } \
+		END { if (!updated) exit 1 }' toolchain.env > "$$tmp"; \
+	mv "$$tmp" toolchain.env; \
+	trap - EXIT; \
+	echo "✔ uv $(UV_VERSION) digest updated: $$digest"
 
 hooks-install: versions-check
 	@command -v $(UVX) >/dev/null 2>&1 || { echo "ERROR: 'uvx' not found. Install uv $(UV_VERSION)."; exit 1; }

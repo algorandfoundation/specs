@@ -150,9 +150,9 @@ Dependabot configuration is maintained in [`.github/dependabot.yaml`](.github/de
 
 ### Shared Toolchain Updates
 
-[`toolchain.env`](toolchain.env) is a manifest consumed by Make, Docker, and CI.
-It is the single source of truth for tool versioning.
-`make versions-check` validates the manifest and warns when native tool versions drift.
+[`toolchain.env`](toolchain.env) is a manifest consumed by Make, Docker, and CI. It is the
+single source of truth for tool versioning. `make versions-check` validates the
+manifest and warns when native tool versions drift.
 
 When changing it:
 
@@ -164,10 +164,10 @@ When changing it:
 
 `UV_VERSION` selects the containerized `uv` release and records the expected native
 version. `UV_IMAGE_SHA256` pins the exact multi-platform image used by Docker. When
-updating `uv`, resolve the corresponding digest and update both values:
+updating `uv`, change `UV_VERSION`, then resolve and record its multi-platform digest:
 
 ```shell
-docker buildx imagetools inspect ghcr.io/astral-sh/uv:<version>
+make uv-digest-update
 ```
 
 `PYTHON_VERSION` pins the uv-managed interpreter used for pre-commit, while
