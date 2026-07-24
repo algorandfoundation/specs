@@ -25,11 +25,11 @@ The `algod` REST API is used to **POST**:
 
 - Synchronization commands (e.g., `/ledger/sync/{round}`, `/catchup/{catchpoint}`, etc.),
 
-- Transactions (e.g., `/transactions`,  `/transactions/simulate`, etc.),
+- Transactions (e.g., `/transactions`, `/transactions/simulate`, etc.),
 
-- Consensus commands (e.g., `/participation`,  `/participation/generate/{address}`, etc.),
+- Consensus commands (e.g., `/participation`, `/participation/generate/{address}`, etc.),
 
-- AVM Compiler commands (e.g., `/teal/compile`,  `/teal/disassemble`, etc.),
+- AVM Compiler commands (e.g., `/teal/compile`, `/teal/disassemble`, etc.),
 
 - Other ancillary dev commands.
 

@@ -91,7 +91,7 @@ clamped on the minimum and maximum bounds defined in the [ABFT normative section
 
 ---
 
-[^1]: With current values for \\( \lambda  \\) and \\( \lambdaMin \\),
+[^1]: With current values for \\( \lambda \\) and \\( \lambdaMin \\),
 \\( \deltaL = 2 \\).
 
 [^2]: A round is “successfully” completed if a _certification bundle_ is observed

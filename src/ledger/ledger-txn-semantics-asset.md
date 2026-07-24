@@ -34,7 +34,7 @@ A zero manager address means no such transaction can be issued.
   - If the [_asset parameters_](ledger-txn-asset-config.md#asset-parameters) are
   not omitted, any non-zero key in the asset’s current parameters (as stored in
   the asset creator’s account) is updated to the key specified in the _asset parameters_.
-  This applies to the _manager_, _reserve_, _freeze_, and _clawback_ keys.  Once
+  This applies to the _manager_, _reserve_, _freeze_, and _clawback_ keys. Once
   a key is set to zero, it cannot be updated. Other parameters are immutable.
 
 ## Asset Transfer

@@ -57,7 +57,7 @@ _Follower Node_:
 
 \\( \textbf{Algorithm 2} \text{: Follower Node Initialization} \\)
 
-<!-- markdownlint-disable MD013 -->
+<!-- rumdl-disable MD013 -->
 $$
 \begin{aligned}
 &\text{1: } \PSfunction \FollowerNode.\mathrm{Start}(\RootDir, \Config, \Phonebook, \Genesis) \\\\
@@ -94,7 +94,7 @@ $$
 &\text{31:} \PSendfunction
 \end{aligned}
 $$
-<!-- markdownlint-enable MD013 -->
+<!-- rumdl-enable MD013 -->
 
 ---
 

@@ -33,7 +33,7 @@ secrecy.
 The Merkle scheme uses [FALCON](https://falcon-sign.info/) scheme as the underlying
 digital signature algorithm.
 
-> For further details on FALCON scheme, refer to the Cryptography primitives [specification](../crypto/crypto.md#falcon).
+> For further details on FALCON scheme, refer to the Cryptography primitives [specification](../crypto/crypto-falcon.md).
 
 The tree’s depth is bound to \\( 16 \\) to bound verification paths on the tree.
 Hence, the maximum number of keys which can be created is at most \\( 2^{16} \\).
@@ -144,4 +144,4 @@ where:
 
   - \\( \Leaf := \texttt{"KP"} || \SchemeID || \Round || s.\Verify \\),
 
-  - \\( \Round :=  r - (r \mod \KLT) \\).
+  - \\( \Round := r - (r \mod \KLT) \\).

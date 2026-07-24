@@ -1,4 +1,4 @@
-# 📡 Peer & Connection Management
+# Peer & Connection Management
 
 ---
 

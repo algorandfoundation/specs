@@ -1,4 +1,4 @@
-# 🔄 Transaction Pool & Sync
+# Transaction Pool & Sync
 
 ---
 

@@ -23,3 +23,8 @@ dev/pdf
 book/
 mermaid.min.js
 mermaid-init.js
+mermaid-filter.err
+
+# Containerized tool caches
+/.cache/
+/.rumdl_cache/

@@ -52,7 +52,7 @@ conditions were met.
 
 \\( \textbf{Algorithm 10} \text{: Fast Recovery} \\)
 
-<!-- markdownlint-disable MD013 -->
+<!-- rumdl-disable MD013 -->
 $$
 \begin{aligned}
 &\text{1: } \PSfunction \FastRecovery() \\\\
@@ -64,7 +64,7 @@ $$
 &\text{7: } \quad \quad \quad \quad \Broadcast(\Vote(r, p, \Late, \bar{v}, \c)) \\\\
 &\text{8: } \quad \quad \quad \PSendif \\\\
 &\text{9: } \quad \quad \PSelseif \nexists s_0 > \Cert \mid \Bundle(r, p - 1, s_0, \bot) \subseteq V \land \\\\
-&\text{   } \quad \quad \quad \quad \quad \quad \exists s_1 > \Cert \mid \Bundle(r, p - 1, s_1, \bar{v}) \subseteq V \PSthen \\\\
+            &\quad \quad \quad \quad \quad \quad \exists s_1 > \Cert \mid \Bundle(r, p - 1, s_1, \bar{v}) \subseteq V \PSthen \\\\
 &\text{10:} \quad \quad \quad \c \gets \Sortition(a_I, r, p, \Redo) \\\\
 &\text{11:} \quad \quad \quad \PSif \c_j > 0 \PSthen \\\\
 &\text{12:} \quad \quad \quad \quad \Broadcast(\Vote(r, p, \Redo, \bar{v}, \c)) \\\\
@@ -82,7 +82,7 @@ $$
 &\text{24: } \PSendfunction
 \end{aligned}
 $$
-<!-- markdownlint-enable MD013 -->
+<!-- rumdl-enable MD013 -->
 
 ---
 
@@ -101,4 +101,4 @@ Nodes are forbidden to equivocate for \\( \Late, \Redo, \Down \\) votes.
 Finally, the node broadcasts all fast recovery votes observed. That is, all votes
 \\( \vt \in V \\) for which \\( \vt_s \\) is a fast recovery step (\\( \Late, \Redo, \Down \\)).
 
-> For a formal definition of this functionality, refer to the ABFT [normative section](../abft.md#fast-recovery).
+> For a formal definition of this functionality, refer to the ABFT [normative section](../abft-broadcast-rules-fast-recovery.md).

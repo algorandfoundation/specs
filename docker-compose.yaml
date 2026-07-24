@@ -5,9 +5,19 @@ services:
       context: .
       target: ci-cd
       args:
-        MDBOOK_VERSION: ${MDBOOK_VERSION-0.5.1}
-        MDBOOK_MERMAID_VERSION: ${MDBOOK_MERMAID_VERSION-0.17.0}
+        RUST_VERSION: "${RUST_VERSION:?RUST_VERSION is required; run via Make or pass --env-file toolchain.env}"
+        RUST_IMAGE_SHA256: "${RUST_IMAGE_SHA256:?RUST_IMAGE_SHA256 is required; run via Make or pass --env-file toolchain.env}"
+        UV_VERSION: "${UV_VERSION:?UV_VERSION is required; run via Make or pass --env-file toolchain.env}"
+        UV_IMAGE_SHA256: "${UV_IMAGE_SHA256:?UV_IMAGE_SHA256 is required; run via Make or pass --env-file toolchain.env}"
+    platform: linux/amd64
     working_dir: /book
+    user: "${LOCAL_UID:-1000}:${LOCAL_GID:-1000}"
+    environment:
+      GITHUB_TOKEN: "${GITHUB_TOKEN:-}"
+      HOME: /book/.cache/linux-amd64/home
+      PRE_COMMIT_HOME: /book/.cache/linux-amd64/pre-commit
+      UV_CACHE_DIR: /book/.cache/linux-amd64/uv
+      UV_PYTHON_INSTALL_DIR: /book/.cache/linux-amd64/uv/python
     ports:
       - 3000:3000
     command: ["mdbook", "serve", "--hostname", "0.0.0.0", "--port", "3000"]
@@ -20,10 +30,15 @@ services:
       context: .
       target: release
       args:
-        MDBOOK_VERSION: ${MDBOOK_VERSION-0.5.1}
-        MDBOOK_MERMAID_VERSION: ${MDBOOK_MERMAID_VERSION-0.17.0}
+        RUST_VERSION: "${RUST_VERSION:?RUST_VERSION is required; run via Make or pass --env-file toolchain.env}"
+        RUST_IMAGE_SHA256: "${RUST_IMAGE_SHA256:?RUST_IMAGE_SHA256 is required; run via Make or pass --env-file toolchain.env}"
+        UV_VERSION: "${UV_VERSION:?UV_VERSION is required; run via Make or pass --env-file toolchain.env}"
+        UV_IMAGE_SHA256: "${UV_IMAGE_SHA256:?UV_IMAGE_SHA256 is required; run via Make or pass --env-file toolchain.env}"
     platform: linux/amd64
     working_dir: /book
+    user: "${LOCAL_UID:-1000}:${LOCAL_GID:-1000}"
+    environment:
+      HOME: /book/.cache/linux-amd64/home
     ports:
       - 3001:3000
     command: ["mdbook", "serve", "--hostname", "0.0.0.0", "--port", "3000"]

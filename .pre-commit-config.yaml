@@ -1,38 +1,37 @@
+minimum_pre_commit_version: 4.6.0
+exclude: '(^|/)(_archive|scripts|theme)(/|$)'
+
 repos:
-  - repo: https://github.com/igorshubovych/markdownlint-cli
-    rev: v0.47.0
+  - repo: https://github.com/rvben/rumdl-pre-commit
+    rev: 5597a2751e69d4ec767059adae3a1913298b1a0b # frozen: v0.2.42
     hooks:
-      - id: markdownlint
-        name: markdownlint
-        description: "Checks the style of Markdown/Commonmark files."
-        language: node
-        entry: markdownlint
-        minimum_pre_commit_version: 3.2.0
-        types: [ markdown ]
-        files: '^(src/.*\.md|README\.md)'
+      - id: rumdl
+        files: '^(src/.*\.md|README\.md|CONTRIBUTING\.md)'
 
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v6.0.0
+    rev: 3e8a8703264a2f4a69428a0aa4dcb512790b2c8c # frozen: v6.0.0
     hooks:
+      - id: check-toml
+      - id: check-yaml
+      - id: end-of-file-fixer
+        exclude: '^src/_[^/]+/'
       - id: trailing-whitespace
-        name: trim trailing whitespace
-        description: "Trims trailing whitespace."
-        language: python
         entry: trailing-whitespace-fixer
-        minimum_pre_commit_version: 3.2.0
-        types: [ text ]
-        exclude: '(^|/)_archive(/|$)'
+        exclude: '^src/_[^/]+/'
 
   - repo: https://github.com/lycheeverse/lychee
-    rev: lychee-v0.22.0
+    rev: 2bba271688c1abb1503097a064e6c3bc1d1b6a9b # frozen: lychee-v0.24.2
     hooks:
       - id: lychee
-        name: lychee-docker
-        description: "Run 'lychee' docker image for fast, async, stream-based link checking (auto-installs)"
-        entry: lycheeverse/lychee:latest
-        minimum_pre_commit_version: 3.2.0
-        language: docker_image
-        args: [ "--no-progress" ]
-        types: [ text ]
-        require_serial: true
-        files: '^(src/.*\.md|README\.md)'
+        alias: lychee-local
+        name: check local links
+        args: [ "--offline", "--no-progress" ]
+        files: '^(src/.*\.md|README\.md|CONTRIBUTING\.md)'
+        exclude: '^src/SUMMARY\.md$' # mdBook permits empty draft links.
+      - id: lychee
+        alias: lychee-external
+        name: check external links
+        args: [ "--no-progress", "--max-retries", "3" ]
+        files: '^(src/.*\.md|README\.md|CONTRIBUTING\.md)'
+        exclude: '^src/SUMMARY\.md$' # mdBook permits empty draft links.
+        stages: [ manual ]

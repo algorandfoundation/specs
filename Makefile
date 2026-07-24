@@ -1,8 +1,10 @@
 SHELL := /usr/bin/env bash
 
-# Pinned tool versions (also used when building the Docker images)
-MDBOOK_VERSION ?= 0.5.1
-MDBOOK_MERMAID_VERSION ?= 0.17.0
+include toolchain.env
+
+LOCAL_UID ?= $(shell id -u)
+LOCAL_GID ?= $(shell id -g)
+export LOCAL_UID LOCAL_GID RUST_VERSION RUST_IMAGE_SHA256 UV_VERSION UV_IMAGE_SHA256
 
 # Local defaults
 MDBOOK   ?= mdbook
@@ -17,6 +19,9 @@ MDBOOK_TEST_MODE := $(strip $(MDBOOK_TEST_MODE))
 MERMAID_ASSETS := mermaid.min.js mermaid-init.js
 
 DOCKER_COMPOSE ?= docker compose
+UV             ?= uv
+UVX            ?= uvx
+PRE_COMMIT      = $(UVX) --managed-python --python $(PYTHON_VERSION) pre-commit@$(PRE_COMMIT_VERSION)
 
 # Commands for local and Docker-backed execution
 MDBOOK_CMD_LOCAL   = $(MDBOOK)
@@ -24,22 +29,31 @@ MERMAID_CMD_LOCAL  = mdbook-mermaid
 
 MDBOOK_CMD_DOCKER  = $(DOCKER_COMPOSE) run --rm mdbook mdbook
 MERMAID_CMD_DOCKER = $(DOCKER_COMPOSE) run --rm mdbook mdbook-mermaid
+PRE_COMMIT_DOCKER  = $(DOCKER_COMPOSE) run --rm mdbook $(PRE_COMMIT)
 
 .PHONY: help doctor \
-        setup test serve \
-        docker-setup docker-test docker-serve docker-build-html docker-ci docker-release \
-        test-auto serve-auto \
-        clean lint-setup lint links-check
+        setup test serve build-html check \
+        docker-image docker-setup docker-test docker-serve docker-build-html \
+        docker-lint docker-links-check docker-check docker-ci docker-release \
+        ci ci-start ci-info submodules-check \
+        test-auto serve-auto local-ready \
+        clean toolchain-check versions-check toolchain-updates \
+        hooks-install lint links-check
 
 help:
 	@echo "Local:"
 	@echo "  make setup             Install local mdBook tools and install Mermaid assets (requires cargo)"
 	@echo "  make test              Test the book locally"
 	@echo "  make serve             Build and serve the book locally"
+	@echo "  make check             Run native CI-equivalent checks and HTML build; warn on version drift"
 	@echo ""
 	@echo "Docker:"
+	@echo "  make ci                Run the authoritative GitHub-equivalent checks and HTML build"
 	@echo "  make docker-setup      Build mdBook light ci-cd image and install Mermaid assets (requires docker)"
 	@echo "  make docker-test       Test the book via ci-cd image"
+	@echo "  make docker-lint       Run all gating pre-commit hooks via ci-cd image"
+	@echo "  make docker-check      Run fast Docker-backed lint and mdBook tests (no HTML build)"
+	@echo "  make docker-links-check  Check external links via ci-cd image"
 	@echo "  make docker-serve      Build and serve the book via ci-cd image"
 	@echo "  make docker-release    Build mdBook full release image and build the book (HTML and PDF)"
 	@echo ""
@@ -49,14 +63,16 @@ help:
 	@echo ""
 	@echo "Misc:"
 	@echo "  make doctor            Check dependencies, mdBook, Mermaid assets, and config"
+	@echo "  make versions-check    Validate toolchain pins and warn on native version drift"
+	@echo "  make toolchain-updates Report available toolchain versions, digests, and checksums"
 	@echo "  make clean             Remove build artifacts and untracked Mermaid JS"
-	@echo "  make lint-setup        Install pre-commit (requires python3 + pip)"
-	@echo "  make lint              Run pre-commit on the repo (requires pre-commit)"
-	@echo "  make links-check       Run 'lychee' links checker on the repo (requires pre-commit + docker)"
+	@echo "  make hooks-install     Install the Git pre-commit hook (requires uv)"
+	@echo "  make lint              Run all gating pre-commit hooks locally (requires uv)"
+	@echo "  make links-check       Check external links locally (requires uv)"
 
 # ---------- Diagnostics ----------
 
-doctor:
+doctor: toolchain-check
 	@echo "== mdBook =="
 	@if [ -f "book.toml" ]; then \
 		echo "✔ book.toml found"; \
@@ -73,28 +89,45 @@ doctor:
 	@echo ""
 	@echo "== Local workflow =="
 	@if command -v $(MDBOOK) >/dev/null 2>&1; then \
-		echo "✔ $(MDBOOK) found: $$($(MDBOOK) --version)"; \
+		actual="$$($(MDBOOK) --version 2>/dev/null | awk '{print $$NF}')"; \
+		actual="$${actual#v}"; \
+		if [ "$$actual" = "$(MDBOOK_VERSION)" ]; then \
+			echo "✔ $(MDBOOK) $$actual matches toolchain.env"; \
+		else \
+			echo "✖ $(MDBOOK) $$actual found; expected $(MDBOOK_VERSION)"; \
+		fi; \
 	else \
 		echo "✖ $(MDBOOK) not found in PATH"; \
 	fi
 	@if command -v mdbook-mermaid >/dev/null 2>&1; then \
-		echo "✔ mdbook-mermaid found: $$(mdbook-mermaid --version || echo '(version check failed)')"; \
+		actual="$$(mdbook-mermaid --version 2>/dev/null | awk '{print $$NF}')"; \
+		actual="$${actual#v}"; \
+		if [ "$$actual" = "$(MDBOOK_MERMAID_VERSION)" ]; then \
+			echo "✔ mdbook-mermaid $$actual matches toolchain.env"; \
+		else \
+			echo "✖ mdbook-mermaid $$actual found; expected $(MDBOOK_MERMAID_VERSION)"; \
+		fi; \
 	else \
 		echo "✖ mdbook-mermaid not found in PATH"; \
 	fi
 	@echo ""
 	@echo "== Docker workflow =="
-	@if command -v docker >/dev/null 2>&1 && command -v docker compose >/dev/null 2>&1; then \
+	@if command -v docker >/dev/null 2>&1 && docker compose version >/dev/null 2>&1; then \
 		echo "✔ docker and docker compose available"; \
 	else \
 		echo "✖ docker or docker compose not available"; \
 	fi
 	@echo ""
-	@echo "== Linting and formatting =="
-	@if command -v pre-commit >/dev/null 2>&1; then \
-		echo "✔ pre-commit found: $$(pre-commit --version)"; \
+	@echo "== Native linting (optional when using Docker) =="
+	@if command -v $(UVX) >/dev/null 2>&1; then \
+		actual="$$($(UVX) --version 2>/dev/null | awk '{print $$2}')"; \
+		if [ "$$actual" = "$(UV_VERSION)" ]; then \
+			echo "✔ uvx $$actual matches toolchain.env"; \
+		else \
+			echo "⚠ uvx $$actual found; Docker uses $(UV_VERSION)"; \
+		fi; \
 	else \
-		echo "✖ pre-commit not found in PATH (run: make lint-setup)"; \
+		echo "✖ uvx not found in PATH (install uv $(UV_VERSION), or use make ci)"; \
 	fi
 
 # ---------- Local workflow ----------
@@ -104,8 +137,8 @@ setup:
 	@echo "Installing mdbook $(MDBOOK_VERSION) and mdbook-mermaid $(MDBOOK_MERMAID_VERSION) locally..."
 	@command -v cargo >/dev/null || { \
 		echo "ERROR: 'cargo' not found. Install Rust toolchain first."; exit 1; }
-	cargo install --locked --force mdbook --version $(MDBOOK_VERSION)
-	cargo install --locked --force mdbook-mermaid --version $(MDBOOK_MERMAID_VERSION)
+	cargo install --locked mdbook --version $(MDBOOK_VERSION)
+	cargo install --locked mdbook-mermaid --version $(MDBOOK_MERMAID_VERSION)
 	@echo "Installing Mermaid assets into $(BOOK_DIR)..."
 	$(MERMAID_CMD_LOCAL) install $(BOOK_DIR)
 
@@ -113,71 +146,163 @@ setup:
 serve:
 	$(MDBOOK_CMD_LOCAL) serve --hostname $(HOST) --port $(PORT) $(BOOK_DIR)
 
+check: versions-check submodules-check lint test build-html
+
+build-html: versions-check
+	@bash scripts/build-html.sh $(BOOK_DIR)
+
+versions-check: toolchain-check
+	@if command -v rustc >/dev/null 2>&1; then \
+		actual="$$(rustc --version 2>/dev/null | awk '{print $$2}')"; \
+		if [ "$$actual" != "$(RUST_VERSION)" ]; then \
+			echo "WARNING: rustc $$actual found; expected $(RUST_VERSION). Native results may differ; run 'make ci' for the authoritative check."; \
+		fi; \
+	else \
+		echo "WARNING: rustc not found; run 'make setup' after installing Rust, or use 'make ci'."; \
+	fi
+	@if command -v $(MDBOOK) >/dev/null 2>&1; then \
+		actual="$$($(MDBOOK) --version 2>/dev/null | awk '{print $$NF}')"; \
+		actual="$${actual#v}"; \
+		if [ "$$actual" != "$(MDBOOK_VERSION)" ]; then \
+			echo "WARNING: $(MDBOOK) $$actual found; expected $(MDBOOK_VERSION). Native results may differ; run 'make ci' for the authoritative check."; \
+		fi; \
+	else \
+		echo "WARNING: $(MDBOOK) not found; run 'make setup' or use 'make ci'."; \
+	fi
+	@if command -v mdbook-mermaid >/dev/null 2>&1; then \
+		actual="$$(mdbook-mermaid --version 2>/dev/null | awk '{print $$NF}')"; \
+		actual="$${actual#v}"; \
+		if [ "$$actual" != "$(MDBOOK_MERMAID_VERSION)" ]; then \
+			echo "WARNING: mdbook-mermaid $$actual found; expected $(MDBOOK_MERMAID_VERSION). Native results may differ; run 'make ci' for the authoritative check."; \
+		fi; \
+	else \
+		echo "WARNING: mdbook-mermaid not found; run 'make setup' or use 'make ci'."; \
+	fi
+	@if command -v $(UVX) >/dev/null 2>&1; then \
+		actual="$$($(UVX) --version 2>/dev/null | awk '{print $$2}')"; \
+		if [ "$$actual" != "$(UV_VERSION)" ]; then \
+			echo "WARNING: uvx $$actual found; expected $(UV_VERSION). Native results may differ; run 'make ci' for the authoritative check."; \
+		fi; \
+	else \
+		echo "WARNING: uvx not found; install uv $(UV_VERSION) or use 'make ci'."; \
+	fi
+
 # Run 'mdbook-test' locally
 test:
 	@set -euo pipefail; \
 	out="$$(mktemp)"; \
-	$(MDBOOK_CMD_LOCAL) test $(BOOK_DIR) 2>&1 | tee "$$out"; \
-	status=$${PIPESTATUS[0]}; \
+	trap 'rm -f "$$out"' EXIT; \
+	status=0; \
+	$(MDBOOK_CMD_LOCAL) test $(BOOK_DIR) 2>&1 | tee "$$out" || status=$${PIPESTATUS[0]}; \
 	if [ $$status -eq 0 ] && grep -qE '^(ERROR |Error updating )' "$$out"; then \
 		status=1; \
 	fi; \
-	rm -f "$$out"; \
 	exit $$status
 
 # ---------- Docker workflow ----------
 
-# Light Docker flow: build ci-cd image and install Mermaid assets
-docker-setup:
+docker-image: toolchain-check
 	@echo "Building ci-cd (light) Docker image..."
-	$(DOCKER_COMPOSE) build mdbook \
-	  --build-arg MDBOOK_VERSION=$(MDBOOK_VERSION) \
-	  --build-arg MDBOOK_MERMAID_VERSION=$(MDBOOK_MERMAID_VERSION)
+	$(DOCKER_COMPOSE) build mdbook
+
+# Light Docker flow: build ci-cd image and install Mermaid assets
+docker-setup: docker-image
 	@echo "Installing Mermaid assets via ci-cd container..."
 	$(MERMAID_CMD_DOCKER) install $(BOOK_DIR)
 
 # Run 'mdbook-test' in Docker (ci-cd image)
-docker-test:
+docker-test: docker-setup
 	@set -euo pipefail; \
 	out="$$(mktemp)"; \
-	$(MDBOOK_CMD_DOCKER) test $(BOOK_DIR) 2>&1 | tee "$$out"; \
-	status=$${PIPESTATUS[0]}; \
+	trap 'rm -f "$$out"' EXIT; \
+	status=0; \
+	$(MDBOOK_CMD_DOCKER) test $(BOOK_DIR) 2>&1 | tee "$$out" || status=$${PIPESTATUS[0]}; \
 	if [ $$status -eq 0 ] && grep -qE '^(ERROR |Error updating )' "$$out"; then \
 		status=1; \
 	fi; \
-	rm -f "$$out"; \
 	exit $$status
 
-docker-build-html:
-	$(MDBOOK_CMD_DOCKER) build $(BOOK_DIR)
+docker-lint: docker-image
+	@$(PRE_COMMIT_DOCKER) run --all-files
 
-docker-ci: docker-setup docker-build-html
+docker-links-check: docker-image
+	@$(PRE_COMMIT_DOCKER) run lychee-external --hook-stage manual --all-files --verbose
+
+docker-check: docker-setup docker-lint docker-test
+
+docker-build-html: docker-image
+	@$(DOCKER_COMPOSE) run --rm mdbook bash scripts/build-html.sh $(BOOK_DIR)
+
+ci-start:
+	@echo "== CI environment =="
+	@echo "source: $$(git rev-parse HEAD)"
+	@echo "target platform: linux/amd64"
+
+ci-info: ci-start submodules-check docker-image
+	@$(DOCKER_COMPOSE) run --rm mdbook bash -c '\
+		. ./toolchain.env; \
+		echo "runtime platform: $$(uname -s)/$$(uname -m)"; \
+		actual="$$(rustc --version | awk "{print \$$2}")"; \
+		test "$$actual" = "$$RUST_VERSION" || { echo "ERROR: rustc $$actual; expected $$RUST_VERSION" >&2; exit 1; }; \
+		rustc --version; \
+		cargo --version; \
+		mdbook --version; \
+		mdbook-mermaid --version; \
+		uvx --version; \
+		uvx --managed-python --python "$$PYTHON_VERSION" "pre-commit@$$PRE_COMMIT_VERSION" --version; \
+		echo "python $$PYTHON_VERSION (pinned)"'
+
+ci: ci-start ci-info docker-check docker-build-html
+
+# Backward-compatible alias. GitHub and contributors should use 'make ci'.
+docker-ci: ci
+
+submodules-check:
+	@status="$$(git submodule status --recursive)"; \
+	if [ -z "$$status" ] || printf '%s\n' "$$status" | grep -Eq '^[+U-]'; then \
+		echo "ERROR: submodules are missing or do not match their recorded commits." >&2; \
+		echo "Run 'git submodule update --init --recursive'." >&2; \
+		exit 1; \
+	fi; \
+	if ! git submodule foreach --quiet --recursive \
+		'git diff --quiet && git diff --cached --quiet && test -z "$$(git ls-files --others --exclude-standard)"'; then \
+		echo "ERROR: a submodule contains local changes or untracked files." >&2; \
+		exit 1; \
+	fi; \
+	echo "✔ submodules match their recorded commits and are clean"
 
 # Full release flow: build all images, install Mermaid assets, then build via release image
-docker-release:
+docker-release: toolchain-check
 	@echo "Building all Docker images (ci-cd + release)..."
-	$(DOCKER_COMPOSE) build \
-	  --build-arg MDBOOK_VERSION=$(MDBOOK_VERSION) \
-	  --build-arg MDBOOK_MERMAID_VERSION=$(MDBOOK_MERMAID_VERSION)
+	$(DOCKER_COMPOSE) --profile release build
 	@echo "Installing Mermaid assets via ci-cd container..."
 	$(MERMAID_CMD_DOCKER) install $(BOOK_DIR)
 	@echo "Building book via release image..."
 	$(DOCKER_COMPOSE) run --rm mdbook-release mdbook build $(BOOK_DIR)
 
 # Build and serve using Docker (ci-cd image) with ports exposed
-docker-serve:
+docker-serve: docker-setup
 	$(DOCKER_COMPOSE) up mdbook
 
 # ---------- Auto workflow ----------
 
-# Auto mode: prefer local, fall back to Docker if mdbook is missing
+# Validate the complete local mdBook toolchain without producing output.
+local-ready:
+	@command -v $(MDBOOK) >/dev/null 2>&1
+	@command -v mdbook-mermaid >/dev/null 2>&1
+	@actual="$$($(MDBOOK) --version 2>/dev/null | awk '{print $$NF}')"; \
+		test "$${actual#v}" = "$(MDBOOK_VERSION)"
+	@actual="$$(mdbook-mermaid --version 2>/dev/null | awk '{print $$NF}')"; \
+		test "$${actual#v}" = "$(MDBOOK_MERMAID_VERSION)"
+	@for f in $(MERMAID_ASSETS); do test -f "$$f" || exit 1; done
+
+# Auto mode: prefer a complete local toolchain, otherwise fall back to Docker.
 serve-auto:
-	@if command -v $(MDBOOK) >/dev/null 2>&1; then \
+	@if $(MAKE) --no-print-directory local-ready >/dev/null 2>&1; then \
 		echo "Using local mdbook..."; \
 		$(MAKE) serve; \
 	else \
-		echo "Local mdbook not found, falling back to Docker (docker-setup + docker-serve)..."; \
-		$(MAKE) docker-setup; \
+		echo "Local mdbook not found, falling back to Docker..."; \
 		$(MAKE) docker-serve; \
 	fi
 
@@ -189,7 +314,7 @@ test-auto:
 		docker) \
 			$(MAKE) docker-test ;; \
 		auto) \
-			if command -v $(MDBOOK) >/dev/null 2>&1; then \
+			if $(MAKE) --no-print-directory local-ready >/dev/null 2>&1; then \
 				echo "Using local mdbook..."; \
 				$(MAKE) test; \
 			else \
@@ -201,10 +326,42 @@ test-auto:
 
 # ---------- Misc ----------
 
-lint-setup:
-	@command -v python3 >/dev/null || { echo "ERROR: 'python3' not found."; exit 1; }
-	@python3 -m pip --version >/dev/null 2>&1 || { echo "ERROR: pip not available for python3."; exit 1; }
-	@python3 -m pip install --user pre-commit
+toolchain-check:
+	@set -eu; \
+	. ./toolchain.env; \
+	for name in RUST_VERSION RUST_IMAGE_SHA256 \
+		MDBOOK_VERSION MDBOOK_MERMAID_VERSION MDBOOK_PANDOC_VERSION \
+		PANDOC_VERSION PANDOC_SHA256_AMD64 PANDOC_SHA256_ARM64 \
+		MERMAID_FILTER_VERSION PRE_COMMIT_VERSION PYTHON_VERSION \
+		UV_VERSION UV_IMAGE_SHA256; do \
+		value="$${!name:-}"; \
+		if [[ -z "$$value" || "$$value" =~ [^0-9A-Za-z._-] ]]; then \
+			echo "ERROR: invalid or missing $$name in toolchain.env" >&2; \
+			exit 1; \
+		fi; \
+	done; \
+	for name in RUST_IMAGE_SHA256 PANDOC_SHA256_AMD64 PANDOC_SHA256_ARM64 UV_IMAGE_SHA256; do \
+		if [[ ! "$${!name}" =~ ^[0-9a-f]{64}$$ ]]; then \
+			echo "ERROR: $$name must be a lowercase SHA-256 digest" >&2; \
+			exit 1; \
+		fi; \
+	done; \
+	configured="$$(awk '$$1 == "minimum_pre_commit_version:" { print $$2 }' .pre-commit-config.yaml)"; \
+	if [[ "$$configured" != "$$PRE_COMMIT_VERSION" ]]; then \
+		echo "ERROR: minimum_pre_commit_version ($$configured) must match PRE_COMMIT_VERSION ($$PRE_COMMIT_VERSION)" >&2; \
+		exit 1; \
+	fi; \
+	echo "✔ toolchain.env is valid"
+
+toolchain-updates: toolchain-check
+	@command -v $(UV) >/dev/null 2>&1 || { echo "ERROR: '$(UV)' not found. Install uv $(UV_VERSION)."; exit 1; }
+	@command -v docker >/dev/null 2>&1 || { echo "ERROR: 'docker' not found."; exit 1; }
+	@$(UV) run --managed-python --python $(PYTHON_VERSION) \
+		scripts/toolchain_updates.py
+
+hooks-install: versions-check
+	@command -v $(UVX) >/dev/null 2>&1 || { echo "ERROR: 'uvx' not found. Install uv $(UV_VERSION)."; exit 1; }
+	@$(PRE_COMMIT) install
 
 clean:
 	@echo "Removing build directory 'book/' (if any)..."
@@ -221,11 +378,10 @@ clean:
 		fi; \
 	done
 
-lint:
-	@command -v pre-commit >/dev/null || { echo "ERROR: 'pre-commit' not found. Run: make lint-setup"; exit 1; }
-	@pre-commit run markdownlint --all-files
-	@pre-commit run trailing-whitespace --all-files
+lint: versions-check
+	@command -v $(UVX) >/dev/null 2>&1 || { echo "ERROR: 'uvx' not found. Install uv $(UV_VERSION)."; exit 1; }
+	@$(PRE_COMMIT) run --all-files
 
-links-check:
-	@command -v pre-commit >/dev/null || { echo "ERROR: 'pre-commit' not found. Run: make lint-setup"; exit 1; }
-	@pre-commit run lychee --all-files --verbose
+links-check: versions-check
+	@command -v $(UVX) >/dev/null 2>&1 || { echo "ERROR: 'uvx' not found. Install uv $(UV_VERSION)."; exit 1; }
+	@$(PRE_COMMIT) run lychee-external --hook-stage manual --all-files --verbose

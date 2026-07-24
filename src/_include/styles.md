@@ -1,6 +1,6 @@
 // ANCHOR: example
 
-> [!IMPORTANT]
+> [!TIP]
 > **EXAMPLE:**
 >
 // ANCHOR_END: example

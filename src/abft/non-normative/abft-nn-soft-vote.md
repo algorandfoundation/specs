@@ -55,14 +55,14 @@ for this round.
 
 \\( \textbf{Algorithm 4} \text{: Soft Vote} \\)
 
-<!-- markdownlint-disable MD013 -->
+<!-- rumdl-disable MD013 -->
 $$
 \begin{aligned}
 &\text{1: } \PSfunction \SoftVote() \\\\
 &\text{2: } \quad \loh \gets \infty \\\\
 &\text{3: } \quad v \gets \bot \\\\
 &\text{4: } \quad \PSfor \vt_p \in V^\ast \PSdo \PScomment{The subset of votes corresponding to proposals} \\\\
-&\text{5: } \quad \quad \ph \gets \Priority(\vt_p)  \\\\
+&\text{5: } \quad \quad \ph \gets \Priority(\vt_p) \\\\
 &\text{6: } \quad \quad \PSif \ph < \loh \PSthen \\\\
 &\text{7: } \quad \quad \quad \loh \gets \ph \\\\
 &\text{8: } \quad \quad \quad v \gets \vt_p \\\\
@@ -82,7 +82,7 @@ $$
 &\text{22: } \PSendfunction
 \end{aligned}
 $$
-<!-- markdownlint-enable MD013 -->
+<!-- rumdl-enable MD013 -->
 
 ---
 

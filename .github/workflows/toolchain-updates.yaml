@@ -1,0 +1,70 @@
+name: Toolchain update report
+
+on:
+  schedule:
+    - cron: "0 5 1 * *" # 5:00 AM UTC on the first day of every month
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  report:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+
+      - name: Install pinned uv
+        shell: bash
+        run: |
+          set -euo pipefail
+          . ./toolchain.env
+          image="ghcr.io/astral-sh/uv:${UV_VERSION}@sha256:${UV_IMAGE_SHA256}"
+          container="$(docker create "$image")"
+          trap 'docker rm -f "$container" >/dev/null' EXIT
+          docker cp "$container:/uv" "$RUNNER_TEMP/uv"
+          chmod +x "$RUNNER_TEMP/uv"
+          echo "$RUNNER_TEMP" >> "$GITHUB_PATH"
+
+      - name: Check for toolchain updates
+        id: updates
+        shell: bash
+        run: |
+          set -euo pipefail
+          report="$RUNNER_TEMP/toolchain-updates.md"
+          make --no-print-directory toolchain-updates | tee "$report"
+          if grep -Fxq '<!-- toolchain-updates: true -->' "$report"; then
+            echo "available=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "available=false" >> "$GITHUB_OUTPUT"
+          fi
+          echo "report=$report" >> "$GITHUB_OUTPUT"
+
+      - name: Synchronize update issue
+        env:
+          AVAILABLE: ${{ steps.updates.outputs.available }}
+          GH_REPO: ${{ github.repository }}
+          GH_TOKEN: ${{ github.token }}
+          ISSUE_TITLE: Toolchain updates available
+          REPORT_PATH: ${{ steps.updates.outputs.report }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          issue_number="$(
+            gh issue list --state open --limit 100 --json number,title \
+              --jq 'map(select(.title == env.ISSUE_TITLE))[0].number // empty'
+          )"
+          if [[ "$AVAILABLE" == "true" ]]; then
+            if [[ -n "$issue_number" ]]; then
+              gh issue edit "$issue_number" --body-file "$REPORT_PATH"
+            else
+              gh issue create --title "$ISSUE_TITLE" --body-file "$REPORT_PATH"
+            fi
+          elif [[ -n "$issue_number" ]]; then
+            gh issue close "$issue_number" \
+              --comment "All pins reported by \`make toolchain-updates\` are current."
+          fi

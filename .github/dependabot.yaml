@@ -10,7 +10,7 @@ updates:
           - minor
           - patch
 
-  - package-ecosystem: docker
+  - package-ecosystem: pre-commit
     directory: "/"
     schedule:
       interval: "monthly"
@@ -20,12 +20,7 @@ updates:
           - minor
           - patch
 
-  - package-ecosystem: docker-compose
+  - package-ecosystem: gitsubmodule
     directory: "/"
     schedule:
       interval: "monthly"
-    groups:
-      minor-and-patch:
-        update-types:
-          - minor
-          - patch

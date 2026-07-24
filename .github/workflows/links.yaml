@@ -1,0 +1,24 @@
+name: External link check
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 4 1 * *" # 4:00 AM UTC on the first day of every month
+
+permissions:
+  contents: read
+
+concurrency:
+  group: external-links
+  cancel-in-progress: true
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+
+      - name: Check external links
+        run: make docker-links-check

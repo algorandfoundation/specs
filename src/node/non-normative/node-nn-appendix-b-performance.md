@@ -1,4 +1,4 @@
-# 🚀 Performance & Resource Management
+# Performance & Resource Management
 
 ---
 

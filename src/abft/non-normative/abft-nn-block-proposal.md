@@ -24,7 +24,7 @@ The following is an abstracted pseudocode of the \\( \BlockProposal \\) algorith
 
 \\( \textbf{Algorithm 3} \text{: Block Proposal} \\)
 
-<!-- markdownlint-disable MD013 -->
+<!-- rumdl-disable MD013 -->
 $$
 \begin{aligned}
 &\text{1: } \PSfunction \BlockProposal() \\\\
@@ -51,7 +51,7 @@ $$
 &\text{22: } \PSendfunction
 \end{aligned}
 $$
-<!-- markdownlint-enable MD013 -->
+<!-- rumdl-enable MD013 -->
 
 ---
 

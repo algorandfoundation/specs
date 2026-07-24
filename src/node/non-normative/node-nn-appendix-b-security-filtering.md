@@ -1,4 +1,4 @@
-# 🛡️ Security & Filtering
+# Security & Filtering
 
 ---
 

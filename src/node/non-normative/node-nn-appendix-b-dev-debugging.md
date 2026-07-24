@@ -1,4 +1,4 @@
-# 🛠️ Developer & Debugging
+# Developer & Debugging
 
 ---
 

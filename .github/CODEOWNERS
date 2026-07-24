@@ -1,0 +1,12 @@
+# Infrastructure and automation
+/.github/workflows/ @cusma
+/.github/dependabot.yaml @cusma
+/.pre-commit-config.yaml @cusma
+/Dockerfile @cusma
+/docker-compose.yaml @cusma
+/scripts/ @cusma
+/Makefile @cusma
+/book.toml @cusma
+/toolchain.env @cusma
+/.gitmodules @cusma
+/theme @cusma
