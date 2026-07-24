@@ -137,16 +137,17 @@ Use `make clean` to remove build output and untracked generated Mermaid assets.
 
 Dependencies are pinned in the format native to each ecosystem.
 
-| Dependency                                           | Source of truth                                                             | Update mechanism                      |
-|------------------------------------------------------|-----------------------------------------------------------------------------|---------------------------------------|
-| Shared tool versions, image digests, and checksums   | [`toolchain.env`](toolchain.env)                                            | Manual                                |
-| Remote pre-commit hooks, including Lychee            | [`.pre-commit-config.yaml`](.pre-commit-config.yaml)                        | Dependabot or `pre-commit autoupdate` |
-| GitHub Actions                                       | Full commit SHAs in `.github/workflows/`                                    | Dependabot                            |
-| Rust base image                                      | [`Dockerfile`](Dockerfile)                                                  | Dependabot                            |
-| Docker platform configuration                        | [`docker-compose.yaml`](docker-compose.yaml)                                | Manual                                |
-| mdBook theme                                         | [`theme`](theme) submodule gitlink                                          | Manual                                |
+| Dependency                                         | Source of truth                                      | Update mechanism                                |
+|----------------------------------------------------|------------------------------------------------------|-------------------------------------------------|
+| Tool versions, image digests, and checksums        | [`toolchain.env`](toolchain.env)                     | `make toolchain-updates` and maintainer review  |
+| Remote pre-commit hooks, including Lychee          | [`.pre-commit-config.yaml`](.pre-commit-config.yaml) | Dependabot or `pre-commit autoupdate`           |
+| GitHub Actions                                     | Full commit SHAs in `.github/workflows/`             | Dependabot                                      |
+| mdBook theme                                       | [`theme`](theme) submodule gitlink                   | Dependabot and maintainer review                |
+| Docker platform configuration                      | [`docker-compose.yaml`](docker-compose.yaml)         | Manual                                          |
 
-Dependabot configuration is maintained in [`.github/dependabot.yaml`](.github/dependabot.yaml).
+Dependabot configuration is maintained in [`.github/dependabot.yaml`](.github/dependabot.yaml)
+and covers GitHub Actions, pre-commit repositories, and Git submodules. Toolchain versions
+and container digests are handled via local [toolchain script](./scripts/toolchain_updates.py).
 
 ### Shared Toolchain Updates
 
@@ -154,28 +155,31 @@ Dependabot configuration is maintained in [`.github/dependabot.yaml`](.github/de
 single source of truth for tool versioning. `make versions-check` validates the
 manifest and warns when native tool versions drift.
 
-When changing it:
+Check toolchain updates with:
 
-1. Update the relevant version and any associated checksum.
+```shell
+make toolchain-updates
+```
+
+The command requires `uv`, Docker, and network access and runs in CI.
+
+When applying its suggestions:
+
+1. Update each relevant version together with its associated digest or checksum.
 1. Run `make versions-check`.
 1. Run `make ci`, or `make check` and confirm that it emits no version-drift warnings.
 1. Run `make docker-release` when the change affects Pandoc, `mdbook-pandoc`, Mermaid
    Filter, the Docker base, or other release dependencies.
 
-`UV_VERSION` selects the containerized `uv` release and records the expected native
-version. `UV_IMAGE_SHA256` pins the exact multi-platform image used by Docker. When
-updating `uv`, change `UV_VERSION`, then resolve and record its multi-platform digest:
-
-```shell
-make uv-digest-update
-```
-
-`PYTHON_VERSION` pins the uv-managed interpreter used for pre-commit, while
-`NODE_VERSION` pins the Node runtime bootstrapped by pre-commit for Markdownlint.
+- `RUST_VERSION` and `UV_VERSION` select exact tool releases.
+- `RUST_IMAGE_SHA256` and `UV_IMAGE_SHA256` pin their multi-platform container images.
+- Pandoc's architecture-specific packages are pinned by their release-asset SHA-256 digests.
+- `PYTHON_VERSION` pins the uv-managed interpreter used for pre-commit.
+- `NODE_VERSION` pins the Node runtime bootstrapped by pre-commit for Markdownlint.
 
 Keep ecosystem-native pins in their native configuration: GitHub Action SHAs belong in
-workflow files, hook revisions in the pre-commit configuration, the Rust base image in
-the Dockerfile, and the theme revision in the submodule gitlink.
+workflow files, hook revisions in the pre-commit configuration, and the theme revision
+in the submodule gitlink.
 
 ### Pre-commit Hook Updates
 
@@ -195,7 +199,6 @@ Run `make links-check` or `make docker-links-check` as well when Lychee changes.
 
 - Keep the human-readable version comment when Dependabot updates a GitHub Action's
   immutable commit SHA.
-- Resolve and record the new multi-platform digest when changing the uv image.
 - When updating the theme submodule, review the upstream change, update the gitlink,
   and validate both HTML and PDF output.
 
@@ -211,6 +214,7 @@ the exact built artifact to deployment.
 | [`external-pr-preview.yaml`](.github/workflows/external-pr-preview.yaml) | Maintainer dispatch | Resolve, build, and preview an external PR   |
 | [`cd.yaml`](.github/workflows/cd.yaml)                                   | Push to `master`    | Deploy the CI-built site to production       |
 | [`links.yaml`](.github/workflows/links.yaml)                             | Monthly or manual   | Check external links                         |
+| [`toolchain-updates.yaml`](.github/workflows/toolchain-updates.yaml)     | Monthly or manual   | Report available toolchain updates           |
 | [`release.yaml`](.github/workflows/release.yaml)                         | Maintainer dispatch | Build the PDF and create a draft release     |
 
 ### Pull Request Previews

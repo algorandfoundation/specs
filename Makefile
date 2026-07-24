@@ -4,7 +4,7 @@ include toolchain.env
 
 LOCAL_UID ?= $(shell id -u)
 LOCAL_GID ?= $(shell id -g)
-export LOCAL_UID LOCAL_GID UV_VERSION UV_IMAGE_SHA256
+export LOCAL_UID LOCAL_GID RUST_VERSION RUST_IMAGE_SHA256 UV_VERSION UV_IMAGE_SHA256
 
 # Local defaults
 MDBOOK   ?= mdbook
@@ -19,6 +19,7 @@ MDBOOK_TEST_MODE := $(strip $(MDBOOK_TEST_MODE))
 MERMAID_ASSETS := mermaid.min.js mermaid-init.js
 
 DOCKER_COMPOSE ?= docker compose
+UV             ?= uv
 UVX            ?= uvx
 PRE_COMMIT      = $(UVX) --managed-python --python $(PYTHON_VERSION) pre-commit@$(PRE_COMMIT_VERSION)
 
@@ -36,7 +37,7 @@ PRE_COMMIT_DOCKER  = $(DOCKER_COMPOSE) run --rm mdbook $(PRE_COMMIT)
         docker-lint docker-links-check docker-check docker-ci docker-release \
         ci ci-start ci-info submodules-check \
         test-auto serve-auto local-ready \
-        clean toolchain-check versions-check uv-digest-update \
+        clean toolchain-check versions-check toolchain-updates \
         hooks-install lint links-check
 
 help:
@@ -63,7 +64,7 @@ help:
 	@echo "Misc:"
 	@echo "  make doctor            Check dependencies, mdBook, Mermaid assets, and config"
 	@echo "  make versions-check    Validate toolchain pins and warn on native version drift"
-	@echo "  make uv-digest-update  Resolve and update the digest for the pinned uv version"
+	@echo "  make toolchain-updates Report available toolchain versions, digests, and checksums"
 	@echo "  make clean             Remove build artifacts and untracked Mermaid JS"
 	@echo "  make hooks-install     Install the Git pre-commit hook (requires uv)"
 	@echo "  make lint              Run all gating pre-commit hooks locally (requires uv)"
@@ -148,9 +149,17 @@ serve:
 check: versions-check submodules-check lint test build-html
 
 build-html: versions-check
-	@bash docker/build-html.sh $(BOOK_DIR)
+	@bash scripts/build-html.sh $(BOOK_DIR)
 
 versions-check: toolchain-check
+	@if command -v rustc >/dev/null 2>&1; then \
+		actual="$$(rustc --version 2>/dev/null | awk '{print $$2}')"; \
+		if [ "$$actual" != "$(RUST_VERSION)" ]; then \
+			echo "WARNING: rustc $$actual found; expected $(RUST_VERSION). Native results may differ; run 'make ci' for the authoritative check."; \
+		fi; \
+	else \
+		echo "WARNING: rustc not found; run 'make setup' after installing Rust, or use 'make ci'."; \
+	fi
 	@if command -v $(MDBOOK) >/dev/null 2>&1; then \
 		actual="$$($(MDBOOK) --version 2>/dev/null | awk '{print $$NF}')"; \
 		actual="$${actual#v}"; \
@@ -222,7 +231,7 @@ docker-links-check: docker-image
 docker-check: docker-setup docker-lint docker-test
 
 docker-build-html: docker-image
-	@$(DOCKER_COMPOSE) run --rm mdbook bash docker/build-html.sh $(BOOK_DIR)
+	@$(DOCKER_COMPOSE) run --rm mdbook bash scripts/build-html.sh $(BOOK_DIR)
 
 ci-start:
 	@echo "== CI environment =="
@@ -233,6 +242,8 @@ ci-info: ci-start submodules-check docker-image
 	@$(DOCKER_COMPOSE) run --rm mdbook bash -c '\
 		. ./toolchain.env; \
 		echo "runtime platform: $$(uname -s)/$$(uname -m)"; \
+		actual="$$(rustc --version | awk "{print \$$2}")"; \
+		test "$$actual" = "$$RUST_VERSION" || { echo "ERROR: rustc $$actual; expected $$RUST_VERSION" >&2; exit 1; }; \
 		rustc --version; \
 		cargo --version; \
 		mdbook --version; \
@@ -319,7 +330,8 @@ test-auto:
 toolchain-check:
 	@set -eu; \
 	. ./toolchain.env; \
-	for name in MDBOOK_VERSION MDBOOK_MERMAID_VERSION MDBOOK_PANDOC_VERSION \
+	for name in RUST_VERSION RUST_IMAGE_SHA256 \
+		MDBOOK_VERSION MDBOOK_MERMAID_VERSION MDBOOK_PANDOC_VERSION \
 		PANDOC_VERSION PANDOC_SHA256_AMD64 PANDOC_SHA256_ARM64 \
 		MERMAID_FILTER_VERSION PRE_COMMIT_VERSION PYTHON_VERSION NODE_VERSION \
 		UV_VERSION UV_IMAGE_SHA256; do \
@@ -329,7 +341,7 @@ toolchain-check:
 			exit 1; \
 		fi; \
 	done; \
-	for name in PANDOC_SHA256_AMD64 PANDOC_SHA256_ARM64 UV_IMAGE_SHA256; do \
+	for name in RUST_IMAGE_SHA256 PANDOC_SHA256_AMD64 PANDOC_SHA256_ARM64 UV_IMAGE_SHA256; do \
 		if [[ ! "$${!name}" =~ ^[0-9a-f]{64}$$ ]]; then \
 			echo "ERROR: $$name must be a lowercase SHA-256 digest" >&2; \
 			exit 1; \
@@ -347,25 +359,11 @@ toolchain-check:
 	fi; \
 	echo "✔ toolchain.env is valid"
 
-uv-digest-update:
+toolchain-updates: toolchain-check
+	@command -v $(UV) >/dev/null 2>&1 || { echo "ERROR: '$(UV)' not found. Install uv $(UV_VERSION)."; exit 1; }
 	@command -v docker >/dev/null 2>&1 || { echo "ERROR: 'docker' not found."; exit 1; }
-	@set -euo pipefail; \
-	digest="$$(docker buildx imagetools inspect \
-		"ghcr.io/astral-sh/uv:$(UV_VERSION)" --format '{{.Manifest.Digest}}')"; \
-	if [[ ! "$$digest" =~ ^sha256:[0-9a-f]{64}$$ ]]; then \
-		echo "ERROR: invalid uv image digest: $$digest" >&2; \
-		exit 1; \
-	fi; \
-	digest="$${digest#sha256:}"; \
-	tmp="$$(mktemp)"; \
-	trap 'rm -f "$$tmp"' EXIT; \
-	awk -v digest="$$digest" '\
-		/^UV_IMAGE_SHA256=/ { print "UV_IMAGE_SHA256=" digest; updated=1; next } \
-		{ print } \
-		END { if (!updated) exit 1 }' toolchain.env > "$$tmp"; \
-	mv "$$tmp" toolchain.env; \
-	trap - EXIT; \
-	echo "✔ uv $(UV_VERSION) digest updated: $$digest"
+	@$(UV) run --managed-python --python $(PYTHON_VERSION) \
+		scripts/toolchain_updates.py
 
 hooks-install: versions-check
 	@command -v $(UVX) >/dev/null 2>&1 || { echo "ERROR: 'uvx' not found. Install uv $(UV_VERSION)."; exit 1; }

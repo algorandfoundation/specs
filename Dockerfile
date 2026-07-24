@@ -2,10 +2,12 @@
 
 ARG UV_VERSION
 ARG UV_IMAGE_SHA256
+ARG RUST_VERSION
+ARG RUST_IMAGE_SHA256
 
 FROM ghcr.io/astral-sh/uv:${UV_VERSION}@sha256:${UV_IMAGE_SHA256} AS uv
 
-FROM rust:1.96-slim-trixie AS base
+FROM rust:${RUST_VERSION}-slim-trixie@sha256:${RUST_IMAGE_SHA256} AS base
 
 WORKDIR /book
 
@@ -23,7 +25,7 @@ RUN . /tmp/toolchain.env \
 
 # Wrap mdbook to automatically remove .html suffixes after build
 RUN mv /usr/local/bin/mdbook /usr/local/bin/mdbook-original
-COPY --chmod=755 docker/mdbook-wrapper.sh /usr/local/bin/mdbook
+COPY --chmod=755 scripts/mdbook-wrapper.sh /usr/local/bin/mdbook
 
 FROM base AS ci-cd
 
@@ -72,10 +74,10 @@ RUN . /tmp/toolchain.env \
 RUN . /tmp/toolchain.env \
     && cargo install --locked --root /usr/local mdbook-pandoc --version "${MDBOOK_PANDOC_VERSION}"
 
-COPY docker/puppeteer-config.json /etc/puppeteer-config.json
+COPY scripts/puppeteer-config.json /etc/puppeteer-config.json
 
 # Wrap the real mmdc executable to inject the config file option
 RUN mv "${MMD_PATH}/mmdc" "${MMD_PATH}/mmdc-original"
-COPY --chmod=755 docker/mmdc-wrapper.sh "${MMD_PATH}/mmdc"
+COPY --chmod=755 scripts/mmdc-wrapper.sh "${MMD_PATH}/mmdc"
 
 HEALTHCHECK CMD curl --fail http://localhost:3000 || exit 1

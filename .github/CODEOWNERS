@@ -4,7 +4,7 @@
 /.pre-commit-config.yaml @cusma
 /Dockerfile @cusma
 /docker-compose.yaml @cusma
-/docker/ @cusma
+/scripts/ @cusma
 /Makefile @cusma
 /book.toml @cusma
 /toolchain.env @cusma

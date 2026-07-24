@@ -5,6 +5,8 @@ services:
       context: .
       target: ci-cd
       args:
+        RUST_VERSION: "${RUST_VERSION:?RUST_VERSION is required; run via Make or pass --env-file toolchain.env}"
+        RUST_IMAGE_SHA256: "${RUST_IMAGE_SHA256:?RUST_IMAGE_SHA256 is required; run via Make or pass --env-file toolchain.env}"
         UV_VERSION: "${UV_VERSION:?UV_VERSION is required; run via Make or pass --env-file toolchain.env}"
         UV_IMAGE_SHA256: "${UV_IMAGE_SHA256:?UV_IMAGE_SHA256 is required; run via Make or pass --env-file toolchain.env}"
     platform: linux/amd64
@@ -28,6 +30,8 @@ services:
       context: .
       target: release
       args:
+        RUST_VERSION: "${RUST_VERSION:?RUST_VERSION is required; run via Make or pass --env-file toolchain.env}"
+        RUST_IMAGE_SHA256: "${RUST_IMAGE_SHA256:?RUST_IMAGE_SHA256 is required; run via Make or pass --env-file toolchain.env}"
         UV_VERSION: "${UV_VERSION:?UV_VERSION is required; run via Make or pass --env-file toolchain.env}"
         UV_IMAGE_SHA256: "${UV_IMAGE_SHA256:?UV_IMAGE_SHA256 is required; run via Make or pass --env-file toolchain.env}"
     platform: linux/amd64

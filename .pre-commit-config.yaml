@@ -1,5 +1,5 @@
 minimum_pre_commit_version: 4.6.0
-exclude: '(^|/)(_archive|docker|theme)(/|$)'
+exclude: '(^|/)(_archive|scripts|theme)(/|$)'
 default_language_version:
   node: 26.5.0
 
