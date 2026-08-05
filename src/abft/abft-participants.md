@@ -33,13 +33,12 @@ Let \\( (\pk_k, \sk_k) \\) be some valid keypair.
 A secret key supports a _signing_ procedure
 
 $$
-y := \Sign(m, m', sk_k, B_k, \bar{B}, Q, \tau, \bar{\tau})
+y := \Sign(m, m', \sk_k, B_k, \bar{B}, Q, \tau, \bar{\tau})
 $$
 
 Where \\( y \\) is opaque and cryptographically resistant to tampering, where defined.
 
-Signing is not defined on many inputs: for any given input, signing may fail to
-produce an output.
+Not every input to \\( \Sign\ \\) produces an output \\( y \\).
 
 The following functions are defined on \\( y \\):
 

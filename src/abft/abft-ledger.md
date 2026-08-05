@@ -45,6 +45,9 @@ and last valid rounds for this participating account.
 
 - _Digest Lookup_: \\( \DigestLookup(L, r) = \Digest(e_r) \\).
 
+- _Consensus Parameters_: \\( \mathrm{Parameters}(L, r) \\) is the consensus
+parameter set recorded at round \\( r \\).
+
 - _Total Stake Lookup_: We use \\( \Kcal_{r_b,r_v} \\) to represent all players
 with participation keys at \\( r_b \\) that are eligible to vote at \\( r_v \\).
 Let \\( \Kcal_{r_b,r_v} \\) be the set of all \\( k \\) for which \\( (\pk_{k,r_b},
