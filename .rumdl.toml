@@ -6,6 +6,7 @@ exclude = ["src/SUMMARY.md"]
 # Remove when jsonspec.md link is fixed
 "src/_include/auto/opcodes/byte-array-manipulation.md" = ["MD057"]
 "src/avm/avm-appendix-a.md" = ["MD057"]
+"src/abft/abft-messages.md" = ["MD075"]
 
 [MD013]
 code-blocks = false
