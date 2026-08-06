@@ -258,5 +258,7 @@ The Algorand Specifications have been completely updated and renewed throughout 
 both in form (new website and PDF Book) and contents (non-normative sections, diagrams,
 examples, etc.).
 
-The last release using the previous HTML and PDF format is [`7791a63`](https://github.com/algorandfoundation/specs/releases/tag/7791a63).
+The last Algorand **consensus** release tag supporting the _old_ format (HTML and PDF)
+is: [`953304d`](https://github.com/algorandfoundation/specs/releases/tag/953304d).
+
 Its (normative only) source files remain available in [`_archive`](./_archive).
