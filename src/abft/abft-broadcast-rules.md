@@ -56,12 +56,12 @@ does not broadcast anything.
 For certain broadcast vote-messages specified here, a node is
 forbidden to _equivocate_ (i.e., produce a pair of votes which contain
 the same round, period, and step but which vote for different proposal
-values). These messages are marked with an asterisk (*) below. To
-prevent accidental equivocation after a power failure, nodes **SHOULD**
-checkpoint their state to crash-safe storage before sending these
-messages.
+values). These messages are marked with an asterisk (*) below.
 
 > [!NOTE]
+> Implementations typically checkpoint their state to crash-safe storage
+> before sending these messages, preventing accidental equivocation after a
+> power failure.
 > For further details on these checkpoint strategies, refer to the
 > [non-normative Ledger specification](../ledger/non-normative/ledger-nn.md). For an in-depth
 > review of broadcasting functionalities, refer to the [non-normative Network specification](../network/network-overview.md).
@@ -97,27 +97,27 @@ Specifically, a resynchronization attempt:
 - Corresponds to no additional outputs if the attempt is inactive, or neither bundle nor payload is available
 
 $$
-N(S, L, \ldots) = (S', L', \ldots),
+N(S, L, \ldots) = (S', L, \ldots),
 $$
 
 - Corresponds to a broadcast of the freshest bundle, if said bundle exists and no proposal
 payload is broadcast
 
 $$
-N(S, L, \ldots) = (S', L', (\ldots, \Bundle(r, q, s_q, v), \ldots)),
+N(S, L, \ldots) = (S', L, (\ldots, \Bundle(r, q, s_q, v), \ldots)),
 $$
 
 - Corresponds to a broadcast of both the bundle and the selected proposal payload
 \\( \Proposal(w) \\), if said bundle exists and a payload is broadcast
 
 $$
-N(S, L, \ldots) = (S', L', (\ldots, \Bundle(r, q, s_q, v), \Proposal(w), \ldots)).
+N(S, L, \ldots) = (S', L, (\ldots, \Bundle(r, q, s_q, v), \Proposal(w), \ldots)).
 $$
 
 - In \\( p = 0 \\), may correspond to a payload broadcast without a bundle
 
 $$
-N(S, L, \ldots) = (S', L', (\ldots, \Proposal(w), \ldots)).
+N(S, L, \ldots) = (S', L, (\ldots, \Proposal(w), \ldots)).
 $$
 
 ## Proposals
@@ -155,13 +155,13 @@ The matching proposal-value is \\( v' := (I, p, \Digest(e), \Hash(\Domain{PL} ||
 In other words, if the player generates a new proposal,
 
 $$
-N(S, L, \ldots) = (S', L', (\ldots, \Vote(I, r, p, 0, v'), \Proposal(v'))),
+N(S, L, \ldots) = (S', L, (\ldots, \Vote(I, r, p, 0, v'), \Proposal(v'))),
 $$
 
 while if the player broadcasts an old proposal,
 
 $$
-N(S, L, \ldots) = (S', L', (\ldots, \Vote(I, r, p, 0, v))).
+N(S, L, \ldots) = (S', L, (\ldots, \Vote(I, r, p, 0, v))).
 $$
 
 ## Reproposal Payloads
@@ -173,7 +173,7 @@ relay.
 In other words, if \\( \Proposal(v) \in P \\),
 
 $$
-N(S, L, \Vote(I, r, p, 0, v)) = (S', L', (\Vote(I, r, p, 0, v), \Proposal(v))).
+N(S, L, \Vote(I, r, p, 0, v)) = (S', L, (\Vote(I, r, p, 0, v), \Proposal(v))).
 $$
 
 ## Filtering
@@ -293,7 +293,7 @@ $$
 
 On observing a timeout event \\( t(T, p) \\) that sets \\( s := \Next_h \\)
 (see [New Step](./abft-state-transitions.md#new-step)), the player attempts to
-resynchronize and then broadcasts*
+resynchronize and broadcasts*
 \\( \Vote(I, r, p, \Next_h, v) \\) where
 
 - \\( v = \sigma(S, r, p) \\) if it is committable in \\( (r, p) \\),
@@ -343,7 +343,7 @@ $$
 On observing a timeout event of \\( T = k\lambda_f + u \\), where \\( k \\) is a positive
 integer and \\( u \in [0, \lambda_f) \\) is sampled uniformly at random, the player
 attempts to resynchronize. The first such event after entering a round or period
-lies in \\( [\lambda_f, 2\lambda_f) \\). Then,
+lies in \\( [\lambda_f, 2\lambda_f) \\). Also,
 
 - The player broadcasts* \\( \Vote(I, r, p, \Late, v) \\) if \\( v = \sigma(S, r, p) \\)
 is committable in \\( (r, p) \\).
