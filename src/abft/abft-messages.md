@@ -200,9 +200,9 @@ We say that this vote is _valid with respect to_ \\( L \\) (or simply _valid_ if
 Observe that valid votes contain outputs of the \\( \Sign \\) procedure; i.e.,
 \\( y := \Sign(x, x', \sk, B, \bar{B}, Q, \tau, \bar{\tau}) \\).
 
-A correct player emits non-bottom votes in \\( \Propose \\), \\( \Soft \\),
-\\( \Cert \\), \\( \Late \\), and \\( \Redo \\). Conversely, if \\( s = \Down \\),
-\\( v = \bot \\). Either value is permitted in \\( \Next_s \\).
+A correct player emits only votes with \\( v \neq \bot \\) in \\( \Propose \\),
+\\( \Soft \\), \\( \Cert \\), \\( \Late \\), and \\( \Redo \\). Conversely, if
+\\( s = \Down \\), \\( v = \bot \\). Either value is permitted in \\( \Next_s \\).
 
 Informally, these conditions check the following:
 

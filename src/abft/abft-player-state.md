@@ -127,7 +127,7 @@ $$
 For each \\( (r, p) \\), let \\( C(S, r, p) = (b, v) \\) summarize the
 thresholds with step at least \\( \Next_0 \\) formed in \\( H \\): \\( b = 1 \\)
 if any has proposal value \\( \bot \\), and \\( v \\) is the proposal value of
-the latest non-bottom threshold, or \\( \bot \\) if none exists.
+the latest threshold for a value \\( \neq \bot \\), or \\( \bot \\) if none exists.
 
 For thresholds in one round, \\( T_1 \\) is _fresher_ than \\( T_0 \\) if the
 first applicable condition holds:
