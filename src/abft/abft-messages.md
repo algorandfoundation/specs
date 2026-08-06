@@ -43,8 +43,6 @@ below.
 
 Let \\( \Hash \\) be the protocol hash function.
 
-Let \\( \Encoding(x) \\) be the canonical protocol encoding of a structured object \\( x \\).
-
 Domain separators are defined in the [cryptographic specification](../crypto/crypto-domain-separators.md).
 
 > [!NOTE]
@@ -104,12 +102,15 @@ $$
 $$
 
 A _proposal-value_ associated with a _proposal payload_ \\( \pi \\) containing entry
-\\( e \\) is a tuple \\( v = (I, p, \Digest(e), \Hash(\Domain{PL} || \Encoding(\pi))) \\)
-where:
+\\( e \\) is a tuple \\( v = (I, p, d, h) \\) where:
 
 - \\( I \\) is an address (the "original proposer"),
 
-- \\( p \\) is a period (the "original period").
+- \\( p \\) is a period (the "original period"),
+
+- \\( d = \Digest(e) \\) is the entry digest,
+
+- \\( h = \Hash(\Domain{PL} || \Encoding(\pi)) \\) is the payload commitment.
 
 The special proposal-value where all fields are the zero-string is called the _bottom
 proposal_ \\( \bot \\).
