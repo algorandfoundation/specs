@@ -1,16 +1,8 @@
 {{#include ../_include/tex-macros/domain-separators.md}}
 
 $$
-\newcommand \pk {\mathrm{pk}}
 \newcommand \sk {\mathrm{sk}}
 \newcommand \Vote {\mathrm{Vote}}
-\newcommand \fv {\text{first}}
-\newcommand \Record {\mathrm{Record}}
-\newcommand \lv {\text{last}}
-\newcommand \Stake {\mathrm{Stake}}
-\newcommand \Seed {\mathrm{Seed}}
-\newcommand \CommitteeThreshold {\mathrm{CommitteeThreshold}}
-\newcommand \CommitteeSize {\mathrm{CommitteeSize}}
 \newcommand \Sign {\mathrm{Sign}}
 \newcommand \Bundle {\mathrm{Bundle}}
 \newcommand \Soft {\mathit{soft}}
@@ -33,25 +25,15 @@ Upon observing messages or receiving timeout events, the player state
 machine emits network outputs, which are externally visible. The
 player may also append an entry to the ledger.
 
-A correct player emits only valid votes. Suppose the player is
-identified with the address \\( I \\) and possesses the secret key \\( \sk \\),
-and the agreement is occurring on the ledger \\(L\\). Then the player
-constructs a vote \\( \Vote(I, r, p, s, v) \\) by doing the following:
-
-- Let
-  - \\(( \pk, B, r_\fv, r_\lv) = \Record(L, r - \delta_b, I) \\),
-  - \\( \bar{B} = \Stake(L, r - \delta_b, r) \\),
-  - \\( Q = \Seed(L, r - \delta_s) \\),
-  - \\( \tau = \CommitteeThreshold(s) \\),
-  - \\( \bar{\tau} = \CommitteeSize(s) \\).
-
-- Let \\( x = \Domain{VO} || \Encoding((I, r, p, s, v)) \\), and \\( x' = \Domain{AS} || \Encoding((Q, r, p, s)) \\).
-
-- Try to set \\( y := \Sign(x, x', \sk, B, \bar{B}, Q, \tau, \bar{\tau}) \\).
-
-If the signing procedure succeeds, the player broadcasts
-\\( \Vote(I, r, p, s, v) = (I, r, p, s, v, y) \\). Otherwise, the player
-does not broadcast anything.
+A correct player emits only valid votes. Suppose the player is identified
+with the address \\( I \\) and possesses the secret key \\( \sk \\), and the
+agreement is occurring on the ledger \\( L \\). The player constructs
+\\( \Vote(I, r, p, s, v) \\) by attempting
+\\( y := \Sign(x, x', \sk, B, \bar{B}, Q, \tau, \bar{\tau}) \\) with the
+parameters of the [vote validity conditions](./abft-messages.md#votes). If
+signing succeeds, the player broadcasts
+\\( \Vote(I, r, p, s, v) = (I, r, p, s, v, y) \\); otherwise, the player does
+not broadcast anything.
 
 For certain broadcast vote-messages specified here, a node is
 forbidden to _equivocate_ (i.e., produce a pair of votes which contain
