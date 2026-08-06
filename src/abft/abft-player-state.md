@@ -133,11 +133,9 @@ For thresholds in one round, \\( T_1 \\) is _fresher_ than \\( T_0 \\) if the
 first applicable condition holds:
 
 1. \\( T_1 \\) is a cert threshold and \\( T_0 \\) is not;
-1. neither is a cert threshold and \\( T_1 \\) has the later period;
-1. they have the same period, \\( T_1 \\) is a next threshold, and \\( T_0 \\)
-   is a soft threshold;
-1. both are next thresholds in the same period, \\( T_1 \\) is for \\( \bot \\),
-   and \\( T_0 \\) is not.
+1. Neither is a cert threshold and \\( T_1 \\) has the later period;
+1. They have the same period, \\( T_1 \\) is a next threshold, and \\( T_0 \\) is a soft threshold;
+1. Both are next thresholds in the same period, \\( T_1 \\) is for \\( \bot \\), and \\( T_0 \\) is not.
 
 The numeric next-step index does not otherwise affect freshness. A threshold
 for a future round is considered when that round begins. The summary \\( C \\)

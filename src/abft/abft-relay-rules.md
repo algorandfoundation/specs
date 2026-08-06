@@ -142,7 +142,7 @@ On receiving a proposal \\( \Proposal(v) \\) a player
 
 A relayed proposal is observed and produces any consequent output only if it is valid.
 
-When relaying \\( Proposal(v) \\), the player **SHOULD** attach an accepted current-period
+When relaying \\( \Proposal(v) \\), the player **SHOULD** attach an accepted current-period
 proposal-vote for \\( v \\) as authenticator, when available.
 
 Specifically, if the player ignores a proposal, then
