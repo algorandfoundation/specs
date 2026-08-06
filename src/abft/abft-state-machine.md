@@ -35,8 +35,8 @@ The state machine _receives_ two types of events as inputs.
 
 2. _timeout events_: A timeout event is received when a specific
    amount of time passes after the beginning of a period. A timeout
-   event \\( \lambda \\) seconds after a period \\( p \\) begins is denoted
-   \\( t(\lambda, p) \\).
+   event \\( T \\) seconds after a period \\( p \\) begins is denoted
+   \\( t(T, p) \\).
 
 > [!NOTE]
 > For more details on the way these events may be constructed from an implementation

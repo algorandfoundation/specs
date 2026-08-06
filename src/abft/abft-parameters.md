@@ -7,8 +7,9 @@ $$
 
 The Algorand protocol is parameterized by the constants described in this section.
 
-For agreement round \\( r \\), the player **SHALL** use the consensus parameters
-recorded in the Ledger at round \\( \max(r - 2, 0) \\).
+For agreement round \\( r \\), the player **SHALL** use the consensus
+parameters \\( \mathrm{Parameters}(L, \max(r - 2, 0)) \\) recorded in the
+Ledger \\( L \\).
 
 ## Time Constants
 
@@ -36,7 +37,7 @@ For convenience, we define:
 
 - \\( \delta_b = 2\delta_s\delta_r \\) (the "balance lookback").
 
-Every round lookback \\( r - \delta \\) refers to round \\( \max(r - \delta, 0) \\).
+Every round or period lookback \\( a - b \\) refers to \\( \max(a - b, 0) \\).
 
 ## Timeouts
 

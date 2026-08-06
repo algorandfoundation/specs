@@ -19,7 +19,7 @@ the player's observation of that message; see the [broadcast rules](./abft-broad
 below).
 
 A player may receive messages from a misbehaving peer. These cases are marked with
-an asterisk (*) and enable the node to perform a special action (e.g., disconnect
+a dagger (†) and enable the node to perform a special action (e.g., disconnect
 from the peer).
 
 > [!NOTE]
@@ -33,7 +33,7 @@ receiving that message.
 
 On receiving a vote \\( \Vote_k(r_k, p_k, s_k, v) \\) a player
 
-- Ignores* it if \\( \Vote_k \\) is malformed or trivially invalid.
+- Ignores† it if \\( \Vote_k \\) is malformed or trivially invalid.
 
 - Ignores it if \\( \Vote_k \in V \\).
 
@@ -46,7 +46,7 @@ On receiving a vote \\( \Vote_k(r_k, p_k, s_k, v) \\) a player
   - \\( r_k \notin [r,r+1] \\) or
   - \\( r_k = r + 1 \\) and either
     - \\( p_k > 0 \\) or
-    - \\( s_k \in (\Next_0, \Late) \\) or
+    - \\( s_k \in (\Next_0, \Late) \\)
 
   - \\( r_k = r \\) and one of
     - \\( p_k \notin [p-1,p+1] \\) or
@@ -94,7 +94,7 @@ $$
 
 On receiving a bundle \\( \Bundle(r_k, p_k, s_k, v) \\) a player
 
-- Ignores* it if \\( \Bundle(r_k, p_k, s_k, v) \\) is malformed or trivially invalid.
+- Ignores† it if \\( \Bundle(r_k, p_k, s_k, v) \\) is malformed or trivially invalid.
 
 - Ignores it if
   - \\( r_k \neq r \\) or
@@ -131,7 +131,7 @@ $$
 
 On receiving a proposal \\( \Proposal(v) \\) a player
 
-- Ignores* it if it is malformed or trivially invalid.
+- Ignores† it if it is malformed or trivially invalid.
 
 - Ignores it if \\( \Proposal(v) \in P \\).
 

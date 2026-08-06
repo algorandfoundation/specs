@@ -33,7 +33,8 @@ where
 - \\( \bar{v} \\) is the _pinned_ value,
 - \\( H \\) is the ordered history of protocol events and outputs.
 
-The definitions below are derived from \\( S \\).
+The definitions below are derived from \\( S \\); observation, threshold
+formation, and freshness comparisons are evaluated in \\( H \\) order.
 
 We say that a player has _observed_
 

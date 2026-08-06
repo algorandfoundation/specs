@@ -243,6 +243,10 @@ An equivocation vote pair is _valid with respect to_ \\( L \\) (or simply _valid
 if \\( L \\) is unambiguous) if both of its constituent votes are also valid with
 respect to \\( L \\).
 
+An equivocation vote pair is transmitted as a single record carrying the
+common \\( (I, r, p, s) \\) and credential, with the two proposal-values and
+their two signatures.
+
 ## Bundles
 
 Let \\( V \\) be any set of votes and equivocation votes.
@@ -255,6 +259,11 @@ and step_ \\( s \\) (or a _bundle for \\( v \\) at_ \\( (r, p, s) \\)), denoted
 > **IMPLEMENTATION:**
 >
 > Bundle [reference implementation](https://github.com/algorand/go-algorand/blob/b6e5bcadf0ad3861d4805c51cbf3f695c38a93b7/agreement/bundle.go#L46).
+
+A bundle is transmitted as \\( (r, p, s, v) \\) together with its vote and
+equivocation-vote records; a vote record carries only the sender, credential,
+and signature, the omitted fields being the bundle's, while an equivocation
+record is transmitted as above.
 
 Moreover, let \\( L \\) be a ledger.
 
