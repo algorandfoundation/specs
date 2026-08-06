@@ -167,18 +167,6 @@ let \\( x' = \Domain{AS} || \Encoding((Q, r, p, s)) \\).
 We say that this vote is _valid with respect to_ \\( L \\) (or simply _valid_ if
 \\( L \\) is unambiguous) if the following conditions are true:
 
-> [!IMPORTANT]
-> **IMPLEMENTATION:**
->
-> The reference implementation builds an [asynchronous vote verifier](https://github.com/algorand/go-algorand/blob/b6e5bcadf0ad3861d4805c51cbf3f695c38a93b7/agreement/asyncVoteVerifier.go#L52),
-> which builds a verification pool and under the hood uses two different verifying
-> routines: one for [regular unauthenticated votes](https://github.com/algorand/go-algorand/blob/b6e5bcadf0ad3861d4805c51cbf3f695c38a93b7/agreement/vote.go#L97),
-> and one for [unauthenticated equivocation votes](https://github.com/algorand/go-algorand/blob/b6e5bcadf0ad3861d4805c51cbf3f695c38a93b7/agreement/vote.go#L193).
-
-> [!NOTE]
-> See the [Algorand ABFT non-normative section](./non-normative/abft-nn.md) for further
-> details.
-
 - \\( r \leq |L| + 2 \\)
 
 - Let \\( v = (I_{orig}, p_{orig}, d, h )\\).
@@ -248,6 +236,14 @@ An equivocation vote pair is transmitted as a single record carrying the
 common \\( (I, r, p, s) \\) and credential, with the two proposal-values and
 their two signatures.
 
+> [!IMPORTANT]
+> **IMPLEMENTATION:**
+>
+> The reference implementation builds an [asynchronous vote verifier](https://github.com/algorand/go-algorand/blob/b6e5bcadf0ad3861d4805c51cbf3f695c38a93b7/agreement/asyncVoteVerifier.go#L52),
+> which builds a verification pool and under the hood uses two different verifying
+> routines: one for [regular unauthenticated votes](https://github.com/algorand/go-algorand/blob/b6e5bcadf0ad3861d4805c51cbf3f695c38a93b7/agreement/vote.go#L97),
+> and one for [unauthenticated equivocation votes](https://github.com/algorand/go-algorand/blob/b6e5bcadf0ad3861d4805c51cbf3f695c38a93b7/agreement/vote.go#L193).
+
 ## Bundles
 
 Let \\( V \\) be any set of votes and equivocation votes.
@@ -271,15 +267,6 @@ Moreover, let \\( L \\) be a ledger.
 We say that this bundle is _valid with respect to_ \\( L \\) (or simply _valid_ if
 \\( L \\) is unambiguous) if the following conditions are true:
 
-> [!IMPORTANT]
-> **IMPLEMENTATION:**
->
-> The reference implementation makes use of an asynchronous [Bundle verifying function](https://github.com/algorand/go-algorand/blob/b6e5bcadf0ad3861d4805c51cbf3f695c38a93b7/agreement/bundle.go#L147).
-
-> [!NOTE]
-> See the [Algorand ABFT non-normative section](./non-normative/abft-nn.md) for
-> further details.
-
 - \\( s \neq \Propose \\).
 
 - \\( |V| \leq \CommitteeThreshold(s) \\).
@@ -296,6 +283,11 @@ or \\( a_i \\) is an equivocation vote.
 - Let \\( w_i \\) be the weight of \\( a_i \\), where an equivocation vote has the
 common weight of its constituent votes. Then
 \\( \sum_i w_i \geq \CommitteeThreshold(s) \\).
+
+> [!IMPORTANT]
+> **IMPLEMENTATION:**
+>
+> The reference implementation makes use of an asynchronous [Bundle verifying function](https://github.com/algorand/go-algorand/blob/b6e5bcadf0ad3861d4805c51cbf3f695c38a93b7/agreement/bundle.go#L147).
 
 ## Proposals
 
