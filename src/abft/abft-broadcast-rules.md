@@ -185,13 +185,13 @@ At most one soft vote is broadcast.
 In other words, in the carried-value case,
 
 $$
-N(S, L, t(\FilterTimeout(p), p)) = (S', L, \Vote(I, r, p, \Soft, c));
+N(S, L, t(\FilterTimeout(p), p)) = (S', L, (\Vote(I, r, p, \Soft, c)));
 $$
 
 while in either frozen-value case,
 
 $$
-N(S, L, t(\FilterTimeout(p), p)) = (S', L, \Vote(I, r, p, \Soft, \mu));
+N(S, L, t(\FilterTimeout(p), p)) = (S', L, (\Vote(I, r, p, \Soft, \mu)));
 $$
 
 and otherwise,

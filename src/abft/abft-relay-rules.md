@@ -154,7 +154,7 @@ while if a player relays a valid proposal, then
 
 $$
 N(S, L, \Proposal(v))
-= (S' \cup \Proposal(v), L', (\Proposal^\ast(v), \ldots)).
+= (S' \cup \\{\Proposal(v)\\}, L', (\Proposal^\ast(v), \ldots)).
 $$
 
 If a relayed proposal is invalid, it is not observed:

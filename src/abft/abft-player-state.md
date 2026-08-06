@@ -59,7 +59,8 @@ N((r, p, s, \bar{s}, V, P, \bar{v}, H), L, \Vote)
 $$
 
 We write \\( S' \cup \\{\Vote\\} \\) for an output state whose \\( V \\)
-additionally contains \\( \Vote \\); thus the transition above is
+additionally contains \\( \Vote \\), and \\( S' \cup \\{\Proposal(v)\\} \\)
+likewise for \\( P \\); thus the transition above is
 
 $$
 N((r, p, s, \bar{s}, V, P, \bar{v}, H), L, \Vote)
