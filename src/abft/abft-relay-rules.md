@@ -31,7 +31,7 @@ receiving that message.
 
 ## Votes
 
-On receiving a vote \\( \Vote_k(r_k, p_k, s_k, v) \\) a player
+On receiving a vote \\( \Vote_k = \Vote(I_k, r_k, p_k, s_k, v) \\) a player
 
 - Ignores† it if \\( \Vote_k \\) is malformed or trivially invalid.
 
@@ -74,20 +74,19 @@ priority than that of every proposal-vote accepted or relayed for \\( (r_k, 0) \
 Specifically, if a player ignores the vote, then
 
 $$
-N(S, L, \Vote_k(r_k, p_k, s_k, v)) = (S, L, \epsilon)
+N(S, L, \Vote_k) = (S, L, \epsilon)
 $$
 
 while if a player relays the vote, then
 
 $$
-N(S, L, \Vote_k(r_k, p_k, s_k, v))
-= (S' \cup \\{\Vote_k(r_k, p_k, s_k, v)\\}, L', (\Vote_k^\ast(r_k, p_k, s_k, v),\ldots));
+N(S, L, \Vote_k) = (S' \cup \\{\Vote_k\\}, L', (\Vote_k^\ast,\ldots));
 $$
 
 and if a player relays the vote without observing it, then
 
 $$
-N(S, L, \Vote_k(r_k, p_k, s_k, v)) = (S, L, (\Vote_k^\ast(r_k, p_k, s_k, v))).
+N(S, L, \Vote_k) = (S, L, (\Vote_k^\ast)).
 $$
 
 ## Bundles

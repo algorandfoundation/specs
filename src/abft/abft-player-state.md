@@ -39,7 +39,7 @@ formation, and freshness comparisons are evaluated in \\( H \\) order.
 We say that a player has _observed_
 
 - \\( \Proposal(v) \\) if \\( \Proposal(v) \in P \\),
-- \\( \Vote(r, p, s, v) \\) if \\( \Vote(r, p, s, v) \in V \\),
+- \\( \Vote(I, r, p, s, v) \\) if \\( \Vote(I, r, p, s, v) \in V \\),
 - \\( \Bundle(r, p, s, v) \\) if \\( \Bundle(r, p, s, v) \subset V \\) and its threshold
 is fresher than every threshold previously observed for round \\( r \\),
 - That the round \\( r > 0 \\) (period \\( p = 0 \\)) has _begun_ if an entry was
