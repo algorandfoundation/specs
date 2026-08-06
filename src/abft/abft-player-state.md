@@ -54,16 +54,16 @@ thing after receiving the event. For instance, a player may observe a
 vote \\( \Vote \\), which adds this vote to \\( V \\):
 
 $$
-N((r, p, s, \bar{s}, V, P, \bar{v}, H), L_0, \Vote)
-= ((r', p', s', \bar{s}', V \cup \\{\Vote\\}, P, \bar{v}', H'), L_1, \ldots)
+N((r, p, s, \bar{s}, V, P, \bar{v}, H), L, \Vote)
+= ((r', p', s', \bar{s}', V \cup \\{\Vote\\}, P, \bar{v}', H'), L', \ldots)
 $$
 
-We write \\( S \cup \\{\Vote\\} \\) for \\( S \\) with \\( \Vote \\) added to
-\\( V \\); thus the transition above is
+We write \\( S' \cup \\{\Vote\\} \\) for an output state whose \\( V \\)
+additionally contains \\( \Vote \\); thus the transition above is
 
 $$
-N((r, p, s, \bar{s}, V, P, \bar{v}, H), L_0, \Vote)
-= (S \cup \\{\Vote\\}, L_1, \ldots)
+N((r, p, s, \bar{s}, V, P, \bar{v}, H), L, \Vote)
+= (S' \cup \\{\Vote\\}, L', \ldots)
 $$
 
 Note that _observing_ a message is distinct from _receiving_ a

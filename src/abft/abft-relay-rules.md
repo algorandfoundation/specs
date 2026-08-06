@@ -160,7 +160,7 @@ $$
 If a relayed proposal is invalid, it is not observed:
 
 $$
-N(S, L, \Proposal(v)) = (S', L, (\Proposal^\ast(v))).
+N(S, L, \Proposal(v)) = (S, L, (\Proposal^\ast(v))).
 $$
 
 > [!NOTE]

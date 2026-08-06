@@ -60,21 +60,21 @@ In other words, if \\( v \neq \bot \\), then
 
 $$
 N((r, p-i, s, \bar{s}, V, P, \bar{v}, H), L, \ldots)
-= ((r, p, \Soft, s, V', P, v, H'), L', \ldots);
+= ((r, p, \Soft, s, V', P, v, H'), L, \ldots);
 $$
 
 and otherwise, if \\( \sigma(S, r, p-i) \neq \bot \\), then
 
 $$
 N((r, p-i, s, \bar{s}, V, P, \bar{v}, H), L, \ldots)
-= ((r, p, \Soft, s, V', P, \sigma(S, r, p-i), H'), L', \ldots);
+= ((r, p, \Soft, s, V', P, \sigma(S, r, p-i), H'), L, \ldots);
 $$
 
 and otherwise
 
 $$
 N((r, p-i, s, \bar{s}, V, P, \bar{v}, H), L, \ldots)
-= ((r, p, \Soft, s, V', P, \bar{v}, H'), L', \ldots);
+= ((r, p, \Soft, s, V', P, \bar{v}, H'), L, \ldots);
 $$
 
 for some \\( i > 0 \\) (where \\( S = (r, p-i, s, \bar{s}, V, P, \bar{v}, H) \\)).
@@ -101,8 +101,8 @@ where
 $$
 \begin{aligned}
 V^\ast_{r, p}
-&=    \\{\Vote(I, r', p', s', v) \in V' \mid r' < r\\} \\\\\\
-&\cup \\{\Vote(I, r', p', s', v) \in V' \mid r' = r, p' + 1 < p\\}
+&=    \\{\Vote(I_i, r_i, p_i, s_i, v_i) \in V' \mid r_i < r\\} \\\\\\
+&\cup \\{\Vote(I_i, r_i, p_i, s_i, v_i) \in V' \mid r_i = r, p_i + 1 < p\\}
 \end{aligned}
 $$
 
@@ -110,7 +110,7 @@ and
 
 $$
 P^\ast_{r, p} = \\{\mathrm{Proposal}(v) \in P' \mid v \neq \bar{v}'
-\land \nexists I, r', p', s' : \Vote(I, r', p', s', v) \in V' \setminus V^\ast_{r, p}\\}.
+\land \nexists I_i, r_i, p_i, s_i : \Vote(I_i, r_i, p_i, s_i, v) \in V' \setminus V^\ast_{r, p}\\}.
 $$
 
 ## New Step
@@ -137,10 +137,10 @@ In other words,
 $$
 \begin{aligned}
 &N((r, p, s, \bar{s}, V, P, \bar{v}, H), L, t(\FilterTimeout(p), p)) \\\\
-&\qquad = ((r, p, \Cert, \bar{s}, V, P, \bar{v}, H'), L', \ldots) \\\\[0.35em]
+&\qquad = ((r, p, \Cert, \bar{s}, V, P, \bar{v}, H'), L, \ldots) \\\\[0.35em]
 &N((r, p, s, \bar{s}, V, P, \bar{v}, H), L, t(\DeadlineTimeout(p), p)) \\\\
-&\qquad = ((r, p, \Next_0, \bar{s}, V, P, \bar{v}, H'), L', \ldots) \\\\[0.35em]
+&\qquad = ((r, p, \Next_0, \bar{s}, V, P, \bar{v}, H'), L, \ldots) \\\\[0.35em]
 &N((r, p, s, \bar{s}, V, P, \bar{v}, H), L, t(\DeadlineTimeout(p) + (2^{s_t} - 1)\lambda + u, p)) \\\\
-&\qquad = ((r, p, \Next_{s_t}, \bar{s}, V, P, \bar{v}, H'), L', \ldots).
+&\qquad = ((r, p, \Next_{s_t}, \bar{s}, V, P, \bar{v}, H'), L, \ldots).
 \end{aligned}
 $$
