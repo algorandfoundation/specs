@@ -94,10 +94,10 @@ $$
 $$
 
 Hash outputs are compared as unsigned big-endian integers. A proposal vote has
-higher priority when its \\( \Priority \\) value is smaller. Before the filter
-timeout, \\( \mu(S, r, p) \\) is the value of the highest-priority accepted
-proposal vote. The timeout fixes that value; later proposal votes do not change
-it.
+higher priority when its \\( \Priority \\) value is smaller.
+\\( \mu(S, r, p) \\) is the value of the highest-priority accepted proposal vote.
+It is fixed as soon as a value is staged for \\( (r, p) \\) or the player processes
+the filter timeout of period \\( p \\), whichever occurs first; later proposal votes do not change it.
 
 If \\( V_{r, p, 0} \\) is empty, then \\( \mu(S, r, p) = \bot \\).
 

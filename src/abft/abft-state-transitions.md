@@ -109,7 +109,7 @@ $$
 and
 
 $$
-P^\ast_{r, p} q = \\{\mathrm{Proposal}(v) \in P' \mid v \neq \bar{v}'
+P^\ast_{r, p} = \\{\mathrm{Proposal}(v) \in P' \mid v \neq \bar{v}'
 \land \nexists I, r', p', s' : \Vote(I, r', p', s', v) \in V' \setminus V^\ast_{r, p}\\}.
 $$
 

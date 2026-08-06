@@ -128,9 +128,6 @@ Let
 
 - \\( v \\) be a _proposal-value_.
 
-Let \\( x = \Domain{VO} || \Encoding((I, r, p, s, v)) \\), and
-let \\( x' = \Domain{AS} || \Encoding((Q, r, p, s)) \\).
-
 Let \\( y \\) be an arbitrary bitstring.
 
 Then we say that the tuple
@@ -146,6 +143,9 @@ $$
 \Vote(I, r, p, s, v)
 $$
 
+Two votes with equal \\( (I, r, p, s, v) \\) are the _same vote_, regardless of
+\\( y \\); membership of a vote in a set is evaluated on this identity.
+
 > [!IMPORTANT]
 > **IMPLEMENTATION:**
 >
@@ -159,6 +159,9 @@ Let
 - \\( B, \bar{B} \\) be 64-bit integers,
 - \\( Q \\) be a 256-bit integer,
 - \\( \tau, \bar{\tau} \\) 32-bit integers.
+
+Let \\( x = \Domain{VO} || \Encoding((I, r, p, s, v)) \\), and
+let \\( x' = \Domain{AS} || \Encoding((Q, r, p, s)) \\).
 
 We say that this vote is _valid with respect to_ \\( L \\) (or simply _valid_ if
 \\( L \\) is unambiguous) if the following conditions are true:
@@ -315,6 +318,11 @@ if the following conditions are true:
 
 If \\( \pi \\) matches \\( v \\), we write \\( \pi = \Proposal(v) \\).
 
+A proposal payload is transmitted, and relayed, as a pair \\( (\pi, a) \\),
+where \\( a \\) is either empty or a proposal-vote whose proposal-value matches
+\\( \pi \\), called the payload's _authenticator_. A player receiving such a
+pair processes \\( a \\), if present, before \\( \pi \\).
+
 ## Seed
 
 Informally, the protocol interleaves \\( \delta_s \\) seeds in an alternating
@@ -353,7 +361,7 @@ Now \\( I \\) computes the seed \\( Q \\) as follows:
 $$
 Q = \left\\{
 \begin{array}{rl}
-  \Hash(\Domain{PS} || \Encoding((\alpha, \DigestLookup(L, r-\delta_s\delta_r)))) & : r \equiv (r \bmod \delta_s) \mod \delta_r\delta_s \\\\
+  \Hash(\Domain{PS} || \Encoding((\alpha, \DigestLookup(L, r-\delta_s\delta_r)))) & : (r \bmod \delta_s\delta_r) < \delta_s \\\\
   \Hash(\Domain{PS} || \Encoding((\alpha, 0))) & : \text{otherwise}
 \end{array}
 \right.
@@ -379,7 +387,7 @@ and continue to step 4.
 
 1. If \\( p \ne 0 \\), let \\( q_1 = \Hash(\Domain{SD} || q_0) \\). Continue.
 
-1. If \\( r \equiv (r \bmod \delta_s) \mod \delta_r\delta_s \\), then check
+1. If \\( (r \bmod \delta_s\delta_r) < \delta_s \\), then check
 \\( Q = \Hash(\Domain{PS} || \Encoding((q_1, \DigestLookup(L, r-\delta_s\delta_r)))) \\). Otherwise,
 check \\( Q = \Hash(\Domain{PS} || \Encoding((q_1, 0))) \\).
 

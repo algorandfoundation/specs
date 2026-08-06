@@ -55,8 +55,21 @@ On receiving a vote \\( \Vote_k(r_k, p_k, s_k, v) \\) a player
     - \\( p > 0 \\) and \\( p_k = p - 1 \\) and \\( s_k \in (\Next_0, \Late) \\) and
       \\( s_k \notin [\bar{s}-1,\bar{s}+1] \\).
 
+- **MAY** ignore it if \\( s_k = 0 \\) and its credential does not have higher
+priority than that of every proposal-vote accepted or relayed for
+\\( (r_k, p_k) \\).
+
 - Otherwise, relays \\( \Vote_k \\), observes it, and then produces any consequent
 output.
+
+A player **MAY** also relay a verified proposal-vote with \\( r_k < r \\) and
+\\( p_k = s_k = 0 \\), without observing it, if its credential has higher
+priority than that of every proposal-vote accepted or relayed for \\( (r_k, 0) \\).
+
+> [!NOTE]
+> The reference implementation does so within a bounded window of past rounds,
+> supporting the adaptive filter timeout described in the
+> [non-normative section](./non-normative/abft-nn-dynamic-filter-timeout.md).
 
 Specifically, if a player ignores the vote, then
 
@@ -68,7 +81,13 @@ while if a player relays the vote, then
 
 $$
 N(S, L, \Vote_k(r_k, p_k, s_k, v))
-= (S' \cup \\{\Vote_k(r_k, p_k, s_k, v)\\}, L', (\Vote_k^\ast(r_k, p_k, s_k, v),\ldots)).
+= (S' \cup \\{\Vote_k(r_k, p_k, s_k, v)\\}, L', (\Vote_k^\ast(r_k, p_k, s_k, v),\ldots));
+$$
+
+and if a player relays the vote without observing it, then
+
+$$
+N(S, L, \Vote_k(r_k, p_k, s_k, v)) = (S, L, (\Vote_k^\ast(r_k, p_k, s_k, v))).
 $$
 
 ## Bundles
@@ -117,11 +136,14 @@ On receiving a proposal \\( \Proposal(v) \\) a player
 - Ignores it if \\( \Proposal(v) \in P \\).
 
 - Relays \\( \Proposal(v) \\) if \\( v = \bar{v} \\), \\( v = \rho(S, r, q) \\) for
-\\( q \in \\{p-1, p, p+1\\} \\) where defined, or \\( v = \rho(S, r+1, 0) \\).
+\\( q \in \\{p-1, p, p+1\\} \\) when not \\( \bot \\), or \\( v = \rho(S, r+1, 0) \\).
 
 - Otherwise, ignores it.
 
 A relayed proposal is observed and produces any consequent output only if it is valid.
+
+When relaying \\( Proposal(v) \\), the player **SHOULD** attach an accepted current-period
+proposal-vote for \\( v \\) as authenticator, when available.
 
 Specifically, if the player ignores a proposal, then
 
@@ -144,12 +166,12 @@ $$
 
 > [!NOTE]
 > Implementations **MAY** store and relay fewer proposals than specified
-> here to improve efficiency. However, implementations **MUST** relay proposals which
-> match the following proposal-values (where \\( r \\) is the current round and \\( p \\)
-> is the current period):
+> here to improve efficiency. However, implementations **MUST** relay, at least
+> once, proposals which match the following proposal-values (where \\( r \\) is
+> the current round and \\( p \\) is the current period):
 >
 > - \\( \bar{v} \\),
 >
-> - \\( \rho(S, r, q) \\) for \\( q \in \\{p-1, p, p+1\\} \\) where defined,
+> - \\( \rho(S, r, q) \\) for \\( q \in \\{p-1, p, p+1\\} \\) when not \\( \bot \\),
 >
 > - \\( \rho(S, r+1, 0) \\).
