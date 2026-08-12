@@ -16,4 +16,4 @@
 | `replace2 s` | Copy of A with the bytes starting at S replaced by the bytes of B. Fails if S+len(B) exceeds len(A) |
 | `replace3` | Copy of A with the bytes starting at B replaced by the bytes of C. Fails if B+len(C) exceeds len(A) |
 | `base64_decode e` | decode A which was base64-encoded using _encoding_ E. Fail if A is not base64 encoded with encoding E |
-| `json_ref r` | key B's value, of type R, from a [valid](jsonspec.md) utf-8 encoded json object A |
+| `json_ref r` | key B's value, of type R, from the json object A, which must satisfy the [JSON spec](https://github.com/algorand/go-algorand/blob/master/data/transactions/logic/jsonspec.md) |
