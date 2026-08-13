@@ -36,4 +36,13 @@ Assets, and Apps though State Access opcodes _are_ allowed in
 ClearState programs because the current application and sender account
 are sure to be _available_.
 
+An application may always operate on its own boxes, but access to another
+application's boxes requires that application to have opted in, via two
+mutable [application parameters](../ledger/ledger-applications.md#applications):
+setting `ForeignBoxReads` permits any application to read its boxes, while
+setting `FamilyBoxAccess` permits applications sharing its creator to both
+read and modify them. Boxes of an application that has set `FamilyBoxAccess`
+are further subject to the
+[family reentrancy rule](../ledger/ledger-applications.md#family-reentrancy).
+
 {{#include ../_include/auto/opcodes/box-access.md}}

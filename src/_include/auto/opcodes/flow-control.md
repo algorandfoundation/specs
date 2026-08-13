@@ -22,5 +22,5 @@
 | `callsub target` | branch unconditionally to TARGET, saving the next instruction on the call stack |
 | `proto a r` | Prepare top call frame for a retsub that will assume A args and R return values. |
 | `retsub` | pop the top instruction from the call stack and branch to it |
-| `switch target ...` | branch to the Ath label. Continue at following instruction if index A exceeds the number of labels. |
-| `match target ...` | given match cases from A[1] to A[N], branch to the Ith label where A[I] = B. Continue to the following instruction if no matches are found. |
+| `switch target ...` | branch to the Ath label. Labels are numbered from 0, so execution continues at the following instruction if A is greater than or equal to the number of labels. |
+| `match target ...` | given N match cases, deepest first, branch to the Ith label (numbering from 0) where case I equals B. Continue to the following instruction if no matches are found. |
