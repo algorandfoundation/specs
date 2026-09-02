@@ -10,7 +10,7 @@ $$
 
 # State Transitions
 
-After receiving message events or a time events, the player may update some components
+After receiving message events or timeout events, the player may update some components
 of its state.
 
 ## New Round
@@ -24,16 +24,18 @@ sets
 
 - \\( p := 0 \\),
 
-- \\( s := 0 \\).
+- \\( s := \Soft \\).
 
 Specifically, if a new round has begun, then
 
 $$
-N((r-i, p, s, \bar{s}, V, P, \bar{v}), L, \ldots)
-= ((r, 0, 0, s, V', P', \bot), L', \ldots)
+N((r-i, p, s, \bar{s}, V, P, \bar{v}, H), L, \ldots)
+= ((r, 0, \Soft, s, V', P', \bot, H'), L', \ldots)
 $$
 
 for some \\( i > 0 \\).
+
+Initially, the player starts round \\( |L|+1 \\) in \\( p = 0 \\) and \\( s = \Soft \\).
 
 > [!IMPORTANT]
 > **IMPLEMENTATION:**
@@ -42,42 +44,40 @@ for some \\( i > 0 \\).
 
 ## New Period
 
-When a player observes that a new period \\( (r, p) \\) has begun, the player sets
+When a player observes that a new period \\( (r, p) \\) has begun due to a threshold
+\\( \Bundle(r, q, s_q, v) \\), the player sets
 
 - \\( \bar{s} := s \\),
 
-- \\( s := 0 \\).
+- \\( s := \Soft \\).
 
-Also, the player sets \\( \bar{v} := v \\) if the player has observed \\( \Bundle(r, p-1, s, v) \\)
-given some values \\( s > \Cert \\) (or \\( s = \Soft \\)), \\( v \neq \bot \\);
-if none exist, the player sets \\( \bar{v} := \sigma(S, r, p-i) \\) if it exists,
-where \\( p-i \\) was the player's period immediately before observing the new period;
-and if none exist, the player does not update \\( \bar{v} \\).
+Also, the player sets \\( \bar{v} := v \\) if \\( v \neq \bot \\); otherwise,
+the player sets \\( \bar{v} := \sigma(S, r, p-i) \\) if \\( \sigma(S, r, p-i) \neq \bot \\),
+where \\( p-i \\) was the player's period immediately before observing the new period
+and otherwise, the player does not update \\( \bar{v} \\).
 
-In other words, if \\( \Bundle(r, p-1, s, v) \in V' \\) for some \\( v \neq \bot, s > \Cert \\)
-or \\( s = \Soft \\), then
+In other words, if \\( v \neq \bot \\), then
 
 $$
-N((r, p-i, s, \bar{s}, V, P, \bar{v}), L, \ldots)
-= ((r, p, 0, s, V', P, v), L', \ldots);
+N((r, p-i, s, \bar{s}, V, P, \bar{v}, H), L, \ldots)
+= ((r, p, \Soft, s, V', P, v, H'), L, \ldots);
 $$
 
-and otherwise, if \\( \Bundle(r, p-1, s, \bot) \in V' \\) for some \\( s > \Cert \\)
-with \\( \sigma(S, r, p-i) \\) defined, then
+and otherwise, if \\( \sigma(S, r, p-i) \neq \bot \\), then
 
 $$
-N((r, p-i, s, \bar{s}, V, P, \bar{v}), L, \ldots)
-= ((r, p, 0, s, V', P, \sigma(S, r, p-i)), L', \ldots);
+N((r, p-i, s, \bar{s}, V, P, \bar{v}, H), L, \ldots)
+= ((r, p, \Soft, s, V', P, \sigma(S, r, p-i), H'), L, \ldots);
 $$
 
 and otherwise
 
 $$
-N((r, p-i, s, \bar{s}, V, P, \bar{v}), L, \ldots)
-= ((r, p, 0, s, V', P, \bar{v}), L', \ldots);
+N((r, p-i, s, \bar{s}, V, P, \bar{v}, H), L, \ldots)
+= ((r, p, \Soft, s, V', P, \bar{v}, H'), L, \ldots);
 $$
 
-for some \\( i > 0 \\) (where \\( S = (r, p-i, s, \bar{s}, V, P, \bar{v}) \\)).
+for some \\( i > 0 \\) (where \\( S = (r, p-i, s, \bar{s}, V, P, \bar{v}, H) \\)).
 
 > [!IMPORTANT]
 > **IMPLEMENTATION:**
@@ -87,13 +87,13 @@ for some \\( i > 0 \\) (where \\( S = (r, p-i, s, \bar{s}, V, P, \bar{v}) \\)).
 ## Garbage Collection
 
 When a player observes that either a new _round_ or a new _period_
-\\( (r, p) \\) has begun, then the player _garbage-collects_ old state.
+\\( (r, p) \\) has begun, then the player _garbage-collects_ old votes and proposal payloads.
 
 In other words,
 
 $$
-N((r-i, p-i, s, \bar{s}, V, P, \bar{v}), L, \ldots)
-= ((r, p, \bar{s}, 0, V' \setminus V^\ast_{r, p}, P' \setminus P^\ast_{r, p}, \bar{v}), L, \ldots)
+N((r_0, p_0, s, \bar{s}, V, P, \bar{v}, H), L, \ldots)
+= ((r, p, \Soft, s, V' \setminus V^\ast_{r, p}, P' \setminus P^\ast_{r, p}, \bar{v}', H'), L', \ldots)
 $$
 
 where
@@ -101,26 +101,31 @@ where
 $$
 \begin{aligned}
 V^\ast_{r, p}
-&=    \\{\Vote(I, r', p', \bar{s}, v) | \Vote \in V, r' < r\\} \\\\\\
-&\cup \\{\Vote(I, r', p', \bar{s}, v) | \Vote \in V, r' = r, p' + 1 < p\\}
+&=    \\{\Vote(I_i, r_i, p_i, s_i, v_i) \in V' \mid r_i < r\\} \\\\\\
+&\cup \\{\Vote(I_i, r_i, p_i, s_i, v_i) \in V' \mid r_i = r, p_i + 1 < p\\}
 \end{aligned}
 $$
 
-and \\( P^\ast_{r, p} \\) is defined similarly.
+and
+
+$$
+P^\ast_{r, p} = \\{\mathrm{Proposal}(v) \in P' \mid v \neq \bar{v}'
+\land \nexists I_i, r_i, p_i, s_i : \Vote(I_i, r_i, p_i, s_i, v) \in V' \setminus V^\ast_{r, p}\\}.
+$$
 
 ## New Step
 
 A player may also update its step after receiving a timeout event.
 
-On observing a timeout event of \\( \FilterTimeout(p) \\) for a period \\( p \\),
-the player sets \\( s := \Cert \\).
+On observing a timeout event of \\( \FilterTimeout(p) \\) for its current period \\( p \\),
+the player freezes \\( \mu(S, r, p) \\) and sets \\( s := \Cert \\).
 
-On observing a timeout event of \\( \DeadlineTimeout(p) \\) for a period \\( p \\),
+On observing a timeout event of \\( \DeadlineTimeout(p) \\) for its current period \\( p \\),
 the player sets \\( s := \Next_0 \\).
 
-On observing a timeout event of \\( \DeadlineTimeout(p) + 2^{s_t}\lambda + u \\)
-where \\( u \in [0, 2^{s_t}\lambda) \\) sampled uniformly at random, the player sets
-\\( s := s_t \\).
+For \\( 1 \leq s_t \leq 249 \\), on observing a timeout event of \\( \DeadlineTimeout(p) + (2^{s_t} - 1)\lambda + u \\)
+for its current period, where \\( u \in [0, 2^{s_t}\lambda) \\) is sampled uniformly at random, the player sets
+\\( s := \Next_{s_t} \\).
 
 > [!IMPORTANT]
 > **IMPLEMENTATION:**
@@ -131,11 +136,11 @@ In other words,
 
 $$
 \begin{aligned}
-&N((r, p, s, \bar{s}, V, P, \bar{v}), L, t(\FilterTimeout(p), p)) \\\\
-&\qquad = ((r, p, \Cert, \bar{s}, V, P, \bar{v}), L', \ldots) \\\\[0.35em]
-&N((r, p, s, \bar{s}, V, P, \bar{v}), L, t(\DeadlineTimeout(p), p)) \\\\
-&\qquad = ((r, p, \Next_0, \bar{s}, V, P, \bar{v}), L', \ldots) \\\\[0.35em]
-&N((r, p, s, \bar{s}, V, P, \bar{v}), L, t(\DeadlineTimeout(p) + 2^{s_t}\lambda + u, p)) \\\\
-&\qquad = ((r, p, \Next_{s_t}, \bar{s}, V, P, \bar{v}), L', \ldots).
+&N((r, p, s, \bar{s}, V, P, \bar{v}, H), L, t(\FilterTimeout(p), p)) \\\\
+&\qquad = ((r, p, \Cert, \bar{s}, V, P, \bar{v}, H'), L, \ldots) \\\\[0.35em]
+&N((r, p, s, \bar{s}, V, P, \bar{v}, H), L, t(\DeadlineTimeout(p), p)) \\\\
+&\qquad = ((r, p, \Next_0, \bar{s}, V, P, \bar{v}, H'), L, \ldots) \\\\[0.35em]
+&N((r, p, s, \bar{s}, V, P, \bar{v}, H), L, t(\DeadlineTimeout(p) + (2^{s_t} - 1)\lambda + u, p)) \\\\
+&\qquad = ((r, p, \Next_{s_t}, \bar{s}, V, P, \bar{v}, H'), L, \ldots).
 \end{aligned}
 $$

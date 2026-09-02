@@ -5,20 +5,24 @@ $$
 
 # Parameters
 
-The Algorand protocol is parameterized by the following constants:
+The Algorand protocol is parameterized by the constants described in this section.
+
+For agreement round \\( r \\), the player **SHALL** use the consensus
+parameters \\( \mathrm{Parameters}(L, \max(r - 2, 0)) \\) recorded in the
+Ledger \\( L \\).
 
 ## Time Constants
 
 These values represent durations of _time_.
 
-|         SYMBOL         |    VALUE (s)    | DESCRIPTION                                                                                        |
-|:----------------------:|:---------------:|:---------------------------------------------------------------------------------------------------|
-|    \\( \lambda \\)     |  \\( 2.00 \\)   | Time for small message (e.g., a vote) propagation in ideal network conditions                      |
-| \\( \lambda_{0min} \\) |  \\( 0.25 \\)   | Minimum amount of time for small message propagation in good network conditions, for \\( p = 0 \\) |
-| \\( \lambda_{0max} \\) |  \\( 1.50 \\)   | Maximum amount of time for small message propagation in good network conditions, for \\( p = 0 \\) |
-|   \\( \lambda_f \\)    | \\( 300.00 \\)  | Frequency at which the protocol _fast recovery_ steps are repeated                                 |
-|    \\( \Lambda \\)     |  \\( 17.00 \\)  | Time for big message (e.g., a block) propagation in ideal network conditions                       |
-|   \\( \Lambda_0 \\)    |  \\( 4.00 \\)   | Time for big message propagation in good network conditions, for \\(p = 0\\)                       |
+|         SYMBOL         |   VALUE (s)    | DESCRIPTION                                                                   |
+|:----------------------:|:--------------:|:------------------------------------------------------------------------------|
+|    \\( \lambda \\)     |  \\( 2.00 \\)  | Time for small message (e.g., a vote) propagation in ideal network conditions |
+| \\( \lambda_{0min} \\) |  \\( 2.50 \\)  | Minimum filtering time, for \\( p = 0 \\)                                     |
+| \\( \lambda_{0max} \\) |  \\( 3.00 \\)  | Maximum filtering time, for \\( p = 0 \\)                                     |
+|   \\( \lambda_f \\)    | \\( 300.00 \\) | Frequency at which the protocol _fast recovery_ steps are repeated            |
+|    \\( \Lambda \\)     | \\( 15.00 \\)  | Time for big message (e.g., a block) propagation in ideal network conditions  |
+|   \\( \Lambda_0 \\)    |  \\( 4.00 \\)  | Propagation deadline, for \\( p = 0 \\)                                       |
 
 ## Round Constants
 
@@ -33,22 +37,26 @@ For convenience, we define:
 
 - \\( \delta_b = 2\delta_s\delta_r \\) (the "balance lookback").
 
+Every round or period lookback \\( a - b \\) refers to \\( \max(a - b, 0) \\).
+
 ## Timeouts
 
 We define \\( \FilterTimeout(p) \\) on a _period_ \\( p \\) as follows:
 
-- If \\( p = 0 \\) the \\( \FilterTimeout(p) \\) is calculated dynamically based on the
-lower 95th percentile of the observed lowest credentials per round arrival time:
+- If \\( p = 0 \\):
 
-  - \\( 2\lambda_{0min} \leq \FilterTimeout(p) \leq 2\lambda_{0max} \\)
-
-> [!NOTE]
-> Refer to the [non-normative](./non-normative/abft-nn-dynamic-filter-timeout.md) section
-> for details about the implementation of the dynamic filtering mechanism.
+  - \\( \lambda_{0min} \leq \FilterTimeout(p) \leq \lambda_{0max} \\).
 
 - If \\( p \ne 0 \\):
 
   - \\( \FilterTimeout(p) = 2\lambda \\).
+
+> [!NOTE]
+> In the reference implementation \\( \FilterTimeout(0) \\) is calculated dynamically
+> based on the lower 95th percentile of the observed lowest credentials per round arrival
+> time. Players may choose different values of \\( \FilterTimeout(0) \\) within its
+> range. Agreement safety does not require equal values. An adaptive strategy is
+> described in the [non-normative section](./non-normative/abft-nn-dynamic-filter-timeout.md).
 
 We define \\( \DeadlineTimeout(p) \\) on _period_ \\( p \\) as follows:
 
@@ -58,7 +66,7 @@ We define \\( \DeadlineTimeout(p) \\) on _period_ \\( p \\) as follows:
 
 - If \\( p \ne 0 \\):
 
-  - \\( \DeadlineTimeout(p) = \Lambda \\)
+  - \\( \DeadlineTimeout(p) = \Lambda + \lambda \\)
 
 > [!IMPORTANT]
 > **IMPLEMENTATION:**

@@ -1,3 +1,5 @@
+{{#include ../_include/tex-macros/domain-separators.md}}
+
 $$
 \newcommand \Propose {\mathit{propose}}
 \newcommand \Soft {\mathit{soft}}
@@ -38,6 +40,10 @@ Players communicate with each other by exchanging _messages_.
 
 A message is an opaque object containing arbitrary data, save for the fields defined
 below.
+
+Let \\( \Hash \\) be the protocol hash function.
+
+Domain separators are defined in the [cryptographic specification](../crypto/crypto-domain-separators.md).
 
 > [!NOTE]
 > For a detailed overview of message composition, whether consensus or other types,
@@ -95,14 +101,16 @@ $$
 \right.
 $$
 
-A _proposal-value_ is a tuple \\( v = (I, p, \Digest(e), \Hash(\Encoding(e))) \\)
-where:
+A _proposal-value_ associated with a _proposal payload_ \\( \pi \\) containing entry
+\\( e \\) is a tuple \\( v = (I, p, d, h) \\) where:
 
 - \\( I \\) is an address (the "original proposer"),
 
 - \\( p \\) is a period (the "original period"),
 
-- \\( \Hash \\) is some cryptographic hash function.
+- \\( d = \Digest(e) \\) is the entry digest,
+
+- \\( h = \Hash(\Domain{PL} || \Encoding(\pi)) \\) is the payload commitment.
 
 The special proposal-value where all fields are the zero-string is called the _bottom
 proposal_ \\( \bot \\).
@@ -121,9 +129,6 @@ Let
 
 - \\( v \\) be a _proposal-value_.
 
-Let \\( x \\) be a canonical encoding of the 5-tuple \\( (I, r, p, s, v) \\), and
-let \\( x' \\) be a canonical encoding of the 4-tuple \\( (I, r, p, s) \\).
-
 Let \\( y \\) be an arbitrary bitstring.
 
 Then we say that the tuple
@@ -139,12 +144,15 @@ $$
 \Vote(I, r, p, s, v)
 $$
 
+Two votes with equal \\( (I, r, p, s, v) \\) are the _same vote_, regardless of
+\\( y \\); membership of a vote in a set is evaluated on this identity.
+
 > [!IMPORTANT]
 > **IMPLEMENTATION:**
 >
 > Vote [reference implementation](https://github.com/algorand/go-algorand/blob/b6e5bcadf0ad3861d4805c51cbf3f695c38a93b7/agreement/vote.go#L152).
 
-Moreover, let \\( L \\) be a ledger where \\( \abs{L} \geq \delta_b \\).
+Moreover, let \\( L \\) be a ledger.
 
 Let
 
@@ -153,20 +161,11 @@ Let
 - \\( Q \\) be a 256-bit integer,
 - \\( \tau, \bar{\tau} \\) 32-bit integers.
 
+Let \\( x = \Domain{VO} || \Encoding((I, r, p, s, v)) \\), and
+let \\( x' = \Domain{AS} || \Encoding((Q, r, p, s)) \\).
+
 We say that this vote is _valid with respect to_ \\( L \\) (or simply _valid_ if
 \\( L \\) is unambiguous) if the following conditions are true:
-
-> [!IMPORTANT]
-> **IMPLEMENTATION:**
->
-> The reference implementation builds an [asynchronous vote verifier](https://github.com/algorand/go-algorand/blob/b6e5bcadf0ad3861d4805c51cbf3f695c38a93b7/agreement/asyncVoteVerifier.go#L52),
-> which builds a verification pool and under the hood uses two different verifying
-> routines: one for [regular unauthenticated votes](https://github.com/algorand/go-algorand/blob/b6e5bcadf0ad3861d4805c51cbf3f695c38a93b7/agreement/vote.go#L97),
-> and one for [unauthenticated equivocation votes](https://github.com/algorand/go-algorand/blob/b6e5bcadf0ad3861d4805c51cbf3f695c38a93b7/agreement/vote.go#L193).
-
-> [!NOTE]
-> See the [Algorand ABFT non-normative section](./non-normative/abft-nn.md) for further
-> details.
 
 - \\( r \leq |L| + 2 \\)
 
@@ -174,11 +173,7 @@ We say that this vote is _valid with respect to_ \\( L \\) (or simply _valid_ if
   - If \\( s = 0 \\), then \\( p_{orig} \le p \\).
   - Furthermore, if \\( s = 0 \\) and \\( p = p_{orig} \\), then \\( I = I_{orig} \\).
 
-<!-- This condition is not enforced in the verifying side, only in the `makeVote()`
-side. It would be easy to add this as an additional check. -->
-
-- If \\( s \in \\{ \Propose, \Soft, \Cert, \Late, \Redo\\} \\), \\( v \neq \bot \\).
-Conversely, if \\( s = \Down \\), \\( v = \bot \\).
+- If \\( s \in \\{ \Propose, \Soft, \Cert\\} \\), then \\( v \neq \bot \\).
 
 - Let
   - \\( (\pk, B, r_\fv, r_\lv) = \Record(L, r - \delta_b, I) \\),
@@ -194,6 +189,10 @@ Conversely, if \\( s = \Down \\), \\( v = \bot \\).
 Observe that valid votes contain outputs of the \\( \Sign \\) procedure; i.e.,
 \\( y := \Sign(x, x', \sk, B, \bar{B}, Q, \tau, \bar{\tau}) \\).
 
+A correct player emits only votes with \\( v \neq \bot \\) in \\( \Propose \\),
+\\( \Soft \\), \\( \Cert \\), \\( \Late \\), and \\( \Redo \\). Conversely, if
+\\( s = \Down \\), \\( v = \bot \\). Either value is permitted in \\( \Next_s \\).
+
 Informally, these conditions check the following:
 
 - The vote is not too far in the future for \\( L \\) to be able to validate.
@@ -204,9 +203,9 @@ earlier period (\\( p_{orig} < p \\)). But they can't claim to "re-propose" a va
 from a future period. And if the proposal-value is new (\\( p_{orig} = p \\)) then
 the "original proposer" must be the voter.
 
-- The \\( \Propose \\), \\( \Soft \\), \\( \Cert \\), \\( \Late \\), and \\( \Redo \\)
-steps must vote for an actual proposal. The \\( \Down \\) step must only vote
-for \\( \bot \\).
+- The \\( \Propose \\), \\( \Soft \\), and \\( \Cert \\) steps must vote for an
+actual proposal. Correct players also \\( \Late \\)-vote and \\( \Redo \\)-vote only
+for an actual proposal, and \\( \Down \\)-vote only for \\( \bot \\).
 
 - The last condition checks that the vote was properly signed by a voter who was
 selected to serve on the committee for this _round_, _period_, and _step_. The
@@ -233,6 +232,18 @@ An equivocation vote pair is _valid with respect to_ \\( L \\) (or simply _valid
 if \\( L \\) is unambiguous) if both of its constituent votes are also valid with
 respect to \\( L \\).
 
+An equivocation vote pair is transmitted as a single record carrying the
+common \\( (I, r, p, s) \\) and credential, with the two proposal-values and
+their two signatures.
+
+> [!IMPORTANT]
+> **IMPLEMENTATION:**
+>
+> The reference implementation builds an [asynchronous vote verifier](https://github.com/algorand/go-algorand/blob/b6e5bcadf0ad3861d4805c51cbf3f695c38a93b7/agreement/asyncVoteVerifier.go#L52),
+> which builds a verification pool and under the hood uses two different verifying
+> routines: one for [regular unauthenticated votes](https://github.com/algorand/go-algorand/blob/b6e5bcadf0ad3861d4805c51cbf3f695c38a93b7/agreement/vote.go#L97),
+> and one for [unauthenticated equivocation votes](https://github.com/algorand/go-algorand/blob/b6e5bcadf0ad3861d4805c51cbf3f695c38a93b7/agreement/vote.go#L193).
+
 ## Bundles
 
 Let \\( V \\) be any set of votes and equivocation votes.
@@ -246,19 +257,19 @@ and step_ \\( s \\) (or a _bundle for \\( v \\) at_ \\( (r, p, s) \\)), denoted
 >
 > Bundle [reference implementation](https://github.com/algorand/go-algorand/blob/b6e5bcadf0ad3861d4805c51cbf3f695c38a93b7/agreement/bundle.go#L46).
 
-Moreover, let \\( L \\) be a ledger where \\( \abs{L} \geq \delta_b \\).
+A bundle is transmitted as \\( (r, p, s, v) \\) together with its vote and
+equivocation-vote records; a vote record carries only the sender, credential,
+and signature, the omitted fields being the bundle's, while an equivocation
+record is transmitted as above.
+
+Moreover, let \\( L \\) be a ledger.
 
 We say that this bundle is _valid with respect to_ \\( L \\) (or simply _valid_ if
 \\( L \\) is unambiguous) if the following conditions are true:
 
-> [!IMPORTANT]
-> **IMPLEMENTATION:**
->
-> The reference implementation makes use of an asynchronous [Bundle verifying function](https://github.com/algorand/go-algorand/blob/b6e5bcadf0ad3861d4805c51cbf3f695c38a93b7/agreement/bundle.go#L147).
+- \\( s \neq \Propose \\).
 
-> [!NOTE]
-> See the [Algorand ABFT non-normative section](./non-normative/abft-nn.md) for
-> further details.
+- \\( |V| \leq \CommitteeThreshold(s) \\).
 
 - Every element \\( a_i \in V \\) is valid with respect to \\( L \\).
 
@@ -269,41 +280,50 @@ We say that this bundle is _valid with respect to_ \\( L \\) (or simply _valid_ 
 - For any element \\( a_i \in V \\), either \\( a_i \\) is a vote and \\( v_i = v \\),
 or \\( a_i \\) is an equivocation vote.
 
-- Let \\( w_i \\) be the weight of the signature in \\( a_i \\). Then
+- Let \\( w_i \\) be the weight of \\( a_i \\), where an equivocation vote has the
+common weight of its constituent votes. Then
 \\( \sum_i w_i \geq \CommitteeThreshold(s) \\).
+
+> [!IMPORTANT]
+> **IMPLEMENTATION:**
+>
+> The reference implementation makes use of an asynchronous [Bundle verifying function](https://github.com/algorand/go-algorand/blob/b6e5bcadf0ad3861d4805c51cbf3f695c38a93b7/agreement/bundle.go#L147).
 
 ## Proposals
 
-Let \\( e = (o, s) \\) be an entry and \\( y \\) be the output of a \\( \Sign \\)
-procedure.
+Let \\( e = (o, Q) \\) be an entry, \\( \gamma \\) a seed proof, \\( I_o \\) an
+address, and \\( p_o \\) a period.
 
-The pair \\( (e, y) \\) is a _proposal_ or a _proposal payload_.
+The tuple \\( \pi = (e, \gamma, p_o, I_o) \\) is a _proposal_ or _proposal payload_.
 
 Moreover, let
 
-- \\( L \\) be a ledger where \\( \abs{L} \geq \delta_b \\),
+- \\( L \\) be a ledger,
 
-- \\( v = (I, p, h, x) \\) be some proposal-value.
+- \\( r \\) be the round being decided,
+
+- \\( v \\) be some proposal-value.
 
 We say that this proposal is _a valid proposal matching \\( v \\) with respect to
 \\( L \\)_ (or simply that this proposal _matches \\( v \\)_ if \\( L \\) is unambiguous)
 if the following conditions are true:
 
-- \\( \ValidEntry(L, e) = 1 \\),
+- \\( \ValidEntry(L, o) = 1 \\),
 
-- \\( h = \Digest(e) \\),
+- \\( v = (I_o, p_o, \Digest(e), \Hash(\Domain{PL} || \Encoding(\pi))) \\),
 
-- \\( x = \Hash(\Encoding(e)) \\),
+- The entry's round is \\( r \\),
 
-- The seed \\( s \\) and seed proof are valid as specified in the following section,
+- The seed \\( Q \\) and seed proof \\( \gamma \\) are valid as specified in the following section,
 
-- Let \\( (\pk, B, r_\fv, r_\lv) = \Record(L, r - \delta_b, I) \\),
-  - If \\( p = 0 \\), then \\( \Verify(y, Q_0, Q_0, \pk, 0, 0, 0, 0, 0) \neq 0 \\),
+- If \\( e \\) identifies a proposer, that proposer is \\( I_o \\).
 
-- Let \\( (\pk, B, r_\fv, r_\lv) = \Record(L, r - \delta_b, I) \\).
-Then \\( r_\fv \leq r \leq r_\lv \\).
+If \\( \pi \\) matches \\( v \\), we write \\( \pi = \Proposal(v) \\).
 
-If \\( e \\) matches \\( v \\), we write \\( e = \Proposal(v) \\).
+A proposal payload is transmitted, and relayed, as a pair \\( (\pi, a) \\),
+where \\( a \\) is either empty or a proposal-vote whose proposal-value matches
+\\( \pi \\), called the payload's _authenticator_. A player receiving such a
+pair processes \\( a \\), if present, before \\( \pi \\).
 
 ## Seed
 
@@ -321,30 +341,35 @@ Let
 
 - \\( (\pk, B, r_\fv, r_\lv) = \Record(L, r - \delta_b, I) \\),
 
-- \\( \sk \\) be the secret key corresponding to \\( \pk \\),
+- \\( \sk_{\mathrm{sel}} \\) be the \\( \VRF \\) secret key associated with \\( \pk \\),
+
+- \\( q_0 = \Seed(L, r - \delta_s) \\),
 
 - \\( \alpha \\) be a 256-bit integer.
 
-Then \\( I \\) computes the seed proof \\( y \\) for a new entry as follows:
+Then \\( I \\) computes the seed proof \\( \gamma \\) for a new entry as follows:
 
 - If \\( p = 0 \\):
-  - \\( y = \VRF.\Prove(\Seed(L, r-\delta_s), \sk) \\),
-  - \\( \alpha = \Hash(\VRF.\ProofToHash(y), I) \\).
+  - \\( \gamma = \VRF.\Prove(\Domain{SD} || q_0, \sk_{\mathrm{sel}}) \\),
+  - \\( z = \VRF.\ProofToHash(\gamma) \\),
+  - \\( \alpha = \Hash(\Domain{PS} || \Encoding((I, z))) \\).
 
 - If \\( p \ne 0 \\):
-  - \\( y = 0 \\),
-  - \\( \alpha = \Hash(\Seed(L, r-\delta_s)) \\).
+  - \\( \gamma = 0 \\),
+  - \\( \alpha = \Hash(\Domain{SD} || q_0) \\).
 
 Now \\( I \\) computes the seed \\( Q \\) as follows:
 
 $$
 Q = \left\\{
 \begin{array}{rl}
-  H(\alpha, \DigestLookup(L, r-\delta_s\delta_r)) & : (r \bmod \delta_s\delta_r) < \delta_s \\\\
-  H(\alpha) & : \text{otherwise}
+  \Hash(\Domain{PS} || \Encoding((\alpha, \DigestLookup(L, r-\delta_s\delta_r)))) & : (r \bmod \delta_s\delta_r) < \delta_s \\\\
+  \Hash(\Domain{PS} || \Encoding((\alpha, 0))) & : \text{otherwise}
 \end{array}
 \right.
 $$
+
+where \\( 0 \\) denotes the zero digest.
 
 > [!IMPORTANT]
 > **IMPLEMENTATION:**
@@ -354,17 +379,19 @@ $$
 The seed is valid if the following verification procedure succeeds:
 
 1. Let \\( (\pk, B, r_\fv, r_\lv) = \Record(L, r-\delta_b, I) \\);
+let \\( \pk_{\mathrm{sel}} \\) be the \\( \VRF \\) public key associated with
+\\( \pk \\), and
 let \\( q_0 = \Seed(L, r-\delta_s) \\).
 
-1. If \\( p = 0 \\), check \\( \VRF.\Verify(y, q_0, \pk) \\), immediately
-returning failure if verification fails. Let \\( q_1 = \Hash(\VRF.\ProofToHash(y), I) \\)
+1. If \\( p = 0 \\), check \\( \VRF.\Verify(\gamma, \Domain{SD} || q_0, \pk_{\mathrm{sel}}) = 1 \\), immediately
+returning failure if verification fails. Let \\( q_1 = \Hash(\Domain{PS} || \Encoding((I, \VRF.\ProofToHash(\gamma)))) \\)
 and continue to step 4.
 
-1. If \\( p \ne 0 \\), let \\( q_1 = \Hash(q_0) \\). Continue.
+1. If \\( p \ne 0 \\), let \\( q_1 = \Hash(\Domain{SD} || q_0) \\). Continue.
 
-1. If \\( r \equiv (r \bmod \delta_s) \mod \delta_r\delta_s \\), then check
-\\( Q = \Hash(q_1||\DigestLookup(L, r-\delta_s\delta_r)) \\). Otherwise,
-check \\( Q = q_1 \\).
+1. If \\( (r \bmod \delta_s\delta_r) < \delta_s \\), then check
+\\( Q = \Hash(\Domain{PS} || \Encoding((q_1, \DigestLookup(L, r-\delta_s\delta_r)))) \\). Otherwise,
+check \\( Q = \Hash(\Domain{PS} || \Encoding((q_1, 0))) \\).
 
 > [!NOTE]
 > Round \\( r \\) leader selection and committee selection both use the seed from

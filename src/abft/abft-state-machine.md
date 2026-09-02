@@ -12,16 +12,21 @@ transmissions from the state machine.
 We can define the operation of the state machine as transitions
 between different states.
 
-A transition \\( N \\) maps some initial state
-\\( S_0 \\), a ledger \\( L_0 \\), and an event \\( e \\) to an output state
-\\( S_1 \\), an output ledger \\( L_1 \\), and a sequence of output network transmissions
+A transition \\( N \\) maps a state
+\\( S \\), a ledger \\( L \\), and an event \\( e \\) to an output state
+\\( S' \\), an output ledger \\( L' \\), and a sequence of output network transmissions
 \\( \mathbf{a} = (a_1, a_2, \ldots, a_n) \\).
 
 We write this as
 
 $$
-N(S_0, L_0, e) = (S_1, L_1, \mathbf{a})
+N(S, L, e) = (S', L', \mathbf{a})
 $$
+
+In transition equations, a primed symbol denotes a component's value after the
+transition; an unprimed symbol in the output asserts that the component is
+unchanged, except the history \\( H \\)
+([Player State](./abft-player-state.md)), which every transition extends.
 
 If no transmissions are output, we write that \\( \mathbf{a} = \epsilon \\).
 
@@ -35,8 +40,8 @@ The state machine _receives_ two types of events as inputs.
 
 2. _timeout events_: A timeout event is received when a specific
    amount of time passes after the beginning of a period. A timeout
-   event \\( \lambda \\) seconds after a period \\( p \\) begins is denoted
-   \\( t(\lambda, p) \\).
+   event \\( T \\) seconds after a period \\( p \\) begins is denoted
+   \\( t(T, p) \\).
 
 > [!NOTE]
 > For more details on the way these events may be constructed from an implementation

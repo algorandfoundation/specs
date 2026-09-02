@@ -22,7 +22,8 @@ For a detailed definition of this object, see the [Algorand Ledger Specification
 
 The following functions are defined on \\( e \\):
 
-- _Encoding_: \\( \Encoding(e) = x \\) where \\( x \\) is a variable-length bitstring.
+- _Encoding_: \\( \Encoding(e) = x \\) where \\( x \\) is the canonical
+variable-length bitstring encoding of \\( e \\).
 
 - _Summarizing_: \\( \Digest(e) = h \\) where \\( h \\) is a 256-bit integer.
 \\( h \\) should be a cryptographic commitment to the contents of \\( e \\).
@@ -44,6 +45,9 @@ integer \\( B_{k,r} \\). \\( r_\fv \\) and \\( r_\lv \\) define the first valid
 and last valid rounds for this participating account.
 
 - _Digest Lookup_: \\( \DigestLookup(L, r) = \Digest(e_r) \\).
+
+- _Consensus Parameters_: \\( \mathrm{Parameters}(L, r) \\) is the consensus
+parameter set recorded at round \\( r \\).
 
 - _Total Stake Lookup_: We use \\( \Kcal_{r_b,r_v} \\) to represent all players
 with participation keys at \\( r_b \\) that are eligible to vote at \\( r_v \\).
