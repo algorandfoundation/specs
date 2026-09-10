@@ -859,7 +859,7 @@ _Warning_: Usage should be restricted to very rare use cases. In almost all case
 - Syntax: `json_ref R` where R: [json_ref Types](#json_ref-types)
 - Bytecode: 0x5f {uint8}
 - Stack: ..., A: []byte, B: []byte &rarr; ..., any
-- key B's value, of type R, from a [valid](jsonspec.md) utf-8 encoded json object A
+- key B's value, of type R, from a [valid](https://datatracker.ietf.org/doc/html/rfc8259) utf-8 encoded json object A
 - **Cost**: 25 + 2 per 7 bytes of A
 - Availability: v7
 
