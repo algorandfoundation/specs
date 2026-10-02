@@ -1,4 +1,4 @@
-minimum_pre_commit_version: 4.6.1
+minimum_pre_commit_version: 4.6.2
 exclude: '(^|/)(_archive|scripts|theme)(/|$)'
 
 repos:
