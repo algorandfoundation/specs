@@ -286,8 +286,7 @@ def markdown_report(pins: list[Pin], now: datetime | None = None) -> str:
     lines.extend(
         [
             "",
-            "Python suggestions stay on the configured major/minor release line; "
-            "Node suggestions stay on the configured major release line.",
+            "Python suggestions stay on the configured major/minor release line.",
             "",
         ]
     )
