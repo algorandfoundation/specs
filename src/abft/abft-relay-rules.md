@@ -46,7 +46,6 @@ On receiving a vote \\( \Vote_k(r_k, p_k, s_k, v) \\) a player
   - \\( r_k = r + 1 \\) and either
     - \\( p_k > 0 \\) or
     - \\( s_k \in (\Next_0, \Late) \\) or
-
   - \\( r_k = r \\) and one of
     - \\( p_k \notin [p-1,p+1] \\) or
     - \\( p_k = p + 1 \\) and \\( s_k \in (\Next_0, \Late) \\) or
