@@ -16,7 +16,7 @@
 | `bytec_3` | constant 3 from bytecblock |
 | `pushbytes bytes` | immediate BYTES |
 | `pushbytess bytes ...` | push sequences of immediate byte arrays to stack (first byte array being deepest) |
-| `bzero` | zero filled byte-array of length A |
+| `bzero` | zero filled byte-array of length A. Fail if A exceeds 4096 |
 | `arg n` | Nth LogicSig argument |
 | `arg_0` | LogicSig argument 0 |
 | `arg_1` | LogicSig argument 1 |
@@ -34,7 +34,7 @@
 | `gtxnsas f` | Bth value of the array field F from the Ath transaction in the current group |
 | `global f` | global field F |
 | `load i` | Ith scratch space value. All scratch spaces are 0 at program start. |
-| `loads` | Ath scratch space value.  All scratch spaces are 0 at program start. |
+| `loads` | Ath scratch space value. All scratch spaces are 0 at program start. |
 | `store i` | store A to the Ith scratch space |
 | `stores` | store B to the Ath scratch space |
 | `gload t i` | Ith scratch space value of the Tth transaction in the current group |
