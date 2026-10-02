@@ -19,6 +19,10 @@ The current version of the Algorand Specifications reflects the latest version o
 the Algorand consensus protocol in its _normative_ sections and is generally aligned
 with the latest stable release of `go-algorand` in its _non-normative_ sections.
 
+Links to the `go-algorand` reference implementation are permalinks pinned to specific
+commits. They provide stable references for the specifications but are not guaranteed
+to point to the latest `go-algorand` revision.
+
 Specifications for previous consensus versions can be found via the link provided
 in the block's `current-protocol.upgrade-state` field corresponding to the desired
 consensus version.
