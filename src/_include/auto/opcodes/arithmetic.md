@@ -10,8 +10,8 @@
 | `>=` | A greater than or equal to B => {0 or 1} |
 | `&&` | A is not zero and B is not zero => {0 or 1} |
 | `\|\|` | A is not zero or B is not zero => {0 or 1} |
-| `shl` | A times 2^B, modulo 2^64 |
-| `shr` | A divided by 2^B |
+| `shl` | A times 2^B, modulo 2^64. Fail if B > 63 |
+| `shr` | A divided by 2^B. Fail if B > 63 |
 | `sqrt` | The largest integer I such that I^2 <= A |
 | `bitlen` | The highest set bit in A. If A is a byte-array, it is interpreted as a big-endian unsigned integer. bitlen of 0 is 0, bitlen of 8 is 4 |
 | `exp` | A raised to the Bth power. Fail if A == B == 0 and on overflow |
@@ -28,5 +28,5 @@
 | `mulw` | A times B as a 128-bit result in two uint64s. X is the high 64 bits, Y is the low |
 | `addw` | A plus B as a 128-bit result. X is the carry-bit, Y is the low-order 64 bits. |
 | `divw` | A,B / C. Fail if C == 0 or if result overflows. |
-| `divmodw` | W,X = (A,B / C,D); Y,Z = (A,B modulo C,D) |
+| `divmodw` | W,X = (A,B / C,D); Y,Z = (A,B modulo C,D). Fail if C,D == 0 |
 | `expw` | A raised to the Bth power as a 128-bit result in two uint64s. X is the high 64 bits, Y is the low. Fail if A == B == 0 or if the results exceeds 2^128-1 |
