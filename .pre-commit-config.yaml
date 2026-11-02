@@ -3,7 +3,7 @@ exclude: '(^|/)(_archive|scripts|theme)(/|$)'
 
 repos:
   - repo: https://github.com/rvben/rumdl-pre-commit
-    rev: cbd02203fbbb2839cd7e25e3062628ba4af18991  # frozen: v0.2.77
+    rev: b0cff962ee693b9e612c097d22e71e0cba127447  # frozen: v0.3.2
     hooks:
       - id: rumdl
         files: '^(src/.*\.md|README\.md|CONTRIBUTING\.md|AGENTS\.md)'
